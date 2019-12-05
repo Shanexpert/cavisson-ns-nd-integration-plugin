@@ -1,0 +1,53 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler"
+ xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson"  xmlns:f="/lib/form"> 
+ <script src ="${rootURL}/plugin/cavisson/js/jenkins_utils.js"/>
+  <f:entry title="${%netstorm.url.title}"  description="${%netstorm.url.description}">
+    <f:textbox field="URLConnectionString"/>
+  </f:entry>
+  <f:entry title="${%netstorm.username.title}"  description="${%netstorm.username.description}">
+    <f:textbox field="username"/>
+  </f:entry>
+  <f:entry title="${%netstorm.password.title}" description="${%netstorm.password.description}">
+    <f:password field="password"/>
+  </f:entry>
+
+  <f:validateButton title="${%netstorm.connection.test.title}" progress="${%netstorm.connection.test.progress}"
+  method="testNetstormConnection" with="URLConnectionString,username,password"/>
+
+  <f:entry title="${%netstorm.project.name.title}" description="${%netstorm.project.name.description}" >
+    <f:select field="project"/>
+  </f:entry>
+  <f:entry title="${%netstorm.subproject.name.title}" description="${%netstorm.subproject.name.description}" >
+    <f:select field="subProject"/>
+  </f:entry>
+  
+  <f:entry title='Select Test Profile Type'>
+      <f:select  field="testMode"  onchange="enableDisableTR(this.value)" />
+  </f:entry>
+
+  <f:entry title='Select Test Profile'>
+      <f:select  field="scenario"/>
+  </f:entry>
+ 
+  <f:entry title='Enter TR number'>
+    <f:textbox field="baselineTR" id='txtBaselineTR' />
+  </f:entry>
+
+
+<script>
+ function enableDisableTR(value)
+ {
+ 
+   if(value == 'T')
+     document.getElementById('txtBaselineTR').disabled = false;
+  else
+    document.getElementById('txtBaselineTR').disabled = true;
+  
+
+ }
+ 
+
+</script>
+   
+</j:jelly>
+

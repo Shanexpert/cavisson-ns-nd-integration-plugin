@@ -1,0 +1,22 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler"
+         xmlns:l="/lib/layout">
+  <l:layout title="trendlayout" css="/plugin/netstorm-dashboard/css/style.css">
+    <st:include it="${it.project}" page="sidepanel.jelly"/>
+    <l:main-panel>
+      <h1>${%netstorm.trend.caption}</h1>
+      <div>
+        <a href="../lastBuild/netstorm-dashboard/">${%last.report.caption}</a>
+      </div>
+      <div>
+
+        <j:set var="metricKeyList" value="${it.getAvailableMetricKeys()}"/>
+        <j:forEach var="metricKey" items="${metricKeyList}">
+          <center>
+            <img class="trend" src="./summarizerGraphForMetric?width=600&amp;height=440&amp;metricDataKey=${metricKey}" width="600" height="440" />
+          </center>
+          <br />
+        </j:forEach>
+      </div>
+    </l:main-panel>
+  </l:layout>
+</j:jelly>

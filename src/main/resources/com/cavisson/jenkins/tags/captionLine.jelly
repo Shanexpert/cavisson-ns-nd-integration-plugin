@@ -1,0 +1,8 @@
+<j:jelly xmlns:j="jelly:core">
+<tr>
+<th>Timestamp</th>
+<th>Value</th>
+<th>Minimum</th>
+<th>Maximum</th>
+</tr>
+</j:jelly>
