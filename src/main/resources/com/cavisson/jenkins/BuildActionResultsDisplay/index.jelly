@@ -1,9 +1,10 @@
+<?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler"
          xmlns:l="/lib/layout">
-  <l:layout title="overview-layout" xmlns:jm="/jenkins/pipeline/tags"
-            css="${rootURL}/plugin/cavisson/css/style.css">
+  <l:layout title="overview-layout" xmlns:jm="/com/cavisson/jenkins/tags"
+            css="${rootURL}/plugin/cavisson-ns-nd-integration/css/style.css">
     <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css' />
-    <link rel="stylesheet" type="text/css" href="${rootURL}/plugin/cavisson/css/report.css" />
+    <link rel="stylesheet" type="text/css" href="${rootURL}/plugin/cavisson-ns-nd-integration/css/report.css" />
 
     <style type="text/css">
             *{box-sizing:border-box}
@@ -36,20 +37,27 @@
     </style>
 
     <st:include it="${it.build}" page="sidepanel.jelly"/>
-    <script src ="${rootURL}/plugin/cavisson/js/jenkins_utils.js"/>
-    <script src ="${rootURL}/plugin/cavisson/js/sortableTable.js"/>
+    <script src ="${rootURL}/plugin/cavisson-ns-nd-integration/js/jenkins_utils.js"/>
+    <script src ="${rootURL}/plugin/cavisson-ns-nd-integration/js/sortableTable.js"/>
     <l:main-panel>
       <j:set var="report" value="${it.getNetStormReport()}"/>
       <j:set var="testReport" value="${report.getTestReport()}"/>
+      
+      <j:if test='${testReport != null}' > 
+       <j:if test='${testReport.pageDetail == null}'>
      
       <h2>${report.getName()}</h2>
-
+      
+      </j:if>
+      </j:if>
       <j:if test='${testReport != null}' > 
+     
          <table width = "100%" border="0" cellspacing="0" cellpadding="0">
             <tr style="background: #f3f7cc;border-width: 1px;border-style: solid;border-color: #999999;" > 
                <td  width ="100%">
 			   
 			   <j:if test='${testReport.testMetrics != null}'>
+			     <j:if test='${testReport.pageDetail == null}'>
                   <table  width = "100%"  border="1" bgcolor="#F0F0F0" cellspacing="0" cellpadding="0">
                      <tr style="background: #f3f7cc;border-width: 1px;border-style: solid;border-color: #999999;" > 
                      <th colspan='5' style = "background:#F0F0F0;border-width: 1px;padding: 8px;border-style: solid;font-size:12px;font-weight:bold;border-color: #999999;" >Test Suite Report</th>
@@ -128,6 +136,7 @@
                         </tr>
 
                         <tr>
+			<j:if test='${!testReport.showHideTransaction}'>
                         <td class='td' style="background: #f3f7cc;">
                         <div class='splitinthree legend_pad'><div class='legend A'>A. Upto ${testReport.normalThreshold}% variation</div></div>
                         <div class='splitinthree legend_pad'><div class='legend B'>B. ${testReport.normalThreshold+1}% - ${testReport.criticalThreshold}% variation</div></div>
@@ -135,6 +144,16 @@
                         <div class='splitintwo legend_pad'><div class='legend C'>D. Greater than ${testReport.criticalThreshold}% variation</div></div>
 			<div class='splitintwo legend_pad'><div class='legend E'>E. Less than ${testReport.criticalThreshold}% variation</div></div>
                         </td>
+			</j:if>
+			
+			<j:if test='${testReport.showHideTransaction}'>
+    			<td class='td' style="background: #f3f7cc;">
+                        <div class='splitintwo legend_pad'><div class='legend A'>A. Upto ${testReport.normalThreshold}% variation</div></div>
+                        <div class='splitintwo legend_pad'><div class='legend B'>B. ${testReport.normalThreshold+1}% - ${testReport.criticalThreshold}% variation</div></div>
+                        <div class='splitintwo legend_pad'><div class='legend D'>C. Unexecuted Transactions</div></div>
+                        <div class='splitintwo legend_pad'><div class='legend C'>D. Greater than ${testReport.criticalThreshold}% variation</div></div>
+                        </td>
+			</j:if>
                       </tr>
 
 					<tr>
@@ -148,11 +167,15 @@
                       </tr>
 
                    </table>
+                   
+                   </j:if>
                 
 	</j:if>
 
 
 		 <j:if test='${testReport.testMetrics == null}'>
+		  <j:if test='${testReport.pageDetail == null}'>
+		  
                   <table  width = "100%"  border="1" bgcolor="#F0F0F0" cellspacing="0" cellpadding="0">
                      <tr style="background: #f3f7cc;border-width: 1px;border-style: solid;border-color: #999999;" > 
                      <th colspan='5' style = "background:#F0F0F0;border-width: 1px;padding: 8px;border-style: solid;font-size:12px;font-weight:bold;border-color: #999999;" >Test Suite Report</th>
@@ -162,7 +185,17 @@
                         <div style='width: 100%;'> 
            
 
-                        <div class='col-md-8 '>
+                        <div class='col-md-6 '>
+                        <div class='panel panel-blue panel-widget'>
+                        <div class='row no-padding'>
+                        <div class='col-lg-12 widget-left'>
+                        <i class='fa fa-3x fa-stack-exchange' aria-hidden='true'></i></div>
+                        <div class='col-lg-12 widget-right'>
+                        <div class='large'>Overall Fail Criteria</div>
+                        <div class='text-muted'>${testReport.overAllFailCriteria}</div>
+                        </div></div></div></div>
+                        
+                        <div class='col-md-6 '>
                         <div class='panel panel-teal panel-widget'>
                         <div class='row no-padding'>
                         <div class='col-lg-12 widget-left'> 
@@ -172,7 +205,7 @@
                         <div class='text-muted2'>${testReport.date}</div>
                         </div></div></div></div>
 
-                        <div class='col-md-8 '>
+                        <div class='col-md-6 '>
                         <div class='panel panel-red panel-widget' title="Open WebDashboard" style="cursor:pointer;" onclick="openDashboard('${testReport.getDashboardURL()}')">
                         <div class='row no-padding'>
                         <div class='col-lg-12 widget-left'>
@@ -183,7 +216,7 @@
                         </div></div></div></div>
 
 
-                        <div class='col-md-8'>
+                        <div class='col-md-6'>
                         <div class='panel panel-red panel-widget' title="Open HTML Report" style="cursor:pointer;" onclick="openHtmlReport('${testReport.getReportLink()}')">
                         <div class='row no-padding'>
                         <div class='col-lg-12 widget-left'>
@@ -196,13 +229,17 @@
                         </tr>
 
                    </table>
+                   
+                   </j:if>
 		</j:if>
                  </td> 
               </tr>
             </table>
+            
 			   
           <br />
            <j:if test='${!testReport.showHideTransaction}'>
+            <j:if test='${testReport.pageDetail == null}'>
           <table class="table1" border='1' width="100%" bgcolor="#F0F0F0" cellspacing="0" cellpadding="5">
             <tr style="height:15px;">
              <th id='title' class='th' style='background:#1e4361; border-width: 1px;padding: 4px;border-style: solid;border-color: #999999;' > Transaction Status </th>
@@ -273,11 +310,15 @@
          </tr>
          </j:forEach>
          </table>
+         <br />
          </j:if>
-          <br />
+         </j:if>
+          
          
 		 <j:if test='${testReport.testMetrics != null}'>
           
+           <j:if test='${testReport.pageDetail == null}'>
+           
              <table border='1' class='table1'  width="100%" bgcolor="#F0F0F0" cellspacing="0" cellpadding="5" id="reportID">
           <thead id ='pfh'><tr>
              <th align='left' class='th td_color' >Metric Under Test</th>
@@ -314,7 +355,8 @@
 
           </tr></thead><tbody>
           <j:forEach var="suit_metric" items="${testReport.testMetrics}">
-                  
+                  <j:if test='${!suit_metric.displayName.equals(" ")}'>
+                  <j:if test='${!suit_metric.displayName.equals("")}'>
                  <j:if test='${suit_metric.newReport.equals("NewReport")}'>
                  <j:if test='${!suit_metric.headerName.equals("")}'>
                   <tr >
@@ -406,9 +448,144 @@
              <i title="Trend Graph" onclick="openTrend('${suit_metric.linkForTrend}')" class='fa fa-line-chart' aria-hidden='true'></i>&#160;
             <i title="Metric Graph" onclick="openMetric('${suit_metric.metricLink}')" class='fa fa-bar-chart' aria-hidden='true'></i> </td>
             </tr>
+            </j:if>
+            </j:if>
         </j:forEach></tbody>
      </table>  
+     
+     </j:if>
+
 </j:if>
+
+
+
+  
+
+
+
+ <j:if test='${testReport.pageDetail != null}'>
+ <div class="caption">Page Detail Report</div>
+    <div class="responsive-table">
+     <table class="custom-table">
+      <thead ><tr>
+           <j:forEach var="header" items="${testReport.pageDetailHeader}">
+               <th align='left' class='th td_color' tooltip='${header}'>${header}</th>
+           </j:forEach>
+            
+          </tr></thead>
+          
+          <tbody>
+          <j:forEach var="pageDetailData" items="${testReport.pageDetail}">
+          <tr>
+          <td tooltip='${pageDetailData.strPageName}'>${pageDetailData.strPageName}</td>
+          <td tooltip='${pageDetailData.strHostName}'>${pageDetailData.strHostName}</td>
+          <td tooltip='${pageDetailData.groupName}'>${pageDetailData.groupName}</td>
+          <td tooltip='${pageDetailData.browserName}'>${pageDetailData.browserName}</td>
+          
+          <j:if test='${!pageDetailData.strScreenSize.equals("")}'>
+          <td tooltip='${pageDetailData.strScreenSize}'>${pageDetailData.strScreenSize}</td>
+          </j:if>
+          <j:if test='${pageDetailData.strScreenSize.equals("")}'>
+          <td>-</td>
+          </j:if>
+          
+          <j:if test='${!pageDetailData.strSessionCount.equals("-1")}'>
+          <td tooltip='${pageDetailData.strSessionCount}'>${pageDetailData.strSessionCount}</td>
+          </j:if>
+          <j:if test='${pageDetailData.strSessionCount.equals("-1")}'>
+          <td>-</td>
+          </j:if>
+          
+          <j:if test='${!pageDetailData.strAverageDOM.equals("-1.00")}'>
+          <td tooltip='${pageDetailData.strAverageDOM}'>${pageDetailData.strAverageDOM}</td>
+          </j:if>
+          <j:if test='${pageDetailData.strAverageDOM.equals("-1.00")}'>
+          <td>-</td>
+          </j:if>
+          
+          <j:if test='${!pageDetailData.strAverageOnload.equals("-1.00")}'>
+          <td tooltip='${pageDetailData.strAverageOnload}'>${pageDetailData.strAverageOnload}</td>
+          </j:if>
+          <j:if test='${pageDetailData.strAverageOnload.equals("-1.00")}'>
+          <td>-</td>
+          </j:if>
+          
+          <j:if test='${!pageDetailData.strAveragePageLoad.equals("-1.00")}'>
+          <td tooltip='${pageDetailData.strAveragePageLoad}'>${pageDetailData.strAveragePageLoad}</td>
+          </j:if>
+          <j:if test='${pageDetailData.strAveragePageLoad.equals("-1.00")}'>
+          <td>-</td>
+          </j:if>
+          
+          <j:if test='${!pageDetailData.strAverageTimeToInteract.equals("-1.00")}'>
+          <td tooltip='${pageDetailData.strAverageTimeToInteract}'>${pageDetailData.strAverageTimeToInteract}</td>
+          </j:if>
+          <j:if test='${pageDetailData.strAverageTimeToInteract.equals("-1.00")}'>
+          <td>-</td>
+          </j:if>
+          
+          <j:if test='${!pageDetailData.averageStartRender.equals("-1.00")}'>
+          <td tooltip='${pageDetailData.averageStartRender}'>${pageDetailData.averageStartRender}</td>
+          </j:if>
+          <j:if test='${pageDetailData.averageStartRender.equals("-1.00")}'>
+          <td>-</td>
+          </j:if>
+          
+          <j:if test='${!pageDetailData.averageEndRender.equals("-1.00")}'>
+          <td tooltip='${pageDetailData.averageEndRender}'>${pageDetailData.averageEndRender}</td>
+          </j:if>
+          <j:if test='${pageDetailData.averageEndRender.equals("-1.00")}'>
+          <td>-</td>
+          </j:if>
+          
+          <j:if test='${!pageDetailData.strAverageReq.equals("-1")}'>
+          <td tooltip='${pageDetailData.strAverageReq}'>${pageDetailData.strAverageReq}</td>
+          </j:if>
+          <j:if test='${pageDetailData.strAverageReq.equals("-1")}'>
+          <td>-</td>
+          </j:if>
+          
+          <j:if test='${!pageDetailData.strBrowserAverageReq.equals("-1")}'>
+          <td tooltip='${pageDetailData.strBrowserAverageReq}'>${pageDetailData.strBrowserAverageReq}</td>
+          </j:if>
+          <j:if test='${pageDetailData.strBrowserAverageReq.equals("-1")}'>
+          <td>-</td>
+          </j:if>
+          
+          <j:if test='${!pageDetailData.strAverageByteRec.equals("-1")}'>
+          <td tooltip='${pageDetailData.strAverageByteRec}'>${pageDetailData.strAverageByteRec}</td>
+          </j:if>
+          <j:if test='${pageDetailData.strAverageByteRec.equals("-1")}'>
+          <td>-</td>
+          </j:if>
+          
+          <j:if test='${!pageDetailData.strAverageByteSent.equals("-1")}'>
+          <td tooltip='${pageDetailData.strAverageByteSent}'>${pageDetailData.strAverageByteSent}</td>
+          </j:if>
+          <j:if test='${pageDetailData.strAverageByteSent.equals("-1")}'>
+          <td>-</td>
+          </j:if>
+          
+          <j:if test='${!pageDetailData.averageSpeedIndex.equals("-1")}'>
+          <td tooltip='${pageDetailData.averageSpeedIndex}'>${pageDetailData.averageSpeedIndex}</td>
+          </j:if>
+          <j:if test='${pageDetailData.averageSpeedIndex.equals("-1")}'>
+          <td>-</td>
+          </j:if>
+          
+          </tr>
+          </j:forEach>
+          
+        </tbody>
+     </table>  
+     </div>
+</j:if>
+
+
+
+
+
+
 		 
 	<j:if test='${testReport.transactionStats != null}'>  	 
          <div class="caption">Transaction Stats</div>
@@ -964,8 +1141,17 @@
                        <td class='td' style="background: #f3f7cc;">
                         <div style='width: 100%;'> 
                       
+                        <div class='col-md-6'>
+                        <div class='panel panel-blue panel-widget'>
+                        <div class='row no-padding'>
+                        <div class='col-lg-12 widget-left'>
+                        <i class='fa fa-3x fa-stack-exchange' aria-hidden='true'></i></div>
+                        <div class='col-lg-12 widget-right'>
+                        <div class='large'>Overall Fail Criteria</div>
+                        <div class='text-muted'>${testReportND.overAllFailCriteria}</div>
+                        </div></div></div></div>
 
-                        <div class='col-md-8'>
+                        <div class='col-md-6'>
                         <div class='panel panel-teal panel-widget'>
                         <div class='row no-padding'>
                         <div class='col-lg-12 widget-left'> 
@@ -975,7 +1161,7 @@
                         <div class='text-muted2'>${testReportND.date}</div>
                         </div></div></div></div>
 
-                        <div class='col-md-8'>
+                        <div class='col-md-6'>
                         <div class='panel panel-red panel-widget' title="Open WebDashboard" style="cursor:pointer;" onclick="openDashboard('${testReportND.getDashboardURL()}')">
                         <div class='row no-padding'>
                         <div class='col-lg-12 widget-left'>
@@ -985,7 +1171,7 @@
                         <div class='text-muted' style="color:#0000ff;">${testReportND.getServerName()}</div>
                         </div></div></div></div>
 
-                        <div class='col-md-8'>
+                        <div class='col-md-6'>
                         <div class='panel panel-red panel-widget' title="Open HTML Report" style="cursor:pointer;" onclick="openHtmlReport('${testReportND.getReportLink()}')">
                         <div class='row no-padding'>
                         <div class='col-lg-12 widget-left'>
@@ -1118,7 +1304,8 @@
 
           </tr></thead><tbody>
           <j:forEach var="suit_metric" items="${testReportND.testMetrics}">
-                  
+                  <j:if test='${!suit_metric.displayName.equals(" ")}'>
+                  <j:if test='${!suit_metric.displayName.equals("")}'>
                  <j:if test='${suit_metric.newReport.equals("NewReport")}'>
                  <j:if test='${!suit_metric.headerName.equals("")}'>
                   <tr >
@@ -1210,6 +1397,8 @@
              <i title="Trend Graph" onclick="openTrend('${suit_metric.linkForTrend}')" class='fa fa-line-chart' aria-hidden='true'></i>&#160;
             <i title="Metric Graph" onclick="openMetric('${suit_metric.metricLink}')" class='fa fa-bar-chart' aria-hidden='true'></i> </td>
             </tr>
+            </j:if>
+            </j:if>
         </j:forEach></tbody>
      </table>
  </j:if>
@@ -1689,7 +1878,7 @@
      <div style="border: 1px solid black;">
         <table width = "100%" border="0" cellspacing="0" cellpadding="0">
            <tr style="background:#F0F0F0;border-width: 1px;border-style: solid;border-color: #999999;" >
-            <td><img src ="${rootURL}/plugin/cavisson/images/arrow_r.png" title="Show or Hide Transaction Report" style="margin-right:8px" onClick='showOrHideReport()' id = "showOrHideReportImgId"/><label style="font-weight:bold; font-size:14px">Transaction Report</label></td></tr><tr><td><div id="reportTableId" style="display:none; width:99%; margin-left:8px;">
+            <td><img src ="${rootURL}/plugin/cavisson-ns-nd-integration/images/arrow_r.png" title="Show or Hide Transaction Report" style="margin-right:8px" onClick='showOrHideReport()' id = "showOrHideReportImgId"/><label style="font-weight:bold; font-size:14px">Transaction Report</label></td></tr><tr><td><div id="reportTableId" style="display:none; width:99%; margin-left:8px;">
 
       <j:forEach var="metricData" items="${report.metricsList}">
         <h3>${metricData.metricPath} with interval: ${metricData.frequency} secs</h3>
@@ -1717,6 +1906,7 @@
      <j:if test='${!report.customHTMLReport.equals("NA")}'>
      <div>${report.customHTMLReport}</div>
      </j:if>
+     
     </l:main-panel>
   </l:layout>
 </j:jelly>

@@ -16,11 +16,10 @@ import hudson.tasks.Builder;
 import hudson.util.FormValidation;
 import hudson.util.ListBoxModel;
 
-import java.io.BufferedWriter;
-import java.io.File;
 import java.io.*;
-import java.io.FileWriter;
-import java.io.PrintStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -42,6 +41,7 @@ import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.bind.JavaScriptMethod;
 
 /**
  */
@@ -52,18 +52,29 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
     private final String scenario;
     private final String URLConnectionString;
     private final String username;
-    private static Secret password;
+    private final Secret password;
     private final String testMode ;
     private final String defaultTestMode = "true";
     private transient static final Logger logger = Logger.getLogger(NetStormBuilder.class.getName());
-    private final String baselineTR;
+    private final String baselineType;
+    private final String pollInterval;
     public static String testRunNumber = "-1";
-    private static final String fileName = "jenkins_check_rule_for_NS.txt"; 
+    public static String testCycleNumber = "";
+    private static final String fileName = "jenkins_check_rule_for_NS.txt";
+    private String protocol="";
+    private String repoIp="";
+    private String repoPort="";
+    private String repoPath="";
+    private String repoUsername="";
+    private String repoPassword="";
+    private String gitPull = "";
+
 
     @DataBoundConstructor
     public NetStormBuilder(String URLConnectionString, String username, String password, String project,
-            String subProject, String scenario, String testMode, String baselineTR) {
-       logger.log(Level.INFO, "inside a constructor..............");
+            String subProject, String scenario, String testMode, String baselineType, String pollInterval, String protocol,
+            String repoIp, String repoPort, String repoPath, String repoUsername, String repoPassword, String gitPull) {
+    	 logger.log(Level.INFO, "inside a constructor..............gitpull -"+gitPull);
         
         this.project = project;
         this.subProject = subProject;
@@ -72,7 +83,15 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
         this.username = username;
  	    this.password = StringUtils.isEmpty(password) ? null : Secret.fromString(password);
         this.testMode = testMode;
-        this.baselineTR = baselineTR;
+        this.baselineType = baselineType;
+        this.pollInterval = pollInterval;
+        this.protocol = protocol;
+        this.repoIp = repoIp;
+        this.repoPort = repoPort;
+        this.repoPath = repoPath;
+        this.repoUsername = repoUsername;
+        this.repoPassword = repoPassword;
+        this.gitPull = gitPull;
     }
 
     public String getProject() 
@@ -100,32 +119,81 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
     public String getUsername() {
         return username;
     }
+    
+    public Secret getPassword() {
+         return password;
+    }
    
     public String getTestMode() 
     {
       return testMode;
     }
     
-    public String getBaselineTR()
-    {
-      return baselineTR;
+   
+    
+    public String getBaselineType() {
+    
+      return baselineType;
     }
     
-  @Override
+    public String getPollInterval() {
+    	return pollInterval;
+    }
+    
+      
+  public String getProtocol() {
+		return protocol;
+	}
+
+	public String getRepoIp() {
+		return repoIp;
+	}
+
+	public String getRepoPort() {
+		return repoPort;
+	}
+
+	public String getRepoPath() {
+		return repoPath;
+	}
+
+	public String getRepoUsername() {
+		return repoUsername;
+	}
+
+	public String getRepoPassword() {
+		return repoPassword;
+	}
+
+	public String getGitPull() {
+		return gitPull;
+	}
+
+	public void setGitPull(String gitPull) {
+		this.gitPull = gitPull;
+	}
+
+@Override
   public void perform(Run<?, ?> run, FilePath fp, Launcher lnchr, TaskListener taskListener) throws InterruptedException, IOException {
    
    Boolean fileUpload = false;
 
    Map<String, String> envVarMap = run instanceof AbstractBuild ? ((AbstractBuild<?, ?>) run).getBuildVariables() : Collections.<String, String>emptyMap();
-   PrintStream logger = taskListener.getLogger();
-   NetStormConnectionManager netstormConnectionManger = new NetStormConnectionManager(URLConnectionString, username, password, project, subProject, scenario, testMode, baselineTR);      
+   PrintStream logg = taskListener.getLogger();
+   
+   logg.println("Calling NetstormConnectionManager constructor ..........");
+   
+   NetStormConnectionManager netstormConnectionManger = new NetStormConnectionManager(URLConnectionString, username, password, project, subProject, scenario, testMode, baselineType, pollInterval,gitPull);      
    StringBuffer errMsg = new StringBuffer();
+   
+   logg.println("Starting loop ............");
    
     @SuppressWarnings("rawtypes")
       Set keyset = envVarMap.keySet();
     
      String path = "";
      String jobName = "";
+     String automateScripts = "";
       for(Object key : keyset)
       {
         Object value = envVarMap.get(key);
@@ -179,9 +247,24 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
            }
            else if(envValue.startsWith("NS_AUTOSCRIPT"))
            {
+        	   logg.println("Inside Autoscript check .........."+envValue);
              String temp [] = envValue.split("_", 3);
-             if(temp.length > 2)
-                netstormConnectionManger.setAutoScript(temp[2]);
+             logg.println("temp length .........."+temp.length);
+             logg.println("auto sccript string ....."+automateScripts);
+             if(temp.length > 2){
+//                netstormConnectionManger.setAutoScript(temp[2]);
+            	 if(automateScripts.equals(""))
+            		 automateScripts = temp[2];
+            	 else
+            		 automateScripts = automateScripts + "," +temp[2];
+             }
+           }
+	   else if(envValue.startsWith("NS_RAMP_UP_DURATION")){
+        	   String temp [] = envValue.split("_");
+               if(temp.length > 4)
+                  netstormConnectionManger.setRampUpDuration(temp[4]);
+               logg.println("Ramp up duration .........."+temp[4]);
+               logg.println("getRampUpDuration ="+netstormConnectionManger.getRampUpDuration());
            }
            
            if(envValue.equalsIgnoreCase(fileName))
@@ -190,53 +273,68 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
            }
         }
       }
+      
+      netstormConnectionManger.setAutoScript(automateScripts);
+      logg.println("set auto script ="+netstormConnectionManger.getAutoScript());
      
       if(testMode == null)
       {
-        logger.println("Please verify configured buit step, test profile mode is not selected.");
+    	  logg.println("Please verify configured buit step, test profile mode is not selected.");
         run.setResult(Result.FAILURE);
         //return false;
       }
       
-      if(getTestMode().equals("N"))
-        logger.println("Starting test with scenario(" + project + "/" + subProject + "/" + scenario + ")");
-      else
-        logger.println("Starting test with test suite(" + project + "/" + subProject + "/" + scenario + ")");
       
-      logger.println("NetStorm URI: " + URLConnectionString );
+      if(scenario.equals("") || scenario == null || scenario.equals("---Select Scenarios ---")){
+    	  if(getTestMode().equals("N"))
+    		  logg.println("Please verify configured build step, scenario is not selected.");
+    	  else
+    		  logg.println("Please verify configured build step, Test Suite is not selected.");
+    	  run.setResult(Result.FAILURE);
+    	  return;
+      }
+      
+      if(getTestMode().equals("N"))
+    	  logg.println("Starting test with scenario(" + project + "/" + subProject + "/" + scenario + ")");
+      else
+    	  logg.println("Starting test with test suite(" + project + "/" + subProject + "/" + scenario + ")");
+      
+
+      logg.println("NetStorm URI: " + URLConnectionString );
       
       JSONObject json = null;
       
       if(fileUpload)
        {
-    	json = createJsonForFileUpload(fp, logger);
+    	json = createJsonForFileUpload(fp, logg);
     	 
        }
         
       netstormConnectionManger.setJkRule(json);
-      HashMap result = netstormConnectionManger.startNetstormTest(errMsg ,logger);
+      HashMap result = netstormConnectionManger.startNetstormTest(errMsg ,logg);
       
       boolean status = (Boolean )result.get("STATUS");
       
-      logger.println("Test Run Status - " + status);
+      logg.println("Test Run Status - " + status);
       
       if(result.get("TESTRUN") != null && !result.get("TESTRUN").toString().trim().equals(""))
       {
         try
         {
-          logger.println("Test Run  - " + result.get("TESTRUN"));
+        	logg.println("Test Run  - " + result.get("TESTRUN"));
           //run.set
           run.setDisplayName((String)result.get("TESTRUN"));
           
           /*set a test run number in static refrence*/
           testRunNumber = (String)result.get("TESTRUN");
-          
+          testCycleNumber = (String) result.get("TEST_CYCLE_NUMBER");         
+ 
           if(result.get("ENV_NAME") != null && !result.get("ENV_NAME").toString().trim().equals(""))
             run.setDescription((String)result.get("ENV_NAME")); 
          
           
           //To set the host and user name in a file for using in other publisher.
-          logger.println("path  - " + path);
+          logg.println("path  - " + path);
           File dir = new File(path.trim()+"/Property");
           if (!dir.exists()) {
               if (dir.mkdir()) {
@@ -283,6 +381,40 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
    
   }  
   
+public void getGitConfigurationFromNS(){
+	  try{
+		  System.out.println("In method getGitConfigurationFromNS ...");
+		  logger.log(Level.INFO, "In method getGitConfigurationFromNS ...");
+		  
+		  NetStormConnectionManager netstormConnectionManger = new NetStormConnectionManager(URLConnectionString, username, password, false);
+		  String res = netstormConnectionManger.getGitConfiguration();
+		  logger.log(Level.INFO, "getGitConfigurationFromNS res ..."+res);
+		  System.out.println("getGitConfigurationFromNS resss ..."+res);
+		  if(res == null||res.equals("")||res.equals("notConfigured")){
+			  logger.log(Level.INFO, "git is not configured ...");
+			  repoIp = "";
+			  repoPort = "";
+			  repoPath = "";
+			  repoUsername = "";
+			  repoPassword = "";
+			  protocol = "";
+		  }else{
+			  String[] resArr = res.split(" ");
+//			  gitlab.com 443 vikasverma4795/demo vikasverma4795 Cavisson1! true NA NA https false
+			  if(resArr.length>8){
+			  repoIp = resArr[0];
+			  repoPort = resArr[1];
+			  repoPath = resArr[2];
+			  repoUsername = resArr[3];
+			  repoPassword = resArr[4];
+			  protocol = resArr[8];
+			  }
+		  }
+	  }catch(Exception e){
+		  logger.log(Level.SEVERE, "Unknown exception in getGitConfigurationFromNS.", e);
+	  }
+}
+
   /*Method is used to create json for check rule*/
   public JSONObject createJsonForFileUpload(FilePath fp, PrintStream logger) {
 	  try {
@@ -322,7 +454,7 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
       * it makes a connection with the m/c and authenticate
       *
      */
-  public String  startTest() {
+  public String  startTest(NetStormConnectionManager netstormConnectionManger) {
       try {
           StringBuffer errBuf = new  StringBuffer();
           
@@ -330,8 +462,8 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
            FileOutputStream fout = new FileOutputStream(tempFile);
           PrintStream pout=new PrintStream(fout); 
           
-          NetStormConnectionManager netstormConnectionManger = new NetStormConnectionManager(URLConnectionString, username, password,
-          project, subProject, scenario, testMode, baselineTR);
+          //NetStormConnectionManager netstormConnectionManger = new NetStormConnectionManager(URLConnectionString, username, password,
+          //project, subProject, scenario, testMode, baselineType, pollInterval);
           
           HashMap result =   netstormConnectionManger.startNetstormTest(errBuf , pout);
           
@@ -340,8 +472,8 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
         {
           /*set a test run number in static refrence*/
           testRunNumber = (String)result.get("TESTRUN");
-          
-          return netstormConnectionManger.getResult();
+          testCycleNumber = (String) result.get("TEST_CYCLE_NUMBER");     
+          return result.toString();
         }
       
         return result.toString();
@@ -424,7 +556,6 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
          */
         public FormValidation doCheckPassword(@QueryParameter String password) {
         	
-        	Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
             return FieldValidator.validatePassword(password);
         }
         
@@ -434,7 +565,6 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
          * @return 
          */
         public FormValidation doCheckUsername(@QueryParameter final String username) {
-        	Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
             return FieldValidator.validateUsername(username);
         }
         
@@ -445,9 +575,41 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
          */
         public FormValidation doCheckURLConnectionString(@QueryParameter final String URLConnectionString)
         {
-        	Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
             return FieldValidator.validateURLConnectionString(URLConnectionString);
         }
+        
+        @JavaScriptMethod
+        public ArrayList<String> getPulledObjects(String value,String URLConnectionString,String username,String password,String project,String subProject,String testMode){
+        	try{
+        		logger.log(Level.INFO,"getPulledObjects args - value :"+value+",url -"+URLConnectionString+", project -"+project+", subProject -"+subProject+",testMode -"+testMode);
+        		ArrayList<String> res = new ArrayList<String>();
+        		
+        		StringBuffer errMsg = new StringBuffer();
+        		if(!URLConnectionString.equals("")&&!URLConnectionString.equals("NA")&&!URLConnectionString.equals(" ")&&URLConnectionString != null&&!password.equals("") && !password.equals("NA")&&!password.equals(" ") && password != null&&!username.equals("") && !username.equals("NA") && !username.equals(" ") && username != null){
+        			NetStormConnectionManager connection = new NetStormConnectionManager(URLConnectionString, username, Secret.fromString(password), false);
+        			if(value.equals("P")){
+        				logger.log(Level.INFO,"in P.......");
+        				res = connection.getProjectList(errMsg);
+        			}else if(value.equals("SP")){
+        				logger.log(Level.INFO,"in SP.......");
+        				res = connection.getSubProjectList(errMsg, project);
+        			}else if(value.equals("S")){
+        				logger.log(Level.INFO,"in S.......");
+        				res = connection.getScenarioList(errMsg, project, subProject, testMode);
+        			}
+            	}
+        		if(res!=null && res.size()>0){
+        			for(int i=0;i<res.size();i++){
+        				logger.log(Level.INFO, "res items -"+res.get(i));
+        			}
+        		}
+        		
+        		return res;
+        	}catch(Exception e){
+      		logger.log(Level.SEVERE,"Exception in getPulledObjects -"+e);
+      		return null;
+      	}
+      }
         
         /**
          * 
@@ -478,6 +640,80 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
         //{
         //    return FieldValidator.validateScenario(scenario);
         //}
+        
+        /**
+         * 
+         * @param gitPull
+         * @return 
+         */
+//        public FormValidation doCheckGitPull(@QueryParameter("URLConnectionString") final String URLConnectionString, @QueryParameter("username") final String username, @QueryParameter("password") String password,@QueryParameter String gitPull,@QueryParameter String project,@QueryParameter final String subProject,@QueryParameter final String testMode)
+//        {
+//        	logger.log(Level.INFO, "gitPull in doCheckGitPull -"+gitPull);
+//        	FormValidation validationResult;
+//        	
+//        	if(URLConnectionString.equals("")||URLConnectionString.equals("NA")||URLConnectionString.equals(" ")||URLConnectionString == null || password.equals("") || password.equals("NA") || password.equals(" ") || password == null||username.equals("") || username.equals("NA") || username.equals(" ") || username == null){
+//        		validationResult = FormValidation.warning("Specify Netstorm URL Connection, Username and Password");
+//        		return validationResult;
+//        	}
+//        	
+//        	if(gitPull.equals("true")){
+//            NetStormConnectionManager netstormConnectionManger = new NetStormConnectionManager(URLConnectionString, username, Secret.fromString(password), false);
+//            JSONObject res = netstormConnectionManger.pullObjectsFromGit();
+//            logger.log(Level.INFO, "project before ..."+project);
+//            if(res != null && !res.isEmpty()){
+//            	if(!res.get("ErrMsg").toString().equals("")){
+//            		logger.log(Level.INFO, "In first check ...");
+//            		validationResult = FormValidation.warning(res.get("ErrMsg").toString());
+//            	}else{
+//            		logger.log(Level.INFO, "In second check ...");
+//            		validationResult = FormValidation.ok(res.get("msg").toString());
+//            	}
+//            }else{
+//            	validationResult = FormValidation.warning("GIT Pull was unsuccessful.");
+//            }
+//            
+//        	}else{
+//        		validationResult = FormValidation.ok(" ");
+//        	}
+//            
+//        	return validationResult;
+//        }
+        
+        @JavaScriptMethod
+        public JSONObject performGitpull(String URLConnectionString,String username,String password,String gitPull,String project,String subProject,String testMode)
+        {
+        	logger.log(Level.INFO, "performGitpull called -");
+        	JSONObject status = new JSONObject();
+        	
+        	if(URLConnectionString.equals("")||URLConnectionString.equals("NA")||URLConnectionString.equals(" ")||URLConnectionString == null || password.equals("") || password.equals("NA") || password.equals(" ") || password == null||username.equals("") || username.equals("NA") || username.equals(" ") || username == null){
+        		String temp = "Specify Netstorm URL Connection, Username and Password";
+        		status.put("msg", temp);
+        		status.put("color", "#CC0000");
+        		return status;
+        	}
+        	
+            NetStormConnectionManager netstormConnectionManger = new NetStormConnectionManager(URLConnectionString, username, Secret.fromString(password), false);
+            JSONObject res = netstormConnectionManger.pullObjectsFromGit();
+            logger.log(Level.INFO, "performGitpull: project before ..."+project);
+            if(res != null && !res.isEmpty()){
+            	if(!res.get("ErrMsg").toString().equals("")){
+            		logger.log(Level.INFO, "performGitpull: In first check ...");
+            		String tmp = res.get("ErrMsg").toString();
+            		status.put("msg", tmp);
+            		status.put("color", "#C4A000");
+            	}else{
+            		logger.log(Level.INFO, "performGitpull: In second check ...");
+            		String tm = res.get("msg").toString();
+            		status.put("msg", tm);
+            		status.put("color", "#159537");
+            	}
+            }else{
+            	status.put("msg", "GIT Pull was unsuccessful.");
+            	status.put("color", "#C4A000");
+            }
+            
+        	return status;
+        }
 
         /**
          *
@@ -488,12 +724,11 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
          */
         public FormValidation doTestNetstormConnection(@QueryParameter("URLConnectionString") final String URLConnectionString, @QueryParameter("username") final String username, @QueryParameter("password") String password) {
 
-        	Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
+        	
             FormValidation validationResult;
             
-            NetStormBuilder.password = Secret.fromString(password);
             
-            NetStormConnectionManager netstormConnectionManger = new NetStormConnectionManager(URLConnectionString, username, NetStormBuilder.password);
+            NetStormConnectionManager netstormConnectionManger = new NetStormConnectionManager(URLConnectionString, username, Secret.fromString(password), false);
             
             StringBuffer errMsg = new StringBuffer();
             
@@ -504,13 +739,127 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
                        
             return validationResult;
         }
+        
+        public FormValidation doPullObjectsFromGit(@QueryParameter("URLConnectionString") final String URLConnectionString, @QueryParameter("username") final String username, @QueryParameter("password") String password) {
+
+        	
+            FormValidation validationResult;
+            StringBuffer errMsg = new StringBuffer();
+                        
+            NetStormConnectionManager netstormConnectionManger = new NetStormConnectionManager(URLConnectionString, username, Secret.fromString(password), false);
+            JSONObject res = netstormConnectionManger.pullObjectsFromGit();
+            logger.log(Level.INFO, "res in doPullObjectsFromGit -"+res);
+            if(res != null && !res.isEmpty()){
+            	if(!res.get("ErrMsg").toString().equals("")){
+            		logger.log(Level.INFO, "In first check ...");
+            		validationResult = FormValidation.warning(res.get("ErrMsg").toString());
+            	}else{
+            		logger.log(Level.INFO, "In second check ...");
+            		validationResult = FormValidation.ok(res.get("msg").toString());
+            	}
+            }else{
+            	validationResult = FormValidation.warning("GIT Pull was unsuccessful.");
+            }
+            doFillProjectItems(URLConnectionString,username,password);
+//            ArrayList<String> projectList = netstormConnectionManger.getProjectList(errMsg);
+            return validationResult;
+        }
+        
+        public FormValidation doTestGitConfiguration(@QueryParameter("protocol") String protocol,@QueryParameter("repoIp") String repoIp,@QueryParameter("repoPort") String repoPort, @QueryParameter("repoPath") String repoPath,@QueryParameter("repoUsername") String repoUserName, @QueryParameter("repoPassword") String repoPassword,@QueryParameter("username") String username,@QueryParameter("password") String password,@QueryParameter("URLConnectionString") String URLConnectionString) {
+        	FormValidation validationResult;
+        	
+        	
+        	if(URLConnectionString.equals("")||URLConnectionString.equals("NA")||URLConnectionString.equals(" ")||URLConnectionString == null || password.equals("") || password.equals("NA") || password.equals(" ") || password == null||username.equals("") || username.equals("NA") || username.equals(" ") || username == null){
+        		validationResult = FormValidation.warning("Specify Netstorm URL Connection, Username and Password first ...");
+        		return validationResult;
+        	}
+        	else if(protocol.equals("") || protocol.equals("NA") || protocol.equals(" ") || protocol == null){
+        		validationResult = FormValidation.warning("Protocol can not be empty");
+        		return validationResult;
+        	}
+        	else if(repoIp.equals("")||repoIp.equals("NA")||repoIp.equals(" ")||repoIp == null){
+        		validationResult = FormValidation.warning("Repository IP can not be empty");
+        		return validationResult;
+        	}
+        	else if(repoPort.equals("")||repoPort.equals("NA")||repoPort.equals(" ")||repoPort == null){
+        		validationResult = FormValidation.warning("Repository Port can not be empty");
+        		return validationResult;
+        	}
+        	else if(repoPath.equals("")||repoPath.equals("NA")||repoPath.equals(" ")||repoPath == null){
+        		validationResult = FormValidation.warning("Repository Path can not be empty");
+        		return validationResult;
+        	}
+        	else if(repoUserName.equals("")||repoUserName.equals("NA")||repoUserName.equals(" ")||repoUserName == null){
+        		validationResult = FormValidation.warning("Repository username can not be empty");
+        		return validationResult;
+        	}
+        	else if(repoPassword.equals("")||repoPassword.equals("NA")||repoPassword.equals(" ")||repoPassword == null){
+        		validationResult = FormValidation.warning("Repository password can not be empty");
+        		return validationResult;
+        	}
+        	
+        	NetStormConnectionManager netstormConnectionManger = new NetStormConnectionManager(URLConnectionString, username, Secret.fromString(password), false);
+        	JSONObject res = netstormConnectionManger.checkGitConfiguration(protocol.toLowerCase(),repoIp,repoPort,repoPath,repoUserName,repoPassword,"NA");
+        	if(res != null && !res.isEmpty()){
+        		if(res.get("errMsg").toString().equals("")){
+        			validationResult = FormValidation.ok(res.get("msg").toString());
+        		}else if(!res.get("errMsg").toString().equals("")){
+        			validationResult = FormValidation.warning(res.get("errMsg").toString());
+        		}else{
+        			validationResult = FormValidation.warning("GIT configuration test failed.");
+        		}
+        	}else{
+        		validationResult = FormValidation.warning("GIT configuration test failed.");
+        	}
+        	return validationResult;
+        }
+        
+        public FormValidation doSaveGitConfiguration(@QueryParameter("protocol") String protocol,@QueryParameter("repoIp") String repoIp,@QueryParameter("repoPort") String repoPort, @QueryParameter("repoPath") String repoPath,@QueryParameter("repoUsername") String repoUserName, @QueryParameter("repoPassword") String repoPassword,@QueryParameter("username") String username,@QueryParameter("password") String password,@QueryParameter("URLConnectionString") String URLConnectionString) {
+        	FormValidation validationResult;
+        	
+        	if(URLConnectionString.equals("")||URLConnectionString.equals("NA")||URLConnectionString.equals(" ")||URLConnectionString == null || password.equals("") || password.equals("NA") || password.equals(" ") || password == null||username.equals("") || username.equals("NA") || username.equals(" ") || username == null){
+        		validationResult = FormValidation.warning("Specify Netstorm URL Connection, Username and Password first ...");
+        		return validationResult;
+        	}
+        	else if(protocol.equals("") || protocol.equals("NA") || protocol.equals(" ") || protocol == null){
+        		validationResult = FormValidation.warning("Protocol can not be empty");
+        		return validationResult;
+        	}
+        	else if(repoIp.equals("")||repoIp.equals("NA")||repoIp.equals(" ")||repoIp == null){
+        		validationResult = FormValidation.warning("Repository IP can not be empty");
+        		return validationResult;
+        	}
+        	else if(repoPort.equals("")||repoPort.equals("NA")||repoPort.equals(" ")||repoPort == null){
+        		validationResult = FormValidation.warning("Repository Port can not be empty");
+        		return validationResult;
+        	}
+        	else if(repoPath.equals("")||repoPath.equals("NA")||repoPath.equals(" ")||repoPath == null){
+        		validationResult = FormValidation.warning("Repository Path can not be empty");
+        		return validationResult;
+        	}
+        	else if(repoUserName.equals("")||repoUserName.equals("NA")||repoUserName.equals(" ")||repoUserName == null){
+        		validationResult = FormValidation.warning("Repository username can not be empty");
+        		return validationResult;
+        	}
+        	else if(repoPassword.equals("")||repoPassword.equals("NA")||repoPassword.equals(" ")||repoPassword == null){
+        		validationResult = FormValidation.warning("Repository password can not be empty");
+        		return validationResult;
+        	}
+        	
+        	NetStormConnectionManager netstormConnectionManger = new NetStormConnectionManager(URLConnectionString, username, Secret.fromString(password), false);
+        	String res = netstormConnectionManger.saveGitConfiguration(protocol.toLowerCase(), repoIp, repoPort, repoPath, repoUserName, repoPassword, "NA");
+        	logger.log(Level.INFO, "res.............."+res);
+        	validationResult=FormValidation.ok(res);
+        	
+        	return validationResult;
+        }
            
         public synchronized ListBoxModel doFillProjectItems(@QueryParameter("URLConnectionString") final String URLConnectionString, @QueryParameter("username") final String username, @QueryParameter("password") String password)
         {
-        	Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
+        	
           ListBoxModel models = new ListBoxModel();
           StringBuffer errMsg = new StringBuffer();
-          Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
+          
           //IF creadentials are null or blank
           if(URLConnectionString == null || URLConnectionString.trim().equals("") || username == null || username.trim().equals("") || password == null || password.trim().equals(""))
           {
@@ -519,8 +868,7 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
           }  
           
           //Making connection server to get project list
-          NetStormBuilder.password = Secret.fromString(password);
-          NetStormConnectionManager objProject = new NetStormConnectionManager(URLConnectionString, username, NetStormBuilder.password);
+          NetStormConnectionManager objProject = new NetStormConnectionManager(URLConnectionString, username, Secret.fromString(password), false);
          
           ArrayList<String> projectList = objProject.getProjectList(errMsg);
           
@@ -536,12 +884,26 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
           
           return models;
         }
+        
+        
+        // for baseline dropdown...
+        public synchronized ListBoxModel doFillBaselineTypeItems()
+        {
+        	ListBoxModel models = new ListBoxModel();
+            models.add("Select Baseline");
+            models.add("All");
+            models.add("Baseline1");
+            models.add("Baseline2");
+            models.add("Baseline3");
+            
+            return models;
+        }
        
         public synchronized ListBoxModel doFillSubProjectItems(@QueryParameter("URLConnectionString") final String URLConnectionString, @QueryParameter("username") final String username, @QueryParameter("password") String password, @QueryParameter("project") final String project )
         {
-        	Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
+        	
           ListBoxModel models = new ListBoxModel();
-          Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
+          
           if(URLConnectionString == null || URLConnectionString.trim().equals("") || username == null || username.trim().equals("") || password == null || password.trim().equals("") || project == null || project.trim().equals(""))
           {
             models.add("---Select SubProject ---");   
@@ -554,8 +916,7 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
             return models;
           } 
           
-          NetStormBuilder.password = Secret.fromString(password);
-          NetStormConnectionManager connection = new NetStormConnectionManager(URLConnectionString, username, NetStormBuilder.password);
+          NetStormConnectionManager connection = new NetStormConnectionManager(URLConnectionString, username, Secret.fromString(password), false);
           StringBuffer errMsg = new StringBuffer();
           ArrayList<String> subProjectList = connection.getSubProjectList(errMsg, project);
           
@@ -575,9 +936,9 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
         
         public synchronized ListBoxModel doFillScenarioItems(@QueryParameter("URLConnectionString") final String URLConnectionString, @QueryParameter("username") final String username, @QueryParameter("password") String password, @QueryParameter("project") final String project, @QueryParameter("subProject") final String subProject , @QueryParameter("testMode") final String testMode )
         {
-        	Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);        	
+        	        	
           ListBoxModel models = new ListBoxModel();
-          Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
+         
           if(URLConnectionString == null || URLConnectionString.trim().equals("") || username == null || username.trim().equals("") || password == null || password.trim().equals("") || project == null || project.trim().equals("") || subProject == null || subProject.trim().equals(""))
           {
             models.add("---Select Profile ---");   
@@ -590,8 +951,7 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
             return models;
           } 
           
-          NetStormBuilder.password = Secret.fromString(password);
-          NetStormConnectionManager connection = new NetStormConnectionManager(URLConnectionString, username, NetStormBuilder.password);
+          NetStormConnectionManager connection = new NetStormConnectionManager(URLConnectionString, username, Secret.fromString(password), false);
           StringBuffer errMsg = new StringBuffer();
           ArrayList<String> scenariosList = connection.getScenarioList(errMsg, project, subProject, testMode);
           
@@ -611,7 +971,7 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
         
         public ListBoxModel doFillTestModeItems()
         {
-	   Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
+	   
            ListBoxModel model = new ListBoxModel();
            model.add("Scenario", "N");
            model.add("Test Suite" , "T");

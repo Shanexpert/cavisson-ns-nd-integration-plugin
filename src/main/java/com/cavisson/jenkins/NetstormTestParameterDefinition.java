@@ -18,6 +18,8 @@ import net.sf.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
+import java.time.format.DateTimeFormatter;
+import java.time.LocalTime;
 
 public class NetstormTestParameterDefinition extends ParameterDefinition {
 
@@ -99,6 +101,19 @@ public class NetstormTestParameterDefinition extends ParameterDefinition {
                     return FormValidation.error("SLA value should be numeric");
                  }
               }
+
+	      if(keyword.equals("NS_RAMP_UP_DURATION")){
+            	  try{
+            		  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+            	        try{
+            	        LocalTime time = LocalTime.parse(value, formatter);
+            	        }catch(Exception e){
+            	        	 return FormValidation.error("Ramp up duration should be in HH:mm:ss format");
+            	        }
+            	  }catch(Exception e){
+            		  
+            	  }
+              }
             }
             
             
@@ -122,6 +137,7 @@ public class NetstormTestParameterDefinition extends ParameterDefinition {
            model.add("SLA" , "NS_SLA_CHANGE");
            model.add("Test Name" , "NS_TNAME");
            model.add("Automate Script Path" , "NS_AUTOSCRIPT");
+	   model.add("Ramp up duration" , "NS_RAMP_UP_DURATION");
            
            return model;
         }

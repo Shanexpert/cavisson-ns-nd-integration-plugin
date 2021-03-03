@@ -29,9 +29,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.util.Collections;
@@ -48,6 +51,7 @@ import com.cavisson.jenkins.NdConnectionManager;
 import com.cavisson.jenkins.NetDiagnosticsParamtersForReport;
 
 import jenkins.model.*;
+import com.cavisson.jenkins.FieldValidator;
 
 import org.apache.commons.lang.StringUtils;
 import hudson.util.Secret;
@@ -58,12 +62,12 @@ public class NetDiagnosticsResultsPublisher extends Recorder implements SimpleBu
   private static final String DEFAULT_USERNAME = "netstorm";// Default user name for NetStorm
   private static final String DEFAULT_TEST_METRIC = "Average Transaction Response Time (Secs)";// Dafault Test Metric  
   private static final String fileName = "jenkins_check_rule";
-  private transient static final Logger logg = Logger.getLogger(NetDiagnosticsResultsPublisher.class.getName());
+  private static PrintStream logger;
 
     @Override
     public void perform(Run<?, ?> run, FilePath fp, Launcher lnchr, TaskListener listener) throws InterruptedException, IOException {
        Map<String, String> env = run instanceof AbstractBuild ? ((AbstractBuild<?,?>) run).getBuildVariables() : Collections.<String, String>emptyMap();    
-     PrintStream logger = listener.getLogger();
+       logger = listener.getLogger();
    StringBuffer errMsg = new StringBuffer();
    
    
@@ -157,17 +161,17 @@ public class NetDiagnosticsResultsPublisher extends Recorder implements SimpleBu
     }
    
    //Getting initial duration values
-   if(getInitDurationValues() != null)
-   {
-     String duration = getInitDurationValues();
-     String values[] = duration.split("@");
-	   
-     ndParams.setInitStartTime(values[0]);
-     ndParams.setInitEndTime(values[1]);
-   }
+//   if(getInitDurationValues() != null)
+//   {
+//     String duration = getInitDurationValues();
+//     String values[] = duration.split("@");
+//	   
+//     ndParams.setInitStartTime(values[0]);
+//     ndParams.setInitEndTime(values[1]);
+//   }
      
    
-   ndParams.setPrevDuration(getPrevDuration());
+   //ndParams.setPrevDuration(getPrevDuration());
    
    NdConnectionManager connection = new NdConnectionManager(netdiagnosticsUri, username, password, ndParams, true);
    connection.setCurStart(curStartTime);
@@ -211,7 +215,6 @@ public class NetDiagnosticsResultsPublisher extends Recorder implements SimpleBu
         
 	    
       } catch(Exception ex){
-    	  logg.log(Level.SEVERE, "Unknown exception. IOException -", ex);
     }
 
    NetStormDataCollector dataCollector = new NetStormDataCollector(connection, run , 50000, "T", true, duration);
@@ -219,27 +222,29 @@ public class NetDiagnosticsResultsPublisher extends Recorder implements SimpleBu
    
    try
    {
-     NetStormReport report = dataCollector.createReportFromMeasurements();
-     boolean pdfUpload = dumpPdfInWorkspace(fp, connection);
+    // NetStormReport report = dataCollector.createReportFromMeasurements(logger);
+	   NetStormReport report  = null;
+	   boolean pdfUpload = dumpPdfInWorkspace(fp, connection);
+	   boolean htmlReport = getHTMLReport(fp, connection);
      logger.println("Pdf Uploaded" + pdfUpload);
      
-     NetStormBuildAction buildAction = new NetStormBuildAction(run, report, true);
+  //   NetStormBuildAction buildAction = new NetStormBuildAction(run, report, true);
      
-    run.addAction(buildAction);
+   // run.addAction(buildAction);
    
      //change status of build depending upon the status of report.
-     TestReport tstRpt =  report.getTestReport();
-      if(tstRpt.getOverAllStatus().equals("FAIL"))
-        run.setResult(Result.FAILURE);
-
-     logger.println("Ready building NetDiagnostics report");
-     List<NetStormReport> previousReportList = getListOfPreviousReports(run, report.getTimestamp());
-     
-     double averageOverTime = calculateAverageBasedOnPreviousReports(previousReportList);
-     logger.println("Calculated average from previous reports: " + averageOverTime);
-
-     double currentReportAverage = report.getAverageForMetric(DEFAULT_TEST_METRIC);
-     logger.println("Metric: " + DEFAULT_TEST_METRIC + "% . Build status is: " + ((Run<?,?>) run).getResult());
+//     TestReport tstRpt =  report.getTestReport();
+//      if(tstRpt.getOverAllStatus().equals("FAIL"))
+//        run.setResult(Result.FAILURE);
+//
+//     logger.println("Ready building NetDiagnostics report");
+//     List<NetStormReport> previousReportList = getListOfPreviousReports(run, report.getTimestamp());
+//     
+//     double averageOverTime = calculateAverageBasedOnPreviousReports(previousReportList);
+//     logger.println("Calculated average from previous reports: " + averageOverTime);
+//
+//     double currentReportAverage = report.getAverageForMetric(DEFAULT_TEST_METRIC);
+//     logger.println("Metric: " + DEFAULT_TEST_METRIC + "% . Build status is: " + ((Run<?,?>) run).getResult());
    }
    catch(Exception e)
    {
@@ -251,6 +256,105 @@ public class NetDiagnosticsResultsPublisher extends Recorder implements SimpleBu
    return ;
                
  }
+    
+    private boolean getHTMLReport(FilePath fp, NdConnectionManager connection) {
+   	 
+  	  /*getting testrun number*/
+  	  String testRun = NetStormBuilder.testRunNumber;
+  	  /*path of directory i.e. /var/lib/jenkins/workspace/jobName*/
+  	  String zipFile = fp + "/TestSuiteReport.zip";
+  	 // logger.log(Level.INFO, "Pdf directory"+zipFile);
+  	 
+  	  File file = new File(zipFile);
+//  	  if(file.exists()) {
+//  		  file.delete();
+//  	  }
+  	  
+  	  try {
+  		  URL urlForHTMLReport;
+  		  String str =   connection.getUrlString();
+  		  urlForHTMLReport = new URL(str+"/ProductUI/productSummary/jenkinsService/getHTMLReport");
+  		//  logger.log(Level.INFO, "urlForPdf-"+urlForHTMLReport);
+
+  		  HttpURLConnection connect = (HttpURLConnection) urlForHTMLReport.openConnection();
+  		  connect.setConnectTimeout(0);
+  		  connect.setReadTimeout(0);
+  		  connect.setRequestMethod("POST");
+  		  connect.setRequestProperty("Content-Type", "application/octet-stream");
+
+  		  connect.setDoOutput(true);
+  		  java.io.OutputStream outStream = connect.getOutputStream();
+  		  outStream.write(testRun.getBytes());
+  		  outStream.flush();
+
+  		  if (connect.getResponseCode() == 200) {
+  			 // logger.log(Level.INFO, "response 200 OK");   
+  			  byte[] mybytearray = new byte[1024];
+  			  InputStream is = connect.getInputStream();
+  			  FileOutputStream fos = new FileOutputStream(file);
+  			  BufferedOutputStream bos = new BufferedOutputStream(fos);
+  			  int bytesRead;
+  			  while((bytesRead = is.read(mybytearray)) > 0){
+  			//	logger.log(Level.INFO, "bytesRead inside while check"+ bytesRead);
+  				bos.write(mybytearray, 0, bytesRead);
+  			  }
+  			  bos.close();
+  			  is.close();
+  		  } else {
+  			  //logger.log(Level.INFO, "ErrorCode-"+ connect.getResponseCode());
+  			  //logger.log(Level.INFO, "content type-" + connect.getContentType());
+  		  }
+  		  
+  		  String destDir = fp + "/TestSuiteReport";
+  		  
+  		  File dir = new File(destDir);
+		  if(dir.exists())
+			  dir.delete();
+          unzip(zipFile, destDir);
+  		  return true;
+  	  } catch (Exception e){
+  		  e.printStackTrace();
+  		  return false;
+  	  }
+  	  
+    }
+    
+    private static void unzip(String zipFilePath, String destDir) {
+	    File dir = new File(destDir);
+	    // create output directory if it doesn't exist
+	    if(!dir.exists()) dir.mkdirs();
+	    FileInputStream fis;
+	    //buffer for read and write data to file
+	    byte[] buffer = new byte[1024];
+	    try {
+	        fis = new FileInputStream(zipFilePath);
+	        ZipInputStream zis = new ZipInputStream(fis);
+	        ZipEntry ze = zis.getNextEntry();
+	        while(ze != null){
+	            String fileName = ze.getName();
+	            File newFile = new File(destDir + File.separator + fileName);
+	            System.out.println("Unzipping to "+newFile.getAbsolutePath());
+	            //create directories for sub directories in zip
+	            new File(newFile.getParent()).mkdirs();
+	            FileOutputStream fos = new FileOutputStream(newFile);
+	            int len;
+	            while ((len = zis.read(buffer)) > 0) {
+	            fos.write(buffer, 0, len);
+	            }
+	            fos.close();
+	            //close this ZipEntry
+	            zis.closeEntry();
+	            ze = zis.getNextEntry();
+	        }
+	        //close last ZipEntry
+	        zis.closeEntry();
+	        zis.close();
+	        fis.close();
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	    
+	}
     
     /*Method to dump pdf file in workspace*/
     private boolean dumpPdfInWorkspace(FilePath fp, NdConnectionManager connection) {
@@ -295,7 +399,6 @@ public class NetDiagnosticsResultsPublisher extends Recorder implements SimpleBu
   		  }
   		  return true;
   	  } catch (Exception e){
-  		logg.log(Level.SEVERE, "Unknown exception. IOException -", e);
   		  return false;
   	  }
 
@@ -333,54 +436,45 @@ public class NetDiagnosticsResultsPublisher extends Recorder implements SimpleBu
  }
  public FormValidation doCheckNetdiagnosticsUri(@QueryParameter final String netdiagnosticsUri)
  {
-   Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
    return  FieldValidator.validateURLConnectionString(netdiagnosticsUri);
  }
  
  public FormValidation doCheckPassword(@QueryParameter String password)
  {
-	   Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
    return  FieldValidator.validatePassword(password);
  }
  
  public FormValidation doCheckUsername(@QueryParameter final String username)
  {
-	 Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
    return  FieldValidator.validateUsername(username);
  }
  
  public FormValidation doCheckWarThreshold(@QueryParameter final String warThreshold) {
-	 Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
    return FieldValidator.validateThresholdValues(warThreshold);
 } 
  
  public FormValidation doCheckCriThreshold(@QueryParameter final String criThreshold) {
-	 Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
    return FieldValidator.validateThresholdValues(criThreshold);
 } 
   
  
  public FormValidation doCheckFailThreshold(@QueryParameter final String failThreshold) {
-	 Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
    return FieldValidator.validateThresholdValues(failThreshold);
 } 
  
  public FormValidation doCheckBaseStartTime(@QueryParameter final String baseStartTime) throws ParseException {
-	 Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
    return FieldValidator.validateDateTime(baseStartTime);
 } 
  
  public FormValidation doCheckBaseEndTime(@QueryParameter final String baseEndTime) throws ParseException {
-	 Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
    return FieldValidator.validateDateTime(baseEndTime);
 }  
  
  /*
  Need to test connection on given credientials
  */
-public FormValidation doTestNetDiagnosticsConnection(@QueryParameter("netdiagnosticsUri") final String netdiagnosticRestUri, @QueryParameter("username") final String username, @QueryParameter("password") String password ) 
+public FormValidation doTestNetDiagnosticsConnection(@QueryParameter("netdiagnosticsUri") final String netdiagnosticRestUri, @QueryParameter("username") final String username, @QueryParameter("password") String password, @QueryParameter("curStartTime") final String curStartTime,@QueryParameter("curEndTime") final String curEndTime,@QueryParameter("baseStartTime") final String baseStartTime,@QueryParameter("baseEndTime") final String baseEndTime,@QueryParameter("criThreshold") final String criThreshold,@QueryParameter("warThreshold") final String warThreshold,@QueryParameter("failThreshold") final String failThreshold,@QueryParameter("initDuration") final Boolean initDuration,@QueryParameter("initStartTime") final String initStartTime,@QueryParameter("initEndTime") final String initEndTime) 
 {
-  Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
    
   FormValidation validationResult;
   
@@ -405,9 +499,35 @@ public FormValidation doTestNetDiagnosticsConnection(@QueryParameter("netdiagnos
     return validationResult = FormValidation.error("Please enter password.");
   }
   
-  NetDiagnosticsResultsPublisher.password = Secret.fromString(password);
+  /*validations*/
+  if(FieldValidator.isEmptyField(criThreshold)) {
+		return validationResult = FormValidation.error("Critical threshold can not be empty.");
+  }
+  if(FieldValidator.isEmptyField(warThreshold)) {
+	return validationResult = FormValidation.error("Warning threshold can not be empty.");
+  }
+  if(FieldValidator.isEmptyField(failThreshold)) {
+		return validationResult = FormValidation.error("Overall Fail Criteria can not be empty.");
+  }
+
+  if(FieldValidator.isEmptyField(curStartTime) || FieldValidator.isEmptyField(curEndTime)) {
+	  return validationResult = FormValidation.error("Current Time Period can not be empty.");
+  }
+  if(!FieldValidator.isEmptyField(baseStartTime) || !FieldValidator.isEmptyField(baseEndTime)) {
+	   if(FieldValidator.isEmptyField(baseStartTime)) {
+		   return validationResult = FormValidation.error("Baseline Time Period can not be empty.");
+	   }else if(FieldValidator.isEmptyField(baseEndTime)) {
+		   return validationResult = FormValidation.error("Baseline Time Period can not be empty.");
+	   }
+  }
+  if(initDuration == true) {
+	  if(FieldValidator.isEmptyField(initStartTime) || FieldValidator.isEmptyField(initEndTime)) {
+		  return validationResult = FormValidation.error("Initial Time Period can not be empty.");
+	  }
+  }
   
-  NdConnectionManager connection = new NdConnectionManager(netdiagnosticRestUri, username, NetDiagnosticsResultsPublisher.password, true);
+  
+  NdConnectionManager connection = new NdConnectionManager(netdiagnosticRestUri, username, Secret.fromString(password), true);
   
   String check = netdiagnosticRestUri + "@@" + username +"@@" + password;
   if (!connection.testNDConnection(errMsg, check)) 
@@ -436,16 +556,21 @@ public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
  
  private String netdiagnosticsUri = "";
  private String username = "";
- private static Secret password;
- private JSONObject prevDuration = new JSONObject();
- private JSONObject initDuration = new JSONObject();
+ private Secret password;
+ //private JSONObject prevDuration = new JSONObject();
+ //private JSONObject initDuration = new JSONObject();
  private  String curStartTime;
  private String curEndTime;
- private String baseStartTime;
- private String baseEndTime;
+ private String base1StartTime;
+ private String base1EndTime;
  private  String checkProfilePath;
- private String initStartTime;
- private String initEndTime;
+ private String base2StartTime;
+ private String base2EndTime;
+ private String base3StartTime;
+ private String base3EndTime;
+ private String base1MSRName;
+ private String base2MSRName;
+ private String base3MSRName;
  private String criThreshold;
  private String warThreshold;
  private String failThreshold;
@@ -476,22 +601,6 @@ public void setFailThreshold(String failThreshold) {
 	this.failThreshold = failThreshold;
 }
 
-public String getInitStartTime() {
-	return initStartTime;
-}
-
-public void setInitStartTime(String initStartTime) {
-	this.initStartTime = initStartTime;
-}
-
-public String getInitEndTime() {
-	return initEndTime;
-}
-
-public void setInitEndTime(String initEndTime) {
-	this.initEndTime = initEndTime;
-}
-
 public String getCurStartTime() {
 	return curStartTime;
 }
@@ -506,22 +615,6 @@ public String getCurEndTime() {
 
 public void setCurEndTime(String curEndTime) {
 	this.curEndTime = curEndTime;
-}
-
-public String getBaseStartTime() {
-	return baseStartTime;
-}
-
-public void setBaseStartTime(String baseStartTime) {
-	this.baseStartTime = baseStartTime;
-}
-
-public String getBaseEndTime() {
-	return baseEndTime;
-}
-
-public void setBaseEndTime(String baseEndTime) {
-	this.baseEndTime = baseEndTime;
 }
 
 public String getCheckProfilePath() {
@@ -548,34 +641,117 @@ public void setUsername(String username) {
 	this.username = username;
 }
 
+public Secret getPassword() {
+	return password;
+}
+
 public void setPassword(String password) {
 	this.password = StringUtils.isEmpty(password) ? null : Secret.fromString(password);
 }
 
-
-public boolean getPrevDuration()
-{
-  if(this.prevDuration != null)
-    return true;
-  else
-    return false;
+public String getBase1StartTime() {
+	return base1StartTime;
 }
+
+public void setBase1StartTime(String base1StartTime) {
+	this.base1StartTime = base1StartTime;
+}
+
+public String getBase1EndTime() {
+	return base1EndTime;
+}
+
+public void setBase1EndTime(String base1EndTime) {
+	this.base1EndTime = base1EndTime;
+}
+
+public String getBase2StartTime() {
+	return base2StartTime;
+}
+
+public void setBase2StartTime(String base2StartTime) {
+	this.base2StartTime = base2StartTime;
+}
+
+public String getBase2EndTime() {
+	return base2EndTime;
+}
+
+public void setBase2EndTime(String base2EndTime) {
+	this.base2EndTime = base2EndTime;
+}
+
+public String getBase3StartTime() {
+	return base3StartTime;
+}
+
+public void setBase3StartTime(String base3StartTime) {
+	this.base3StartTime = base3StartTime;
+}
+
+public String getBase3EndTime() {
+	return base3EndTime;
+}
+
+public void setBase3EndTime(String base3EndTime) {
+	this.base3EndTime = base3EndTime;
+}
+
+public String getBase1MSRName() {
+	return base1MSRName;
+}
+
+public void setBase1MSRName(String base1msrName) {
+	base1MSRName = base1msrName;
+}
+
+public String getBase2MSRName() {
+	return base2MSRName;
+}
+
+public void setBase2MSRName(String base2msrName) {
+	base2MSRName = base2msrName;
+}
+
+public String getBase3MSRName() {
+	return base3MSRName;
+}
+
+public void setBase3MSRName(String base3msrName) {
+	base3MSRName = base3msrName;
+}
+
+
+//public boolean getPrevDuration()
+//{
+//  if(this.prevDuration != null)
+//    return true;
+//  else
+//    return false;
+//}
 NetDiagnosticsParamtersForReport  ndParams = new NetDiagnosticsParamtersForReport();
 
 @DataBoundConstructor
  public NetDiagnosticsResultsPublisher(final String netdiagnosticsUri, final String username,
-         String password, final String baseStartTime, final String baseEndTime, 
-         final JSONObject prevDuration, final JSONObject initDuration, final String initEndTime,
-         final String initStartTime,final String checkProfilePath, final String criThreshold,
-         final String warThreshold, final String failThreshold, final String curStartTime, final String curEndTime, final boolean previousDuration, final boolean initialDuration)
+         final String password, final String base1StartTime, final String base1EndTime, final String base2EndTime,
+         final String base2StartTime, final String base3StartTime, final String base3EndTime, final String checkProfilePath, final String criThreshold,
+         final String warThreshold, final String failThreshold, final String curStartTime, final String curEndTime, 
+         final String base1MSRName, final String base2MSRName, final String base3MSRName)
  {
    /*creating json for sending the paramters to get the response json. */
    setNetdiagnosticsUri(netdiagnosticsUri);
    setUsername(username);
     
    setPassword(password);
-   setBaseStartTime(baseStartTime);
-   setBaseEndTime(baseEndTime);
+   setBase1StartTime(base1StartTime);
+   setBase1EndTime(base1EndTime);
+   setBase1MSRName(base1MSRName);
+   setBase2StartTime(base2StartTime);
+   setBase2EndTime(base2EndTime);
+   setBase2MSRName(base2MSRName);
+   setBase3StartTime(base3StartTime);
+   setBase3EndTime(base3EndTime);
+   setBase3MSRName(base3MSRName);
  
    if(curStartTime != null)
     setCurStartTime(curStartTime);
@@ -590,25 +766,34 @@ NetDiagnosticsParamtersForReport  ndParams = new NetDiagnosticsParamtersForRepor
    setCriThreshold(criThreshold);
    setWarThreshold(warThreshold);
    setFailThreshold(failThreshold);
-   this.initDuration = initDuration;
-   this.prevDuration = prevDuration;
-   ndParams.setBaseEndTime(baseEndTime);
-   ndParams.setBaseStartTime(baseStartTime);
+   //this.initDuration = initDuration;
+   //this.prevDuration = prevDuration;
+   ndParams.setCheckProfilePath(checkProfilePath);
+   ndParams.setBase1MSRName(base1MSRName);
+   ndParams.setBase1StartTime(base1StartTime);
+   ndParams.setBase1EndTime(base1EndTime);
+   ndParams.setBase2EndTime(base2EndTime);
+   ndParams.setBase2StartTime(base2StartTime);
+   ndParams.setBase2MSRName(base2MSRName);
+   ndParams.setBase3EndTime(base3EndTime);
+   ndParams.setBase3StartTime(base3StartTime);
+   ndParams.setBase3MSRName(base3MSRName);
+   
    ndParams.setCheckProfilePath(checkProfilePath);
 
 
   //Handling for pipeline jobs
-   if(initialDuration && initDuration == null){
-      
-      this.initDuration = new JSONObject();
-      this.initDuration.put("initStartTime", initStartTime);
-      this.initDuration.put("initEndTime", initEndTime);
-    }
-   
-    if(previousDuration && prevDuration == null){
-      this.prevDuration = new JSONObject();
-      this.prevDuration.put("prevDuration",true);
-    }
+//   if(initialDuration && initDuration == null){
+//      
+//      this.initDuration = new JSONObject();
+//      this.initDuration.put("initStartTime", initStartTime);
+//      this.initDuration.put("initEndTime", initEndTime);
+//    }
+//   
+//    if(previousDuration && prevDuration == null){
+//      this.prevDuration = new JSONObject();
+//      this.prevDuration.put("prevDuration",true);
+//    }
 
 
    if(this.getCurEndTime() != "")
@@ -703,41 +888,41 @@ NetDiagnosticsParamtersForReport  ndParams = new NetDiagnosticsParamtersForRepor
      return previousReports;
    }
 
-   public boolean isInitDuration()
-   {
-     if(getInitDurationValues() == null)
-       return false;
-     else
-       return true;
-   }
+//   public boolean isInitDuration()
+//   {
+//     if(getInitDurationValues() == null)
+//       return false;
+//     else
+//       return true;
+//   }
    
-   public boolean isPrevDuration()
-   {
-    return getPrevDuration();
-   }
+//   public boolean isPrevDuration()
+//   {
+//    return getPrevDuration();
+//   }
+//   
    
-   
-   public String getInitDurationValues()
-   {
-     if(this.initDuration != null)
-     {
-       if(this.initDuration.containsKey("initStartTime"))
-       {
-         initStartTime = (String)this.initDuration.get("initStartTime");
-         setInitStartTime(initStartTime);
-       }
-       
-       if(this.initDuration.containsKey("initEndTime"))
-       {
-           initEndTime = (String)this.initDuration.get("initEndTime");
-           setInitEndTime(initEndTime);
-       }   
-         
-     }
-     
-     if(initStartTime != null && initEndTime != null)
-       return initStartTime+"@"+initEndTime;
-     else
-    	return null;
-   }
+//   public String getInitDurationValues()
+//   {
+//     if(this.initDuration != null)
+//     {
+//       if(this.initDuration.containsKey("initStartTime"))
+//       {
+//         initStartTime = (String)this.initDuration.get("initStartTime");
+//         setInitStartTime(initStartTime);
+//       }
+//       
+//       if(this.initDuration.containsKey("initEndTime"))
+//       {
+//           initEndTime = (String)this.initDuration.get("initEndTime");
+//           setInitEndTime(initEndTime);
+//       }   
+//         
+//     }
+//     
+//     if(initStartTime != null && initEndTime != null)
+//       return initStartTime+"@"+initEndTime;
+//     else
+//    	return null;
+ //  }
 }

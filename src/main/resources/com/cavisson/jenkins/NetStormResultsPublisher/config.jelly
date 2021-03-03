@@ -1,3 +1,4 @@
+<?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
 
   <f:entry title="${%netstorm.uri.title}" description="${%netstorm.uri.description}">
@@ -16,10 +17,8 @@
       title="${%netstorm.connection.test.title}" progress="${%netstorm.connection.test.progress}"
       method="testNetStormConnection" with="netstormUri,username,password" />
 
-  <f:optionalBlock name="htmlTable" field="htmlTable" title='Import Custom HTML Report' checked='${instance.isImportSelected()}'>
-    <f:entry title="Report Path">
-      <f:textbox field="htmlTablePath"/>
-    </f:entry>
-  </f:optionalBlock>
+  <f:entry title="Report generation of Duration Phase">
+    <f:checkbox field="durationReport"/>
+  </f:entry>
 
 </j:jelly>

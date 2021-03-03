@@ -7,6 +7,7 @@ package com.cavisson.jenkins;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -14,15 +15,14 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -33,6 +33,9 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
 import org.json.simple.parser.JSONParser;
 
 
@@ -40,7 +43,11 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import hudson.model.Result;
+import hudson.model.Run;
 import hudson.util.Secret;
+
+import com.cavisson.jenkins.PageDetail;
 
 /**
  *
@@ -62,9 +69,12 @@ public class NetStormConnectionManager {
   private String vUsers;
   private String tName;
   private String rampUp;
+  private String rampUpDuration;
   private String autoScript;
   private String htmlTablePath;
-  private String baselineTR;
+  private String baselineType;
+  private String gitPull;
+  private long pollInterval;
   private String result;
   private String err = "Authentication failure, please check whether username and password given correctly";
 
@@ -75,14 +85,20 @@ public class NetStormConnectionManager {
   private static int POLL_REPEAT_FOR_REPORT_TIME= 30000;
   private static int INITIAL_POLL_DELAY = 10000;
   private int testRun = -1;
+  private String testCycleNum = "";
   private String scenarioName = "NA";
   private PrintStream consoleLogger = null;
   private JSONObject resonseReportObj = null;
-  private JSONObject jkRule = new JSONObject();
+  private JSONObject jkRule = null;
+  private boolean durationPhase = false;
   
   private HashMap<String,String> slaValueMap =  new HashMap<String,String> ();
 
-
+  static
+  { 
+    disableSslVerification();
+  }
+  
   public String getHtmlTablePath()
   {
     return htmlTablePath;
@@ -120,12 +136,12 @@ public class NetStormConnectionManager {
     this.rampUp = rampUp;
   }
   
-  public String getBaselineTR() {
-    return baselineTR;
+  public String getBaselineType() {
+    return baselineType;
   }
 
-  public void setBaselineTR(String baselineTR) {
-    this.baselineTR = baselineTR;
+  public void setBaselineType(String baselineType) {
+    this.baselineType = baselineType;
   }
   
   public void addSLAValue(String key, String value)
@@ -198,13 +214,79 @@ public class NetStormConnectionManager {
 	 this.jkRule = jkRule;
   }
   
+  public long getPollInterval() {
+      return pollInterval;
+  }
+  
+  public void setPollInterval(long pollInterval) {
+     this.pollInterval = pollInterval;
+  }
+ 
+  public String getRampUpDuration() {
+	return rampUpDuration;
+  }
+
+  public void setRampUpDuration(String rampUpDuration) {
+	this.rampUpDuration = rampUpDuration;
+  }
+
+  public String getGitPull() {
+	return gitPull;
+  }
+
+  public void setGitPull(String gitPull) {
+	this.gitPull = gitPull;
+  }
+ 
+  private static void disableSslVerification() 
+  {
+    try
+    {
+      // Create a trust manager that does not validate certificate chains
+      TrustManager[] trustAllCerts = new TrustManager[] {new X509TrustManager() 
+      {            
+        public java.security.cert.X509Certificate[] getAcceptedIssuers()
+        {                
+          return null;            
+        }
+        
+        public void checkClientTrusted(X509Certificate[] certs, String authType) 
+        { 
+        }            
+       
+        public void checkServerTrusted(X509Certificate[] certs, String authType)
+        {            
+        }        
+      }        
+    };
+    // Install the all-trusting trust manager       
+    SSLContext sc = SSLContext.getInstance("SSL");       
+    sc.init(null, trustAllCerts, new java.security.SecureRandom());   
+    HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());  
+    // Create all-trusting host name verifier    
+    HostnameVerifier allHostsValid = new HostnameVerifier() 
+    {  
+      public boolean verify(String hostname, SSLSession session) 
+      { 
+        return true;            
+      }         
+    };        
+    // Install the all-trusting host verifier        
+    HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);    
+   }
+   catch (NoSuchAlgorithmException e) 
+   {     
+   } 
+   catch (KeyManagementException e)
+   {       
+   }
+  }  
   
   private static enum JSONKeys {
 
 	 URLCONNECTION("URLConnectionString"),USERNAME("username"), PASSWORD("password"), PROJECT("project"), SUBPROJECT("subproject"), OPERATION_TYPE("Operation"),
     SCENARIO("scenario"), STATUS("Status"), TEST_RUN("TESTRUN"),
-    TESTMODE("testmode"), GETPROJECT("PROJECTLIST") , GETSUBPROJECT("SUBPROJECTLIST"), GETSCENARIOS("SCENARIOLIST"), BASELINE_TR("baselineTR"), REPORT_STATUS("reportStatus"), ERROR_MSG("errMsg"), CHECK_RULE("checkRule");
-
+    TESTMODE("testmode"), GETPROJECT("PROJECTLIST") , GETSUBPROJECT("SUBPROJECTLIST"), GETSCENARIOS("SCENARIOLIST"), BASELINE_TYPE("baselineType"), REPORT_STATUS("reportStatus"), ERROR_MSG("errMsg"), CHECK_RULE("checkRule");
     private final String value;
 
     JSONKeys(String value) {
@@ -221,19 +303,19 @@ public class NetStormConnectionManager {
     START_TEST, AUTHENTICATE_USER, GETDATA, GETPROJECT, GETSUBPROJECT, GETSCENARIOS
   };
 
-  public NetStormConnectionManager(String URLConnectionString, String username, Secret password)
+  public NetStormConnectionManager(String URLConnectionString, String username, Secret password, boolean durationPhase)
   {
     logger.log(Level.INFO, "NetstormConnectionManger constructor called with parameters with username:{0}", new Object[]{username});
 
     this.URLConnectionString = URLConnectionString;
-    System.out.println("password NSConnection = "+password);
     this.username = username;
     this.password = password;
+    this.durationPhase = durationPhase;
   }
 
-  public NetStormConnectionManager(String URLConnectionString, String username, Secret password, String project, String subProject, String scenario, String testMode, String baselineTR)
+  public NetStormConnectionManager(String URLConnectionString, String username, Secret password, String project, String subProject, String scenario, String testMode, String baselineType, String pollInterval, String gitPull)
   {
-    logger.log(Level.INFO, "NetstormConnectionManger constructor called with parameters with username:{0}, project:{2}, subProject:{3}, scenario:{4}, baselineTR:{5}", new Object[]{username, project, subProject, scenario, baselineTR});
+    logger.log(Level.INFO, "NetstormConnectionManger constructor called with parameters with username:{0}, project:{2}, subProject:{3}, scenario:{4}, baselineTR:{5}", new Object[]{username, project, subProject, scenario, baselineType});
 
     this.URLConnectionString = URLConnectionString;
     this.username = username;
@@ -241,10 +323,10 @@ public class NetStormConnectionManager {
     this.subProject = subProject;
     this.scenario = scenario;
     this.testMode = testMode;
-    this.baselineTR = baselineTR;
-    System.out.println("password NSConnection2 = "+password);
+    this.baselineType = baselineType;
     this.password = password;
-    
+    this.pollInterval = Long.parseLong(pollInterval);
+    this.gitPull = gitPull;
   }
   
   /**
@@ -276,7 +358,6 @@ public class NetStormConnectionManager {
 	  conn.setRequestProperty("Accept", "application/json");
 	  conn.setDoOutput(true);
 	  String json =reqObj.toString();
-	  System.out.println("json in NSConnection = "+json);
 	  OutputStream os = conn.getOutputStream();
 	  os.write(json.getBytes());
 	  os.flush();
@@ -304,7 +385,296 @@ public class NetStormConnectionManager {
 	}
   
   }
+
+public JSONObject checkGitConfiguration(String protocol,String repoIp,String repoPort,String repoPath,String username,String password,String passPhrase){
+		try
+        {
+			logger.log(Level.INFO, "checkGitConfiguration method called. with password ="+password+",passPhrase ="+passPhrase);
+  	 JSONObject reqObj = new JSONObject();
+  	 
+     /*Encrypting password and passphrase*/  	
+  	  URL urll ;
+	  String strr = getUrlString(); // URLConnectionString.substring(0,URLConnectionString.lastIndexOf("/"));
+	  urll = new URL(strr+"/ProductUI/productSummary/jenkinsService/getEncryptedStr?password="+password+"&passPhrase="+passPhrase);
+	   try{
+  	HttpURLConnection connectt = (HttpURLConnection) urll.openConnection();
+  	connectt.setConnectTimeout(POLL_CONN_TIMEOUT);
+  	connectt.setReadTimeout(POLL_CONN_TIMEOUT);
+  	connectt.setRequestMethod("GET");
+  	connectt.setRequestProperty("Accept", "application/json");    
+
+  	if (connectt.getResponseCode() != 200) {
+  	  logger.log(Level.INFO, "Getting Error code on encrypting  = " + connectt.getResponseCode());
+  	}
+
+  	BufferedReader brr = new BufferedReader(new InputStreamReader(connectt.getInputStream()));
+  	String encryptRes = brr.readLine();
+  	
+  	  
+  	  logger.log(Level.INFO, "encryptRes = " + encryptRes);
+  	logger.log(Level.INFO, "br.readLine() = " + brr.readLine());
+  	 JSONObject encResponseObj = (JSONObject) JSONSerializer.toJSON(encryptRes);
+  	logger.log(Level.INFO, "encryptRes object = " + encResponseObj);
+  	password = encResponseObj.get("password").toString();
+  	passPhrase = encResponseObj.get("passPhrase").toString();
+    }catch(Exception e){
+    	logger.log(Level.SEVERE, "Unknown exception in encrypting password and passphrase.", e);
+	}
+	   
+       logger.log(Level.INFO, "Encrypted password -> "+password+", passPhrase ="+passPhrase);
+  	 
+  	 /*Testing git configuration*/
+	  reqObj.put("productType", "NS");
+	  reqObj.put("userName", this.username);
+	  	 
+	  String testString = "GIT_HOST = ";
+	  testString = testString + repoIp+" "+repoPort+" "+repoPath+" "+username+" "+password+" true "+passPhrase+" NA "+protocol+" NA";
+	  logger.log(Level.INFO, "testString ="+testString);
+	  reqObj.put("testString", testString);
+	  logger.log(Level.INFO, "reqObj = "+  reqObj);
+	  	 
+  	  URL url ;
+  	  String response="";
+  	  JSONObject finalRes = new JSONObject();
+  	  String str = getUrlString(); // URLConnectionString.substring(0,URLConnectionString.lastIndexOf("/"));
+  	  url = new URL(str+"/ProductUI/productSummary/ScenarioWebService/versionControl/TEST");
+  	  
+  	     
+  	  logger.log(Level.INFO, "versionControl method called. with arguments url = "+  url);
+  	  HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+  	  conn.setRequestMethod("POST");
+  	  conn.setRequestProperty("Content-Type", "application/json");
+  	  conn.setRequestProperty("Accept", "application/json");
+  	  conn.setDoOutput(true);
+  	  String json =reqObj.toString();
+  	  OutputStream os = conn.getOutputStream();
+  	  os.write(json.getBytes());
+  	  os.flush();
+
+  	   if (conn.getResponseCode() != 200) {
+     	        throw new RuntimeException("Failed in checkGitConfiguration : HTTP error code : "+ conn.getResponseCode());
+  	   }
+  	   else 
+  	   {
+  		  BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+  	      String output = br.readLine();
+  	      try
+  	      {
+  	    	org.json.simple.JSONObject jsonObj = (org.json.simple.JSONObject)new JSONParser().parse(output);
+  	        logger.log(Level.INFO, "data = "+  jsonObj.get("data"));
+  	        org.json.simple.JSONObject data = (org.json.simple.JSONObject)jsonObj.get("data");
+  	        response = (String)data.get("response");
+  	        logger.log(Level.INFO, "response = "+  response);
+  	        
+	  	 	if(!response.equals("") && response != null){
+	  	 	logger.log(Level.INFO, "in check of response ...");
+	 		String[] temp = response.split("\n");
+	 		logger.log(Level.INFO, "temp ..."+temp);
+	 		if(temp.length>1){
+	 		logger.log(Level.INFO, "ERRRORRRRR in temp ...");
+	 		String resStr = "";
+	 		for(int i=0;i<temp.length;i++){
+	 			resStr=resStr+temp[i];
+	 			if(i<temp.length){
+	 			  resStr=resStr+"\n";}
+	 			finalRes.put("errMsg", resStr);
+	 		  }
+	 		logger.log(Level.INFO, "finalRes with error ..."+finalRes);
+	 		}
+	 		else{
+	 			logger.log(Level.INFO, "no error ...");
+	 			finalRes.put("msg", temp[0]);
+	 			finalRes.put("errMsg", "");
+	 			logger.log(Level.INFO, "finalRes without error ..."+finalRes);
+	 		}	 		
+	  	 }
+	  	 	else{
+	  	 		logger.log(Level.INFO, "response is null ...");
+	  	 		finalRes = new JSONObject();
+	  	 	}
+  	      }
+  	      catch(Exception e)
+  	      {
+  	        // TODO Auto-generated catch block
+  	        e.printStackTrace();
+  	      }
+  	   }
+  	 return finalRes;
+  	      
+  	} catch (MalformedURLException e) {
+  	      logger.log(Level.SEVERE, "Unknown exception in checking configuration. MalformedURLException -", e);
+  	      return null;
+  	}catch (IOException e) {
+	      logger.log(Level.SEVERE, "Unknown exception in checking configuration. IOException -", e);
+	      return null;
+	} catch (Exception e) {
+	      logger.log(Level.SEVERE, "Unknown exception in checking configuration.", e);
+	      return (null);
+	}
+  }
+
+public String saveGitConfiguration(String protocol,String repoIp,String repoPort,String repoPath,String username,String password,String passPhrase){
+	try{
+		
+		/*Encrypting password and passphrase*/  	
+	  	  URL urll ;
+		  String strr = getUrlString(); // URLConnectionString.substring(0,URLConnectionString.lastIndexOf("/"));
+		  urll = new URL(strr+"/ProductUI/productSummary/jenkinsService/getEncryptedStr?password="+password+"&passPhrase="+passPhrase);
+		try{
+	  	HttpURLConnection connectt = (HttpURLConnection) urll.openConnection();
+	  	connectt.setConnectTimeout(POLL_CONN_TIMEOUT);
+	  	connectt.setReadTimeout(POLL_CONN_TIMEOUT);
+	  	connectt.setRequestMethod("GET");
+	  	connectt.setRequestProperty("Accept", "application/json");    
+
+	  	if (connectt.getResponseCode() != 200) {
+	  	  logger.log(Level.INFO, "saveGitConfiguration: Getting Error code while encrypting  = " + connectt.getResponseCode());
+	  	}
+
+	  	BufferedReader brr = new BufferedReader(new InputStreamReader(connectt.getInputStream()));
+	  	String encryptRes = brr.readLine();
+	  	
+	  	  
+	  	  logger.log(Level.INFO, "saveGitConfiguration: encryptRes = " + encryptRes);
+	  	 JSONObject encResponseObj = (JSONObject) JSONSerializer.toJSON(encryptRes);
+	  	logger.log(Level.INFO, "saveGitConfiguration: encryptRes object = " + encResponseObj);
+	  	password = encResponseObj.get("password").toString();
+	  	passPhrase = encResponseObj.get("passPhrase").toString();
+		}catch(Exception e){
+			logger.log(Level.SEVERE, "saveGitConfiguration: Unknown exception in encrypting password and passphrase.", e);
+		}
+	    logger.log(Level.INFO, "saveGitConfiguration: Encrypted password -> "+password+", passPhrase ="+passPhrase);
+	    
+	    /*Saving git configuration*/
+	    JSONObject saveParam = new JSONObject();
+	    saveParam.put("GIT_HOST_email", "NA");
+	    saveParam.put("GIT_HOST_enable", "true");
+	    saveParam.put("GIT_HOST_ip", repoIp);
+	    saveParam.put("GIT_HOST_isSSLCertificateDisable", "false");
+	    saveParam.put("GIT_HOST_pass_phrase", passPhrase);
+	    saveParam.put("GIT_HOST_protocol", protocol);
+	    saveParam.put("GIT_HOST_pwd", password);
+	    saveParam.put("GIT_HOST_repo_name", repoPath);
+	    saveParam.put("GIT_HOST_repo_port", repoPort);
+	    saveParam.put("GIT_HOST_uname", username);
+	    logger.log(Level.INFO, "saveGitConfiguration: saveParam = "+  saveParam);
+	    
+	    StringBuilder result = new StringBuilder();
+	    URL url = new URL(strr+"/DashboardServer/web/commons/setGitConfiguration");
+	    logger.log(Level.INFO, "saveGitConfiguration: url = "+  url);
+	    
+	    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+	      conn.setRequestMethod("POST");
+	  	  conn.setRequestProperty("Content-Type", "application/json");
+	  	  conn.setRequestProperty("Accept", "application/json");
+	  	  conn.setDoOutput(true);
+	  	  String json =saveParam.toString();
+	  	  OutputStream os = conn.getOutputStream();
+	  	  os.write(json.getBytes());
+	  	  os.flush();
+	  	  
+	  	if (conn.getResponseCode() != 200) {
+ 	        throw new RuntimeException("Failed in saveGitConfiguration : HTTP error code : "+ conn.getResponseCode());
+	  	}
+	       BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+	       String line;
+	       while ((line = br.readLine()) != null) {
+	         result.append(line);
+	       }
+	       br.close();
+	       return result.toString();	    
+	}catch(Exception e){
+		logger.log(Level.SEVERE, "Unknown exception in saveGitConfiguration method.", e);
+	    return (null);
+	}
+}
+
+public String getGitConfiguration(){
+	try{
+		logger.log(Level.INFO, "getGitConfiguration: Method called.");
+		URL urll ;
+		String resMsg="";
+		StringBuffer errMsg = new StringBuffer();
+		JSONObject resObj = new JSONObject();
+		String str = getUrlString(); // URLConnectionString.substring(0,URLConnectionString.lastIndexOf("/"));
+		urll = new URL(str+"/DashboardServer/web/commons/getGitConfiguration");
+		try{
+		  	HttpURLConnection connectt = (HttpURLConnection) urll.openConnection();
+		  	connectt.setConnectTimeout(POLL_CONN_TIMEOUT);
+		  	connectt.setReadTimeout(POLL_CONN_TIMEOUT);
+		  	connectt.setRequestMethod("GET");
+//		  	connectt.setRequestProperty("Accept", "application/json");    
+
+		  	if (connectt.getResponseCode() != 200) {
+		  	  logger.log(Level.INFO, "getGitConfiguration: Getting Error code while checking for git config  = " + connectt.getResponseCode());
+		  	}
+
+		  	BufferedReader brr = new BufferedReader(new InputStreamReader(connectt.getInputStream()));
+		  	resMsg = brr.readLine();
+		  	logger.log(Level.INFO, "getGitConfiguration: resMsg -"+resMsg);
+		  	
+			}catch(Exception e){
+				logger.log(Level.SEVERE, "getGitConfiguration :Unknown exception in checking if git is configured -", e);
+			}
+		return resMsg;
+	}catch(Exception e){
+		logger.log(Level.SEVERE, "getGitConfiguration sec :Unknown exception in checking if git is configured -", e);
+		return null;
+	}
+}
+
+public JSONObject pullObjectsFromGit(){
+	try{
+		logger.log(Level.INFO, "pullObjectsFromGit called...");
+		/*Checking if git is already configured*/
+		String res="";
+		JSONObject resObj = new JSONObject();
+		String str = getUrlString(); // URLConnectionString.substring(0,URLConnectionString.lastIndexOf("/"));
+		try{
+		String resMsg = getGitConfiguration();
+	  	logger.log(Level.INFO, "pullObjectsFromGit: resMsg -"+resMsg);
+	  	if(resMsg == null||resMsg.equals("")||resMsg.equals("notConfigured")){
+	  		logger.log(Level.INFO, "Git is not configured ...");
+	  		res = "Git configuration is unavailable. Configure git repository first";
+	  		resObj.put("ErrMsg", res);
+	  		resObj.put("msg", "");
+	  		return resObj;
+	  	}
+		}catch(Exception e){
+			logger.log(Level.SEVERE, "Unknown exception in checking if git is configured -", e);
+		}
+	  	
+		logger.log(Level.INFO, "Going to pull objects ...");
+	  	/*If git is configured, pull/clone scenario, scripts, testcases, checkprofiles and testsuites from configured repo*/
+		URL url ;
+		url = new URL(str+"/ProductUI/productSummary/jenkinsService/getPulledObjectsFromGit");
+		try{
+	  	HttpURLConnection con = (HttpURLConnection) url.openConnection();
+//	  	con.setConnectTimeout(POLL_CONN_TIMEOUT);
+//	  	con.setReadTimeout(POLL_CONN_TIMEOUT);
+	  	con.setRequestMethod("GET");
+//	  	con.setRequestProperty("Accept", "application/json");    
+
+	  	if (con.getResponseCode() != 200) {
+	  	  logger.log(Level.INFO, "pullObjectsFromGit: Getting Error code while pulling objects from git  = " + con.getResponseCode());
+	  	}
+	  	BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+	  	String pullRes = br.readLine();
+	  	logger.log(Level.INFO, "pullRes -"+pullRes);
+	  	resObj = (JSONObject) JSONSerializer.toJSON(pullRes);
+	  	logger.log(Level.INFO, "pullRes msg -"+resObj.get("msg").toString());
+	  	
+		}catch(Exception e){
+			logger.log(Level.SEVERE, "Unknown exception while pulling objects from git -", e);
+		}
+	  	return resObj;
+	}catch(Exception e){
+		logger.log(Level.SEVERE, "Unknown exception in pullObjectsFromGit method.", e);
+	    return (null);
+	}
+}
     
+	
   private void setDefaultSSLProperties(URLConnection urlConnection,StringBuffer errMsg)
   {
     try 
@@ -347,18 +717,19 @@ public class NetStormConnectionManager {
       jsonRequest.put(JSONKeys.STATUS.getValue(), Boolean.FALSE);
       jsonRequest.put(JSONKeys.TESTMODE.getValue(), testMode);
       jsonRequest.put(JSONKeys.REPORT_STATUS.getValue(), ""); 
+      jsonRequest.put(JSONKeys.BASELINE_TYPE.getValue(),baselineType);
          
       
-      if(getBaselineTR() != null && !getBaselineTR().trim().equals(""))
-       {
-         String baseline = getBaselineTR();
-         if(baseline.startsWith("TR"))
-	  baseline = baseline.substring(2, baseline.length());
-	  
-         jsonRequest.put("BASELINE_TR", baseline);
-       } 
-      else
-       jsonRequest.put("BASELINE_TR", "-1");
+//      if(getBaselineTR() != null && !getBaselineTR().trim().equals(""))
+//       {
+//         String baseline = getBaselineTR();
+//         if(baseline.startsWith("TR"))
+//	  baseline = baseline.substring(2, baseline.length());
+//	  
+//         jsonRequest.put("BASELINE_TR", baseline);
+//       } 
+//      else
+//       jsonRequest.put("BASELINE_TR", "-1");
        
 
       if(getDuration() != null && !getDuration().trim().equals(""))
@@ -379,6 +750,10 @@ public class NetStormConnectionManager {
       if(getRampUp() != null && !getRampUp().trim().equals(""))
       {
         jsonRequest.put("RAMP_UP", getRampUp());
+      }
+
+      if(getRampUpDuration() != null && !getRampUpDuration().trim().equals("")){
+    	  jsonRequest.put("RAMP_UP_DURATION", getRampUpDuration());
       }
       
       if(gettName()!= null && !gettName().trim().equals(""))
@@ -781,6 +1156,32 @@ public class NetStormConnectionManager {
 		  JSONObject jsonRequest =    makeRequestObject("START_TEST");
 		  consoleLogger.println("Starting Test ... ");
 
+		  try{
+			if(gitPull.equals("true")){
+			  logger.log(Level.INFO, "Going to pull from GIT...");
+			  consoleLogger.println("Starting Git pull ... ");
+			  JSONObject res = pullObjectsFromGit();
+//			  if(res != null && !res.isEmpty()){
+//				  logger.log(Level.INFO, "res -"+res);
+//			  }else{
+//	            consoleLogger.println("GIT Pull was unsuccessful.");
+//	          }
+			  if(res != null && !res.isEmpty()){
+	            	if(!res.get("ErrMsg").toString().equals("")){
+	            		logger.log(Level.INFO, "Err exists ...");
+	            		consoleLogger.println(res.get("ErrMsg").toString());
+	            	}else{
+	            		logger.log(Level.INFO, "No Err ...");
+	            		consoleLogger.println(res.get("msg").toString());
+	            	}
+	            }else{
+	            	consoleLogger.println("GIT Pull was unsuccessful.");
+	            }
+		  	}
+		  }catch(Exception ex){
+			  logger.log(Level.SEVERE, "Exception in pulling from Git -", ex);
+		  }
+
 		  try {
 			  URL url;
 			  String str =   getUrlString();//URLConnectionString.substring(0,URLConnectionString.lastIndexOf("/"));
@@ -838,12 +1239,20 @@ public class NetStormConnectionManager {
 			  jsonResponse.put("TESTRUN", testRun + "" );
 			  jsonResponse.put("REPORT_STATUS", "");
 
+			  consoleLogger.println("Test Cycle Number - "+testCycleNum);
 			  if(testRun == -1)
 			  {
 
 				  logger.log(Level.INFO, "Test is Failed .");
-				  consoleLogger.println("Test is either not started or failed due to some reason,");
-				  return resultMap;            
+				  if(!scenario.equals("") && scenario != null && !scenario.equals("---Select Scenarios ---")){
+        			  if(testMode.equals("N"))
+        				  consoleLogger.println("Test is either not started or failed due to some error in the scenario.");
+        			  else
+        				  consoleLogger.println("Test is either not started or failed due to some error in the scenario. The test suite execution ended with status 'NetStorm Fail'.");
+            	  }else{
+				  consoleLogger.println("Test is either not started or failed due to some reason");
+            	  }
+                  return resultMap;            
 			  }
 
 			  /** if check rule file is imported then call this method. */
@@ -939,7 +1348,9 @@ public class NetStormConnectionManager {
 	  String testRun= (String)(jsonResponse.get(JSONKeys.TEST_RUN.getValue()));
 	  resultMap.put("STATUS", status);
 	  resultMap.put("TESTRUN",testRun);
+	  resultMap.put("TEST_CYCLE_NUMBER", testCycleNum);
 
+	  consoleLogger.println("Test is executed successfully.");
 	  if(jsonResponse.containsKey("ENV_NAME"))
 	  { 
 	    String envNames = "";
@@ -987,7 +1398,7 @@ public class NetStormConnectionManager {
             try {
               
               /*Delay to poll due to test is taking time to start.*/
-              Thread.sleep(INITIAL_POLL_DELAY);     
+              Thread.sleep(pollInterval * 1000);     
               
             } catch (Exception ex) {
               logger.log(Level.SEVERE, "Error in initial sleep before polling.", ex);
@@ -1030,7 +1441,7 @@ public class NetStormConnectionManager {
         	    isTestRunning = false;
         	  }
                   
-                  
+        	  testCycleNum = pollResponse.getString("testCycleNumber");  
         	} catch (Exception e) {
         	  logger.log(Level.SEVERE, "Error in parsing polling response = " + pollResString, e);
         	}
@@ -1047,8 +1458,14 @@ public class NetStormConnectionManager {
 
               /*Repeating till Test Ended.*/
               try {
-        	Thread.sleep(POLL_REPEAT_TIME);
-                consoleLogger.println("Test in progress. Going to check on server. Time = " + new Date());
+            consoleLogger.println("Test in progress. Going to check on server. Time = " + new Date() + ", pollInterval = " + pollInterval);
+        	
+            if(testRun > 0)
+              pollInterval  = 60;
+            
+            if(isTestRunning == true)
+              Thread.sleep(pollInterval * 1000);
+                
               } catch (Exception ex) {       	
         	logger.log(Level.SEVERE, "Error in polling connection in loop", ex);
               } 
@@ -1092,124 +1509,140 @@ public class NetStormConnectionManager {
    * @param TestRun
    * @param consoleLogger
    */
-  private void connectNSAndPollJsonReport(){
-   
-     try {
+  private void connectNSAndPollJsonReport(Run build, PrintStream logg){
+	   
+	     try {
 
-     logger.log(Level.INFO, "Test is stopped. Now getting report from Netstorm. It may take some time. URL = " + pollReportURL);
-     
-      /* Creating the thread. */
-      Runnable pollReportState = new Runnable()
-      {
-        public void run()
-        {
-          try {
+	     logger.log(Level.INFO, "Test is stopped. Now getting report from Netstorm. It may take some time. URL = " + pollReportURL);
+	     
+	      /* Creating the thread. */
+	      Runnable pollReportState = new Runnable()
+	      {
+	        public void run()
+	        {
+	          try {
 
-            /*Keeping flag based on report status on server.*/
-            boolean isReportGenerated = true;
-            
-            logger.log(Level.INFO, "Starting Polling to server.");
-            
-            /*Running Thread till test stopped.*/
-            while (isReportGenerated) {
-              try {
-        	
-        	/*Creating Polling URL.*/
-        	String pollURLWithArgs = pollReportURL + "?&testRun=" + testRun;    	
-        	URL url = new URL(pollURLWithArgs);
-        	HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        	conn.setConnectTimeout(POLL_CONN_TIMEOUT);
-        	conn.setReadTimeout(POLL_CONN_TIMEOUT);
-        	conn.setRequestMethod("GET");
-        	conn.setRequestProperty("Accept", "application/json");    
+	            /*Keeping flag based on report status on server.*/
+	            boolean isReportGenerated = true;
+	            
+	            logger.log(Level.INFO, "Starting Polling to server.");
+	            
+	            /*Running Thread till test stopped.*/
+	            while (isReportGenerated) {
+	              try {
+	        	
+	        	/*Creating Polling URL.*/
+	        	String pollURLWithArgs = pollReportURL + "?&testRun=" + testRun;    	
+	        	URL url = new URL(pollURLWithArgs);
+	        	HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+	        	conn.setConnectTimeout(POLL_CONN_TIMEOUT);
+	        	conn.setReadTimeout(POLL_CONN_TIMEOUT);
+	        	conn.setRequestMethod("GET");
+	        	conn.setRequestProperty("Accept", "application/json");    
 
-        	if (conn.getResponseCode() != 200) {
-        	  logger.log(Level.INFO, "Getting Error code on polling  = " + conn.getResponseCode() + ". Retrying in next poll in 5 minutes.");
-        	}
+	        	if (conn.getResponseCode() != 200) {
+	        	  logger.log(Level.INFO, "Getting Error code on polling  = " + conn.getResponseCode() + ". Retrying in next poll in 5 minutes.");
+	        	}
 
-        	BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-        	String pollResString = br.readLine();
-        	
-        	try {
-        	  
-        	  logger.log(Level.INFO, "Polling Response = " + pollResString);
-        	  JSONObject pollResponse = (JSONObject) JSONSerializer.toJSON(pollResString);
-        	      	  
-        	  /*Getting data, if not available.*/
-        	 // logger.log(Level.INFO, "Getting data as - "+pollResponse);
-                          	          	  
-        	  if(pollResponse.getBoolean("status")) {
-        	    /*Terminating Loop when test is stopped.*/
-        	    isReportGenerated = false;
-                    
-                    /*Parsing to get the data from response. */
-                      JSONParser parser = new JSONParser();
-                      org.json.simple.JSONObject objJson = (org.json.simple.JSONObject) parser.parse(pollResString);
-                       String strData = objJson.get("data").toString();
-                      
-                       org.json.simple.JSONObject objJson2 =(org.json.simple.JSONObject)parser.parse(strData);
-                       String strData2 = objJson2.toJSONString();
-                       logger.log(Level.INFO, "Data -- = " + strData);
-                       resonseReportObj = (JSONObject) JSONSerializer.toJSON(strData2);
-        	  }
-                  
-                  
-        	} catch (Exception e) {
-        	  logger.log(Level.SEVERE, "Error in parsing polling response = " + pollResString, e);
-        	}
+	        	BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+	        	String pollResString = br.readLine();
+	        	
+	        	try {
+	        	  
+	        	 // logger.log(Level.INFO, "Polling Response = " + pollResString);
+	        	  JSONObject pollResponse = (JSONObject) JSONSerializer.toJSON(pollResString);
+	        	      	  
+	        	  /*Getting data, if not available.*/
+	        	 // logger.log(Level.INFO, "Getting data as - "+pollResponse);
+	                          	          	  
+	        	  if(pollResponse.getBoolean("status")) {
+	        	    /*Terminating Loop when test is stopped.*/
+	        	    isReportGenerated = false;
+	        	    String reportstatus = pollResponse.getString("Report Status");
+	        	    logg.println("Report Status = " + reportstatus);
+	        	    logger.log(Level.INFO, "report status = " + reportstatus);
+	        	    
+	        	    if(reportstatus.equals("PASS"))
+	        	      build.setResult(Result.SUCCESS);
+	        	    else
+	        	      build.setResult(Result.FAILURE);
+	                    /*Parsing to get the data from response. */
+//	                      JSONParser parser = new JSONParser();
+//	                      org.json.simple.JSONObject objJson = (org.json.simple.JSONObject) parser.parse(pollResString);
+//	                      if(!objJson.isNull("data")) { 
+//	                      String strData = objJson.get("data").toString();
+//	                      
+//	                       org.json.simple.JSONObject objJson2 =(org.json.simple.JSONObject)parser.parse(strData);
+//	                       String strData2 = objJson2.toJSONString();
+//	                       logger.log(Level.INFO, "Data -- = " + strData);
+//	                       resonseReportObj = (JSONObject) JSONSerializer.toJSON(strData2);
+//	                      }
+	        	  }
+	                  
+	                  
+	        	} catch (Exception e) {
+	        	  logger.log(Level.SEVERE, "Error in parsing polling response = " + pollResString, e);
+	        	  build.setResult(Result.UNSTABLE);
+	        	  
+	        	}
 
-        	/*Closing Stream.*/
-        	try {
-        	  br.close();
-        	} catch (Exception e) {
-        	  logger.log(Level.SEVERE, "Error in closing stream inside polling thread.", e);
-        	}
-              } catch (Exception e) {
-                logger.log(Level.SEVERE, "Error in polling report with interval. Retrying after 5 sec.", e);
-              }
+	        	/*Closing Stream.*/
+	        	try {
+	        	  br.close();
+	        	} catch (Exception e) {
+	        	  logger.log(Level.SEVERE, "Error in closing stream inside polling thread.", e);
+	        	  build.setResult(Result.UNSTABLE);
+	        	}
+	              } catch (Exception e) {
+	                logger.log(Level.SEVERE, "Error in polling report with interval. Retrying after 5 sec.", e);
+	               
+	              }
 
-              /*Repeating till Test Ended.*/
-              try {
-        	Thread.sleep(POLL_REPEAT_FOR_REPORT_TIME);
-                logger.log(Level.INFO, "Report generation is  in progress. Going to check on server. Time = " + new Date());
-              } catch (Exception ex) {       	
-        	logger.log(Level.SEVERE, "Error in polling connection in loop", ex);
-              } 
-            }
+	              /*Repeating till Test Ended.*/
+	              try {
+	        	Thread.sleep(POLL_REPEAT_FOR_REPORT_TIME);
+	                logger.log(Level.INFO, "Report generation is  in progress. Going to check on server. Time = " + new Date());
+	              } catch (Exception ex) {       	
+	        	logger.log(Level.SEVERE, "Error in polling connection in loop", ex);
+	        	build.setResult(Result.UNSTABLE);
+	              } 
+	            }
 
-          } catch (Exception e) {
-            logger.log(Level.SEVERE, "Error in polling report with interval.", e);
-          }
-        }   
-      };
+	          } catch (Exception e) {
+	            logger.log(Level.SEVERE, "Error in polling report with interval.", e);
+	            build.setResult(Result.UNSTABLE);
+	          }
+	        }   
+	      };
 
-      // Creating and Starting thread for Getting Graph Data.
-      Thread pollTestRunThread = new Thread(pollReportState, "pollTestRunThread");
+	      // Creating and Starting thread for Getting Graph Data.
+	      Thread pollTestRunThread = new Thread(pollReportState, "pollTestRunThread");
 
-      // Running it with Executor Service to provide concurrency.
-      ExecutorService threadExecutorService = Executors.newFixedThreadPool(1);
+	      // Running it with Executor Service to provide concurrency.
+	      ExecutorService threadExecutorService = Executors.newFixedThreadPool(1);
 
-      // Executing thread in thread Pool.
-      threadExecutorService.execute(pollTestRunThread);
+	      // Executing thread in thread Pool.
+	      threadExecutorService.execute(pollTestRunThread);
 
-      // Shutting down in order.
-      threadExecutorService.shutdown();
+	      // Shutting down in order.
+	      threadExecutorService.shutdown();
 
-      // Checking for running state.
-      // Wait until thread is not terminated.
-      while (!threadExecutorService.isTerminated())
-      {
-      }    
-      
-    } catch (Exception e) {
-      logger.log(Level.SEVERE, "Error in polling report.", e);
-    }
-   
-  }
+	      // Checking for running state.
+	      // Wait until thread is not terminated.
+	      while (!threadExecutorService.isTerminated())
+	      {
+	      }    
+	      
+	    } catch (Exception e) {
+	      logger.log(Level.SEVERE, "Error in polling report.", e);
+	    }
+	   
+	  }
 
 
 
-  public MetricDataContainer fetchMetricData(NetStormConnectionManager connection,  String metrics[], String durationInMinutes, int groupIds[], int graphIds[], int testRun, String testMode)
+
+  public boolean fetchMetricData(NetStormConnectionManager connection,  String metrics[], String durationInMinutes, int groupIds[], int graphIds[], int testRun, String testMode, PrintStream logg, String test_cycle_Number, final Run build)
   {
     logger.log(Level.INFO, "fetchMetricData() called.");
   
@@ -1221,6 +1654,8 @@ public class NetStormConnectionManager {
     jsonRequest.put(JSONKeys.PROJECT.getValue(), connection.getProject());
     jsonRequest.put(JSONKeys.SUBPROJECT.getValue(), connection.getSubProject());
     jsonRequest.put(JSONKeys.SCENARIO.getValue(), connection.getScenario());
+    jsonRequest.put("TestCycleNumber", test_cycle_Number);
+    jsonRequest.put("isDurationPhase", durationPhase);
    
     this.testRun = testRun; 
     JSONArray jSONArray = new JSONArray();
@@ -1252,7 +1687,8 @@ public class NetStormConnectionManager {
 	    conn.setRequestMethod("POST");
         
 	    conn.setRequestProperty("Accept", "application/json");
-        
+       
+	    logger.log(Level.INFO, "jsonRequest " + jsonRequest);
 	    String json =jsonRequest.toString();
 	    conn.setDoOutput(true);
 	    OutputStream os = conn.getOutputStream();
@@ -1273,7 +1709,8 @@ public class NetStormConnectionManager {
                {
                  logger.log(Level.SEVERE, "Not able to get response form server due to some reason");
                  consoleLogger.println("Error in report generation.");
-                 return null;
+                 //return null;
+                 return false;
                }
             }
         
@@ -1281,18 +1718,20 @@ public class NetStormConnectionManager {
         
             logger.log(Level.INFO, "url for polling report - pollReportURL = " + pollReportURL);
             
-            connectNSAndPollJsonReport();
+            connectNSAndPollJsonReport(build, logg);
         
-            if(resonseReportObj == null)
-            {
-               logger.log(Level.SEVERE, "Not able to get response form server due to: " + errMsg);
-               return null;
-            }
+//            if(resonseReportObj == null)
+//            {
+//               logger.log(Level.SEVERE, "Not able to get response form server due to: " + errMsg);
+//               return null;
+//            }
          }
          catch (MalformedURLException e) {
 	   logger.log(Level.SEVERE, "Unknown exception in establishing connection. MalformedURLException -", e);
+	   e.printStackTrace();
          } catch (IOException e) {
 	   logger.log(Level.SEVERE, "Unknown exception in establishing connection. IOException -", e);
+	   e.printStackTrace();
         } catch (Exception e) {
 	     logger.log(Level.SEVERE, "Unknown exception in establishing connection.", e);
         }
@@ -1304,11 +1743,34 @@ public class NetStormConnectionManager {
 //      return null;
 //    }
 
-    return parseJSONData(resonseReportObj, testMode);
+   // return parseJSONData(resonseReportObj, testMode, logg);
+      return true;
   }  
 
+  public String numberFormatWithDecimal(double value, String upToDecimal) {
+	    try {
+	      DecimalFormat df = new DecimalFormat(upToDecimal);
+	      if(value%1 == 0){
+	    	  upToDecimal = "0";
+	      }
+	      String num = df.format(value);
+	      String arr[] = num.split("\\.");
 
-  private MetricDataContainer parseJSONData(JSONObject resonseObj, String testMode)
+	      arr[0] = NumberFormat.getIntegerInstance().format(Long.parseLong(arr[0]));
+//	      arr[0] = NumberFormat.getIntegerInstance().format(arr[0]);
+	      if(arr.length == 2) {
+	        return arr[0] + "." + arr[1];
+	      } else
+	        return arr[0];
+
+	      
+	    } catch (Exception e) {
+	    	logger.log(Level.SEVERE, "Unknown exception ", e);
+	    }
+	    return "";
+	  }
+
+  private MetricDataContainer parseJSONData(JSONObject resonseObj, String testMode, PrintStream logg)
   {
     logger.log(Level.INFO, "parseJSONData() called.");
     
@@ -1339,6 +1801,10 @@ public class NetStormConnectionManager {
         JSONObject jsonTestReport = jsonTestReportWholeObj.getJSONObject("members");
         
         String overAllStatus =  jsonTestReport.getString("Overall Status");
+        
+        logg.println("----------------------------");
+        logg.println("Overall Status = " + overAllStatus);
+        
         String date = jsonTestReport.getString("Date");
         String overAllFailCriteria = jsonTestReport.getString("Overall Fail Criteria (greater than red) %");
         String serverName = jsonTestReport.getString("IP");
@@ -1369,7 +1835,7 @@ public class NetStormConnectionManager {
           logger.log(Level.SEVERE, "Error in parsing Test Report Data:" + ex);
           logger.log(Level.SEVERE, "---" + ex.getMessage());
         }
-       if(jsonTestReport.get("Metrics Under Test") != null) {
+       if(jsonTestReport.get("Metrics Under Test") != null && jsonTestReport.get("Page Detail Report") == null) {
         JSONArray metricsUnderTest = (JSONArray)jsonTestReport.get("Metrics Under Test");
         ArrayList<TestMetrics> testMetricsList = new ArrayList<TestMetrics>(metricsUnderTest.size());
         
@@ -1392,6 +1858,8 @@ public class NetStormConnectionManager {
           if(sla.indexOf(">") != -1 || sla.indexOf(">") > 0)
 	    sla = sla.substring(sla.lastIndexOf(">")+1, sla.length());
 
+          String count = jsonObject.getString("Count");
+          
           String transactiontStatus = jsonObject.getString("Transaction Status");
           String transactionBgcolor = jsonObject.getString("Transaction BGcolor");
           String transactionTooltip = jsonObject.getString("Transaction Tooltip"); 
@@ -1410,17 +1878,36 @@ public class NetStormConnectionManager {
           testMetric.setPrevTestRunValue(prevTestValue);
           testMetric.setInitialValue(initialValue);
           testMetric.setSLA(sla);
+          
+          if(count.equals("noCount")){
+        	  testMetric.setCount("NA");
+          }
+          else {
+        	  testMetric.setCount(count);  
+          }
+          
           if(trendLink != null)
            testMetric.setLinkForTrend(trendLink);
           else
             testMetric.setLinkForTrend("NA");
             
+          int fromPattern=0;
+    	  String patt = jsonObject.getString("PATTERN");
+//          String arrMetricDisplayName = arrMetricValue[0];
+          if (metric.trim().contains("- PATTERN"))
+          {
+            int len = patt.length()+2;
+    	        String dName = metric.substring(metric.indexOf("-")+len+1,metric.trim().length()-1);
+    	        metric = metric.replace(metric.substring(metric.indexOf("-"), metric.length()),"- " + dName);
+    	        fromPattern=1;
+          }
+          
           String headerName = "";
           String displayName = metric;
           if (index == 0)
           {
             str = displayName;
-            if(displayName.contains("- All"))
+            if(displayName.contains("- All") && fromPattern!=1)
             {
                headerName = displayName.substring(0, str.indexOf("-")+5);
                displayName = displayName.substring(displayName.indexOf("-")+6,displayName.length()-1);
@@ -1445,7 +1932,7 @@ public class NetStormConnectionManager {
                if (metricName.toString().trim().equals(str.substring(0, str.indexOf("-")).toString().trim()))
                {
                   headerName = "";
-                 if (displayName.contains("- All"))
+                 if (displayName.contains("- All") && fromPattern!=1)
                  {
                    displayName = displayName.substring(displayName.indexOf("-")+6,displayName.length()-1);
                  }
@@ -1455,7 +1942,7 @@ public class NetStormConnectionManager {
                else
                {
                  str = displayName;
-                 if (displayName.contains("- All"))
+                 if (displayName.contains("- All") && fromPattern!=1)
                  {
                    headerName = displayName.substring(0, displayName.indexOf("-")+5);
                    displayName = displayName.substring(displayName.indexOf("-")+6,displayName.length()-1);
@@ -1476,7 +1963,7 @@ public class NetStormConnectionManager {
              { 
                str = displayName;
                
-               if(displayName.contains("- All"))
+               if(displayName.contains("- All") && fromPattern!=1)
                { 
                  headerName = displayName.substring(0, str.indexOf("-")+5);
                  displayName = displayName.substring(str.indexOf("-")+6,displayName.length()-1);
@@ -1498,6 +1985,7 @@ public class NetStormConnectionManager {
              }
            }
          
+         
           testMetric.setNewReport("NewReport");
           testMetric.setDisplayName(displayName);
           testMetric.setHeaderName(headerName);               
@@ -1510,6 +1998,13 @@ public class NetStormConnectionManager {
           testMetricsList.add(testMetric);
           testReport.setOperator(operator);
           testReport.setTestMetrics(testMetricsList);
+          
+          if(count.equals("noCount")){
+        	  testReport.setShowCount("0");
+          }else {
+        	  testReport.setShowCount("1");
+          }
+          
         }
        } else {
     	   /* method calls for transaction stats, vector groups and scalar groups table */
@@ -1526,6 +2021,149 @@ public class NetStormConnectionManager {
             testReport = metricDataForScalar(scalarGroups, testReport, jsonTestReport);
     	   }
            
+       }
+       
+       /*Page Detail Report*/
+       if(jsonTestReport.get("Page Detail Report") != null) {
+    	   JSONArray pageDetailReport = (JSONArray)jsonTestReport.get("Page Detail Report");
+           ArrayList<PageDetail> pageDetailReportList = new ArrayList<PageDetail>(pageDetailReport.size());
+           
+           for(Object jsonData : pageDetailReport)
+           {  
+             JSONObject jsonObject = (JSONObject)jsonData;
+             
+             String maxPageLoad = jsonObject.getString("maxPageLoad");
+             String strAvgPerfScore = jsonObject.getString("strAvgPerfScore");
+             String strAvgBestPracScore = jsonObject.getString("strAvgBestPracScore");
+             String minStartRender = jsonObject.getString("minStartRender");
+             String strPageName = jsonObject.getString("strPageName");
+             String strAverageByteRec = numberFormatWithDecimal(Double.parseDouble(jsonObject.getString("strAverageByteRec")), "0");
+             
+             String maxEndRender = jsonObject.getString("maxEndRender");
+             String strBrowserAverageReq = jsonObject.getString("strBrowserAverageReq");
+             String minOnload = jsonObject.getString("minOnload");
+             String strAvgFrstCpuIdle = jsonObject.getString("strAvgFrstCpuIdle");
+             String strHostName = jsonObject.getString("strHostName");
+             String minEndRender = jsonObject.getString("minEndRender");
+             String strBrowserAverageReqOnLoad = jsonObject.getString("strBrowserAverageReqOnLoad");
+             String strAverageReqDomContent = jsonObject.getString("strAverageReqDomContent");
+             String averageEndRender = numberFormatWithDecimal(Double.parseDouble(jsonObject.getString("averageEndRender")), "0.00");
+             
+             String strAverageDOM = numberFormatWithDecimal(Double.parseDouble(jsonObject.getString("strAverageDOM")), "0.00");
+             
+             String strAvgAccessScore = jsonObject.getString("strAvgAccessScore");
+             String strAveragePageLoad = numberFormatWithDecimal(Double.parseDouble(jsonObject.getString("strAveragePageLoad")), "0.00");
+             
+             String averageSpeedIndex = numberFormatWithDecimal(Double.parseDouble(jsonObject.getString("averageSpeedIndex")), "0");
+             String browserName = jsonObject.getString("browserName");
+             String strAvgFrstCPaint = jsonObject.getString("strAvgFrstCPaint");
+             String strAvgSeoScore = jsonObject.getString("strAvgSeoScore");
+             String strAvgIptLtncy = jsonObject.getString("strAvgIptLtncy");
+             String strAverageReqOnLoad = jsonObject.getString("strAverageReqOnLoad");
+             String strAverageOnload = numberFormatWithDecimal(Double.parseDouble(jsonObject.getString("strAverageOnload")), "0.00");
+             
+             String strAvgPwaScrore = jsonObject.getString("strAvgPwaScrore");
+             String minDom = jsonObject.getString("minDom");
+             String maxStartRender = jsonObject.getString("maxStartRender");
+             String strSessionCount = jsonObject.getString("strSessionCount");
+             String averageStartRender = numberFormatWithDecimal(Double.parseDouble(jsonObject.getString("averageStartRender")), "0.00");
+             
+             String maxDom = jsonObject.getString("maxDom");
+             String groupName = jsonObject.getString("groupName");
+             String strAverageReq = jsonObject.getString("strAverageReq");
+             String pageIndex = jsonObject.getString("pageIndex");
+             String strBrowserAverageReqDomContent = jsonObject.getString("strBrowserAverageReqDomContent");
+             String envName = jsonObject.getString("envName");
+             String sessionPagename = jsonObject.getString("sessionPagename");
+             String maxOnload = jsonObject.getString("maxOnload");
+             String strAvgFrstMpaint = jsonObject.getString("strAvgFrstMpaint");
+             String strAverageByteSent = numberFormatWithDecimal(Double.parseDouble(jsonObject.getString("strAverageByteSent")), "0");
+             
+             String strScreenSize = jsonObject.getString("strScreenSize");
+             String strAverageTimeToInteract = numberFormatWithDecimal(Double.parseDouble(jsonObject.getString("strAverageTimeToInteract")), "0.00");
+             
+             String minPageLoad = jsonObject.getString("minPageLoad");
+             
+             
+             PageDetail pageDetail = new PageDetail();
+             pageDetail.setAverageEndRender(averageEndRender);
+             pageDetail.setAverageSpeedIndex(averageSpeedIndex);
+             pageDetail.setAverageStartRender(averageStartRender);
+             pageDetail.setBrowserName(browserName);
+             pageDetail.setEnvName(envName);
+             pageDetail.setGroupName(groupName);
+             pageDetail.setMaxDom(maxDom);
+             pageDetail.setMaxEndRender(maxEndRender);
+             pageDetail.setMaxOnload(maxOnload);
+             pageDetail.setMaxPageLoad(maxPageLoad);
+             pageDetail.setMaxStartRender(maxStartRender);
+             pageDetail.setMinDom(minDom);
+             pageDetail.setMinEndRender(minEndRender);
+             pageDetail.setMinOnload(minOnload);
+             pageDetail.setMinPageLoad(minPageLoad);
+             pageDetail.setMinStartRender(minStartRender);
+             pageDetail.setPageIndex(pageIndex);
+             pageDetail.setSessionPagename(sessionPagename);
+             pageDetail.setStrAverageByteRec(strAverageByteRec);
+             pageDetail.setStrAverageByteSent(strAverageByteSent);
+             pageDetail.setStrAverageDOM(strAverageDOM);
+             pageDetail.setStrAverageOnload(strAverageOnload);
+             pageDetail.setStrAveragePageLoad(strAveragePageLoad);
+             pageDetail.setStrAverageReq(strAverageReq);
+             pageDetail.setStrAverageReqDomContent(strAverageReqDomContent);
+             pageDetail.setStrAverageReqOnLoad(strAverageReqOnLoad);
+             pageDetail.setStrAverageTimeToInteract(strAverageTimeToInteract);
+             pageDetail.setStrAvgAccessScore(strAvgAccessScore);
+             pageDetail.setStrAvgBestPracScore(strAvgBestPracScore);
+             pageDetail.setStrAvgFrstCPaint(strAvgFrstCPaint);
+             pageDetail.setStrAvgFrstCpuIdle(strAvgFrstCpuIdle);
+             pageDetail.setStrAvgFrstMpaint(strAvgFrstMpaint);
+             pageDetail.setStrAvgIptLtncy(strAvgIptLtncy);
+             pageDetail.setStrAvgPerfScore(strAvgPerfScore);
+             pageDetail.setStrAvgPwaScrore(strAvgPwaScrore);
+             pageDetail.setStrAvgSeoScore(strAvgSeoScore);
+             pageDetail.setStrBrowserAverageReq(strBrowserAverageReq);
+             pageDetail.setStrBrowserAverageReqDomContent(strBrowserAverageReqDomContent);
+             pageDetail.setStrBrowserAverageReqOnLoad(strBrowserAverageReqOnLoad);
+             pageDetail.setStrHostName(strHostName);
+             pageDetail.setStrPageName(strPageName);
+             pageDetail.setStrScreenSize(strScreenSize);
+             pageDetail.setStrSessionCount(strSessionCount);
+             
+             pageDetailReportList.add(pageDetail);
+             
+           }
+           
+           JSONObject pageDetailObj = (JSONObject)pageDetailReport.get(0);
+           String strScreenSize = pageDetailObj.getString("strScreenSize");
+           String strAverageTimeToInteract = pageDetailObj.getString("strAverageTimeToInteract");
+           
+           ArrayList<String> pageDetailHeader = new ArrayList<String>();
+           pageDetailHeader.add("Page Name");
+           pageDetailHeader.add("Host Name");
+           pageDetailHeader.add("Group");
+           pageDetailHeader.add("Browser");
+//           if(!strScreenSize.equals(""))
+           pageDetailHeader.add("Screen Size");
+           pageDetailHeader.add("Session Count");
+           pageDetailHeader.add("DOM Content Load(Sec)");
+           pageDetailHeader.add("On Load(Sec)");
+           pageDetailHeader.add("Page Load(Sec)");
+//           if(!strAverageTimeToInteract.equals("-1"))
+           pageDetailHeader.add("Time To Interact(Sec)");
+           pageDetailHeader.add("Start Render Time(Sec)");
+           pageDetailHeader.add("Visually Complete Time");
+           pageDetailHeader.add("Requests");
+           pageDetailHeader.add("Browser Cache");
+           pageDetailHeader.add("Bytes Received(KB)");
+           pageDetailHeader.add("Bytes Send(KB)");
+           pageDetailHeader.add("Speed Index");
+           
+           
+           testReport.setPageDetailHeader(pageDetailHeader);
+           testReport.setPageDetail(pageDetailReportList);
+           
+           logger.log(Level.INFO,"Page Detail report : " + testReport.getPageDetail());
        }
         
         int transObj = 1;
@@ -1640,6 +2278,15 @@ public class NetStormConnectionManager {
         testReport.setInitialDescription(initialDescription);
         testReport.setCurrentDescription(currentDescription);
         metricDataContainer.setTestReport(testReport);
+        
+        if(!testRun.equals("-1")) {
+        	String url = getUrlString();
+        	String reportlink = url + "/logs/TR" + testRun + "/ready_reports/TestSuiteReport.html";
+        	logg.println("Report Link:- " + reportlink);
+        }
+        
+        logg.println("----------------------------");
+        
       }
       if(jsonGraphs != null)
       {
@@ -1798,7 +2445,7 @@ public class NetStormConnectionManager {
 								  String transTooltip = (String)metricInfoFinal.get("Transaction Tooltip");
 								  String transBGcolor = (String)metricInfoFinal.get("Transaction BGcolor");
 								  String Value = (String)metricInfoFinal.get("Value");
-								  String linkss = (String)metricInfoFinal.get("link");
+								  String linkss = (String)metricInfoFinal.get("Trend Link");
 								  String SLA = (String)metricInfoFinal.get("SLA");
 								  String initialValue = (String)metricInfoFinal.get("Initial Value "); 
 								  String Stress = (String)metricInfoFinal.get("Stress");
@@ -1813,7 +2460,8 @@ public class NetStormConnectionManager {
 								  finalInfoForVector.setTransactionTooltip(transTooltip);
 								  finalInfoForVector.setTransactionBGcolor(transBGcolor);
 								  finalInfoForVector.setValue(Value);
-								  finalInfoForVector.setLink(linkss);
+								 // finalInfoForVector.setLink(linkss);
+								  finalInfoForVector.setTrendLink(linkss);
 								  finalInfoForVector.setSLA(SLA);
 								  finalInfoForVector.setInitialValue(initialValue);
 								  finalInfoForVector.setStress(Stress);
@@ -1895,7 +2543,7 @@ public class NetStormConnectionManager {
 						  counts = counts+1;
 
 						  metrVal.setCountForBenchmark(counts);
-						  int countForMetrices = counts+1;
+						  int countForMetrices = counts+2;
 						  metrVal.setCountForMetrices(countForMetrices);
 						  metrVal.setHeadersForTrans(headerForVector);
 						  metrVal.setNameOfMetric(metrcNames);
@@ -1980,7 +2628,7 @@ public class NetStormConnectionManager {
 							  String transactionTool = (String)metricObj.get("Transaction Tooltip");
 							  String transactionBG = (String)metricObj.get("Transaction BGcolor");
 							  String Val = (String)metricObj.get("Value");
-							  String links = (String)metricObj.get("link");
+							  String links = (String)metricObj.get("Trend Link");
 							  String sla = (String)metricObj.get("SLA");
 							  String initialVal = (String)metricObj.get("Initial Value "); 
 							  String stress = (String)metricObj.get("Stress");
@@ -1993,7 +2641,8 @@ public class NetStormConnectionManager {
 							  transValue.setTransactionTooltip(transactionTool);
 							  transValue.setTransactionBGcolor(transactionBG);
 							  transValue.setValue(Val);
-							  transValue.setLink(links);
+							 // transValue.setLink(links);
+							  transValue.setTrendLink(links);
 							  transValue.setSLA(sla);
 							  transValue.setInitialValue(initialVal);
 							  transValue.setStress(stress);
@@ -2071,7 +2720,7 @@ public class NetStormConnectionManager {
 					  count = count+1;
 
 					  metrVal.setCountForBenchmark(count);
-					  int countForMetrices = count+1;
+					  int countForMetrices = count+2;
 					  metrVal.setCountForMetrices(countForMetrices);
 					  metrVal.setHeadersForTrans(transHeader);
 					  metrVal.setNameOfMetric(metrcNames); 
@@ -2137,6 +2786,8 @@ public class NetStormConnectionManager {
 				  String transactionBGcolor = (String)scalarVal.get("Transaction BGcolor");
 				  String Value = (String)scalarVal.get("Value");
 				  
+				  String trendLink = (String)scalarVal.get("Trend Link");
+				  
 				  String link = (String) metricLink.get(name);
 				  
 				  String SLA = (String)scalarVal.get("SLA");
@@ -2169,6 +2820,7 @@ public class NetStormConnectionManager {
 				  scalarValue.setInitialValue(initialValue);
 				  scalarValue.setStress(Stress);
 				  scalarValue.setMetricName(name);
+				  scalarValue.setTrendLink(trendLink);
 
 				  scalarArr.add(scalarValue);
 			  }
@@ -2200,6 +2852,7 @@ public class NetStormConnectionManager {
 			  scalarHeader.add("Success(%)");
 		  }
 		  scalarHeader.add("Current");
+		  scalarHeader.add("Trend");
 		  scalarHeader.add("Action");
 
 		  testReport.setScalarHeaders(scalarHeader);

@@ -51,7 +51,8 @@ import java.util.logging.Logger;
 import jenkins.model.*;
 import org.apache.commons.lang.StringUtils;
 import hudson.util.Secret;
-
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 /**
  *
  * @author preety.yadav
@@ -69,10 +70,16 @@ public class NetStormResultsPublisher extends Recorder implements SimpleBuildSte
     this.username = username;
   }
 
+    public Secret getPassword() 
+    {
+      return password;
+    }
+    
   public void setPassword(final String password) 
   {
 	  this.password =  StringUtils.isEmpty(password) ? null : Secret.fromString(password);
   }
+
   
   public String getNetstormUri() 
   {
@@ -84,7 +91,15 @@ public class NetStormResultsPublisher extends Recorder implements SimpleBuildSte
     this.netstormUri = netstormUri;
   }
 
-  public String getUsername() 
+  public boolean isDurationReport() {
+	return durationReport;
+}
+
+public void setDurationReport(boolean durationReport) {
+	this.durationReport = durationReport;
+}
+
+public String getUsername() 
   {
     return username;
   }
@@ -151,25 +166,21 @@ public class NetStormResultsPublisher extends Recorder implements SimpleBuildSte
     
  public FormValidation doCheckNetstormUri(@QueryParameter final String netstormUri)
  {
-   Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
    return  FieldValidator.validateURLConnectionString(netstormUri);
  }
  
  public FormValidation doCheckPassword(@QueryParameter String password)
  {
-   Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
    return  FieldValidator.validatePassword(password);
  }
  
  public FormValidation doCheckUsername(@QueryParameter String username)
  {
-	 Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
    return  FieldValidator.validateUsername(username);
  }
  
  public FormValidation doCheckHtmlTablePath(@QueryParameter final String htmlTablePath)
  {
-	 Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
    return FieldValidator.validateHtmlTablePath(htmlTablePath);
  }
      
@@ -178,7 +189,6 @@ public class NetStormResultsPublisher extends Recorder implements SimpleBuildSte
   */
  public FormValidation doTestNetStormConnection(@QueryParameter("netstormUri") final String netstormRestUri, @QueryParameter("username") final String username, @QueryParameter("password") String password ) 
  {
-   Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
 
    FormValidation validationResult;
    
@@ -203,9 +213,9 @@ public class NetStormResultsPublisher extends Recorder implements SimpleBuildSte
      return validationResult = FormValidation.error("Please enter password.");
    }
    
-   NetStormResultsPublisher.password = Secret.fromString(password);
+   //NetStormResultsPublisher.password = Secret.fromString(password);
    
-  NetStormConnectionManager connection = new NetStormConnectionManager(netstormRestUri, username, NetStormResultsPublisher.password);
+  NetStormConnectionManager connection = new NetStormConnectionManager(netstormRestUri, username, Secret.fromString(password), false);
     
    if (!connection.testNSConnection(errMsg)) 
    { 
@@ -227,34 +237,38 @@ public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
  */
  private String netstormUri = "";
  private String username = "";
- private static Secret password;
+ private Secret password;
  private String project = "";
  private String subProject = "";
  private String scenario = "";
  private JSONObject htmlTable = new JSONObject();
  private String htmlTablePath = null;
+ private boolean durationReport = false;
   
  @DataBoundConstructor
- public NetStormResultsPublisher(final String netstormUri, final String username,String password, final JSONObject htmlTable,final String project, final String subProject, final String scenario)
+ public NetStormResultsPublisher(final String netstormUri, final String username,String password, final JSONObject htmlTable,final String project, final String subProject, final String scenario, final boolean  durationReport)
  {
    System.out.println(" getting constructor parmeter== "+netstormUri +", username = "+username+", project = "+project+", subProject = " +subProject);
-     
+     logger.log(Level.INFO, "duration check = " + durationReport + ", uri = " + netstormUri);
    setNetstormUri(netstormUri);
    setUsername(username);
    setPassword(password);
    setProject(project);
    setSubProject(subProject);
    setScenario(scenario);
+   this.durationReport = durationReport;
+   setDurationReport(durationReport);
    this.htmlTable = htmlTable;
  }
  
 
- NetStormResultsPublisher(final String netstormUri, final String username,String password, final String htmlTable) {
+ NetStormResultsPublisher(final String netstormUri, final String username,String password, final String htmlTable, final JSONObject  durationReport) {
      System.out.println(" getting constructor parmeter== "+netstormUri +", username = "+username);
-    
+    logger.log(Level.INFO, "duration  repport = " + durationReport);
    setNetstormUri(netstormUri);
    setUsername(username);
    setPassword(password);
+  // setDurationCheckBox(durationReport);
  }
   
  public void setArguments()
@@ -293,9 +307,10 @@ public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
     PrintStream logger = taskListener.getLogger();
     StringBuffer errMsg = new StringBuffer();
     
-     NetStormConnectionManager connection = new NetStormConnectionManager(netstormUri, username, password);
     
-    logger.println("Verify connection to NetStorm interface ...");
+     NetStormConnectionManager connection = new NetStormConnectionManager(netstormUri, username, password, durationReport);
+    
+    logger.println("Verify connection to NetStorm interface ..." + durationReport);
     
     if (!connection.testNSConnection(errMsg)) 
     {
@@ -337,6 +352,7 @@ public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
                connection.setProject(((NetStormBuilder)currentBuilder).getProject());
                connection.setSubProject(((NetStormBuilder)currentBuilder).getSubProject());
                connection.setScenario(((NetStormBuilder)currentBuilder).getScenario());
+               
              }
              break;
           }
@@ -353,29 +369,29 @@ public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
        
     logger.println("Connection successful, continue to fetch measurements from netstorm Controller ...");
     //run.doBuildNumber(NetStormBuilder.testRunNumber);
-    NetStormDataCollector dataCollector = new NetStormDataCollector(connection,  run , Integer.parseInt(NetStormBuilder.testRunNumber), "T");
+    NetStormDataCollector dataCollector = new NetStormDataCollector(connection,  run , Integer.parseInt(NetStormBuilder.testRunNumber), "T", NetStormBuilder.testCycleNumber);
     
     try
     {
-      NetStormReport report = dataCollector.createReportFromMeasurements();
-    
+      NetStormReport report = dataCollector.createReportFromMeasurements(logger, fp);
       boolean pdfUpload = dumpPdfInWorkspace(fp, connection);
-      logger.println("Pdf Uploaded" + pdfUpload);
-      NetStormBuildAction buildAction = new NetStormBuildAction(run, report);
-      run.addAction(buildAction);
+      logger.println("Pdf Uploaded = " + pdfUpload);
+       boolean htmlReport = getHTMLReport(fp, connection);
+     // NetStormBuildAction buildAction = new NetStormBuildAction(run, report);
+      //run.addAction(buildAction);
       run.setDisplayName(NetStormBuilder.testRunNumber);
       NetStormBuilder.testRunNumber = "-1";
       logger.println("Ready building NetStorm report");
     
-    List<NetStormReport> previousReportList = getListOfPreviousReports( run, report.getTimestamp());
+   // List<NetStormReport> previousReportList = getListOfPreviousReports( run, report.getTimestamp());
     
-    double currentReportAverage = report.getAverageForMetric(DEFAULT_TEST_METRIC);
-    logger.println("Current report average: " + currentReportAverage);
+   // double currentReportAverage = report.getAverageForMetric(DEFAULT_TEST_METRIC);
+   // logger.println("Current report average: " + currentReportAverage);
     
     }
     catch(Exception e)
     {
-      logger.println("Not able to create netstorm report.may be some configuration issue in running scenario.");
+      logger.println("Not able to create netstorm report.may be some configuration issue in running scenario." + e);
       return ;
     }
     return ;
@@ -383,18 +399,21 @@ public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
     }
 
    /*Method to dump pdf file in workspace*/
-      private boolean dumpPdfInWorkspace(FilePath fp, NetStormConnectionManager connection) {
+      private boolean dumpPdfInWorkspace(FilePath fp, NetStormConnectionManager connection) throws IOException, InterruptedException {
     	  /*getting testrun number*/
     	  String testRun = NetStormBuilder.testRunNumber;
     	  /*path of directory i.e. /var/lib/jenkins/workspace/jobName*/
     	  String dir = fp + "/TR" + testRun;
+    	  
+    	  
     	  logger.log(Level.INFO, "Pdf directory"+dir);
-    	  File fl = new File(dir);
-    	  if(!fl.exists()) {
-    		  fl.mkdir();
-    	  }
-
-    	  File file = new File(dir + "/testsuite_report_" + testRun + ".pdf");
+    	  
+    	  
+    	   FilePath fz = new FilePath(fp.getChannel(), fp + "/TR" + testRun);
+    	   fz.mkdirs();
+    	   FilePath fk = new FilePath(fp.getChannel(), fz + "/testsuite_report_" + testRun + ".pdf");
+    	  logger.log(Level.INFO, "File path for pdf file = " + fk);
+    	  
     	  try {
     		  URL urlForPdf;
     		  String str =   connection.getUrlString();
@@ -416,12 +435,13 @@ public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
     			  logger.log(Level.INFO, "response 200 OK");   
     			  byte[] mybytearray = new byte[1024];
     			  InputStream is = connect.getInputStream();
-    			  FileOutputStream fos = new FileOutputStream(file);
-    			  BufferedOutputStream bos = new BufferedOutputStream(fos);
+    			//  FileOutputStream fos = new FileOutputStream(fp);
+    			  BufferedOutputStream bos = new BufferedOutputStream(fk.write());
     			  int bytesRead;
     			  while((bytesRead = is.read(mybytearray)) > 0){
     				logger.log(Level.INFO, "bytesRead inside while check"+ bytesRead);
     				bos.write(mybytearray, 0, bytesRead);
+    				//fp.write(content, null);
     			  }
     			  bos.close();
     			  is.close();
@@ -436,7 +456,84 @@ public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
     	  }
 
       }  
+    
+    private boolean getHTMLReport(FilePath fp, NetStormConnectionManager connection) throws IOException, InterruptedException {
+    	 
+    	  /*getting testrun number*/
+    	  String testRun = NetStormBuilder.testRunNumber;
+    	  /*path of directory i.e. /var/lib/jenkins/workspace/jobName*/
+    	  String zipFile = fp + "/TestSuiteReport.zip";
+    
+       	 FilePath  fz = new FilePath(fp.getChannel(), zipFile);
+       	   if(fz.exists()) {
+     		   fz.delete();
+     		   fz = new FilePath(fp.getChannel(), zipFile);
+       	   }
+    	  
+    	  try {
+    		  URL urlForHTMLReport;
+    		  String str =   connection.getUrlString();
+    		  urlForHTMLReport = new URL(str+"/ProductUI/productSummary/jenkinsService/getHTMLReport");
+    		  logger.log(Level.INFO, "urlForPdf-"+urlForHTMLReport);
+
+    		  HttpURLConnection connect = (HttpURLConnection) urlForHTMLReport.openConnection();
+    		  connect.setConnectTimeout(0);
+    		  connect.setReadTimeout(0);
+    		  connect.setRequestMethod("POST");
+    		  connect.setRequestProperty("Content-Type", "application/octet-stream");
+
+    		  connect.setDoOutput(true);
+    		  java.io.OutputStream outStream = connect.getOutputStream();
+    		  outStream.write(testRun.getBytes());
+    		  outStream.flush();
+
+    		  if (connect.getResponseCode() == 200) {
+    			  logger.log(Level.INFO, "response 200 OK");   
+    			  byte[] mybytearray = new byte[1024];
+    			  InputStream is = connect.getInputStream();
+    			 // FileOutputStream fos = new FileOutputStream(file);
+    			  BufferedOutputStream bos = new BufferedOutputStream(fz.write());
+    			  int bytesRead;
+    			  while((bytesRead = is.read(mybytearray)) > 0){
+    				logger.log(Level.INFO, "bytesRead inside while check"+ bytesRead);
+    				bos.write(mybytearray, 0, bytesRead);
+    			  }
+    			  bos.close();
+    			  is.close();
+    		  } else {
+    			  logger.log(Level.INFO, "ErrorCode-"+ connect.getResponseCode());
+    			  logger.log(Level.INFO, "content type-" + connect.getContentType());
+    		  }
+    		  
+    		  String destDir = fp + "/TestSuiteReport";
+    		  
+    		  FilePath dir = new FilePath(fp.getChannel(), destDir);
+    		  if(dir.exists())
+    			  dir.deleteRecursive(); 
+    		  dir.mkdirs();
+    			 
+              unzip(dir, fz);
+    		  return true;
+    	  } catch (Exception e){
+    		  logger.log(Level.SEVERE, "Unknown exception in methid getHTMLreport. IOException -", e);
+    		  e.printStackTrace();
+    		  return false;
+    	  }
+    	  
+      }
       
+      private static void unzip(FilePath dir, FilePath zipFile) throws IOException, InterruptedException {
+    	
+    	    logger.log(Level.INFO, "inside unzip method...");
+    	    try {
+    	    	InputStream in = zipFile.read();
+    	    	dir.unzipFrom(in);
+    	    } catch (IOException e) {
+    	    	logger.log(Level.SEVERE, "Exception in unzipping file = " + e);
+    	        e.printStackTrace();
+    	    }
+    	    
+    	}
    private double calculateAverageBasedOnPreviousReports(final List<NetStormReport> reports)
    {
     double calculatedSum = 0;
@@ -467,13 +564,13 @@ public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
     final List<NetStormReport> previousReports = new ArrayList<NetStormReport>();
 
    // final List<? extends AbstractBuild<?, ?>> builds = build.getProject().getBuilds();
-    final NetStormBuildAction performanceBuildAction = build.getAction(NetStormBuildAction.class);
+   // final NetStormBuildAction performanceBuildAction = build.getAction(NetStormBuildAction.class);
     
-        logger.log(Level.INFO, "data in the performence build action = "+ performanceBuildAction);
+    //    logger.log(Level.INFO, "data in the performence build action = "+ performanceBuildAction);
     
-    previousReports.add(performanceBuildAction.getBuildActionResultsDisplay().getNetStormReport());
+   // previousReports.add(performanceBuildAction.getBuildActionResultsDisplay().getNetStormReport());
     
-    logger.log(Level.INFO, "data in the get result display = "+ performanceBuildAction.getBuildActionResultsDisplay().getNetStormReport());
+  //  logger.log(Level.INFO, "data in the get result display = "+ performanceBuildAction.getBuildActionResultsDisplay().getNetStormReport());
 
     return previousReports;
   }

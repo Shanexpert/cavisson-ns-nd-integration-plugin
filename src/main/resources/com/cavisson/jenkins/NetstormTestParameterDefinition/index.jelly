@@ -7,7 +7,7 @@
 <div name="parameter" description="${it.formattedDescription}">
 <input type="hidden" name="name" value="${it.name}" />
 <f:textbox name="value" value="${it.defaultValue}" 
-checkUrl="'${it.rootUrl}/descriptor/jenkins.pipeline.NetstormTestParameterDefinition/validate?keyword='+encodeURIComponent(&quot;${it.keyword}&quot;)+'&amp;value='+encodeURIComponent(this.value)"/>
+checkUrl="'${it.rootUrl}/descriptor/com.cavisson.jenkins.NetstormTestParameterDefinition/validate?keyword='+encodeURIComponent(&quot;${it.keyword}&quot;)+'&amp;value='+encodeURIComponent(this.value)"/>
 </div>
 	</f:entry>
 </j:jelly>

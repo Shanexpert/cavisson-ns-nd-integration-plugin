@@ -152,17 +152,17 @@ public class NSNDIntegrationResultsPublisher extends Recorder implements SimpleB
     }
    
    //Getting initial duration values
-   if(getInitDurationValues() != null)
-   {
-     String duration = getInitDurationValues();
-     String values[] = duration.split("@");
-	   
-     ndParams.setInitStartTime(values[0]);
-     ndParams.setInitEndTime(values[1]);
-   }
+//   if(getInitDurationValues() != null)
+//   {
+//     String duration = getInitDurationValues();
+//     String values[] = duration.split("@");
+//	   
+//     ndParams.setInitStartTime(values[0]);
+//     ndParams.setInitEndTime(values[1]);
+//   }
      
    
-  ndParams.setPrevDuration(getPrevDuration());
+//  ndParams.setPrevDuration(getPrevDuration());
    
    NSNDIntegrationConnectionManager connection = new NSNDIntegrationConnectionManager (nsIntegrationUri, nsUsername, nsPassword, ndIntegrationUri, ndUsername, ndPassword, ndParams);
 
@@ -198,27 +198,27 @@ public class NSNDIntegrationResultsPublisher extends Recorder implements SimpleB
    
    try
    {
-     NetStormReport report = dataCollector.createReportFromMeasurements();
-     
-     NetStormBuildAction buildAction = new NetStormBuildAction(run, report, false, true);
-     
-      run.addAction(buildAction);
+     NetStormReport report = dataCollector.createReportFromMeasurements(logger, fp);
+     //boolean status = dataCollector.createReportFromMeasurements(logger);
+//     NetStormBuildAction buildAction = new NetStormBuildAction(run, report, false, true);
+//     
+//      run.addAction(buildAction);
       run.setDisplayName(NetStormBuilder.testRunNumber);
       NetStormBuilder.testRunNumber = "-1";
      
      //change status of build depending upon the status of report.
-      TestReport tstRpt =  report.getTestReport();
-      if(tstRpt.getOverAllStatus().equals("FAIL"))
-      run.setResult(Result.FAILURE);
-
-     logger.println("Ready building Integrated  report");
-     List<NetStormReport> previousReportList = getListOfPreviousReports(run, report.getTimestamp());
-     
-     double averageOverTime = calculateAverageBasedOnPreviousReports(previousReportList);
-     logger.println("Calculated average from previous reports for integrated: " + averageOverTime);
-
-     double currentReportAverage = report.getAverageForMetric(DEFAULT_TEST_METRIC);
-     logger.println("Metric for integrated: " + DEFAULT_TEST_METRIC + "% . Build status is: " + ((Run<?,?>) run).getResult());
+//      TestReport tstRpt =  report.getTestReport();
+//      if(tstRpt.getOverAllStatus().equals("FAIL"))
+//      run.setResult(Result.FAILURE);
+//
+//     logger.println("Ready building Integrated  report");
+//     List<NetStormReport> previousReportList = getListOfPreviousReports(run, report.getTimestamp());
+//     
+//     double averageOverTime = calculateAverageBasedOnPreviousReports(previousReportList);
+//     logger.println("Calculated average from previous reports for integrated: " + averageOverTime);
+//
+//     double currentReportAverage = report.getAverageForMetric(DEFAULT_TEST_METRIC);
+//     logger.println("Metric for integrated: " + DEFAULT_TEST_METRIC + "% . Build status is: " + ((Run<?,?>) run).getResult());
    }
    catch(Exception e)
    {
@@ -231,29 +231,34 @@ public class NSNDIntegrationResultsPublisher extends Recorder implements SimpleB
                
     }
    
-   public String getInitDurationValues()
-   {
-     if(initDuration != null)
-     {
-       if(initDuration.containsKey("initStartTime"))
-       {
-         initStartTime = (String)initDuration.get("initStartTime");
-         setInitStartTime(initStartTime);
-       }
-       
-       if(initDuration.containsKey("initEndTime"))
-       {
-           initEndTime = (String)initDuration.get("initEndTime");
-           setInitEndTime(initEndTime);
-       }   
-         
-     }
-     
-     if(initStartTime != null && initEndTime != null)
-       return initStartTime+"@"+initEndTime;
-     else
-    	return null;
-   }
+//   public String getInitDurationValues()
+//   {
+//     if(initDuration != null)
+//     {
+////       if(initDuration.containsKey("initStartTime"))
+////       {
+////         initStartTime = (String)initDuration.get("initStartTime");
+////         setInitStartTime(initStartTime);
+////       }
+////       
+////       if(initDuration.containsKey("initEndTime"))
+////       {
+////           initEndTime = (String)initDuration.get("initEndTime");
+////           setInitEndTime(initEndTime);
+////       }   
+//         
+//     }
+//     
+//     if(initStartTime != null && initEndTime != null)
+//       return initStartTime+"@"+initEndTime;
+//     else
+//    	return null;
+//   }
+   
+   public String isTimePeriod(String testTypeName) {
+	   logger.log(Level.INFO, "inside time period check..." + testTypeName + ", ndParams.getTimePeriod() = " + ndParams.getTimePeriod());
+	    return ndParams.getTimePeriod().equalsIgnoreCase(testTypeName) ? "true" : "";
+	}
     
    private double calculateAverageBasedOnPreviousReports(final List<NetStormReport> reports)
    {
@@ -294,19 +299,20 @@ public class NSNDIntegrationResultsPublisher extends Recorder implements SimpleB
      return previousReports;
    }
     
-    public boolean isPrevDuration()
-   {
-    return getPrevDuration();
-   }
+//    public boolean isPrevDuration()
+//   {
+//    return getPrevDuration();
+//   }
 
     NSNDIntegrationParameterForReport  ndParams = new NSNDIntegrationParameterForReport();
     
     @DataBoundConstructor
    public NSNDIntegrationResultsPublisher(final String nsIntegrationUri, final String nsUsername, String nsPassword, final String ndIntegrationUri, final String ndUsername,
-         String ndPassword, final String baseStartTime, final String baseEndTime, 
-         final JSONObject prevDuration, final JSONObject initDuration, final String initEndTime,
-         final String initStartTime,final String checkProfilePath, final String criThreshold,
-         final String warThreshold, final String failThreshold)
+         String ndPassword, final String base1StartTime, final String base1EndTime, 
+         final String base2StartTime, final String base2EndTime, final String base3StartTime, final String base3EndTime,
+         final String checkProfilePath, final String criThreshold, final String warThreshold, final String failThreshold, 
+         final String timePeriod, final String curStartTimeAbsolute, final String curEndTimeAbsolute, final String curStartTimeElapsed, 
+         final String curEndTimeElapsed, final String phase, final String base1MSRName, final String base2MSRName, final String base3MSRName)
   {
 
    
@@ -317,17 +323,31 @@ public class NSNDIntegrationResultsPublisher extends Recorder implements SimpleB
    setNdIntegrationUri(ndIntegrationUri);
    setNdUsername(ndUsername);
    setNdPassword(ndPassword);
-   setBaseStartTime(baseStartTime);
-   setBaseEndTime(baseEndTime);
+   setBase1StartTime(base1StartTime);
+   setBase1EndTime(base1EndTime);
+   setBase2StartTime(base2StartTime);
+   setBase2EndTime(base2EndTime);
+   setBase3StartTime(base3StartTime);
+   setBase3EndTime(base3EndTime);
+   setBase3MSRName(base3MSRName);
+   setBase2MSRName(base2MSRName);
+   setBase1MSRName(base1MSRName);
  
    setCheckProfilePath(checkProfilePath);
    setCriThreshold(criThreshold);
    setWarThreshold(warThreshold);
    setFailThreshold(failThreshold);
-   this.initDuration = initDuration;
-   this.prevDuration = prevDuration;
-   ndParams.setBaseEndTime(baseEndTime);
-   ndParams.setBaseStartTime(baseStartTime);
+//   this.initDuration = initDuration;
+//   this.prevDuration = prevDuration;
+   ndParams.setBase1StartTime(base1StartTime);
+   ndParams.setBase1EndTime(base1EndTime);
+   ndParams.setBase2StartTime(base2StartTime);
+   ndParams.setBase2EndTime(base2EndTime);
+   ndParams.setBase3StartTime(base3StartTime);
+   ndParams.setBase3EndTime(base3EndTime);
+   ndParams.setBase1MSRName(base1MSRName);
+   ndParams.setBase2MSRName(base2MSRName);
+   ndParams.setBase3MSRName(base3MSRName);
    ndParams.setCheckProfilePath(checkProfilePath);
     
     if(this.getCriThreshold() != "")
@@ -344,6 +364,26 @@ public class NSNDIntegrationResultsPublisher extends Recorder implements SimpleB
       ndParams.setFailThreshold(this.getFailThreshold());
     else
       ndParams.setFailThreshold(failThreshold);
+    
+    setTimePeriod(timePeriod);
+    ndParams.setTimePeriod(timePeriod);
+
+ if(timePeriod != null) {
+  if(timePeriod.equals("Absolute Time")) {
+  	ndParams.setCurStartTimeAbsolute(curStartTimeAbsolute);
+  	ndParams.setCurEndTimeAbsolute(curEndTimeAbsolute);
+  	setCurStartTimeAbsolute(curStartTimeAbsolute);
+  	setCurEndTimeAbsolute(curEndTimeAbsolute);
+  } else if(timePeriod.equals("Elapsed Time")) {
+  	ndParams.setCurStartTimeElapsed(curStartTimeElapsed);
+  	ndParams.setCurEndTimeElapsed(curEndTimeElapsed);
+  	setCurStartTimeElapsed(curStartTimeElapsed);
+  	setCurEndTimeElapsed(curEndTimeElapsed);
+  } else if(timePeriod.equals("Phase")) {
+  	ndParams.setPhase(phase);
+  	setPhase(phase);
+  }
+ }
 
  }
 
@@ -376,63 +416,59 @@ public class NSNDIntegrationResultsPublisher extends Recorder implements SimpleB
  
  public FormValidation doCheckNsIntegrationUri(@QueryParameter final String nsIntegrationUri)
  {
-	 Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
    return  FieldValidator.validateURLConnectionString(nsIntegrationUri);
  }
  
  public FormValidation doCheckNsPassword(@QueryParameter String nsPassword)
  {	
-	   Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
    return  FieldValidator.validatePassword(nsPassword);
  }
  
  public FormValidation doCheckNsUsername(@QueryParameter final String nsUsername)
  {
-	 Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
    return  FieldValidator.validateUsername(nsUsername);
+ }
+ 
+ public synchronized ListBoxModel doFillPhaseItems()
+ {
+   ListBoxModel models = new ListBoxModel();
+     models.add("Duration");  
+     return models;
  }
  
  public FormValidation doCheckNdIntegrationUri(@QueryParameter final String ndIntegrationUri)
  {
-	 Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
    return  FieldValidator.validateURLConnectionString(ndIntegrationUri);
  }
  
  public FormValidation doCheckNdPassword(@QueryParameter String ndPassword)
  {
-	   Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
    return  FieldValidator.validatePassword(ndPassword);
  }
  
  public FormValidation doCheckNdUsername(@QueryParameter final String ndUsername)
  {
-	 Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
    return  FieldValidator.validateUsername(ndUsername);
  }
  
  public FormValidation doCheckWarThreshold(@QueryParameter final String warThreshold) {
-	 Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
    return FieldValidator.validateThresholdValues(warThreshold);
 } 
  
  public FormValidation doCheckCriThreshold(@QueryParameter final String criThreshold) {
-	 Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
    return FieldValidator.validateThresholdValues(criThreshold);
 } 
   
  
  public FormValidation doCheckFailThreshold(@QueryParameter final String failThreshold) {
-	 Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
    return FieldValidator.validateThresholdValues(failThreshold);
 } 
  
  public FormValidation doCheckBaseStartTime(@QueryParameter final String baseStartTime) throws ParseException {
-	 Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
    return FieldValidator.validateDateTime(baseStartTime);
 } 
  
  public FormValidation doCheckBaseEndTime(@QueryParameter final String baseEndTime) throws ParseException {
-	 Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
    return FieldValidator.validateDateTime(baseEndTime);
 }  
  
@@ -441,7 +477,6 @@ public class NSNDIntegrationResultsPublisher extends Recorder implements SimpleB
  */
 public FormValidation doTestNsNdIntegratedConnection(@QueryParameter("nsIntegrationUri") final String nsIntegrationUri, @QueryParameter("nsUsername") final String nsUsername, @QueryParameter("nsPassword") String nsPassword, @QueryParameter("ndIntegrationUri") final String ndIntegrationUri, @QueryParameter("ndUsername") final String ndUsername, @QueryParameter("ndPassword") String ndPassword ) 
 { 
-  Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
   
   FormValidation validationResult;
   
@@ -484,11 +519,8 @@ public FormValidation doTestNsNdIntegratedConnection(@QueryParameter("nsIntegrat
   {
     return validationResult = FormValidation.error("Please enter password.");
   }
-  
-  NSNDIntegrationResultsPublisher.nsPassword = Secret.fromString(nsPassword);
-  NSNDIntegrationResultsPublisher.ndPassword = Secret.fromString(ndPassword);
-  
-  NSNDIntegrationConnectionManager connection = new NSNDIntegrationConnectionManager(nsIntegrationUri, nsUsername, NSNDIntegrationResultsPublisher.nsPassword, ndIntegrationUri, ndUsername, NSNDIntegrationResultsPublisher.ndPassword, null);
+    
+  NSNDIntegrationConnectionManager connection = new NSNDIntegrationConnectionManager(nsIntegrationUri, nsUsername, Secret.fromString(nsPassword), ndIntegrationUri, ndUsername, Secret.fromString(ndPassword), null);
   
   String check = ndIntegrationUri + "@@" + ndUsername +"@@" + ndPassword;
   
@@ -516,21 +548,81 @@ public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
  
  private String nsIntegrationUri = "";
  private String nsUsername = "";
- private static Secret nsPassword;
+ private Secret nsPassword;
  private String ndIntegrationUri = "";
  private String ndUsername = "";
- private static Secret ndPassword;
- private JSONObject prevDuration = new JSONObject();
- private JSONObject initDuration = new JSONObject();
- private String baseStartTime;
- private String baseEndTime;
+ private Secret ndPassword;
+ //private String prevDuration = new String();
+ //private String initDuration = new String();
+ private String base1StartTime;
+ private String base1EndTime;
  private  String checkProfilePath;
- private String initStartTime;
- private String initEndTime;
+ private String base2StartTime;
+ private String base2EndTime;
+ private String base3StartTime;
+ private String base3EndTime;
+ private String base1MSRName;
+ private String base2MSRName;
+ private String base3MSRName;
  private String criThreshold;
  private String warThreshold;
  private String failThreshold;
+ private String phase;
+ private String curStartTimeAbsolute;
+ private String curEndTimeAbsolute;
+ private String curStartTimeElapsed;
+ private String curEndTimeElapsed;
+ private static String timePeriod;
  String duration;
+ 
+ public String getTimePeriod() {
+		return timePeriod;
+	}
+
+	public void setTimePeriod(String timePeriod) {
+		this.timePeriod = timePeriod;
+	}
+
+	public String getCurStartTimeAbsolute() {
+		return curStartTimeAbsolute;
+	}
+
+	public void setCurStartTimeAbsolute(String curStartTimeAbsolute) {
+		this.curStartTimeAbsolute = curStartTimeAbsolute;
+	}
+
+	public String getCurEndTimeAbsolute() {
+		return curEndTimeAbsolute;
+	}
+
+	public void setCurEndTimeAbsolute(String curEndTimeAbsolute) {
+		this.curEndTimeAbsolute = curEndTimeAbsolute;
+	}
+
+	public String getCurStartTimeElapsed() {
+		return curStartTimeElapsed;
+	}
+
+	public void setCurStartTimeElapsed(String curStartTimeElapsed) {
+		this.curStartTimeElapsed = curStartTimeElapsed;
+	}
+
+	public String getCurEndTimeElapsed() {
+		return curEndTimeElapsed;
+	}
+
+	public void setCurEndTimeElapsed(String curEndTimeElapsed) {
+		this.curEndTimeElapsed = curEndTimeElapsed;
+	}
+
+	public String getPhase() {
+		return phase;
+	}
+
+	public void setPhase(String phase) {
+		this.phase = phase;
+	}
+
  
  
 public String getCriThreshold() {
@@ -557,36 +649,76 @@ public void setFailThreshold(String failThreshold) {
 	this.failThreshold = failThreshold;
 }
 
-public String getInitStartTime() {
-	return initStartTime;
+public String getBase1StartTime() {
+	return base1StartTime;
 }
 
-public void setInitStartTime(String initStartTime) {
-	this.initStartTime = initStartTime;
+public void setBase1StartTime(String base1StartTime) {
+	this.base1StartTime = base1StartTime;
 }
 
-public String getInitEndTime() {
-	return initEndTime;
+public String getBase1EndTime() {
+	return base1EndTime;
 }
 
-public void setInitEndTime(String initEndTime) {
-	this.initEndTime = initEndTime;
+public void setBase1EndTime(String base1EndTime) {
+	this.base1EndTime = base1EndTime;
 }
 
-public String getBaseStartTime() {
-	return baseStartTime;
+public String getBase2StartTime() {
+	return base2StartTime;
 }
 
-public void setBaseStartTime(String baseStartTime) {
-	this.baseStartTime = baseStartTime;
+public void setBase2StartTime(String base2StartTime) {
+	this.base2StartTime = base2StartTime;
 }
 
-public String getBaseEndTime() {
-	return baseEndTime;
+public String getBase2EndTime() {
+	return base2EndTime;
 }
 
-public void setBaseEndTime(String baseEndTime) {
-	this.baseEndTime = baseEndTime;
+public void setBase2EndTime(String base2EndTime) {
+	this.base2EndTime = base2EndTime;
+}
+
+public String getBase3StartTime() {
+	return base3StartTime;
+}
+
+public void setBase3StartTime(String base3StartTime) {
+	this.base3StartTime = base3StartTime;
+}
+
+public String getBase3EndTime() {
+	return base3EndTime;
+}
+
+public void setBase3EndTime(String base3EndTime) {
+	this.base3EndTime = base3EndTime;
+}
+
+public String getBase1MSRName() {
+	return base1MSRName;
+}
+
+public void setBase1MSRName(String base1msrName) {
+	base1MSRName = base1msrName;
+}
+
+public String getBase2MSRName() {
+	return base2MSRName;
+}
+
+public void setBase2MSRName(String base2msrName) {
+	base2MSRName = base2msrName;
+}
+
+public String getBase3MSRName() {
+	return base3MSRName;
+}
+
+public void setBase3MSRName(String base3msrName) {
+	base3MSRName = base3msrName;
 }
 
 public String getCheckProfilePath() {
@@ -613,6 +745,10 @@ public void setNdUsername(String ndUsername) {
 	this.ndUsername = ndUsername;
 }
 
+public Secret getNdPassword() {
+	return ndPassword;
+}
+
 public void setNdPassword(String ndPassword) {
 	this.ndPassword = StringUtils.isEmpty(ndPassword) ? null : Secret.fromString(ndPassword);
 }
@@ -633,17 +769,21 @@ public void setNsUsername(String nsUsername) {
 	this.nsUsername = nsUsername;
 }
 
+public Secret getNsPassword() {
+	return nsPassword;
+}
+
 public void setNsPassword(String nsPassword) {
 	this.nsPassword = StringUtils.isEmpty(nsPassword) ? null : Secret.fromString(nsPassword);
 }
 
-public boolean getPrevDuration()
-{
-  if(prevDuration != null)
-    return true;
-  else
-    return false;
-}
+//public boolean getPrevDuration()
+//{
+//  if(prevDuration != null)
+//    return true;
+//  else
+//    return false;
+//}
  
 
 }

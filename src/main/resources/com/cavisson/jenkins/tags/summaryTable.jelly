@@ -1,6 +1,0 @@
-<j:jelly xmlns:j="jelly:core">
-<td>${it.getFormattedTime()}</td>
-<td><b>${it.getValue()}</b></td>
-<td>${it.getMin()}</td>
-<td>${it.getMax()}</td>
-</j:jelly>

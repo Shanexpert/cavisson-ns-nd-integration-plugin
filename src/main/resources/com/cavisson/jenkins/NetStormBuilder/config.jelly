@@ -1,40 +1,93 @@
+<?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler"
- xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson"  xmlns:f="/lib/form"> 
- <script src ="${rootURL}/plugin/cavisson/js/jenkins_utils.js"/>
+ xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson"  xmlns:f="/lib/form">
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/> 
+ <script src ="${rootURL}/plugin/cavisson-ns-nd-integration/js/jenkins_utils.js"/>
   <f:entry title="${%netstorm.url.title}"  description="${%netstorm.url.description}">
-    <f:textbox field="URLConnectionString"/>
+    <f:textbox field="URLConnectionString" id="urlConnect"/> 
   </f:entry>
   <f:entry title="${%netstorm.username.title}"  description="${%netstorm.username.description}">
-    <f:textbox field="username"/>
+    <f:textbox field="username" id="userName"/>
   </f:entry>
   <f:entry title="${%netstorm.password.title}" description="${%netstorm.password.description}">
-    <f:password field="password"/>
+    <f:password field="password" id="pass"/>
   </f:entry>
 
+<div style="justify-content:flex-end;width:100%;">
   <f:validateButton title="${%netstorm.connection.test.title}" progress="${%netstorm.connection.test.progress}"
   method="testNetstormConnection" with="URLConnectionString,username,password"/>
+</div>
 
+ <f:optionalBlock name="dynamic" title="Git Configuration" checked="${instance.getGitConfigurationFromNS()}">
+      <f:section title="Git Configuration">
+       <div style='padding:10px;width:100%;background-color:#e7e6e6c2;'>
+    	<f:entry title="Protocol">
+     		<f:textbox field="protocol" />
+    	</f:entry>
+    	<f:entry title="Repository IP/Domain Name">
+     		<f:textbox field="repoIp" />
+    	</f:entry>
+    	<f:entry title="Repository Port">
+     		<f:textbox field="repoPort" />
+    	</f:entry>
+    	<f:entry title="Repository Path">
+     		<f:textbox field="repoPath" />
+    	</f:entry>
+      	<f:entry title="Username">
+       		<f:textbox field="repoUsername" />
+      	</f:entry>
+      	<f:entry title="Password">
+     		<f:password field="repoPassword"/>
+      	</f:entry>
+      	<div style="display:flex;justify-content:flex-end;width:100%;">
+			<f:validateButton title="Test" progress="Testing Configuration..." method="testGitConfiguration" with="protocol,repoIp,repoPort,repoPath,repoUsername,repoPassword,username,password,URLConnectionString"/>
+        	<f:validateButton title="OK" progress="Saving Configuration..." method="saveGitConfiguration" with="protocol,repoIp,repoPort,repoPath,repoUsername,repoPassword,username,password,URLConnectionString"/>
+      	</div>
+       </div>
+      </f:section>
+</f:optionalBlock>
+
+<f:block>
+<div style="display: flex;margin: 5px;margin-bottom: 15px;">
+	<div style="width: 110px;">
+	   <input type="checkbox" field="gitPull" id="myCheck" name="gitPull" value="${instance.gitPull}" onchange="performGitPull(this.value)" onload="performGitPull(this.value)"/>
+  	   <label>Git Pull</label><br></br>
+	</div>
+    <div style="display:flex;">
+  		<div id="showIcon" style="display:none;"><i style="margin-right: 8px;" class="fa fa-circle-o-notch fa-spin"></i></div>
+  		<div id="gitPullMsg"></div>
+	</div>
+</div>
+</f:block>
+
+
+<f:section>
   <f:entry title="${%netstorm.project.name.title}" description="${%netstorm.project.name.description}" >
-    <f:select field="project"/>
+    <f:select field="project" id="P" onfocus="getPulledObjects(this.id)"/>
   </f:entry>
   <f:entry title="${%netstorm.subproject.name.title}" description="${%netstorm.subproject.name.description}" >
-    <f:select field="subProject"/>
+    <f:select field="subProject" id="SP" onfocus="getPulledObjects(this.id)"/>
   </f:entry>
   
   <f:entry title='Select Test Profile Type'>
-      <f:select  field="testMode"  onchange="enableDisableTR(this.value)" />
+      <f:select  field="testMode" id="testMode"  onchange="enableDisableTR(this.value)" />
   </f:entry>
 
   <f:entry title='Select Test Profile'>
-      <f:select  field="scenario"/>
+      <f:select  field="scenario" id="S" onfocus="getPulledObjects(this.id)"/>
   </f:entry>
  
-  <f:entry title='Enter TR number'>
-    <f:textbox field="baselineTR" id='txtBaselineTR' />
+ <f:entry title='Polling interval' description="${%netstorm.pollInterval.description}">
+    <f:textbox field="pollInterval" id='pollInterval' default="60"/>
   </f:entry>
-
-
-<script>
+  
+ <f:entry title='Override Baseline with last successful TR'>
+    <f:select field ="baselineType"/>
+ </f:entry>
+</f:section>
+   
+ <st:bind var="backend" value="${descriptor}"/>
+ <script>
  function enableDisableTR(value)
  {
  
@@ -46,6 +99,127 @@
 
  }
  
+ window.addEventListener('load', (event) => {
+    console.log("markChecked called ...");
+	var urlConn = document.getElementById('urlConnect').value;
+ 	var username = document.getElementById('userName').value;
+ 	var password = document.getElementById('pass').value;
+ 	var project = document.getElementById('P').value;
+ 	var subProject = document.getElementById('SP').value;
+ 	var testMode = document.getElementById('testMode').value;
+ 	var checkBox = document.getElementById("myCheck");
+ 	console.log("markChecked: checkBox -"+document.getElementById("myCheck").value);
+ 	var checkVal = document.getElementById("myCheck").value;
+ 	
+ 	var boolVal = (document.getElementById("myCheck").value == 'true');
+ 	console.log("markChecked: boolVal -"+boolVal);
+ 	document.getElementById("myCheck").checked = boolVal;
+ 	console.log("markChecked: checkBox checked? "+checkBox.checked);
+ 	
+ 	document.getElementById('gitPullMsg').innerHTML = "";
+ 	document.getElementById('gitPullMsg').style.color = "#000000";
+ 	document.getElementById('gitPullMsg').fontWeight = "400";
+	if(checkBox.checked == true){
+	console.log("in on check ...");
+ 	document.getElementById('gitPullMsg').innerHTML = "Git pull is in progress ...";
+ 	var x = document.getElementById("showIcon");
+ 	x.style.display = "block";
+	backend.performGitpull(urlConn,username,password,checkVal,project,subProject,testMode,function(t) {
+	  console.log("STATUS -"+t.responseObject());
+	  var res = t.responseObject();
+	  console.log("res gitPull-"+res);
+	  console.log("res gitPull msg -"+res.msg+",color -"+res.color);
+	  console.log("message -"+document.getElementById('gitPullMsg').innerHTML);
+	  document.getElementById('gitPullMsg').innerHTML = res.msg;
+	  var colortext = document.getElementById('gitPullMsg');
+	  colortext.style.color = res.color;
+	  colortext.style.fontWeight = "500";
+	  x.style.display = "none";
+	})
+	
+	}
+ 	
+	});
+ 
+ function getPulledObjects(value){
+ 	console.log("getPulledObjects called -"+value);
+ 	var obj = document.getElementById(value);
+ 	console.log("obj -"+obj);
+ 	var urlConn = document.getElementById('urlConnect').value;
+ 	var username = document.getElementById('userName').value;
+ 	var password = document.getElementById('pass').value;
+ 	var project = document.getElementById('P').value;
+ 	var subProject = document.getElementById('SP').value;
+ 	var testMode = document.getElementById('testMode').value;
+ 	console.log("urlConn -"+urlConn+",project-"+project+",subProject -"+subProject+",testMode -"+testMode);
+ 	var temp = document.getElementById(value).value;
+ 	
+ 	backend.getPulledObjects(value,urlConn,username,password,project,subProject,testMode,function(t) {
+ 		var res = new Array();
+ 		console.log("res obj -"+t.responseObject());
+ 		res = t.responseObject();
+ 		console.log("res length -"+res.length);
+ 		console.log("res item -"+res[0]);
+ 		var l = res.length;
+ 		 if(l &gt; 0){
+ 		 	console.log("length is greater than 0 ...");
+ 		 	var addOptions = "";
+ 		 	for (i in res) {
+ 		 	console.log("res length again -"+l);
+ 		 	   if(i &lt; l){
+                console.log("item -"+res[i]);
+                addOptions += "<option>" + res[i] + "</option>";
+               }
+            }
+            console.log("addOptions -"+addOptions);
+            document.getElementById(value).innerHTML = addOptions;
+            console.log("selected value -"+document.getElementById(value).value);
+            if(res.includes(temp)){
+            	console.log("temp exists ...");
+            	document.getElementById(value).value = temp;
+            }else{
+            	console.log("temp does not exist ...");
+            	document.getElementById(value).value = res[0];
+            }
+            console.log("updated selected value -"+document.getElementById(value).value);
+ 		 }
+ 	})
+ }
+ 
+ function performGitPull(value){
+    console.log("performGitPull called -");
+	var urlConn = document.getElementById('urlConnect').value;
+ 	var username = document.getElementById('userName').value;
+ 	var password = document.getElementById('pass').value;
+ 	var project = document.getElementById('P').value;
+ 	var subProject = document.getElementById('SP').value;
+ 	var testMode = document.getElementById('testMode').value;
+ 	var checkBox = document.getElementById("myCheck");
+ 	console.log("checkBox -"+checkBox);
+ 	
+ 	document.getElementById('gitPullMsg').innerHTML = "";
+ 	document.getElementById('gitPullMsg').style.color = "#000000";
+ 	document.getElementById('gitPullMsg').fontWeight = "400";
+	if(checkBox.checked == true){
+	console.log("in on check ...");
+ 	document.getElementById('gitPullMsg').innerHTML = "Git pull is in progress ...";
+ 	var x = document.getElementById("showIcon");
+ 	x.style.display = "block";
+	backend.performGitpull(urlConn,username,password,value,project,subProject,testMode,function(t) {
+	  console.log("STATUS -"+t.responseObject());
+	  var res = t.responseObject();
+	  console.log("res gitPull-"+res);
+	  console.log("res gitPull msg -"+res.msg+",color -"+res.color);
+	  console.log("message -"+document.getElementById('gitPullMsg').innerHTML);
+	  document.getElementById('gitPullMsg').innerHTML = res.msg;
+	  var colortext = document.getElementById('gitPullMsg');
+	  colortext.style.color = res.color;
+	  colortext.style.fontWeight = "500";
+	  x.style.display = "none";
+	})
+	
+	}
+}
 
 </script>
    

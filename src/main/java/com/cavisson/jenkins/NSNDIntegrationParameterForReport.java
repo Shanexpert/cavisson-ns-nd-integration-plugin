@@ -13,17 +13,76 @@ public class NSNDIntegrationParameterForReport {
     
   private String curStartTime;
   private String curEndTime;
-  private String baseStartTime;
-  private String baseEndTime;
-  private String initStartTime;
-  private String initEndTime;
+  private String base1StartTime;
+  private String base1EndTime;
+  private String base2StartTime;
+  private String base2EndTime;
+  private String base3StartTime;
+  private String base3EndTime;
+  private String base1MSRName;
+  private String base2MSRName;
+  private String base3MSRName;
   private boolean prevDuration;
   private String checkProfilePath;
   private String critiThreshold;
   private String warThreshold;
   private String failThreshold;
+  private String curStartTimeAbsolute;
+  private String curEndTimeAbsolute;
+  private String curStartTimeElapsed;
+  private String curEndTimeElapsed;
+  private String phase;
+  private String timePeriod;
 
   
+  public String getTimePeriod() {
+	 	return timePeriod;
+	 }
+
+	 public void setTimePeriod(String timePeriod) {
+	 	this.timePeriod = timePeriod;
+	 }
+
+	 public String getPhase() {
+	 	return phase;
+	 }
+
+	 public void setPhase(String phase) {
+	 	this.phase = phase;
+	 }
+
+	   public String getCurStartTimeAbsolute() {
+		return curStartTimeAbsolute;
+	}
+
+	public void setCurStartTimeAbsolute(String curStartTimeAbsolute) {
+		this.curStartTimeAbsolute = curStartTimeAbsolute;
+	}
+
+	public String getCurEndTimeAbsolute() {
+		return curEndTimeAbsolute;
+	}
+
+	public void setCurEndTimeAbsolute(String curEndTimeAbsolute) {
+		this.curEndTimeAbsolute = curEndTimeAbsolute;
+	}
+
+	public String getCurStartTimeElapsed() {
+	 	return curStartTimeElapsed;
+	  }
+
+	  public void setCurStartTimeElapsed(String curStartTimeElapsed) {
+	 	this.curStartTimeElapsed = curStartTimeElapsed;
+	  }
+
+	  public String getCurEndTimeElapsed() {
+	 	return curEndTimeElapsed;
+	  }
+
+	  public void setCurEndTimeElapsed(String curEndTimeElapsed) {
+	 	this.curEndTimeElapsed = curEndTimeElapsed;
+	  }
+
 public String getCritiThreshold() {
 	return critiThreshold;
 }
@@ -54,30 +113,79 @@ public String getCurEndTime() {
 public void setCurEndTime(String curEndTime) {
 	this.curEndTime = curEndTime;
 }
-public String getBaseStartTime() {
-	return baseStartTime;
+
+public String getBase1StartTime() {
+	return base1StartTime;
 }
-public void setBaseStartTime(String baseStartTime) {
-	this.baseStartTime = baseStartTime;
+
+public void setBase1StartTime(String base1StartTime) {
+	this.base1StartTime = base1StartTime;
 }
-public String getBaseEndTime() {
-	return baseEndTime;
+
+public String getBase1EndTime() {
+	return base1EndTime;
 }
-public void setBaseEndTime(String baseEndTime) {
-	this.baseEndTime = baseEndTime;
+
+public void setBase1EndTime(String base1EndTime) {
+	this.base1EndTime = base1EndTime;
 }
-public String getInitStartTime() {
-	return initStartTime;
+
+public String getBase2StartTime() {
+	return base2StartTime;
 }
-public void setInitStartTime(String initStartTime) {
-	this.initStartTime = initStartTime;
+
+public void setBase2StartTime(String base2StartTime) {
+	this.base2StartTime = base2StartTime;
 }
-public String getInitEndTime() {
-	return initEndTime;
+
+public String getBase2EndTime() {
+	return base2EndTime;
 }
-public void setInitEndTime(String initEndTime) {
-	this.initEndTime = initEndTime;
+
+public void setBase2EndTime(String base2EndTime) {
+	this.base2EndTime = base2EndTime;
 }
+
+public String getBase3StartTime() {
+	return base3StartTime;
+}
+
+public void setBase3StartTime(String base3StartTime) {
+	this.base3StartTime = base3StartTime;
+}
+
+public String getBase3EndTime() {
+	return base3EndTime;
+}
+
+public void setBase3EndTime(String base3EndTime) {
+	this.base3EndTime = base3EndTime;
+}
+
+public String getBase1MSRName() {
+	return base1MSRName;
+}
+
+public void setBase1MSRName(String base1msrName) {
+	base1MSRName = base1msrName;
+}
+
+public String getBase2MSRName() {
+	return base2MSRName;
+}
+
+public void setBase2MSRName(String base2msrName) {
+	base2MSRName = base2msrName;
+}
+
+public String getBase3MSRName() {
+	return base3MSRName;
+}
+
+public void setBase3MSRName(String base3msrName) {
+	base3MSRName = base3msrName;
+}
+
 public boolean isPrevDuration() {
 	return prevDuration;
 }
@@ -94,7 +202,7 @@ public void setCheckProfilePath(String checkProfilePath) {
 
 @Override
 public String toString() {
-	return "curStartTime=" + curStartTime + ",curEndTime=" + curEndTime+ ",baseStartTime=" + baseStartTime + ",baseEndTime=" + baseEndTime + ",initStartTime=" + initStartTime+ ",initEndTime=" + initEndTime + ",prevDuration=" + prevDuration + ",checkProfilePath="+ checkProfilePath +",criThreshold="+critiThreshold +",warThreshold="+warThreshold +",failThreshold="+failThreshold;
+	return "curStartTime=" + curStartTime + ",curEndTime=" + curEndTime+ ",base1StartTime=" + base1StartTime + ",base1EndTime=" + base1EndTime + ",base2StartTime=" + base2StartTime+ ",base2EndTime=" + base2EndTime + ",prevDuration=" + prevDuration + ",checkProfilePath="+ checkProfilePath +",criThreshold="+critiThreshold +",warThreshold="+warThreshold +",failThreshold="+failThreshold + ", base1MSRName=" + base1MSRName+", base2MSRName=" + base2MSRName + ", base3MSRName=" + base3MSRName + ", base3StartTime=" + base3StartTime + ", base3EndTime=" + base3EndTime;
 }
   
 }

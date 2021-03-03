@@ -18,6 +18,7 @@ public class ScalarVal {
 	private String Stress;
 	private String MetricName;
 	private String VectorName;
+	private String trendLink;
 	
 	
 	
@@ -104,6 +105,12 @@ public class ScalarVal {
 	}
 	public void setStress(String stress) {
 		Stress = stress;
+	}
+	public String getTrendLink() {
+		return trendLink;
+	}
+	public void setTrendLink(String trendLink) {
+		this.trendLink = trendLink;
 	}
 	
 }

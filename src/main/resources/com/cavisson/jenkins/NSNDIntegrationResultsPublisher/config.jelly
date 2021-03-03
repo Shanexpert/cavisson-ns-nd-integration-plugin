@@ -1,3 +1,4 @@
+<?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler"
  xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson"  xmlns:f="/lib/form">
 
@@ -26,12 +27,51 @@
    </f:entry>
 
   <f:entry title="${%NDIntegration.checkprofile.title}" description="${%NDIntegration.checkprofile.description}">
-    <f:textbox field="checkProfilePath"/>  
+    <f:textbox field="checkProfilePath" placeholder="project/subproject/checkprofileName.cprof"/>  
+  </f:entry>
+  
+  <f:entry title="${%NDIntegration.current.title}">
+    <f:radioBlock name="timePeriod" value="Whole Scenario" checked="${instance == null? 'true': '' || instance.isTimePeriod('Whole Scenario')}" default="true" title="Whole Scenario" inline="true">
+       <f:nested>
+       </f:nested>
+    </f:radioBlock>
+    
+     <f:radioBlock name="timePeriod" value="Absolute Time" checked="${instance.isTimePeriod('Absolute Time')}" default="" title="Absolute Time" inline="true">
+      <f:nested>
+         from :  <f:textbox style="width:40%;"  field="curStartTimeAbsolute" placeholder="MM/dd/yy HH:mm:ss"/> to :  <f:textbox style="width:40%;"  field="curEndTimeAbsolute" placeholder="MM/dd/yy HH:mm:ss"/>
+      </f:nested>
+    </f:radioBlock>
+    
+     <f:radioBlock name="timePeriod" value="Elapsed Time" checked="${instance.isTimePeriod('Elapsed Time')}" default="" title="Elapsed Time" inline="true">
+      <f:nested>
+         from :  <f:textbox style="width:40%;"  field="curStartTimeElapsed" placeholder="HH:mm:ss"/> to :  <f:textbox style="width:40%;"  field="curEndTimeElapsed" placeholder="HH:mm:ss"/>
+      </f:nested>
+    </f:radioBlock>
+    
+     <f:radioBlock name="timePeriod" value="Phase" checked="${instance.isTimePeriod('Phase')}" default="" title="Phase" inline="true">
+      <f:nested>
+       <f:select style="width:40%;" field="phase"/>
+      </f:nested>
+    </f:radioBlock>
+    
+     
   </f:entry>
 
-   <f:entry title="${%NDIntegration.baseline.title}" description="${%NDIntegration.baseline.description}">
-  from :  <f:textbox style="width:40%;"  field="baseStartTime" /> to :  <f:textbox style="width:40%;"  field="baseEndTime" />
+  <f:entry title="${%NDIntegration.baseline1.title}" description="${%NDIntegration.baseline1.description}">
+   <f:textbox style="width:20%;" type="tel" size="16" maxlength="16" field="base1MSRName" placeholder="MSR Name"/>
+  from :  <f:textbox style="width:30%;"  field="base1StartTime" placeholder="MM/dd/yyyy HH:mm:ss"/> to :  <f:textbox style="width:30%;"  field="base1EndTime" placeholder="MM/dd/yyyy HH:mm:ss"/>
    </f:entry>
+   
+   <f:entry title="${%NDIntegration.baseline2.title}" description="${%NDIntegration.baseline2.description}">
+   <f:textbox style="width:20%;" type="tel" size="16" maxlength="16" field="base2MSRName" placeholder="MSR Name"/>
+  from :  <f:textbox style="width:30%;"  field="base2StartTime" placeholder="MM/dd/yyyy HH:mm:ss"/> to :  <f:textbox style="width:30%;"  field="base2EndTime" placeholder="MM/dd/yyyy HH:mm:ss"/>
+   </f:entry>
+   
+   <f:entry title="${%NDIntegration.baseline3.title}" description="${%NDIntegration.baseline3.description}">
+   <f:textbox style="width:20%;" type="tel" size="16" maxlength="16" field="base3MSRName" placeholder="MSR Name"/>
+  from :  <f:textbox style="width:30%;"  field="base3StartTime" placeholder="MM/dd/yyyy HH:mm:ss"/> to :  <f:textbox style="width:30%;"  field="base3EndTime" placeholder="MM/dd/yyyy HH:mm:ss"/>
+   </f:entry>
+
 
    <f:entry title="Test Case Pass Criteria">  </f:entry>
    <f:entry title="     Critical Threshold (greater than)" description="To set the critical threshold for a cell in report. This value should be in %age">
@@ -46,15 +86,6 @@
     <f:textbox style="width:40%;"  field="failThreshold" />
    </f:entry>
 
-    <f:optionalBlock name="initDuration" field="initDuration" title="${%NDIntegration.initial.title}"  checked='${instance.isInitDuration}'>
-     <f:entry title="">
-    from :  <f:textbox style="width:40%;" field="initStartTime" /> to :  <f:textbox style="width:40%;"  field="initEndTime" />
-     </f:entry>
-    </f:optionalBlock>
-
-
-  <f:optionalBlock name="prevDuration" field="prevDuration" title='Include previous time period' checked='${instance.isPrevDuration}'>
-  </f:optionalBlock>
 
   <f:validateButton
       title="${%NDIntegration.connection.test.title}" progress="${%NDIntegration.connection.test.progress}"

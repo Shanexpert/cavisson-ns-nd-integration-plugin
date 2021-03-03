@@ -28,14 +28,22 @@ public class TestMetrics {
   private String headerName;
   private String newReport;
   private String metricLink;
+  private String count;
 
   @Override
   public String toString()
   {
-    return "TestMetrics{" + "prevTestRunValue=" + prevTestRunValue + ", baseLineValue=" + baseLineValue +", currentDateTime" +currentDateTime +", currValue=" + currValue + ", metricName=" + metricName + ", operator=" + operator + ", SLA=" + SLA + ", metricRuleName="+ metricRuleName + ", transactiontStatus="+ transactiontStatus + ", statusColour = " + statusColour + ", trendLink = " + linkForTrend + "}";
+    return "TestMetrics{" + "prevTestRunValue=" + prevTestRunValue + ", baseLineValue=" + baseLineValue +", currentDateTime" +currentDateTime +", currValue=" + currValue + ", metricName=" + metricName + ", operator=" + operator + ", SLA=" + SLA + ", metricRuleName="+ metricRuleName + ", transactiontStatus="+ transactiontStatus + ", statusColour = " + statusColour + ", trendLink = " + linkForTrend + ", count = " + count + "}";
   }
   private String SLA;
 
+  public String getCount() {
+	  return count;
+  }
+
+  public void setCount(String count) {
+	  this.count = count;
+  }
   
   public String getEdLink() {
     return edLink;

@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.io.PrintStream;
 
 import net.sf.json.JSONArray;
 import net.sf.json.*;
@@ -109,6 +110,55 @@ public class NdConnectionManager {
   public void setResult(String result) {
     this.result = result;
   }
+  
+  static
+  { 
+    disableSslVerification();
+  }	
+
+  private static void disableSslVerification() 
+  {
+    try
+    {
+      // Create a trust manager that does not validate certificate chains
+      TrustManager[] trustAllCerts = new TrustManager[] {new X509TrustManager() 
+      {            
+	public java.security.cert.X509Certificate[] getAcceptedIssuers()
+	{                
+	  return null;            
+	}
+
+	public void checkClientTrusted(X509Certificate[] certs, String authType) 
+	{ 
+	}            
+
+	public void checkServerTrusted(X509Certificate[] certs, String authType)
+	{            
+	}        
+      }        
+      };
+      // Install the all-trusting trust manager       
+      SSLContext sc = SSLContext.getInstance("SSL");       
+      sc.init(null, trustAllCerts, new java.security.SecureRandom());   
+      HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());  
+      // Create all-trusting host name verifier    
+      HostnameVerifier allHostsValid = new HostnameVerifier() 
+      {  
+	public boolean verify(String hostname, SSLSession session) 
+	{ 
+	  return true;            
+	}         
+      };        
+      // Install the all-trusting host verifier        
+      HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);    
+    }
+    catch (NoSuchAlgorithmException e) 
+    {     
+    } 
+    catch (KeyManagementException e)
+    {       
+    }
+  }
 
   public NdConnectionManager(String uRLConnectionString, String username, Secret password, boolean isNDE) {
 
@@ -143,18 +193,18 @@ public class NdConnectionManager {
     {
       logger.log(Level.INFO, "After check connection method.");
 
-      if((getResult() == null))
-      {
-	logger.log(Level.INFO, "result is null- ",err);
-	errMsg.append("Connection failure, please check whether Connection URI is specified correctly");
-	return false;
-      }
-      else 
-      {
-	logger.log(Level.INFO, "Successfully Authenticated.");   
-	return true;
-      }
-
+//      if((getResult() == null))
+//      {
+//	logger.log(Level.INFO, "result is null- ",err);
+//	errMsg.append("Connection failure, please check whether Connection URI is specified correctly");
+//	return false;
+//      }
+//      else 
+//      {
+//	logger.log(Level.INFO, "Successfully Authenticated.");   
+//	return true;
+//      }
+     return true;
     } 
     else 
     {
@@ -190,13 +240,35 @@ public class NdConnectionManager {
 	logger.log(Level.INFO, "checkAndMakeConnection method called. with ndParam "+  ndParam.toString());
 	ndParam.setCurStartTime(this.getCurStart().replace(" ", "@"));
 	ndParam.setCurEndTime(this.getCurEnd().replace(" ", "@"));
-	ndParam.setBaseStartTime(ndParam.getBaseStartTime().replace(" ", "@"));
-	ndParam.setBaseEndTime(ndParam.getBaseEndTime().replace(" ", "@"));
-	if(ndParam.getInitStartTime() != null)
-	  ndParam.setInitStartTime(ndParam.getInitStartTime().replace(" ", "@"));
+	if(ndParam.getBase1StartTime() != null && ndParam.getBase1StartTime().equals(""))
+		  ndParam.setBase1StartTime(null);
+		else
+		  ndParam.setBase1StartTime(ndParam.getBase1StartTime().replace(" ", "@"));
+		
+		if(ndParam.getBase1EndTime() != null && !ndParam.getBase1EndTime().equals(""))
+		  ndParam.setBase1EndTime(ndParam.getBase1EndTime().replace(" ", "@"));
+		else
+		  ndParam.setBase1EndTime(null);
+		
+		if(ndParam.getBase2StartTime() != null && !ndParam.getBase2StartTime().equals(""))
+		  ndParam.setBase2StartTime(ndParam.getBase2StartTime().replace(" ", "@"));
+		else
+		  ndParam.setBase2StartTime(null);
 
-	if(ndParam.getInitEndTime() != null)
-	  ndParam.setInitEndTime(ndParam.getInitEndTime().replace(" ", "@"));
+		if(ndParam.getBase2EndTime() != null &&  !ndParam.getBase2EndTime().equals(""))
+		  ndParam.setBase2EndTime(ndParam.getBase2EndTime().replace(" ", "@"));
+		else
+		  ndParam.setBase2EndTime(null);
+		
+		if(ndParam.getBase3StartTime() != null && !ndParam.getBase3StartTime().equals(""))
+		  ndParam.setBase3StartTime(ndParam.getBase3StartTime().replace(" ", "@"));
+	    else
+		  ndParam.setBase3StartTime(null);
+
+	    if(ndParam.getBase3EndTime() != null &&  !ndParam.getBase3EndTime().equals(""))
+		  ndParam.setBase3EndTime(ndParam.getBase3EndTime().replace(" ", "@"));
+	    else
+		  ndParam.setBase3EndTime(null);
       }
 
       if(this.getCritical() != null && this.getCritical() != "")
@@ -232,8 +304,8 @@ public class NdConnectionManager {
       System.out.println("resonseObj -- "+resonseObj);
       Boolean status = (Boolean)resonseObj.get("status");
          
-      if(status == false && !((String)resonseObj.get("errMsg")).equals(""))
-        err = (String)resonseObj.get("errMsg");
+//      if(status == false && !((String)resonseObj.get("errMsg")).equals(""))
+//        err = (String)resonseObj.get("errMsg");
       
       return status;
     } catch (MalformedURLException e) {
@@ -328,7 +400,8 @@ public class NdConnectionManager {
     if(jsonTestReport.get("Metrics Under Test") != null) { 
      JSONArray metricsUnderTest = (JSONArray)jsonTestReport.get("Metrics Under Test");
 	ArrayList<TestMetrics> testMetricsList = new ArrayList<TestMetrics>(metricsUnderTest.size());
-	
+	 String str = "";
+	    int index = 0;	
 	for(Object jsonData : metricsUnderTest)
 	{  
 	  JSONObject jsonObject = (JSONObject)jsonData;
@@ -341,6 +414,9 @@ public class NdConnectionManager {
 	  String metricRule = jsonObject.getString("MetricRule");
 	  String operator = jsonObject.getString("Operator");
 	  String sla = jsonObject.getString("SLA");
+	  
+	  String count = jsonObject.getString("Count");
+	  
 	  if(sla.indexOf(">") != -1 || sla.indexOf(">") > 0)
 	    sla = sla.substring(sla.lastIndexOf(">")+1, sla.length());
 
@@ -364,19 +440,125 @@ public class NdConnectionManager {
 	  testMetric.setPrevTestRunValue(prevTestValue);
 	  testMetric.setInitialValue(initialValue);
 	  testMetric.setSLA(sla);
-	  if (trendLink != null) {
-             if(prefix[0] != "")
-              trendLink = prefix[0] + trendLink;
+	  
+	  if(count.equals("noCount")){
+    	  testMetric.setCount("NA");
+      }
+      else {
+    	  testMetric.setCount(count);  
+      }
+	  
+//	  if (trendLink != null) {
+//             if(prefix[0] != "")
+//              trendLink = prefix[0] + trendLink;
              
             testMetric.setLinkForTrend(trendLink);
-          } else {
-            testMetric.setLinkForTrend("NA");
-          }
+//          } else {
+//            testMetric.setLinkForTrend("NA");
+//          }
           
 	  testMetric.setMetricName(metric);
           
-          if(prefix[0] != "")
-           metricLink = prefix[0] + metricLink;
+//          if(prefix[0] != "")
+//           metricLink = prefix[0] + metricLink;
+	  
+	  int fromPattern=0;
+	  String patt = jsonObject.getString("PATTERN");
+	  //      String arrMetricDisplayName = arrMetricValue[0];
+	  if (metric.trim().contains("- PATTERN"))
+	  {
+		  int len = patt.length()+2;
+		  String dName = metric.substring(metric.indexOf("-")+len+1,metric.trim().length()-1);
+		  metric = metric.replace(metric.substring(metric.indexOf("-"), metric.length()),"- " + dName);
+		  fromPattern=1;
+	  }
+
+	  String headerName = "";
+	  String displayName = metric;
+	  if (index == 0)
+	  {
+		  str = displayName;
+		  if(displayName.contains("- All") && fromPattern!=1)
+		  {
+			  headerName = displayName.substring(0, str.indexOf("-")+5);
+			  displayName = displayName.substring(displayName.indexOf("-")+6,displayName.length()-1);
+		  }
+		  else if(displayName.contains(" - "))
+		  {
+			  headerName = displayName.substring(0, str.indexOf("-")+1);
+			  displayName = displayName.substring(displayName.indexOf("-")+1,displayName.length()-1);
+		  }
+		  else
+		  {
+			  headerName = "Other";
+		  }
+		  index++;
+	  }
+	  else
+	  {
+		  if (displayName.contains(" - ") && (str.indexOf("-")) != -1 )
+		  {
+			  String metricName = displayName.substring(0, displayName.indexOf("-"));
+
+			  if (metricName.toString().trim().equals(str.substring(0, str.indexOf("-")).toString().trim()))
+			  {
+				  headerName = "";
+				  if (displayName.contains("- All") && fromPattern!=1)
+				  {
+					  displayName = displayName.substring(displayName.indexOf("-")+6,displayName.length()-1);
+				  }
+				  else
+					  displayName = displayName.substring(displayName.indexOf("-")+1,displayName.length());
+			  }
+			  else
+			  {
+				  str = displayName;
+				  if (displayName.contains("- All") && fromPattern!=1)
+				  {
+					  headerName = displayName.substring(0, displayName.indexOf("-")+5);
+					  displayName = displayName.substring(displayName.indexOf("-")+6,displayName.length()-1);
+				  }
+				  else if(displayName.contains(" - "))
+				  {
+					  headerName = displayName.substring(0, displayName.indexOf("-"));
+					  displayName = displayName.substring(displayName.indexOf("-")+1,displayName.length());
+				  }
+				  else
+				  {
+					  headerName = "Other";
+				  }
+
+			  }
+		  }
+		  else if(str.indexOf("-") == -1)
+		  { 
+			  str = displayName;
+
+			  if(displayName.contains("- All") && fromPattern!=1)
+			  { 
+				  headerName = displayName.substring(0, str.indexOf("-")+5);
+				  displayName = displayName.substring(str.indexOf("-")+6,displayName.length()-1);
+
+			  }
+			  else if(displayName.contains(" - "))
+			  { 
+				  headerName = displayName.substring(0, str.indexOf("-"));
+				  displayName = displayName.substring(str.indexOf("-")+1,displayName.length());
+			  }
+			  else
+			  { 
+				  headerName = "Other";
+			  }
+		  }
+		  else
+		  {
+			  headerName = "Other";
+		  }
+	  }
+	  testMetric.setNewReport("NewReport");
+	  testMetric.setDisplayName(displayName);
+	  testMetric.setHeaderName(headerName); 
+
           
           testMetric.setMetricLink(metricLink);
 	  testMetric.setMetricRuleName(metricRule);
@@ -387,6 +569,12 @@ public class NdConnectionManager {
 	  testMetricsList.add(testMetric);
 	  testReport.setOperator(operator);
 	  testReport.setTestMetrics(testMetricsList);
+	  
+	  if(count.equals("noCount")){
+		  testReport.setShowCount("0");
+	  }else {
+		  testReport.setShowCount("1");
+	  }
 	}
    } else {
 	  
@@ -494,34 +682,35 @@ public class NdConnectionManager {
 
 	if(isNDE)
 	{
-	  String[] startDateTime = ndParam.getBaseStartTime().split("@");         
-	  String[] endDateTime = ndParam.getBaseEndTime().split("@");
+//	if(ndParam.getBaseStartTime() != null && !ndParam.getBaseStartTime().equals("") && !ndParam.getBaseStartTime().equals("NA")) {		
+//	  String[] startDateTime = ndParam.getBaseStartTime().split("@");         
+//	  String[] endDateTime = ndParam.getBaseEndTime().split("@");
+//
+//	  System.out.println("start time == "+startDateTime[0]);
+//	  System.out.println("end 9time == "+endDateTime[0]);
+//	  if(startDateTime[0].equals(endDateTime[0]))
+//	    baseLineDateTime = ndParam.getBaseStartTime().replace("@", " ") + " to "+ endDateTime[1];
+//	  //baseLineDateTime = startDateTime[0] + " to "+ endDateTime[1];
+//	  else
+//	    baseLineDateTime = ndParam.getBaseStartTime().replace("@", " ") + " to "+ ndParam.getBaseEndTime().replace("@", " ");
+//	}
 
-	  System.out.println("start time == "+startDateTime[0]);
-	  System.out.println("end 9time == "+endDateTime[0]);
-	  if(startDateTime[0].equals(endDateTime[0]))
-	    baseLineDateTime = ndParam.getBaseStartTime().replace("@", " ") + " to "+ endDateTime[1];
-	  //baseLineDateTime = startDateTime[0] + " to "+ endDateTime[1];
-	  else
-	    baseLineDateTime = ndParam.getBaseStartTime().replace("@", " ") + " to "+ ndParam.getBaseEndTime().replace("@", " ");
-
-
-	  startDateTime = ndParam.getCurStartTime().split("@");
-	  endDateTime = ndParam.getCurEndTime().split("@");
-	  if(startDateTime[0].equals(endDateTime[0]))
-	    currentDateTime = ndParam.getCurStartTime().replace("@", " ") + " to "+ endDateTime[1];
+	String[] curStartDateTime = ndParam.getCurStartTime().split("@");
+	  String[] curEndDateTime = ndParam.getCurEndTime().split("@");
+	  if(curStartDateTime[0].equals(curEndDateTime[0]))
+	    currentDateTime = ndParam.getCurStartTime().replace("@", " ") + " to "+ curEndDateTime[1];
 	  else
 	    currentDateTime =  ndParam.getCurStartTime().replace("@", " ") + " to "+ ndParam.getCurEndTime().replace("@", " ");
 
-	  if(ndParam.getInitEndTime() != null)
-	  {
-	    startDateTime = ndParam.getInitStartTime().split("@");	
-	    endDateTime = ndParam.getInitEndTime().split("@");
-	    if(startDateTime[0].equals(endDateTime[0]))
-	      initialDateTime = ndParam.getInitStartTime().replace("@", " ") + " to "+ endDateTime[1];
-	    else
-	      initialDateTime = ndParam.getInitStartTime().replace("@", " ") + " to "+ ndParam.getInitEndTime().replace("@", " ");
-	  } 
+//	  if(ndParam.getInitEndTime() != null)
+//	  {
+//	    String[] initStartDateTime = ndParam.getInitStartTime().split("@");	
+//	    String[] initEndDateTime = ndParam.getInitEndTime().split("@");
+//	    if(initStartDateTime[0].equals(initEndDateTime[0]))
+//	      initialDateTime = ndParam.getInitStartTime().replace("@", " ") + " to "+ initEndDateTime[1];
+//	    else
+//	      initialDateTime = ndParam.getInitStartTime().replace("@", " ") + " to "+ ndParam.getInitEndTime().replace("@", " ");
+//	  } 
           
           if(ndParam.isPrevDuration()){
             
@@ -546,12 +735,13 @@ public class NdConnectionManager {
            Date endDatePrev = new Date(prevEndTS);
            String prevEndDuration = trDateFormat.format(endDatePrev);
            
-           startDateTime = prevStartDuration.split(" ");
-	   endDateTime = prevEndDuration.split(" ");
+           
+           String[] prevStartDateTime = prevStartDuration.split(" ");
+	       String[] prevEndDateTime = prevEndDuration.split(" ");
               
            System.out.println("prevStartDuration = "+prevStartDuration +" , prevEndDuration = "+prevEndDuration);
-            if(startDateTime[0].equals(endDateTime[0]))
-              previousDateTime = prevStartDuration + " to "+ endDateTime[1]; 
+            if(prevStartDateTime[0].equals(prevEndDateTime[0]))
+              previousDateTime = prevStartDuration + " to "+ prevEndDateTime[1]; 
             else
               previousDateTime = prevStartDuration + " to "+ prevEndDuration;
             
@@ -559,13 +749,13 @@ public class NdConnectionManager {
           
 
 	}
-         if(prefix[0] != "")
-          dashboardURL = prefix[0]+dashboardURL;
+//         if(prefix[0] != "")
+//          dashboardURL = prefix[0]+dashboardURL;
          
         testReport.setDashboardURL(dashboardURL);
         
-         if(prefix[0] != "")
-          reportLink = prefix[0]+reportLink;
+//         if(prefix[0] != "")
+//          reportLink = prefix[0]+reportLink;
          
         testReport.setReportLink(reportLink);
 	testReport.setBaseLineTestRun(baseLineTestRun);
@@ -839,7 +1029,7 @@ public class NdConnectionManager {
 						  counts = counts+1;
 
 						  metrVal.setCountForBenchmark(counts);
-						  int countForMetrices = counts+1;
+						  int countForMetrices = counts+2;
 						  metrVal.setCountForMetrices(countForMetrices);
 						  metrVal.setHeadersForTrans(headerForVector);
 						  metrVal.setNameOfMetric(metrcNames);
@@ -1015,7 +1205,7 @@ public class NdConnectionManager {
 					  count = count+1;
 
 					  metrVal.setCountForBenchmark(count);
-					  int countForMetrices = count+1;
+					  int countForMetrices = count+2;
 					  metrVal.setCountForMetrices(countForMetrices);
 					  metrVal.setHeadersForTrans(transHeader);
 					  metrVal.setNameOfMetric(metrcNames); 
@@ -1144,6 +1334,7 @@ public class NdConnectionManager {
 			  scalarHeader.add("Success(%)");
 		  }
 		  scalarHeader.add("Current");
+		  scalarHeader.add("Trend");
 		  scalarHeader.add("Action");
 
 		  testReport.setScalarHeaders(scalarHeader);
@@ -1258,7 +1449,10 @@ public class NdConnectionManager {
         }
         else
           urlAddrs = urlAddrs +":" +str[2];
-        }
+        }else
+        {
+            urlAddrs = URLConnectionString;
+         }
       }
       catch(Exception ex){
        logger.log(Level.SEVERE, "Error in getting url string " );

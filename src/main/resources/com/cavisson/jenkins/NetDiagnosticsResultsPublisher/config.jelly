@@ -1,3 +1,4 @@
+<?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler"
  xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson"  xmlns:f="/lib/form">
 
@@ -14,16 +15,27 @@
    </f:entry>
 
   <f:entry title="${%netdiagnostics.checkprofile.title}" description="${%netdiagnostics.checkprofile.description}">
-    <f:textbox field="checkProfilePath"/>  
+    <f:textbox field="checkProfilePath" placeholder="project/subproject/checkprofileName.cprof"/>  
   </f:entry>
 
   <f:entry title="${%netdiagnostics.current.title}" description="${%netdiagnostics.current.description}">
-   from : <f:textbox style="width:40%;"  field="curStartTime"/> to : <f:textbox style="width:40%;"  field="curEndTime"/>
+   from : <f:textbox style="width:40%;"  field="curStartTime" placeholder="MM/dd/yy HH:mm:ss"/> to : <f:textbox style="width:40%;"  field="curEndTime" placeholder="MM/dd/yy HH:mm:ss"/>
   </f:entry>
 
 
-   <f:entry title="${%netdiagnostics.baseline.title}" description="${%netdiagnostics.baseline.description}">
-  from :  <f:textbox style="width:40%;"  field="baseStartTime" /> to :  <f:textbox style="width:40%;"  field="baseEndTime" />
+   <f:entry title="${%netdiagnostics.baseline1.title}" description="${%netdiagnostics.baseline1.description}">
+   <f:textbox style="width:20%;"  field="base1MSRName" placeholder="MSR Name"/>
+  from :  <f:textbox style="width:30%;"  field="base1StartTime" placeholder="MM/dd/yyyy HH:mm:ss"/> to :  <f:textbox style="width:30%;"  field="base1EndTime" placeholder="MM/dd/yyyy HH:mm:ss"/>
+   </f:entry>
+   
+   <f:entry title="${%netdiagnostics.baseline2.title}" description="${%netdiagnostics.baseline2.description}">
+   <f:textbox style="width:20%;"  field="base2MSRName" placeholder="MSR Name"/>
+  from :  <f:textbox style="width:30%;"  field="base2StartTime" placeholder="MM/dd/yyyy HH:mm:ss"/> to :  <f:textbox style="width:30%;"  field="base2EndTime" placeholder="MM/dd/yyyy HH:mm:ss"/>
+   </f:entry>
+   
+   <f:entry title="${%netdiagnostics.baseline3.title}" description="${%netdiagnostics.baseline3.description}">
+   <f:textbox style="width:20%;"  field="base3MSRName" placeholder="MSR Name"/>
+  from :  <f:textbox style="width:30%;"  field="base3StartTime" placeholder="MM/dd/yyyy HH:mm:ss"/> to :  <f:textbox style="width:30%;"  field="base3EndTime" placeholder="MM/dd/yyyy HH:mm:ss"/>
    </f:entry>
 
    <f:entry title="Test Case Pass Criteria">  </f:entry>
@@ -39,15 +51,6 @@
     <f:textbox style="width:40%;"  field="failThreshold" />
    </f:entry>
 
-    <f:optionalBlock name="initDuration" field="initDuration" title="${%netdiagnostics.initial.title}"  checked='${instance.isInitDuration}'>
-     <f:entry title="">
-    from :  <f:textbox style="width:40%;" field="initStartTime" /> to :  <f:textbox style="width:40%;"  field="initEndTime" />
-     </f:entry>
-    </f:optionalBlock>
-
-
-  <f:optionalBlock name="prevDuration" field="prevDuration" title='Include previous time period' checked='${instance.isPrevDuration}'>
-  </f:optionalBlock>
 
   <f:validateButton
       title="${%netdiagnostics.connection.test.title}" progress="${%netdiagnostics.connection.test.progress}"

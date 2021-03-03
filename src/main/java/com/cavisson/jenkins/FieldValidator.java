@@ -68,13 +68,14 @@ class FieldValidator {
       FormValidation validationResult;
       SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
       Date testDate = null;
+      if(dateTime != null && !dateTime.equals(""))
       testDate = sdf.parse(dateTime);
       
       
       if (isEmptyField(dateTime)) {
           validationResult = FormValidation.error("Baseline date time shouldn't be empty");
       } 
-      else if(!sdf.format(testDate).equals(dateTime)){
+      if(!isEmptyField(dateTime) && !sdf.format(testDate).equals(dateTime)){
       		validationResult = FormValidation.error("Please enter correct format i.e. MM/dd/yyyy HH:mm:ss");
       }
       else {
@@ -138,6 +139,78 @@ class FieldValidator {
         
         if(isEmptyField(htmlTablePath)) {
            validationResult = FormValidation.error("Report path shouldn't be empty");
+        } else {
+            validationResult = FormValidation.ok();
+        }
+
+        return validationResult;
+    }
+    
+    public static FormValidation validateProtocol(final String protocol) {
+        FormValidation validationResult;
+        
+        if(isEmptyField(protocol)) {
+           validationResult = FormValidation.error("Protocol shouldn't be empty");
+        } else {
+            validationResult = FormValidation.ok();
+        }
+
+        return validationResult;
+    }
+    
+    public static FormValidation validateRepoIp(final String repoIp) {
+        FormValidation validationResult;
+        
+        if(isEmptyField(repoIp)) {
+           validationResult = FormValidation.error("Repository IP shouldn't be empty");
+        } else {
+            validationResult = FormValidation.ok();
+        }
+
+        return validationResult;
+    }
+    
+    public static FormValidation validateRepoPort(final String repoPort) {
+        FormValidation validationResult;
+        
+        if(isEmptyField(repoPort)) {
+           validationResult = FormValidation.error("Repository Port shouldn't be empty");
+        } else {
+            validationResult = FormValidation.ok();
+        }
+
+        return validationResult;
+    }
+    
+    public static FormValidation validateRepoPath(final String repoPath) {
+        FormValidation validationResult;
+        
+        if(isEmptyField(repoPath)) {
+           validationResult = FormValidation.error("Repository Path shouldn't be empty");
+        } else {
+            validationResult = FormValidation.ok();
+        }
+
+        return validationResult;
+    }
+    
+    public static FormValidation validateRepoUsername(final String repoUsername) {
+        FormValidation validationResult;
+        
+        if(isEmptyField(repoUsername)) {
+           validationResult = FormValidation.error("Repository username shouldn't be empty");
+        } else {
+            validationResult = FormValidation.ok();
+        }
+
+        return validationResult;
+    }
+    
+    public static FormValidation validateRepoPassword(final String repoPassword) {
+        FormValidation validationResult;
+        
+        if(isEmptyField(repoPassword)) {
+           validationResult = FormValidation.error("Repository password shouldn't be empty");
         } else {
             validationResult = FormValidation.ok();
         }

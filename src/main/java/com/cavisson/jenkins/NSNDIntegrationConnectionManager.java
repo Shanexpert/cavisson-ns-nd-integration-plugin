@@ -5,8 +5,13 @@
  */
 package com.cavisson.jenkins;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -19,14 +24,19 @@ import java.net.URLConnection;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -37,6 +47,8 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
 import org.json.simple.parser.JSONParser;
+
+import hudson.FilePath;
 import hudson.util.Secret;
 
 /**
@@ -169,6 +181,55 @@ public class NSNDIntegrationConnectionManager {
   public void setResultND(String result) {
     this.resultND = result;
   }
+  
+  static
+  { 
+    disableSslVerification();
+  }	
+
+  private static void disableSslVerification() 
+  {
+    try
+    {
+      // Create a trust manager that does not validate certificate chains
+      TrustManager[] trustAllCerts = new TrustManager[] {new X509TrustManager() 
+      {            
+	public java.security.cert.X509Certificate[] getAcceptedIssuers()
+	{                
+	  return null;            
+	}
+
+	public void checkClientTrusted(X509Certificate[] certs, String authType) 
+	{ 
+	}            
+
+	public void checkServerTrusted(X509Certificate[] certs, String authType)
+	{            
+	}        
+      }        
+      };
+      // Install the all-trusting trust manager       
+      SSLContext sc = SSLContext.getInstance("SSL");       
+      sc.init(null, trustAllCerts, new java.security.SecureRandom());   
+      HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());  
+      // Create all-trusting host name verifier    
+      HostnameVerifier allHostsValid = new HostnameVerifier() 
+      {  
+	public boolean verify(String hostname, SSLSession session) 
+	{ 
+	  return true;            
+	}         
+      };        
+      // Install the all-trusting host verifier        
+      HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);    
+    }
+    catch (NoSuchAlgorithmException e) 
+    {     
+    } 
+    catch (KeyManagementException e)
+    {       
+    }
+  }
 
   public NSNDIntegrationConnectionManager(String nsUrlConnectionString, String nsUsername, Secret nsPassword, String ndUrlConnectionString, String ndUsername, Secret ndPassword, NSNDIntegrationParameterForReport ndParam) {
 
@@ -250,6 +311,7 @@ public class NSNDIntegrationConnectionManager {
       reqObj.put("username", this.nsUsername);
       reqObj.put("password", this.nsPassword.getPlainText());
       reqObj.put("URLConnectionString", this.nsUrlConnectionString);
+      disableSslVerification();
       URL url;
       String str = getUrlString(urlString); // URLConnectionString.substring(0,URLConnectionString.lastIndexOf("/"));
       url = new URL(str + "ProductUI/productSummary/jenkinsService/validateUser");
@@ -337,18 +399,38 @@ public class NSNDIntegrationConnectionManager {
     try {
       if (ndParam != null) {
         logger.log(Level.INFO, "checkAndMakeConnection method for NetDiagnostics called. with ndParam " + ndParam.toString());
-        ndParam.setCurStartTime(getCurStart().replace(" ", "@"));
-        ndParam.setCurEndTime(getCurEnd().replace(" ", "@"));
+      //  ndParam.setCurStartTime(getCurStart().replace(" ", "@"));
+      //  ndParam.setCurEndTime(getCurEnd().replace(" ", "@"));
 
-        ndParam.setBaseStartTime(ndParam.getBaseStartTime().replace(" ", "@"));
-        ndParam.setBaseEndTime(ndParam.getBaseEndTime().replace(" ", "@"));
-        if (ndParam.getInitStartTime() != null) {
-          ndParam.setInitStartTime(ndParam.getInitStartTime().replace(" ", "@"));
-        }
+        if(ndParam.getBase1StartTime().equals(""))
+            ndParam.setBase1StartTime(null);
+          else
+            ndParam.setBase1StartTime(ndParam.getBase1StartTime().replace(" ", "@"));
+          
+          if(ndParam.getBase1EndTime().equals(""))
+            ndParam.setBase1EndTime(null);
+          else
+            ndParam.setBase1EndTime(ndParam.getBase1EndTime().replace(" ", "@"));
+          
+          if (ndParam.getBase2StartTime() != null && !ndParam.getBase2StartTime().equals("")) 
+            ndParam.setBase2StartTime(ndParam.getBase2StartTime().replace(" ", "@"));
+          else
+        	ndParam.setBase2StartTime(null);
 
-        if (ndParam.getInitEndTime() != null) {
-          ndParam.setInitEndTime(ndParam.getInitEndTime().replace(" ", "@"));
-        }
+          if (ndParam.getBase2EndTime() != null && !ndParam.getBase2EndTime().equals("")) 
+            ndParam.setBase2EndTime(ndParam.getBase2EndTime().replace(" ", "@"));
+          else
+        	ndParam.setBase2EndTime(null);
+          
+          if (ndParam.getBase3StartTime() != null && !ndParam.getBase3StartTime().equals("")) 
+            ndParam.setBase3StartTime(ndParam.getBase3StartTime().replace(" ", "@"));
+          else
+          	ndParam.setBase3StartTime(null);
+
+          if (ndParam.getBase3EndTime() != null && !ndParam.getBase3EndTime().equals("")) 
+            ndParam.setBase3EndTime(ndParam.getBase3EndTime().replace(" ", "@"));
+          else
+          	ndParam.setBase3EndTime(null);
       }
 
       if (this.getCritical() != null && this.getCritical() != "") {
@@ -388,8 +470,8 @@ public class NSNDIntegrationConnectionManager {
       resonseObj = (JSONObject) JSONSerializer.toJSON(this.resultND);
        Boolean status = (Boolean)resonseObj.get("status");
       
-       if(status == false && !((String)resonseObj.get("errMsg")).equals(""))
-          err = (String)resonseObj.get("errMsg");
+//       if(status == false && !((String)resonseObj.get("errMsg")).equals(""))
+//          err = (String)resonseObj.get("errMsg");
       
       return status;
     } catch (MalformedURLException e) {
@@ -461,16 +543,16 @@ public class NSNDIntegrationConnectionManager {
         	    isReportGenerated = false;
                     
                     /*Parsing to get the data from response. */
-                      JSONParser parser = new JSONParser();
-                      org.json.simple.JSONObject objJson = (org.json.simple.JSONObject) parser.parse(pollResString);
-                       String strData = objJson.get("data").toString();
-                      
-                       org.json.simple.JSONObject objJson2 =(org.json.simple.JSONObject)parser.parse(strData);
-                       String strData2 = objJson2.toJSONString();
-                       logger.log(Level.INFO, "Data -- = " + strData);
-                       resonseReportObjNS = (JSONObject) JSONSerializer.toJSON(strData2);
+//                      JSONParser parser = new JSONParser();
+//                      org.json.simple.JSONObject objJson = (org.json.simple.JSONObject) parser.parse(pollResString);
+//                       String strData = objJson.get("data").toString();
+//                      
+//                       org.json.simple.JSONObject objJson2 =(org.json.simple.JSONObject)parser.parse(strData);
+//                       String strData2 = objJson2.toJSONString();
+//                       logger.log(Level.INFO, "Data -- = " + strData);
+                 //      resonseReportObjNS = (JSONObject) JSONSerializer.toJSON(strData2);
+        	    resonseReportObjNS = pollResponse;
         	  }
-                  
                   
         	} catch (Exception e) {
         	  logger.log(Level.SEVERE, "Error in parsing polling response = " + pollResString, e);
@@ -527,7 +609,7 @@ public class NSNDIntegrationConnectionManager {
 
   
 
-  public MetricDataContainer fetchMetricData(NSNDIntegrationConnectionManager connection, String metrics[], String duration, int groupIds[], int graphIds[], int testRun, String testMode) {
+  public boolean fetchMetricData(NSNDIntegrationConnectionManager connection, String metrics[], String duration, int groupIds[], int graphIds[], int testRun, String testMode, FilePath fp) {
     JSONObject jsonRequest = makeRequestObject("GET_DATA");
     jsonRequest.put("TESTRUN", String.valueOf(testRun));
     jsonRequest.put(JSONKeys.TESTMODE.getValue(), testMode);
@@ -548,6 +630,8 @@ public class NSNDIntegrationConnectionManager {
     JSONObject resonseObjNS = null;
     JSONObject resonseObjND = null;
 
+    boolean nsStatus = false;
+    boolean ndStatus = false;
     StringBuffer errMsg = new StringBuffer();
   //  if (checkAndMakeConnectionNS(nsUrlConnectionString, errMsg)) {
       try {
@@ -581,7 +665,12 @@ public class NSNDIntegrationConnectionManager {
              {
                 logger.log(Level.SEVERE, "Not able to get response form server due to some reason");
                 consoleLogger.println("Error in report generation.");
-                return null;
+                nsStatus = false;
+                return false;
+              } else {
+            	  if(resonseReportObjNS.containsKey("Current Start Time") && resonseReportObjNS.containsKey("Current End Time")) {
+            	   setCurStartAndEndDateTime(resonseReportObjNS.getString("Current Start Time"), resonseReportObjNS.getString("Current End Time"), connection.getScenario());
+            	  }
               }
           }
         
@@ -589,26 +678,23 @@ public class NSNDIntegrationConnectionManager {
         
           logger.log(Level.INFO, "url for polling report - pollReportURL = " + pollReportURL);
             
-          connectNSAndPollJsonReport();
+           connectNSAndPollJsonReport();
         
-          if(resonseReportObjNS == null)
-           {
-              logger.log(Level.SEVERE, "Not able to get response form server due to: " + errMsg);
-              return null;
+//          if(resonseReportObjNS == null)
+//           {
+//              logger.log(Level.SEVERE, "Not able to get response form server due to: " + errMsg);
+//              return null;
+//           }
+//        
+//        JSONObject jsonTestReportWholeObj = resonseReportObjNS.getJSONObject("testReport");
+//        JSONObject jsonTestReport = jsonTestReportWholeObj.getJSONObject("members");
+ //       String curStartTime = jsonTestReport.getString("Current Date Time");
+ //       String curEndTime = jsonTestReport.getString("Current End Time");
+ //       setCurStartAndEndDateTime(curStartTime, curEndTime, connection.getScenario());
+
+           if(resonseReportObjNS.getBoolean("status")) {
+        	   getHTMLReport("NS", fp, String.valueOf(testRun));
            }
-        
-        JSONObject jsonTestReportWholeObj = resonseReportObjNS.getJSONObject("testReport");
-        JSONObject jsonTestReport = jsonTestReportWholeObj.getJSONObject("members");
-        String curStartTime = jsonTestReport.getString("Current Date Time");
-        if (curStartTime != null) {
-          setCurStart(curStartTime);
-        }
-
-        String curEndTime = jsonTestReport.getString("Current End Time");
-        if (curEndTime != null) {
-          setCurEnd(curEndTime);
-        }
-
       } catch (Exception e) {
         logger.log(Level.SEVERE, "Unknown exception in establishing connection with Netstorm .", e);
       }
@@ -628,13 +714,261 @@ public class NSNDIntegrationConnectionManager {
 //   }
       logger.log(Level.INFO, "RESPONSE from netdiagnostics  -- " + this.resultND);
       resonseObjND = (JSONObject) JSONSerializer.toJSON(this.resultND);
+      ndStatus = true;
+   	   getHTMLReport("ND", fp, "-1");
     } else {
       logger.log(Level.INFO, "Connection to netdiagnostics unsuccessful, cannot to proceed to generate report.");
       logger.log(Level.SEVERE, "Error: " + errMsg);
+      ndStatus = false;
     }
 
-    return parseJSONDataND(resonseReportObjNS, resonseObjND, testMode);
+   // return parseJSONDataND(resonseReportObjNS, resonseObjND, testMode);
+    if(nsStatus == true && ndStatus == true) {
+    	return true;
+    } else {
+    	return false;
+    }
   }
+  
+  private boolean getHTMLReport(String type, FilePath fp, String testRun) {
+ 	 
+	  /*path of directory i.e. /var/lib/jenkins/workspace/jobName*/
+	  String zipFile = fp + "/TestSuiteReport.zip";
+	  logger.log(Level.INFO, "Pdf directory"+zipFile);
+	 
+	  File file = new File(zipFile);
+//	  if(file.exists()) {
+//		  file.delete();
+//	  }
+	  
+	  try {
+		  URL urlForHTMLReport;
+		  String str = "";
+		  if(type.equals("NS")) {
+			 str = nsUrlConnectionString; 
+		  } else {
+			  str = ndUrlConnectionString;
+		  }
+		  urlForHTMLReport = new URL(str+"/ProductUI/productSummary/jenkinsService/getHTMLReport");
+		  logger.log(Level.INFO, "urlForPdf-"+urlForHTMLReport);
+
+		  HttpURLConnection connect = (HttpURLConnection) urlForHTMLReport.openConnection();
+		  connect.setConnectTimeout(0);
+		  connect.setReadTimeout(0);
+		  connect.setRequestMethod("POST");
+		  connect.setRequestProperty("Content-Type", "application/octet-stream");
+
+		  connect.setDoOutput(true);
+		  java.io.OutputStream outStream = connect.getOutputStream();
+		  outStream.write(testRun.getBytes());
+		  outStream.flush();
+
+		  if (connect.getResponseCode() == 200) {
+			  logger.log(Level.INFO, "response 200 OK");   
+			  byte[] mybytearray = new byte[1024];
+			  InputStream is = connect.getInputStream();
+			  FileOutputStream fos = new FileOutputStream(file);
+			  BufferedOutputStream bos = new BufferedOutputStream(fos);
+			  int bytesRead;
+			  while((bytesRead = is.read(mybytearray)) > 0){
+				logger.log(Level.INFO, "bytesRead inside while check"+ bytesRead);
+				bos.write(mybytearray, 0, bytesRead);
+			  }
+			  bos.close();
+			  is.close();
+		  } else {
+			  logger.log(Level.INFO, "ErrorCode-"+ connect.getResponseCode());
+			  logger.log(Level.INFO, "content type-" + connect.getContentType());
+		  }
+		  
+		  String destDir = fp + "/TestSuiteReport";
+          unzip(zipFile, destDir);
+		  return true;
+	  } catch (Exception e){
+		  e.printStackTrace();
+		  return false;
+	  }
+	  
+  }
+  
+  private static void unzip(String zipFilePath, String destDir) {
+	    File dir = new File(destDir);
+	    // create output directory if it doesn't exist
+	    if(!dir.exists()) dir.mkdirs();
+	    FileInputStream fis;
+	    //buffer for read and write data to file
+	    byte[] buffer = new byte[1024];
+	    try {
+	        fis = new FileInputStream(zipFilePath);
+	        ZipInputStream zis = new ZipInputStream(fis);
+	        ZipEntry ze = zis.getNextEntry();
+	        while(ze != null){
+	            String fileName = ze.getName();
+	            File newFile = new File(destDir + File.separator + fileName);
+	            System.out.println("Unzipping to "+newFile.getAbsolutePath());
+	            //create directories for sub directories in zip
+	            new File(newFile.getParent()).mkdirs();
+	            FileOutputStream fos = new FileOutputStream(newFile);
+	            int len;
+	            while ((len = zis.read(buffer)) > 0) {
+	            fos.write(buffer, 0, len);
+	            }
+	            fos.close();
+	            //close this ZipEntry
+	            zis.closeEntry();
+	            ze = zis.getNextEntry();
+	        }
+	        //close last ZipEntry
+	        zis.closeEntry();
+	        zis.close();
+	        fis.close();
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	    
+	}
+  
+  private void setCurStartAndEndDateTime(String curStartTime, String curEndTime, String scenario) {
+	  
+		 if(ndParam.getTimePeriod() != null) {
+		  if(ndParam.getTimePeriod().equals("Absolute Time")) {
+			  ndParam.setCurStartTime(ndParam.getCurStartTimeAbsolute().replace(" ", "@"));
+			  ndParam.setCurEndTime(ndParam.getCurEndTimeAbsolute().replace(" ", "@"));
+		  } else if(ndParam.getTimePeriod().equals("Elapsed Time")) {
+			  long startTime =  convertFormattedDateToMilliscond(curStartTime, "MM/dd/yy HH:mm:ss", null);
+			  long elapsedStartTime = convertFormattedTimeToMillisecond(ndParam.getCurStartTimeElapsed(), ":");
+			  long elapStartTime = startTime + elapsedStartTime;
+			  String startElapsedTime = convertDateTimeStampToFormattedString(elapStartTime, "MM/dd/yy HH:mm:ss", null);
+			 
+			 // long endTime =  convertFormattedDateToMilliscond(curEndTime, "MM/dd/yy HH:mm:ss", null);
+			  long elapsedEndTime = convertFormattedTimeToMillisecond(ndParam.getCurEndTimeElapsed(), ":");
+			  long elapEndTime = startTime + elapsedEndTime;
+			  String endElapsedTime = convertDateTimeStampToFormattedString(elapEndTime, "MM/dd/yy HH:mm:ss", null);
+			  ndParam.setCurStartTime(startElapsedTime.replace(" ", "@"));
+			  ndParam.setCurEndTime(endElapsedTime.replace(" ", "@"));
+		  } else if(ndParam.getTimePeriod().equals("Phase")) {
+			  
+			  try {
+			  
+			  URL url;
+		        String str = getUrlString(nsUrlConnectionString); // URLConnectionString.substring(0,URLConnectionString.lastIndexOf("/"));
+		        url = new URL(str + "ProductUI/productSummary/jenkinsService/getPhaseDuration?phaseName=" + ndParam.getPhase() + "&testRun=" + testRun + "&scenarioName=" + scenarioName);
+		        
+		        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		        conn.setRequestMethod("GET");
+
+		        conn.setRequestProperty("Accept", "application/json");
+
+	        	if (conn.getResponseCode() != 200) {
+	        	  logger.log(Level.INFO, "Getting Error code on polling  = " + conn.getResponseCode() + ". Retrying in next poll in 5 minutes.");
+	        	}
+
+	        	BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+	        	String phaseResponse = br.readLine();
+
+		    
+		        JSONObject phaseDuration = (JSONObject) JSONSerializer.toJSON(phaseResponse);
+		      	  
+	      	 
+	      	  
+	      	    String startTime = phaseDuration.getString("start Time");
+	      	    String endTime = phaseDuration.getString("end Time");
+	      	    /*Terminating Loop when test is stopped.*/
+	      	  
+	      	    long startTimee =  convertFormattedDateToMilliscond(curStartTime, "MM/dd/yy HH:mm:ss", null);
+	      	    long timeInMilisecond = convertFormattedTimeToMillisecond(startTime, ":");
+	      	    long stTime = startTimee + timeInMilisecond;
+	      	    String startElapsedTime = convertDateTimeStampToFormattedString(stTime, "MM/dd/yy HH:mm:ss", null);
+	      	    
+	      	    long endTimee =  convertFormattedDateToMilliscond(curEndTime, "MM/dd/yy HH:mm:ss", null);
+	    	    long endtimeInMilisecond = convertFormattedTimeToMillisecond(endTime, ":");
+	    	    long edTime = startTimee + endtimeInMilisecond;
+	    	    String edElapsedTime = convertDateTimeStampToFormattedString(edTime, "MM/dd/yy HH:mm:ss", null);
+	      	    ndParam.setCurStartTime(startElapsedTime.replace(" ", "@"));
+			    ndParam.setCurEndTime(edElapsedTime.replace(" ", "@"));
+		        
+			  } catch(Exception e) {
+				  logger.log(Level.SEVERE, "Unknown exception in establishing connection with Netstorm .", e);
+			  }
+			  } else if(ndParam.getTimePeriod().equals("Whole Scenario")) {
+				  ndParam.setCurStartTime(curStartTime.replace(" ", "@"));
+				  ndParam.setCurEndTime(curEndTime.replace(" ", "@"));
+			  }
+		  
+		  setCurStart(curStartTime);
+		  setCurEnd(curEndTime);
+		  
+		  logger.log(Level.INFO, "current stat time and end time...." + ndParam.getCurStartTime() + "   " + ndParam.getCurEndTime());
+		 }
+	       
+	  }
+	  
+	  public static String convertDateTimeStampToFormattedString(long dateTimeStamp, String dateFormat, TimeZone timeZone)
+	  {
+	    try
+	    {
+	      SimpleDateFormat trDateFormat = new SimpleDateFormat(dateFormat);
+	      
+	      //If TimeZone is null then it use default.
+	      if(timeZone != null)
+	        trDateFormat.setTimeZone(timeZone);
+	      
+	      Date userDate = new Date(dateTimeStamp);
+	      String formattedDate = trDateFormat.format(userDate);
+	      return formattedDate;
+	    }
+	    catch(Exception e)
+	    {
+	      return "";
+	    }
+	  }
+	  
+	  public static long convertFormattedDateToMilliscond(String dateTime, String dateFormat, TimeZone timeZone)
+	  {
+	    try
+	    {
+	      SimpleDateFormat trDateFormat = new SimpleDateFormat(dateFormat);
+	        
+	      //If TimeZone is null then it use default.
+	      if(timeZone != null)
+	        trDateFormat.setTimeZone(timeZone);
+	      
+	      Date userDate = trDateFormat.parse(dateTime); 
+	      long absoluteDateInMillies = userDate.getTime();	 
+	      return absoluteDateInMillies;	   
+	    }
+	    catch(Exception e)
+	    {
+	      return 0L;
+	    }
+	  }
+	  
+	  public static long convertFormattedTimeToMillisecond(String formattedString, String seperater)
+	  {
+	    try
+	    {
+	      String arrTime[] = formattedString.split(seperater);
+	      
+	      //Validation for checking if time array size is not equals to 3, then return from here.
+	      if(arrTime == null || arrTime.length != 3)
+	      {
+		return 0L;
+	      }
+	      
+	      //First calculate in seconds.
+	      int hourInSecond = Integer.parseInt(arrTime[0]) * 3600;
+	      int minuteInSecond = Integer.parseInt(arrTime[1]) * 60;
+	      int second = Integer.parseInt(arrTime[2]);
+	      
+	      long totalMilliscond = (hourInSecond + minuteInSecond + second) * 1000L;
+	      
+	      return totalMilliscond;
+	    }
+	    catch(Exception e)
+	    {
+	      return 0L;
+	    }
+	  }
 
   /*Method to parse json for both netstorm and netdiagnostic*/
   private MetricDataContainer parseJSONDataND(JSONObject resonseObj, JSONObject resonseObjND, String testMode) {
@@ -710,6 +1044,8 @@ public class NSNDIntegrationConnectionManager {
           if (sla.indexOf(">") != -1 || sla.indexOf(">") > 0) {
             sla = sla.substring(sla.lastIndexOf(">") + 1, sla.length());
           }
+          
+          String count = jsonObject.getString("Count");
 
           String transactiontStatus = jsonObject.getString("Transaction Status");
           String transactionBgcolor = jsonObject.getString("Transaction BGcolor");
@@ -729,17 +1065,36 @@ public class NSNDIntegrationConnectionManager {
           testMetric.setPrevTestRunValue(prevTestValue);
           testMetric.setInitialValue(initialValue);
           testMetric.setSLA(sla);
+          
+          if(count.equals("noCount")){
+        	  testMetric.setCount("NA");
+          }
+          else {
+        	  testMetric.setCount(count);  
+          }
+          
           if (trendLink != null) {
             testMetric.setLinkForTrend(trendLink);
           } else {
             testMetric.setLinkForTrend("NA");
           }
 
+          int fromPattern=0;
+    	  String patt = jsonObject.getString("PATTERN");
+//          String arrMetricDisplayName = arrMetricValue[0];
+          if (metric.trim().contains("- PATTERN"))
+          {
+            int len = patt.length()+2;
+    	        String dName = metric.substring(metric.indexOf("-")+len+1,metric.trim().length()-1);
+    	        metric = metric.replace(metric.substring(metric.indexOf("-"), metric.length()),"- " + dName);
+    	        fromPattern=1;
+          }
+          
           String headerName = "";
           String displayName = metric;
           if (index == 0) {
             str = displayName;
-            if (displayName.contains("- All")) {
+            if (displayName.contains("- All") && fromPattern!=1) {
               headerName = displayName.substring(0, str.lastIndexOf("-") + 5);
               displayName = displayName.substring(displayName.lastIndexOf("-") + 6, displayName.length() - 1);
             } else if (displayName.contains(" - ")) {
@@ -755,14 +1110,14 @@ public class NSNDIntegrationConnectionManager {
 
               if  (metricName.toString().trim().equals(str.substring(0, str.lastIndexOf("-")).toString().trim())) {
                 headerName = "";
-                if (displayName.contains("- All")) {
+                if (displayName.contains("- All") && fromPattern!=1) {
                   displayName = displayName.substring(displayName.lastIndexOf("-") + 6, displayName.length() - 1);
                 } else {
                   displayName = displayName.substring(displayName.lastIndexOf("-") + 1, displayName.length());
                 }
               } else {
                 str = displayName;
-                if (displayName.contains("- All")) {
+                if (displayName.contains("- All") && fromPattern!=1) {
                   headerName = displayName.substring(0, displayName.lastIndexOf("-") + 5);
                   displayName = displayName.substring(displayName.lastIndexOf("-") + 6, displayName.length() - 1);
                 } else if (displayName.contains(" - ")) {
@@ -776,7 +1131,7 @@ public class NSNDIntegrationConnectionManager {
             } else if (str.lastIndexOf("-") == -1) {
               str = displayName;
 
-              if (displayName.contains("- All")) {
+              if (displayName.contains("- All") && fromPattern!=1) {
                 headerName = displayName.substring(0, str.lastIndexOf("-") + 5);
                 displayName = displayName.substring(str.lastIndexOf("-") + 6, displayName.length() - 1);
 
@@ -790,7 +1145,7 @@ public class NSNDIntegrationConnectionManager {
               headerName = "Other";
             }
           }
-
+          
           testMetric.setNewReport("NewReport");
           testMetric.setDisplayName(displayName);
           testMetric.setHeaderName(headerName);
@@ -804,6 +1159,12 @@ public class NSNDIntegrationConnectionManager {
           testMetricsList.add(testMetric);
           testReportNS.setOperator(operator);
           testReportNS.setTestMetrics(testMetricsList);
+          if(count.equals("noCount")){
+        	  testReportNS.setShowCount("0");
+           }else {
+        	   testReportNS.setShowCount("1");
+           }
+          
         }
        } else {
     	   if(jsonTestReport.get("Transaction Stats") != null) {
@@ -981,6 +1342,8 @@ public class NSNDIntegrationConnectionManager {
     	 JSONArray metricsUnderTest = jsonTestReport.getJSONArray("Metrics Under Test");
         ArrayList<TestMetrics> testMetricsList = new ArrayList<TestMetrics>(metricsUnderTest.size());
 
+        String str = "";
+        int index = 0;
         for (Object jsonData : metricsUnderTest) {
           JSONObject jsonObject = (JSONObject) jsonData;
 
@@ -1002,8 +1365,16 @@ public class NSNDIntegrationConnectionManager {
           String transactionTooltip = jsonObject.getString("Transaction Tooltip");
           String trendLink = jsonObject.getString("trendLink");
           String metricLink = jsonObject.getString("Metric_DashboardLink");
+          
+          String count = jsonObject.getString("Count");
           TestMetrics testMetric = new TestMetrics();
 
+          if(count.equals("noCount")){
+        	  testMetric.setCount("NA");
+          }
+          else {
+        	  testMetric.setCount(count);  
+          }
           testMetric.setBaseLineValue(baseLineValue);
           testMetric.setCurrValue(currValue);
           
@@ -1016,45 +1387,142 @@ public class NSNDIntegrationConnectionManager {
           testMetric.setPrevTestRunValue(prevTestValue);
           testMetric.setInitialValue(initialValue);
           testMetric.setSLA(sla);
-          
-          if (trendLink != null) {
-            
-           if(prefix[0] != "")
-            trendLink = prefix[0] + trendLink;
+//          
+//          if (trendLink != null) {
+//            
+//           if(prefix[0] != "")
+//            trendLink = prefix[0] + trendLink;
              
             testMetric.setLinkForTrend(trendLink);
-          } else {
-            testMetric.setLinkForTrend("NA");
+//          } else {
+//            testMetric.setLinkForTrend("NA");
+//          }
+//         if(ndParam.getBaseStartTime() != null && !ndParam.getBaseStartTime().equals("") && !ndParam.getBaseStartTime().equals("NA")) {
+//          String[] startDateTime = ndParam.getBaseStartTime().spligetBase1EndTime     String[] endDateTime = ndParam.getBaseEndTime().split("@");
+//
+//          if (startDateTime[0].equals(endDateTime[0])) {
+//            baseLineDateTime = ndParam.getBaseStartTime().replace("@", " ") + " to " + endDateTime[1];
+//          } //baseLineDateTime = startDateTime[0] + " to "+ endDateTime[1];
+//          else {
+//            baseLineDateTime = ndParam.getBasgetBase1EndTimeeplace("@", " ") + " to " + ndParam.getBaseEndTime().replace("@", " ");
+//          }
+//         }
+//
+//         if (ndParam.getInitEndTime() != null) {
+//             String[] initStartDateTime = ndParam.getInitStartTime().split("@");
+//             String[] initEndDateTime = ndParam.getInitEndTime().split("@");
+//             if (initStartDateTime[0].equals(initEndDateTime[0])) {
+//               initialDateTime = ndParam.getInitStartTime().replace("@", " ") + " to " + initEndDateTime[1];
+//             } else {
+//               initialDateTime = ndParam.getInitStartTime().replace("@", " ") + " to " + ndParam.getInitEndTime().replace("@", " ");
+//             }
+//           }
+
+         int fromPattern=0;
+   	  String patt = jsonObject.getString("PATTERN");
+//         String arrMetricDisplayName = arrMetricValue[0];
+         if (metric.trim().contains("- PATTERN"))
+         {
+           int len = patt.length()+2;
+   	        String dName = metric.substring(metric.indexOf("-")+len+1,metric.trim().length()-1);
+   	        metric = metric.replace(metric.substring(metric.indexOf("-"), metric.length()),"- " + dName);
+   	        fromPattern=1;
+         }
+   	  
+   	  String headerName = "";
+         String displayName = metric;
+         if (index == 0)
+         {
+           str = displayName;
+           if(displayName.contains("- All") && fromPattern!=1)
+           {
+              headerName = displayName.substring(0, str.indexOf("-")+5);
+              displayName = displayName.substring(displayName.indexOf("-")+6,displayName.length()-1);
+           }
+           else if(displayName.contains(" - "))
+           {
+             headerName = displayName.substring(0, str.indexOf("-")+1);
+             displayName = displayName.substring(displayName.indexOf("-")+1,displayName.length()-1);
+           }
+           else
+           {
+             headerName = "Other";
+           }
+             index++;
           }
+          else
+          {
+            if (displayName.contains(" - ") && (str.indexOf("-")) != -1 )
+            {
+              String metricName = displayName.substring(0, displayName.indexOf("-"));
 
-          String[] startDateTime = ndParam.getBaseStartTime().split("@");
-          String[] endDateTime = ndParam.getBaseEndTime().split("@");
-
-          if (startDateTime[0].equals(endDateTime[0])) {
-            baseLineDateTime = ndParam.getBaseStartTime().replace("@", " ") + " to " + endDateTime[1];
-          } //baseLineDateTime = startDateTime[0] + " to "+ endDateTime[1];
-          else {
-            baseLineDateTime = ndParam.getBaseStartTime().replace("@", " ") + " to " + ndParam.getBaseEndTime().replace("@", " ");
-          }
-
-          if (ndParam.getInitEndTime() != null) {
-            startDateTime = ndParam.getInitStartTime().split("@");
-            endDateTime = ndParam.getInitEndTime().split("@");
-            if (startDateTime[0].equals(endDateTime[0])) {
-              initialDateTime = ndParam.getInitStartTime().replace("@", " ") + " to " + endDateTime[1];
-            } else {
-              initialDateTime = ndParam.getInitStartTime().replace("@", " ") + " to " + ndParam.getInitEndTime().replace("@", " ");
+              if (metricName.toString().trim().equals(str.substring(0, str.indexOf("-")).toString().trim()))
+              {
+                 headerName = "";
+                if (displayName.contains("- All") && fromPattern!=1)
+                {
+                  displayName = displayName.substring(displayName.indexOf("-")+6,displayName.length()-1);
+                }
+                else
+                  displayName = displayName.substring(displayName.indexOf("-")+1,displayName.length());
+               }
+              else
+              {
+                str = displayName;
+                if (displayName.contains("- All") && fromPattern!=1)
+                {
+                  headerName = displayName.substring(0, displayName.indexOf("-")+5);
+                  displayName = displayName.substring(displayName.indexOf("-")+6,displayName.length()-1);
+                }
+                else if(displayName.contains(" - "))
+                {
+                  headerName = displayName.substring(0, displayName.indexOf("-"));
+                  displayName = displayName.substring(displayName.indexOf("-")+1,displayName.length());
+                }
+                else
+                {
+                  headerName = "Other";
+                }
+                
+              }
+            }
+            else if(str.indexOf("-") == -1)
+            { 
+              str = displayName;
+              
+              if(displayName.contains("- All") && fromPattern!=1)
+              { 
+                headerName = displayName.substring(0, str.indexOf("-")+5);
+                displayName = displayName.substring(str.indexOf("-")+6,displayName.length()-1);
+              
+              }
+              else if(displayName.contains(" - "))
+              { 
+                headerName = displayName.substring(0, str.indexOf("-"));
+                displayName = displayName.substring(str.indexOf("-")+1,displayName.length());
+              }
+              else
+              { 
+                headerName = "Other";
+              }
+            }
+            else
+            {
+             headerName = "Other";
             }
           }
 
+         testMetric.setNewReport("NewReport");
+         testMetric.setDisplayName(displayName);
+         testMetric.setHeaderName(headerName);
           testMetric.setMetricName(metric);
           testMetric.setMetricRuleName(metricRule);
           testMetric.setTransactiontStatus(transactiontStatus);
           testMetric.setStatusColour(transactionBgcolor);
           testMetric.setTransactionTooltip(transactionTooltip);
           
-          if(prefix[0] != "")
-           metricLink = prefix[0] + metricLink;
+//          if(prefix[0] != "")
+//           metricLink = prefix[0] + metricLink;
           
           testMetric.setMetricLink(metricLink);
           testMetricsList.add(testMetric);
@@ -1085,13 +1553,13 @@ public class NSNDIntegrationConnectionManager {
 
         testReportND.setShowHideTransaction(true);
 
-        if(prefix[0] != "")
-          dashboardURL = prefix[0]+dashboardURL;
+//        if(prefix[0] != "")
+//          dashboardURL = prefix[0]+dashboardURL;
   
         testReportND.setDashboardURL(dashboardURL);
         
-        if(prefix[0] != "")
-          reportLink = prefix[0]+reportLink;
+//        if(prefix[0] != "")
+//          reportLink = prefix[0]+reportLink;
         
         testReportND.setReportLink(reportLink);
         testReportND.setBaseLineTestRun(baseLineTestRun);
@@ -1109,7 +1577,7 @@ public class NSNDIntegrationConnectionManager {
         testReportND.setTestRun(testRun);
         testReportND.setNormalThreshold(normalThreshold);
         testReportND.setCriticalThreshold(criticalThreshold);
-        testReportND.setCurrentDateTime(getCurStart() + " to " + getCurEnd());
+        testReportND.setCurrentDateTime(ndParam.getCurStartTime().replace("@", " ") + " to " + ndParam.getCurEndTime().replace("@", " "));
         testReportND.setPreviousDescription(previousDescription);
         testReportND.setBaselineDescription(baselineDescription);
         testReportND.setInitialDescription(initialDescription);
@@ -1261,6 +1729,7 @@ public class NSNDIntegrationConnectionManager {
 								  String transBGcolor = (String)metricInfoFinal.get("Transaction BGcolor");
 								  String Value = (String)metricInfoFinal.get("Value");
 								  String linkss = (String)metricInfoFinal.get("link");
+								  String trendLink = (String)metricInfoFinal.get("Trend Link");
 								  String SLA = (String)metricInfoFinal.get("SLA");
 								  String initialValue = (String)metricInfoFinal.get("Initial Value "); 
 								  String Stress = (String)metricInfoFinal.get("Stress");
@@ -1281,6 +1750,7 @@ public class NSNDIntegrationConnectionManager {
 								  finalInfoForVector.setStress(Stress);
 								  finalInfoForVector.setMetricName(metricNameVec);
 								  finalInfoForVector.setVectorName(vectorNameVec);
+								  finalInfoForVector.setTrendLink(trendLink);
 
 								  arrForVectorinfo.add(finalInfoForVector);
 
@@ -1357,7 +1827,7 @@ public class NSNDIntegrationConnectionManager {
 						  counts = counts+1;
 
 						  metrVal.setCountForBenchmark(counts);
-						  int countForMetrices = counts+1;
+						  int countForMetrices = counts+2;
 						  metrVal.setCountForMetrices(countForMetrices);
 						  metrVal.setHeadersForTrans(headerForVector);
 						  metrVal.setNameOfMetric(metrcNames);
@@ -1446,6 +1916,7 @@ public class NSNDIntegrationConnectionManager {
 							  String sla = (String)metricObj.get("SLA");
 							  String initialVal = (String)metricObj.get("Initial Value "); 
 							  String stress = (String)metricObj.get("Stress");
+							  String trendLink = (String)metricObj.get("Trend Link");
 
 							  transValue.setOperator(Oper);
 							  transValue.setPrevTestValue(prevTest);
@@ -1461,6 +1932,7 @@ public class NSNDIntegrationConnectionManager {
 							  transValue.setStress(stress);
 							  transValue.setMetricName(metricNameTranss);
 							  transValue.setVectorName(vectorNameTrans);
+							  transValue.setTrendLink(trendLink);
 
 						  }
 					  }
@@ -1533,7 +2005,7 @@ public class NSNDIntegrationConnectionManager {
 					  count = count+1;
 
 					  metrVal.setCountForBenchmark(count);
-					  int countForMetrices = count+1;
+					  int countForMetrices = count+2;
 					  metrVal.setCountForMetrices(countForMetrices);
 					  metrVal.setHeadersForTrans(transHeader);
 					  metrVal.setNameOfMetric(metrcNames); 
@@ -1600,6 +2072,7 @@ public class NSNDIntegrationConnectionManager {
 				  String Value = (String)scalarVal.get("Value");
 				  
 				  String link = (String) metricLink.get(name);
+				  String trendLink = (String)scalarVal.get("Trend Link");
 				  
 				  String SLA = (String)scalarVal.get("SLA");
 				  String initialValue = (String)scalarVal.get("Initial Value "); 
@@ -1631,6 +2104,7 @@ public class NSNDIntegrationConnectionManager {
 				  scalarValue.setInitialValue(initialValue);
 				  scalarValue.setStress(Stress);
 				  scalarValue.setMetricName(name);
+				  scalarValue.setTrendLink(trendLink);
 
 				  scalarArr.add(scalarValue);
 			  }
@@ -1662,6 +2136,7 @@ public class NSNDIntegrationConnectionManager {
 			  scalarHeader.add("Success(%)");
 		  }
 		  scalarHeader.add("Current");
+		  scalarHeader.add("Trend");
 		  scalarHeader.add("Action");
 
 		  testReport.setScalarHeaders(scalarHeader);

@@ -67,7 +67,7 @@ public class NetStormProjectAction implements Action  {
    * Method necessary to get the side-panel included in the Jelly file
    * @return this {@link AbstractProject}
    */
-  public AbstractProject getProject() 
+  public AbstractProject<?,?> getProject() 
   {
     return this.project;
   }

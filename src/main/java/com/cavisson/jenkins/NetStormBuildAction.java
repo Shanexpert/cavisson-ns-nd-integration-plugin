@@ -54,12 +54,13 @@ public class NetStormBuildAction implements Action, StaplerProxy {
 
     @Override
     public String getDisplayName() {
-        if(isNDE)
-	 return LocalMessages.ND_BUILDACTION_DISPLAYNAME.toString();
-        else if (isIntegrated)
-          return LocalMessages.NSND_BUILDACTION_DISPLAYNAME.toString();
-	else
-         return LocalMessages.BUILDACTION_DISPLAYNAME.toString();
+//        if(isNDE)
+//	 return LocalMessages.ND_BUILDACTION_DISPLAYNAME.toString();
+//        else if (isIntegrated)
+//          return LocalMessages.NSND_BUILDACTION_DISPLAYNAME.toString();
+//	else
+      //   return LocalMessages.BUILDACTION_DISPLAYNAME.toString();
+    	return "";
     }
 
     @Override

@@ -14,15 +14,15 @@ import java.util.ResourceBundle;
 public enum LocalMessages {
     
 PROJECTACTION_DISPLAYNAME("NetStormProjectAction.DisplayName"),
-BUILDACTION_DISPLAYNAME("NetStormBuildAction.DisplayName"),
-ND_BUILDACTION_DISPLAYNAME("NetDiagnosticsBuildAction.DisplayName"),
-NSND_BUILDACTION_DISPLAYNAME("NSNDIntegrationBuildAction.DisplayName"),
+//BUILDACTION_DISPLAYNAME("NetStormBuildAction.DisplayName"),
+//ND_BUILDACTION_DISPLAYNAME("NetDiagnosticsBuildAction.DisplayName"),
+//NSND_BUILDACTION_DISPLAYNAME("NSNDIntegrationBuildAction.DisplayName"),
 PUBLISHER_DISPLAYNAME("NetStormResultsPublisher.DisplayName"),
 ND_PUBLISHER_DISPLAYNAME("NetDiagnosticsResultsPublisher.DisplayName"),
 NSND_PUBLISHER_DISPLAYNAME("NSNDIntegrationResultsPublisher.DisplayName"),
 REPORT_DISPLAYNAME("NetStormReport.DisplayName"),
 ND_REPORT_DISPLAYNAME("NetDiagnosticsReport.DisplayName");
-private final static ResourceBundle MESSAGES = ResourceBundle.getBundle("jenkins.pipeline.Messages");
+private final static ResourceBundle MESSAGES = ResourceBundle.getBundle("com.cavisson.jenkins.Messages");
 private final String msgRef;
 private LocalMessages(final String msgReference) {
 msgRef = msgReference;

@@ -8,6 +8,8 @@ package com.cavisson.jenkins;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.cavisson.jenkins.PageDetail;
+
 /**
  *
  * @author preety.yadav
@@ -62,7 +64,28 @@ public class TestReport {
   private ArrayList<MetricVal> metricValues;
   private ArrayList<MetricInfo> vectorValues;
  private ArrayList<MetricLinkInfo> transMetricLink;  //for transaction metric link
+ private String showCount;
+ private ArrayList<String> pageDetailHeader;
+ 
+ public ArrayList<String> getPageDetailHeader() {
+	return pageDetailHeader;
+}
 
+public void setPageDetailHeader(ArrayList<String> pageDetailHeader) {
+	this.pageDetailHeader = pageDetailHeader;
+}
+
+private ArrayList<PageDetail> pageDetail; 
+
+  
+ 
+public ArrayList<PageDetail> getPageDetail() {
+	return pageDetail;
+}
+
+public void setPageDetail(ArrayList<PageDetail> pageDetail) {
+	this.pageDetail = pageDetail;
+}
 
   
 public ArrayList<MetricLinkInfo> getTransMetricLink() {
@@ -446,6 +469,14 @@ public void setCurrentDescription(String currentDescription)
 public String getCurrentDescription()
 {
    return currentDescription;
+}
+
+public String getShowCount() {
+	return showCount;
+}
+
+public void setShowCount(String showCount) {
+	this.showCount = showCount;
 }
 
     
