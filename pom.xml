@@ -57,7 +57,7 @@ THE SOFTWARE.
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.level>8</java.level>
         <jenkins.version>2.54</jenkins.version>
-        <maven.version>3.5.2</maven.version>
+        <maven.version>3.6.3</maven.version>
         <powermock.version>1.6.6</powermock.version>
     </properties>
 
