@@ -11,7 +11,7 @@ More information can be found on the Wiki page https://plugins.jenkins.io/caviss
 
 Note : Plugin source code is hosted on [GitHub](https://github.com/jenkinsci/cavisson-ns-nd-integration-plugin).
 
-How to build and test
+How to Build and test
 =====================
 
 * Configure the plugin
