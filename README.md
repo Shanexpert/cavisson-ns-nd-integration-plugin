@@ -1,4 +1,4 @@
-cavisson-ns-nd-integration-plugin
+Plugin Features
 =============
 
 `Release:` https://github.com/jenkinsci/cavisson-ns-nd-integration-plugin/releases
@@ -11,15 +11,36 @@ More information can be found on the Wiki page https://plugins.jenkins.io/caviss
 
 Note : Plugin source code is hosted on [GitHub](https://github.com/jenkinsci/cavisson-ns-nd-integration-plugin).
 
-How to Build and test
+Build Configuration
 =====================
 
-* Configure the plugin
-
-1 `Add build action(Execute NetStorm/NetCloud Test):`
+1 `Add build step(Execute NetStorm/NetCloud Test):`
     This step will make connection to the remote Netstorm server, execute the scenario/test suite and generate a test run number.
 			  
-2 `Add Post build action(NetStorm/NetCloud Performance Publisher):`
+2 `Add Post build step(NetStorm/NetCloud Performance Publisher):`
     This step will fetch the HTML report from the NetStorm server and publish it using HTML Publisher plugin.
+
+Plugin usage
+==============
+Build step configuration needs the following information:
+* Enter URL,username and password to connect with remote NetStorm server.
+* Select the Test suite or scenario to be run from the list.
+
+![image](https://user-images.githubusercontent.com/38205209/116411079-fd933600-a852-11eb-853b-d7ec778d7897.png)
+
+Post build step configuration needs the following information:
+* Enter the URL, username, and password of NetStorm server from where HTML report is to be fetched.
+
+![image](https://user-images.githubusercontent.com/38205209/116411868-bfe2dd00-a853-11eb-97f4-2b8c291e1723.png)
+
+* Configure Publish HTML Reports plugin, for rendering report over Jenkins UI.
+
+![image](https://user-images.githubusercontent.com/38205209/116412304-2c5ddc00-a854-11eb-97f2-7e02aff1ed07.png)
+
+Output
+=======
+The NS-ND Integration Performance Publisher plugin will show HTML report output per build. The following is an example:
+
+![image](https://user-images.githubusercontent.com/38205209/116413199-06850700-a855-11eb-80fd-a0d9ca07a0b6.png)
 
 See https://github.com/jenkinsci/cavisson-ns-nd-integration-plugin for details.
