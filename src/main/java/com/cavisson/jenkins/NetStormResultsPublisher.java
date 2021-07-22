@@ -244,12 +244,13 @@ public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
  private JSONObject htmlTable = new JSONObject();
  private String htmlTablePath = null;
  private boolean durationReport = false;
+ private String profile = "";
   
  @DataBoundConstructor
- public NetStormResultsPublisher(final String netstormUri, final String username,String password, final JSONObject htmlTable,final String project, final String subProject, final String scenario, final boolean  durationReport)
+ public NetStormResultsPublisher(final String netstormUri, final String username,String password, final JSONObject htmlTable,final String project, final String subProject, final String scenario, final boolean  durationReport, final String profile)
  {
    System.out.println(" getting constructor parmeter== "+netstormUri +", username = "+username+", project = "+project+", subProject = " +subProject);
-     logger.log(Level.INFO, "duration check = " + durationReport + ", uri = " + netstormUri);
+     logger.log(Level.INFO, "duration check = " + durationReport + ", uri = " + netstormUri+", profile -"+profile);
    setNetstormUri(netstormUri);
    setUsername(username);
    setPassword(password);
@@ -259,6 +260,7 @@ public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
    this.durationReport = durationReport;
    setDurationReport(durationReport);
    this.htmlTable = htmlTable;
+   this.profile = profile;
  }
  
 
@@ -352,7 +354,7 @@ public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
                connection.setProject(((NetStormBuilder)currentBuilder).getProject());
                connection.setSubProject(((NetStormBuilder)currentBuilder).getSubProject());
                connection.setScenario(((NetStormBuilder)currentBuilder).getScenario());
-               
+               connection.setProfile(((NetStormBuilder)currentBuilder).getProfile());
              }
              break;
           }
@@ -361,10 +363,10 @@ public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
       else
       {
          System.out.println("project = "+this.project+", subproject == "+this.subProject+", scenario = "+this.scenario);
-          
          connection.setProject(this.project);
          connection.setSubProject(this.subProject);
          connection.setScenario(this.scenario);
+         connection.setProfile(profile);
       }
        
     logger.println("Connection successful, continue to fetch measurements from netstorm Controller ...");

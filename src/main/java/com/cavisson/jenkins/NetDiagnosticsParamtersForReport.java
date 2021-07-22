@@ -19,6 +19,8 @@ public class NetDiagnosticsParamtersForReport {
   private String base1MSRName;
   private String base2MSRName;
   private String base3MSRName;
+  private String profile;
+  private String username;
 
   
 public String getCritiThreshold() {
@@ -118,10 +120,21 @@ public void setCheckProfilePath(String checkProfilePath) {
 	this.checkProfilePath = checkProfilePath;
 }
 
-
+public String getProfile() {
+	return profile;
+}
+public void setProfile(String profile) {
+	this.profile = profile;
+}
+public String getUsername() {
+	return username;
+}
+public void setUsername(String username) {
+	this.username = username;
+}
 @Override
 public String toString() {
-	return "curStartTime=" + curStartTime + ",curEndTime=" + curEndTime+ ",base1StartTime=" + base1StartTime + ",base1EndTime=" + base1EndTime + ",base2StartTime=" + base2StartTime + ", base2EndTime =" + base2EndTime + ", base3StartTime=" + base3StartTime + ", base3EndTime=" + base3EndTime + ", base1MSRName=" + base1MSRName+", base2MSRName=" + base2MSRName + ", base3MSRName=" + base3MSRName+",checkProfilePath="+ checkProfilePath +",criThreshold="+critiThreshold +",warThreshold="+warThreshold +",failThreshold="+failThreshold;
+	return "curStartTime=" + curStartTime + ",curEndTime=" + curEndTime+ ",base1StartTime=" + base1StartTime + ",base1EndTime=" + base1EndTime + ",base2StartTime=" + base2StartTime + ",base2EndTime =" + base2EndTime + ",base3StartTime=" + base3StartTime + ",base3EndTime=" + base3EndTime + ",base1MSRName=" + base1MSRName+",base2MSRName=" + base2MSRName + ",base3MSRName=" + base3MSRName+",checkProfilePath="+ checkProfilePath +",criThreshold="+critiThreshold +",warThreshold="+warThreshold +",failThreshold="+failThreshold+",profile="+profile+",username="+username;
 }
   
   

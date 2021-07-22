@@ -71,7 +71,6 @@ public class NetDiagnosticsResultsPublisher extends Recorder implements SimpleBu
    StringBuffer errMsg = new StringBuffer();
    
    
-   
   // EnvVars env = build.getEnvironment(listener);
    String curStart = "";
    String curEnd = " ";
@@ -540,7 +539,36 @@ public FormValidation doTestNetDiagnosticsConnection(@QueryParameter("netdiagnos
   return validationResult;
 }
 
+public synchronized ListBoxModel doFillProfileItems(@QueryParameter("netdiagnosticsUri") final String netdiagnosticRestUri, @QueryParameter("username") final String username, @QueryParameter("password") String password)
+{
+	
+  ListBoxModel models = new ListBoxModel();
+  StringBuffer errMsg = new StringBuffer();
+  
+  //IF creadentials are null or blank
+  if(netdiagnosticRestUri == null || netdiagnosticRestUri.trim().equals("") || username == null || username.trim().equals("") || password == null || password.trim().equals(""))
+  {
+    models.add("---Select Profile ---");   
+    return models;
+  }  
+  
+  //Making connection server to get project list
+  NdConnectionManager connection = new NdConnectionManager(netdiagnosticRestUri, username, Secret.fromString(password), true);
  
+  ArrayList<String> profileList = connection.getProfileList(errMsg);
+  
+  //IF project list is found null
+  if(profileList == null || profileList.size() == 0)
+  {
+    models.add("---Select Profile ---");   
+    return models;
+  }
+  
+  for(String profile : profileList)
+    models.add(profile);
+  
+  return models;
+}
 
 }
  @Extension
@@ -575,6 +603,7 @@ public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
  private String warThreshold;
  private String failThreshold;
  String duration;
+ private String profile;
  
  
 public String getCriThreshold() {
@@ -721,6 +750,13 @@ public void setBase3MSRName(String base3msrName) {
 	base3MSRName = base3msrName;
 }
 
+public String getProfile() {
+	return profile;
+}
+
+public void setProfile(String profile) {
+	this.profile = profile;
+}
 
 //public boolean getPrevDuration()
 //{
@@ -736,7 +772,7 @@ NetDiagnosticsParamtersForReport  ndParams = new NetDiagnosticsParamtersForRepor
          final String password, final String base1StartTime, final String base1EndTime, final String base2EndTime,
          final String base2StartTime, final String base3StartTime, final String base3EndTime, final String checkProfilePath, final String criThreshold,
          final String warThreshold, final String failThreshold, final String curStartTime, final String curEndTime, 
-         final String base1MSRName, final String base2MSRName, final String base3MSRName)
+         final String base1MSRName, final String base2MSRName, final String base3MSRName, final String profile)
  {
    /*creating json for sending the paramters to get the response json. */
    setNetdiagnosticsUri(netdiagnosticsUri);
@@ -766,6 +802,7 @@ NetDiagnosticsParamtersForReport  ndParams = new NetDiagnosticsParamtersForRepor
    setCriThreshold(criThreshold);
    setWarThreshold(warThreshold);
    setFailThreshold(failThreshold);
+   setProfile(profile);
    //this.initDuration = initDuration;
    //this.prevDuration = prevDuration;
    ndParams.setCheckProfilePath(checkProfilePath);
@@ -780,6 +817,8 @@ NetDiagnosticsParamtersForReport  ndParams = new NetDiagnosticsParamtersForRepor
    ndParams.setBase3MSRName(base3MSRName);
    
    ndParams.setCheckProfilePath(checkProfilePath);
+   ndParams.setProfile(profile);
+   ndParams.setUsername(username);
 
 
   //Handling for pipeline jobs

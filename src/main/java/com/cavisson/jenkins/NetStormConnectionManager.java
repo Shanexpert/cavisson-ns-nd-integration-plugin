@@ -22,6 +22,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.GZIPInputStream;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -73,7 +74,7 @@ public class NetStormConnectionManager {
   private String autoScript;
   private String htmlTablePath;
   private String baselineType;
-  private String gitPull;
+  private String gitPull = "false";
   private long pollInterval;
   private String result;
   private String err = "Authentication failure, please check whether username and password given correctly";
@@ -91,6 +92,8 @@ public class NetStormConnectionManager {
   private JSONObject resonseReportObj = null;
   private JSONObject jkRule = null;
   private boolean durationPhase = false;
+  private String profile = "";
+  private String hiddenBox = "";
   
   private HashMap<String,String> slaValueMap =  new HashMap<String,String> ();
 
@@ -237,8 +240,16 @@ public class NetStormConnectionManager {
   public void setGitPull(String gitPull) {
 	this.gitPull = gitPull;
   }
- 
-  private static void disableSslVerification() 
+  
+  public String getProfile() {
+	return profile;
+  }
+
+  public void setProfile(String profile) {
+	this.profile = profile;
+  }
+
+private static void disableSslVerification() 
   {
     try
     {
@@ -313,10 +324,12 @@ public class NetStormConnectionManager {
     this.durationPhase = durationPhase;
   }
 
-  public NetStormConnectionManager(String URLConnectionString, String username, Secret password, String project, String subProject, String scenario, String testMode, String baselineType, String pollInterval, String gitPull)
+  public NetStormConnectionManager(String URLConnectionString, String username, Secret password, String project, String subProject, String scenario, String testMode, String baselineType, String pollInterval, String profile,String hiddenBox,String... gitPull)
   {
     logger.log(Level.INFO, "NetstormConnectionManger constructor called with parameters with username:{0}, project:{2}, subProject:{3}, scenario:{4}, baselineTR:{5}", new Object[]{username, project, subProject, scenario, baselineType});
-
+    logger.log(Level.INFO, "Gitpull - ",gitPull.length);
+    logger.log(Level.INFO, "profile - ",profile);
+    logger.log(Level.INFO, "NetStormConnectionManager: profile - ",hiddenBox);
     this.URLConnectionString = URLConnectionString;
     this.username = username;
     this.project = project;
@@ -326,7 +339,10 @@ public class NetStormConnectionManager {
     this.baselineType = baselineType;
     this.password = password;
     this.pollInterval = Long.parseLong(pollInterval);
-    this.gitPull = gitPull;
+    this.profile = profile;
+    this.hiddenBox = hiddenBox;
+//    this.gitPull = gitPull;
+    this.gitPull = (gitPull.length > 0) ? gitPull[0] : "false";
   }
   
   /**
@@ -718,6 +734,8 @@ public JSONObject pullObjectsFromGit(){
       jsonRequest.put(JSONKeys.TESTMODE.getValue(), testMode);
       jsonRequest.put(JSONKeys.REPORT_STATUS.getValue(), ""); 
       jsonRequest.put(JSONKeys.BASELINE_TYPE.getValue(),baselineType);
+      jsonRequest.put("workProfile",profile);
+      jsonRequest.put("scriptHeaders",hiddenBox);
          
       
 //      if(getBaselineTR() != null && !getBaselineTR().trim().equals(""))
@@ -807,6 +825,7 @@ public JSONObject pullObjectsFromGit(){
       jsonRequest.put(JSONKeys.OPERATION_TYPE.getValue(), OperationType.GETPROJECT.toString());
       jsonRequest.put(JSONKeys.STATUS.getValue(), Boolean.FALSE);
       jsonRequest.put(JSONKeys.URLCONNECTION.getValue(), URLConnectionString); 
+      jsonRequest.put("workProfile",profile);
     }
     else if(type.equals("GET_SUBPROJECT"))
     {
@@ -816,6 +835,7 @@ public JSONObject pullObjectsFromGit(){
       jsonRequest.put(JSONKeys.OPERATION_TYPE.getValue(), OperationType.GETSUBPROJECT.toString());
       jsonRequest.put(JSONKeys.STATUS.getValue(), Boolean.FALSE);
       jsonRequest.put(JSONKeys.URLCONNECTION.getValue(), URLConnectionString); 
+      jsonRequest.put("workProfile",profile);
     }
     else if(type.equals("GET_SCENARIOS"))
     {
@@ -827,6 +847,7 @@ public JSONObject pullObjectsFromGit(){
      jsonRequest.put(JSONKeys.URLCONNECTION.getValue(), URLConnectionString);
       jsonRequest.put(JSONKeys.OPERATION_TYPE.getValue(), OperationType.GETSCENARIOS.toString());
       jsonRequest.put(JSONKeys.STATUS.getValue(), Boolean.FALSE);
+      jsonRequest.put("workProfile",profile);
     } 
     return jsonRequest;
   }
@@ -879,17 +900,67 @@ public JSONObject pullObjectsFromGit(){
       return false;
   }
    
+  public ArrayList<String> getProfileList(StringBuffer errMsg)
+  {
+	 try {
+		 logger.log(Level.INFO, " getting profile list ");
+		 ArrayList<String> profiles = new ArrayList<String>();
+		 URL url ;
+         String str = getUrlString(); // URLConnectionString.substring(0,URLConnectionString.lastIndexOf("/"));
+	      url = new URL(str+"/DashboardServer/web/commons/getProfileList?userName=" + username);
+	     
+	      logger.log(Level.INFO, "getProfileList url-"+  url);
+	      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+	      conn.setRequestMethod("GET");
+	      conn.setRequestProperty("Accept", "application/json");
+	      conn.setRequestProperty("Accept-Encoding", "gzip, deflate");
+	      conn.setRequestProperty("Content-Type","application/json");
+	      if(conn.getResponseCode()!= 200) {
+	    	  logger.log(Level.INFO, "getting error in fetching profile list.");
+	    	  profiles = new ArrayList<String>();
+	    	  return profiles;
+	      }
+	      
+	      //BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+	      BufferedReader br = new BufferedReader(new InputStreamReader(new GZIPInputStream(conn.getInputStream())));
+	      StringBuilder stb = new StringBuilder();
+	      
+	      String response = null;
+	      while((response = br.readLine())!= null) {
+	    	  stb.append(response);
+	      }
+	      logger.log(Level.INFO, "response- " + stb.toString());
+	      JSONArray arr = JSONArray.fromObject(stb.toString());
+	      //JSONArray arr = (JSONArray) JSONSerializer.toJSON(response);
+	      for(Object obj:arr) {
+	    	  String res = JSONObject.fromObject(obj).get("profileName").toString();
+	    	  profiles.add(res);
+	    	  logger.log(Level.INFO, "res- " + res);
+	      }
+	      logger.log(Level.INFO, "profiles- " + profiles.size());
+	      return profiles;
+	 }
+	  
+	  catch(Exception e){
+		  logger.log(Level.SEVERE, "Error getting profile list- " + e);
+		  return null;
+	  }
+  }
+  
+  
    
   
-  public ArrayList<String> getProjectList(StringBuffer errMsg)
+  public ArrayList<String> getProjectList(StringBuffer errMsg,String activeProfile)
   {
     logger.log(Level.INFO, "getProjectList method called.");
+    logger.log(Level.INFO, "activeProfile -"+activeProfile);
     
     try
     {
       logger.log(Level.INFO, "Making connection to Netstorm with following request uri- " + URLConnectionString);
       logger.log(Level.INFO, "Sending requets to get project list - " + URLConnectionString);
       JSONObject jsonResponse  = null;
+      this.profile = activeProfile;
 //      if(checkAndMakeConnection(URLConnectionString, servletName, errMsg))
 //      {   
     	JSONObject jsonRequest =    makeRequestObject("GET_PROJECT");
@@ -965,7 +1036,7 @@ public JSONObject pullObjectsFromGit(){
     return null;
   }
 
-  public ArrayList<String> getSubProjectList(StringBuffer errMsg , String project)
+  public ArrayList<String> getSubProjectList(StringBuffer errMsg , String project, String activeProfile)
   {
     logger.log(Level.INFO, "getSubProjectList method called.");
     
@@ -974,6 +1045,7 @@ public JSONObject pullObjectsFromGit(){
       logger.log(Level.INFO, "Making connection to Netstorm with following request uri- " + URLConnectionString);
 
       this.project =  project;
+      this.profile = activeProfile;
       JSONObject jsonResponse  = null;
 //      if (checkAndMakeConnection(URLConnectionString, servletName, errMsg))
 //      {
@@ -1051,7 +1123,7 @@ public JSONObject pullObjectsFromGit(){
    return null;
  }  
   
-  public ArrayList<String> getScenarioList(StringBuffer errMsg , String project, String subProject, String mode)
+  public ArrayList<String> getScenarioList(StringBuffer errMsg , String project, String subProject, String mode, String activeProfile)
   {
     logger.log(Level.INFO, "getScenarioList method called.");
     try
@@ -1060,6 +1132,7 @@ public JSONObject pullObjectsFromGit(){
       this.project = project;
       this.subProject = subProject;
       this.testMode = mode;
+      this.profile = activeProfile;
    
       JSONObject jsonResponse  = null;
 //      if (checkAndMakeConnection(URLConnectionString, servletName, errMsg))
@@ -1141,6 +1214,8 @@ public JSONObject pullObjectsFromGit(){
   public HashMap startNetstormTest(StringBuffer errMsg , PrintStream consoleLogger)
   {
 	  logger.log(Level.INFO, "startNetstormTest() called.");
+	  
+	  logger.log(Level.INFO, "startNetstormTest: hiddenBox -"+hiddenBox);
 
 	  this.consoleLogger = consoleLogger; 
 	  HashMap resultMap = new HashMap(); 
@@ -1283,13 +1358,16 @@ public JSONObject pullObjectsFromGit(){
 
    public void createCheckRuleFile(String restUrl) {
 	 try {
-	   logger.log(Level.INFO, "inside createCheckRuleFile ");
+	   logger.log(Level.INFO, "inside createCheckRuleFile - username :"+username+", profile :"+profile);
 	   JSONObject jsonRequest = new JSONObject();
 	   jsonRequest.put(JSONKeys.PROJECT.getValue(), project);
 	   jsonRequest.put(JSONKeys.SUBPROJECT.getValue(), subProject);
 	   jsonRequest.put(JSONKeys.SCENARIO.getValue(), scenario);
 	   jsonRequest.put(JSONKeys.TEST_RUN.getValue(), testRun + "");
 	   jsonRequest.put(JSONKeys.CHECK_RULE.getValue(), this.jkRule);
+	   jsonRequest.put("username", username);
+	   jsonRequest.put("profile", profile);
+	   
 	   URL url;
 	   url = new URL(restUrl+"/ProductUI/productSummary/jenkinsService/createCheckProfile");
 	
@@ -1656,6 +1734,7 @@ public JSONObject pullObjectsFromGit(){
     jsonRequest.put(JSONKeys.SCENARIO.getValue(), connection.getScenario());
     jsonRequest.put("TestCycleNumber", test_cycle_Number);
     jsonRequest.put("isDurationPhase", durationPhase);
+    jsonRequest.put("workProfile", connection.getProfile());
    
     this.testRun = testRun; 
     JSONArray jSONArray = new JSONArray();
@@ -2981,6 +3060,76 @@ public JSONObject pullObjectsFromGit(){
       }
 
      return urlAddrs;
+  }
+  
+  public JSONArray getScriptList(String profile,String scenario,String project,String subProject,String testMode){
+	  try{
+	  	 JSONArray scripts = new JSONArray();
+		 URL url ;
+      String str = getUrlString(); // URLConnectionString.substring(0,URLConnectionString.lastIndexOf("/"));
+	      url = new URL(str+"/ProductUI/productSummary/ScenarioWebService/getScenarioScriptList?scenName="+scenario+"&userName="+username+"&profile="+profile+"&project="+project+"&subproject="+subProject+"&testMode="+testMode);
+	     
+	      logger.log(Level.INFO, "getScriptList url-"+  url);
+	      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+	      conn.setRequestMethod("GET");
+	      conn.setRequestProperty("Accept", "application/json");
+	      conn.setRequestProperty("Content-Type","application/json");
+	      if(conn.getResponseCode()!= 200) {
+	    	  logger.log(Level.INFO, "getting error in fetching script list.");
+	    	  scripts = new JSONArray();
+	    	  return scripts;
+	      }
+	      
+	      BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+	      StringBuilder stb = new StringBuilder();
+	      
+	      String response = null;
+	      while((response = br.readLine())!= null) {
+	    	  stb.append(response);
+	      }
+	      logger.log(Level.INFO, "response of page list - " + stb.toString());
+	      scripts = JSONArray.fromObject(stb.toString());
+	      logger.log(Level.INFO, "scripts size - " + scripts.size());
+	      return scripts;
+	  }catch(Exception e){
+		  logger.log(Level.SEVERE, "Exception in getting script list - " + e);
+		  return null;
+	  }
+}
+  
+  public JSONArray getPageList(String script,String scenario,String profile,String testMode,String project,String subProjects){
+	  try{
+	  	 JSONArray scripts = new JSONArray();
+		 URL url ;
+         String str = getUrlString(); // URLConnectionString.substring(0,URLConnectionString.lastIndexOf("/"));
+	      url = new URL(str+"/ProductUI/productSummary/ScenarioWebService/getPageListByScriptNameJenkins?scenMode=0&scenName="+scenario+"&userName="+username+"&scriptName="+script+"&profile="+profile+"&project="+project+"&subproject="+subProjects+"&testMode="+testMode);
+	     
+	      logger.log(Level.INFO, "getPageList url-"+  url);
+	      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+	      conn.setRequestMethod("GET");
+	      conn.setRequestProperty("Accept", "application/json");
+	      conn.setRequestProperty("Content-Type","application/json");
+	      if(conn.getResponseCode()!= 200) {
+	    	  logger.log(Level.INFO, "getting error in fetching page list.");
+	    	  scripts = new JSONArray();
+	    	  return scripts;
+	      }
+	      
+	      BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+	      StringBuilder stb = new StringBuilder();
+	      
+	      String response = null;
+	      while((response = br.readLine())!= null) {
+	    	  stb.append(response);
+	      }
+	      logger.log(Level.INFO, "response of page list - " + stb.toString());
+	      scripts = JSONArray.fromObject(stb.toString());
+	      logger.log(Level.INFO, "scripts size - " + scripts.size());
+	      return scripts;
+	  }catch(Exception e){
+		  logger.log(Level.SEVERE, "Exception in getting page list - " + e);
+		  return null;
+	  }
   }
 
   

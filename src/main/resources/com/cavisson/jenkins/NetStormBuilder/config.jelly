@@ -2,6 +2,16 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler"
  xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson"  xmlns:f="/lib/form">
  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/> 
+ <style>
+ .tablecss {font-family: arial, sans-serif;border-collapse: collapse;width: 100%;}
+ td, th {border: 1px solid #dddddd;text-align: left;padding: 4px;}
+ td {background-color: whitesmoke;}
+ .submitcss {width: 100%;text-align: right;padding: 0px;font-style: normal;font-family: inherit;font-weight: 600;}
+ .ths {background-color: #0b6aa2;color: white;text-align: center;font-weight: 500;}
+ .secDiv {display: inline-block;float: right;cursor: pointer;background-color: #0b6aa2;border-radius: 2px;color: white;padding-right: 2px;padding-left: 2px;}
+ .outer{display: flex;align-items: center;justify-content: space-between;width: 100%;}
+ .inputBox{display: flex;flex-direction: column;}
+</style>
  <script src ="${rootURL}/plugin/cavisson-ns-nd-integration/js/jenkins_utils.js"/>
   <f:entry title="${%netstorm.url.title}"  description="${%netstorm.url.description}">
     <f:textbox field="URLConnectionString" id="urlConnect"/> 
@@ -60,8 +70,10 @@
 </div>
 </f:block>
 
-
 <f:section>
+  <f:entry title="Profile">
+    <f:select field="profile" id="prof"/>
+  </f:entry>
   <f:entry title="${%netstorm.project.name.title}" description="${%netstorm.project.name.description}" >
     <f:select field="project" id="P" onfocus="getPulledObjects(this.id)"/>
   </f:entry>
@@ -85,8 +97,64 @@
     <f:select field ="baselineType"/>
  </f:entry>
 </f:section>
+
+<f:section>
+	<input type="checkbox" name="advanceSett" id="advSetting" field="advanceSett" value="${instance.advanceSett}" onchange="openDiv(this.value)"/>
+	<label for="advanceSett">Advanced Settings</label>
+	<div style="display: none;padding:10px;width:100%;background-color:#e7e6e6c2;" id="show">
+      <div class="outer">
+      	<div class="inputBox">
+       	<f:entry title="Script">
+    		<f:select id="script" field="script"/>
+  		</f:entry>
+  		</div>
+  		<div class="inputBox">
+       	<f:entry title="Page">
+    		<f:select id="page" field="page"/>
+  		</f:entry>
+  		</div>
+  		<div class="inputBox">
+       	<f:entry title="URL">
+    		<f:select id="url" field="urlHeader"/>
+  		</f:entry>
+  		</div>
+  		<div class="inputBox">
+  		<input type="text" placeholder="Header Name" id="hdrName" style="border-color: #ffffff8c;width: 150px;height: 30px;margin-top: 10px;"/>
+  		</div>
+  		<div class="inputBox">
+  		<input type="text" placeholder="Header Value" id="hdrValue" style="border-color: #ffffff8c;width: 327px;height: 30px;margin-top: 10px;"/>
+  		</div>     		
+        	
+        <i class="fa fa-plus-circle" onclick="addRow()" style="margin-left: 10px;margin-top: 10px;cursor: pointer;" title="Add"></i>
+	  </div>
+	  <div>
+        <table id="tabl" field="hdrTableData" class="tablecss">
+        <tr>
+        	<th style="width:15%;" class="ths">Script</th>
+        	<th style="width:16%;" class="ths">Page</th>
+        	<th style="width:8%;" class="ths">URL</th>
+        	<th style="width:27%;" class="ths">Header Name</th>
+        	<th style="width:44%;" class="ths">Header Value</th>
+        	<th class="ths">Action</th>
+        </tr>
+        </table>
+      </div>
+      <div id="saveTblData" style="height: 17px;margin: 5px;margin-top: 20px;float: right;">
+	    <div id="showSubmit" style="display:none;float: left;"><i style="margin-right: 8px;" class="fa fa-circle-o-notch fa-spin"></i></div>
+      	<div class="secDiv" title="Save added headers">
+      	    <i class="submitcss" onclick="saveTableData()">Save</i>
+      	</div>
+      </div>
+      
+      <f:invisibleEntry>
+    	<f:textbox field="hiddenBox" id="hiddenTxt" />
+  	  </f:invisibleEntry>
+      
+    </div>
+</f:section>
    
  <st:bind var="backend" value="${descriptor}"/>
+ <st:bind var="instance" value="${instance}"/>
  <script>
  function enableDisableTR(value)
  {
@@ -100,7 +168,6 @@
  }
  
  window.addEventListener('load', (event) => {
-    console.log("markChecked called ...");
 	var urlConn = document.getElementById('urlConnect').value;
  	var username = document.getElementById('userName').value;
  	var password = document.getElementById('pass').value;
@@ -108,28 +175,24 @@
  	var subProject = document.getElementById('SP').value;
  	var testMode = document.getElementById('testMode').value;
  	var checkBox = document.getElementById("myCheck");
- 	console.log("markChecked: checkBox -"+document.getElementById("myCheck").value);
  	var checkVal = document.getElementById("myCheck").value;
  	
  	var boolVal = (document.getElementById("myCheck").value == 'true');
- 	console.log("markChecked: boolVal -"+boolVal);
  	document.getElementById("myCheck").checked = boolVal;
- 	console.log("markChecked: checkBox checked? "+checkBox.checked);
+ 	
+ 	var advBoolVal = (document.getElementById("advSetting").value == 'true');
+ 	document.getElementById("advSetting").checked = advBoolVal;
+ 	openDiv();
  	
  	document.getElementById('gitPullMsg').innerHTML = "";
  	document.getElementById('gitPullMsg').style.color = "#000000";
  	document.getElementById('gitPullMsg').fontWeight = "400";
 	if(checkBox.checked == true){
-	console.log("in on check ...");
  	document.getElementById('gitPullMsg').innerHTML = "Git pull is in progress ...";
  	var x = document.getElementById("showIcon");
  	x.style.display = "block";
 	backend.performGitpull(urlConn,username,password,checkVal,project,subProject,testMode,function(t) {
-	  console.log("STATUS -"+t.responseObject());
 	  var res = t.responseObject();
-	  console.log("res gitPull-"+res);
-	  console.log("res gitPull msg -"+res.msg+",color -"+res.color);
-	  console.log("message -"+document.getElementById('gitPullMsg').innerHTML);
 	  document.getElementById('gitPullMsg').innerHTML = res.msg;
 	  var colortext = document.getElementById('gitPullMsg');
 	  colortext.style.color = res.color;
@@ -138,56 +201,84 @@
 	})
 	
 	}
- 	
+	var hiddenData = "";
+	var table = document.getElementById("tabl");
+	instance.getAddedHeaders(function(t){
+		if(t.responseObject() != ""){
+		hiddenData = t.responseObject();
+		var data = hiddenData.split("%0A");
+		for(i=0;i &lt; data.length;i++){
+			var row = data[i];
+			var index = row.indexOf(',', 1 + row.indexOf(',', 1 + row.indexOf(',',1 + row.indexOf(','))));
+			let first = row.substring(0,index);
+			let second = row.substring(index+1);
+			var temp = first.split(",");
+			
+			var rowlength = table.rows.length;
+  			var rows = table.insertRow(rowlength);
+  		
+  			var cell1 = rows.insertCell(0);
+  			var cell2 = rows.insertCell(1);
+  			var cell3 = rows.insertCell(2);
+  			var cell4 = rows.insertCell(3);
+  			var cell5 = rows.insertCell(4);
+  			var cell6 = rows.insertCell(5);
+  	
+  			cell1.innerHTML = temp[0];
+  			cell2.innerHTML = temp[1];
+  			cell3.innerHTML = temp[2];
+  			cell4.innerHTML = temp[3];
+  			cell5.innerHTML = second;
+  			cell6.innerHTML = '<i class="fa fa-trash" onclick="deleteRow(this)"></i>';
+  			
+			}
+		}else{
+			var rowlength = table.rows.length;
+  			var rows = table.insertRow(rowlength);
+  		
+  			var cell1 = rows.insertCell(0);
+  	
+  			cell1.innerHTML = 'No data available';
+  			cell1.id = "myTd";
+  			document.getElementById("myTd").colSpan="6";
+			document.getElementById("myTd").style.textAlign = 'center';
+		}
+	}) 	
 	});
  
  function getPulledObjects(value){
- 	console.log("getPulledObjects called -"+value);
  	var obj = document.getElementById(value);
- 	console.log("obj -"+obj);
  	var urlConn = document.getElementById('urlConnect').value;
  	var username = document.getElementById('userName').value;
  	var password = document.getElementById('pass').value;
  	var project = document.getElementById('P').value;
  	var subProject = document.getElementById('SP').value;
  	var testMode = document.getElementById('testMode').value;
- 	console.log("urlConn -"+urlConn+",project-"+project+",subProject -"+subProject+",testMode -"+testMode);
+ 	var profile = document.getElementById('prof').value;
  	var temp = document.getElementById(value).value;
  	
- 	backend.getPulledObjects(value,urlConn,username,password,project,subProject,testMode,function(t) {
+ 	backend.getPulledObjects(value,urlConn,username,password,project,subProject,testMode,profile,function(t) {
  		var res = new Array();
- 		console.log("res obj -"+t.responseObject());
  		res = t.responseObject();
- 		console.log("res length -"+res.length);
- 		console.log("res item -"+res[0]);
  		var l = res.length;
  		 if(l &gt; 0){
- 		 	console.log("length is greater than 0 ...");
  		 	var addOptions = "";
  		 	for (i in res) {
- 		 	console.log("res length again -"+l);
  		 	   if(i &lt; l){
-                console.log("item -"+res[i]);
                 addOptions += "<option>" + res[i] + "</option>";
                }
             }
-            console.log("addOptions -"+addOptions);
             document.getElementById(value).innerHTML = addOptions;
-            console.log("selected value -"+document.getElementById(value).value);
             if(res.includes(temp)){
-            	console.log("temp exists ...");
             	document.getElementById(value).value = temp;
             }else{
-            	console.log("temp does not exist ...");
             	document.getElementById(value).value = res[0];
             }
-            console.log("updated selected value -"+document.getElementById(value).value);
  		 }
  	})
  }
  
  function performGitPull(value){
-    console.log("performGitPull called -");
 	var urlConn = document.getElementById('urlConnect').value;
  	var username = document.getElementById('userName').value;
  	var password = document.getElementById('pass').value;
@@ -195,22 +286,17 @@
  	var subProject = document.getElementById('SP').value;
  	var testMode = document.getElementById('testMode').value;
  	var checkBox = document.getElementById("myCheck");
- 	console.log("checkBox -"+checkBox);
  	
  	document.getElementById('gitPullMsg').innerHTML = "";
  	document.getElementById('gitPullMsg').style.color = "#000000";
  	document.getElementById('gitPullMsg').fontWeight = "400";
 	if(checkBox.checked == true){
-	console.log("in on check ...");
  	document.getElementById('gitPullMsg').innerHTML = "Git pull is in progress ...";
  	var x = document.getElementById("showIcon");
  	x.style.display = "block";
 	backend.performGitpull(urlConn,username,password,value,project,subProject,testMode,function(t) {
-	  console.log("STATUS -"+t.responseObject());
 	  var res = t.responseObject();
-	  console.log("res gitPull-"+res);
 	  console.log("res gitPull msg -"+res.msg+",color -"+res.color);
-	  console.log("message -"+document.getElementById('gitPullMsg').innerHTML);
 	  document.getElementById('gitPullMsg').innerHTML = res.msg;
 	  var colortext = document.getElementById('gitPullMsg');
 	  colortext.style.color = res.color;
@@ -220,6 +306,146 @@
 	
 	}
 }
+
+function openDiv(value){
+    var checkBox = document.getElementById("advSetting");
+    var showDiv = document.getElementById("show");
+    showDiv.style.display = checkBox.checked ? "inline-block" : "none";
+}
+
+function addRow() {
+	var script = document.getElementById("script").value;
+ 	var page = document.getElementById("page").value;
+ 	var url = document.getElementById("url").value;
+ 	var hdrname = document.getElementById("hdrName").value;
+ 	var hdrvalue = document.getElementById("hdrValue").value;
+ 	
+ 	if(script != "") {
+	var table = document.getElementById("tabl");
+	var rowlength = table.rows.length;
+	
+	if(hdrname == null || hdrname == ""){
+		alert("Header name is empty");
+		return;
+	}else if(hdrvalue == null || hdrvalue == ""){
+		alert("Header value is empty");
+		return;
+	}
+	
+	for (i=1;i &lt; table.rows.length;i++){
+		var cells = table.rows.item(i).cells;
+		if(script == cells.item(0).innerHTML){
+			if(page == cells.item(1).innerHTML){
+				if(url == cells.item(2).innerHTML){
+					if(hdrname == cells.item(3).innerHTML){
+						if(hdrvalue == cells.item(4).innerHTML){
+							alert("Added values already exist.");
+							document.getElementById("hdrName").value = "";
+							document.getElementById("hdrValue").value = "";
+							return;
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	if(table.rows.length == 2){
+	for (i=1;i &lt; table.rows.length;i++){
+		var cells = table.rows.item(i).cells;
+		if(cells.item(0).innerHTML == 'No data available'){
+			table.deleteRow(1);
+			rowlength--;
+		}
+	}	
+	}
+  	var row = table.insertRow(rowlength);
+  	
+  	var cell1 = row.insertCell(0);
+  	var cell2 = row.insertCell(1);
+  	var cell3 = row.insertCell(2);
+  	var cell4 = row.insertCell(3);
+  	var cell5 = row.insertCell(4);
+  	var cell6 = row.insertCell(5);
+  	
+  	cell1.innerHTML = script;
+  	cell2.innerHTML = page;
+  	cell3.innerHTML = url;
+	if(hdrname == null || hdrname == "")
+		cell4.innerHTML = "NA";
+	else
+		cell4.innerHTML = hdrname;
+	if(hdrvalue == null || hdrvalue == "")
+		cell5.innerHTML = "NA";
+	else
+		cell5.innerHTML = hdrvalue;
+  	cell6.innerHTML = '<i class="fa fa-trash" onclick="deleteRow(this)"></i>';
+  	
+  }
+  
+  var rowlength = table.rows.length;
+  var showDiv = document.getElementById("saveTblData");
+  if(rowlength>1){
+    showDiv.style.display = "block";  
+  }else{
+    showDiv.style.display = "none"; 
+  }
+  
+  document.getElementById("hdrName").value = "";
+  document.getElementById("hdrValue").value = "";
+}
+
+function saveTableData(){
+	var table = document.getElementById("tabl");
+	var hiddenData="";
+	
+	var spinner = document.getElementById("showSubmit");
+	spinner.style.display = "block";
+	
+	if(table.rows.length == 2){
+	for (i=1;i &lt; table.rows.length;i++){
+		var cells = table.rows.item(i).cells;
+		if(cells.item(0).innerHTML == 'No data available'){
+			document.getElementById("hiddenTxt").value = "";
+			spinner.style.display = "none";
+			return;
+		}
+	}	
+	}
+	
+	
+	for (i=1;i &lt; table.rows.length;i++){
+		var cells = table.rows.item(i).cells;
+		const obj = {script:cells.item(0).innerHTML, page:cells.item(1).innerHTML, url:cells.item(2).innerHTML, headerName:cells.item(3).innerHTML , headerValue:cells.item(4).innerHTML };
+		if(i &lt; table.rows.length-1){
+			hiddenData = hiddenData + cells.item(0).innerHTML +","+cells.item(1).innerHTML+","+cells.item(2).innerHTML+","+cells.item(3).innerHTML+","+cells.item(4).innerHTML+"%0A";
+		}else{
+			hiddenData = hiddenData + cells.item(0).innerHTML +","+cells.item(1).innerHTML+","+cells.item(2).innerHTML+","+cells.item(3).innerHTML+","+cells.item(4).innerHTML;
+		}
+	}
+	document.getElementById("hiddenTxt").value = hiddenData;
+	spinner.style.display = "none";
+	alert("Custom headers are saved successfully");
+}
+
+function deleteRow(r) {
+  var i = r.parentNode.parentNode.rowIndex;
+  document.getElementById("tabl").deleteRow(i);
+  
+  var table = document.getElementById("tabl");
+  if(table.rows.length == 1){
+  	var rowlength = table.rows.length;
+  	var rows = table.insertRow(rowlength);
+  		
+  	var cell1 = rows.insertCell(0);
+  	
+  	cell1.innerHTML = 'No data available';
+  	cell1.id = "myTd";
+  	document.getElementById("myTd").colSpan="6";
+	document.getElementById("myTd").style.textAlign = 'center';
+  }
+}
+ 
 
 </script>
    

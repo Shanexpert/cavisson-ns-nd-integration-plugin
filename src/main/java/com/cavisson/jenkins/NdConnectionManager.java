@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.GZIPInputStream;
 import java.io.PrintStream;
 
 import net.sf.json.JSONArray;
@@ -240,10 +241,10 @@ public class NdConnectionManager {
 	logger.log(Level.INFO, "checkAndMakeConnection method called. with ndParam "+  ndParam.toString());
 	ndParam.setCurStartTime(this.getCurStart().replace(" ", "@"));
 	ndParam.setCurEndTime(this.getCurEnd().replace(" ", "@"));
-	if(ndParam.getBase1StartTime() != null && ndParam.getBase1StartTime().equals(""))
-		  ndParam.setBase1StartTime(null);
-		else
-		  ndParam.setBase1StartTime(ndParam.getBase1StartTime().replace(" ", "@"));
+	if(ndParam.getBase1StartTime() != null && !ndParam.getBase1StartTime().equals(""))
+		ndParam.setBase1StartTime(ndParam.getBase1StartTime().replace(" ", "@"));
+	else
+	   ndParam.setBase1StartTime(null);  
 		
 		if(ndParam.getBase1EndTime() != null && !ndParam.getBase1EndTime().equals(""))
 		  ndParam.setBase1EndTime(ndParam.getBase1EndTime().replace(" ", "@"));
@@ -269,6 +270,15 @@ public class NdConnectionManager {
 		  ndParam.setBase3EndTime(ndParam.getBase3EndTime().replace(" ", "@"));
 	    else
 		  ndParam.setBase3EndTime(null);
+	    
+	    if(ndParam.getBase1MSRName().equals(""))
+		  ndParam.setBase1MSRName(null);
+	    
+	    if(ndParam.getBase2MSRName().equals(""))
+			  ndParam.setBase2MSRName(null);
+	    
+	    if(ndParam.getBase3MSRName().equals(""))
+			  ndParam.setBase3MSRName(null);
       }
 
       if(this.getCritical() != null && this.getCritical() != "")
@@ -283,14 +293,18 @@ public class NdConnectionManager {
       URL url ;
 
       if(test == null || test.equals(null))
-	url = new URL(restUrl+"/ProductUI/productSummary/jenkinsService/reportData?&reportParam="+ndParam.toString()+"&status=false"+"&chkRule="+this.getJkRule());
+	url = new URL((restUrl+"/ProductUI/productSummary/jenkinsService/reportData?reportParam="+ndParam.toString()+"&status=false"+"&chkRule="+this.getJkRule()).replaceAll(" ","%20"));
       else
-	url = new URL(restUrl+"/ProductUI/productSummary/jenkinsService/reportData?&reportParam="+test+"&status=true"); //for only test connection
+	url = new URL((restUrl+"/ProductUI/productSummary/jenkinsService/reportData?reportParam="+test+"&status=true").replaceAll(" ","%20")); //for only test connection
 
       logger.log(Level.INFO, "checkAndMakeConnection method called. with arguments url"+  url);
+     
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+      conn.setConnectTimeout(0);
+	  conn.setReadTimeout(0);
       conn.setRequestMethod("GET");
       conn.setRequestProperty("Accept", "application/json");
+      conn.setDoOutput(false);
       if (conn.getResponseCode() != 200) {
 	throw new RuntimeException("Failed : HTTP error code : "+ conn.getResponseCode());
       }
@@ -1461,5 +1475,52 @@ public class NdConnectionManager {
 
      return urlAddrs;
   }
+   
+   public ArrayList<String> getProfileList(StringBuffer errMsg)
+   {
+ 	 try {
+ 		 logger.log(Level.INFO, " getting profile list ");
+ 		 ArrayList<String> profiles = new ArrayList<String>();
+ 		 URL url ;
+          String str = getUrlString(); // URLConnectionString.substring(0,URLConnectionString.lastIndexOf("/"));
+ 	      url = new URL(str+"/DashboardServer/web/commons/getProfileList?userName=" + username);
+ 	     
+ 	      logger.log(Level.INFO, "getProfileList url-"+  url);
+ 	      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+ 	      conn.setRequestMethod("GET");
+ 	      conn.setRequestProperty("Accept", "application/json");
+ 	      conn.setRequestProperty("Accept-Encoding", "gzip, deflate");
+ 	      conn.setRequestProperty("Content-Type","application/json");
+ 	      if(conn.getResponseCode()!= 200) {
+ 	    	  logger.log(Level.INFO, "getting error in fetching profile list.");
+ 	    	  profiles = new ArrayList<String>();
+ 	    	  return profiles;
+ 	      }
+ 	      
+ 	      //BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+ 	      BufferedReader br = new BufferedReader(new InputStreamReader(new GZIPInputStream(conn.getInputStream())));
+ 	      StringBuilder stb = new StringBuilder();
+ 	      
+ 	      String response = null;
+ 	      while((response = br.readLine())!= null) {
+ 	    	  stb.append(response);
+ 	      }
+ 	      logger.log(Level.INFO, "response- " + stb.toString());
+ 	      JSONArray arr = JSONArray.fromObject(stb.toString());
+ 	      //JSONArray arr = (JSONArray) JSONSerializer.toJSON(response);
+ 	      for(Object obj:arr) {
+ 	    	  String res = JSONObject.fromObject(obj).get("profileName").toString();
+ 	    	  profiles.add(res);
+ 	    	  logger.log(Level.INFO, "res- " + res);
+ 	      }
+ 	      logger.log(Level.INFO, "profiles- " + profiles.size());
+ 	      return profiles;
+ 	 }
+ 	  
+ 	  catch(Exception e){
+ 		  logger.log(Level.SEVERE, "Error getting profile list- " + e);
+ 		  return null;
+ 	  }
+   }
 
 }

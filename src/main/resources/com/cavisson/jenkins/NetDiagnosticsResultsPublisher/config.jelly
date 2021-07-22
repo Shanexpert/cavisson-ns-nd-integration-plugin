@@ -13,6 +13,10 @@
    <f:entry title="${%netdiagnostics.password.title}" description="${%netdiagnostics.password.description}">
     <f:password field="password"/>
    </f:entry>
+   
+   <f:entry title="Profile">
+    <f:select field="profile" id="prof"/>
+  </f:entry>
 
   <f:entry title="${%netdiagnostics.checkprofile.title}" description="${%netdiagnostics.checkprofile.description}">
     <f:textbox field="checkProfilePath" placeholder="project/subproject/checkprofileName.cprof"/>  

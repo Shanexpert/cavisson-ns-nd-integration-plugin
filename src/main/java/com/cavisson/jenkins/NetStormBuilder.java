@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.Iterator;
 import jenkins.tasks.SimpleBuildStep;
 import net.sf.json.JSONObject;
 import net.sf.json.*;
@@ -68,14 +69,20 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
     private String repoUsername="";
     private String repoPassword="";
     private String gitPull = "";
+    private String profile="";
+    private String script="";
+    private String page="";
+    private String advanceSett="";
+    private String urlHeader="";
+    private String hiddenBox="";
 
 
     @DataBoundConstructor
     public NetStormBuilder(String URLConnectionString, String username, String password, String project,
             String subProject, String scenario, String testMode, String baselineType, String pollInterval, String protocol,
-            String repoIp, String repoPort, String repoPath, String repoUsername, String repoPassword, String gitPull) {
+            String repoIp, String repoPort, String repoPath, String repoUsername, String repoPassword, String profile,String script,String page,String advanceSett,String urlHeader,String hiddenBox,String gitPull) {
     	 logger.log(Level.INFO, "inside a constructor..............gitpull -"+gitPull);
-        
+         logger.log(Level.INFO, "profile -"+profile+", advanceSett -"+advanceSett+", urlHeader -"+urlHeader+", hiddenBox -"+hiddenBox);
         this.project = project;
         this.subProject = subProject;
         this.scenario = scenario;
@@ -91,7 +98,30 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
         this.repoPath = repoPath;
         this.repoUsername = repoUsername;
         this.repoPassword = repoPassword;
-        this.gitPull = gitPull;
+        this.profile = profile;
+        this.gitPull = gitPull; 
+        this.script = script;
+        this.page = page;
+        this.advanceSett = advanceSett;
+        this.urlHeader = urlHeader;
+        this.hiddenBox = hiddenBox;
+        logger.log(Level.INFO, "hiddenBox -"+this.hiddenBox+", testmode ="+testMode);
+    }
+
+    public NetStormBuilder(String URLConnectionString, String username, String password, String project,
+            String subProject, String scenario, String testMode, String baselineType, String pollInterval,String profile) {
+    	 logger.log(Level.INFO, "inside second constructor..............");
+        
+        this.project = project;
+        this.subProject = subProject;
+        this.scenario = scenario;
+        this.URLConnectionString = URLConnectionString;
+        this.username = username;
+ 	    this.password = StringUtils.isEmpty(password) ? null : Secret.fromString(password);
+        this.testMode = testMode;
+        this.baselineType = baselineType;
+        this.pollInterval = pollInterval;
+        this.profile = profile; 
     }
 
     public String getProject() 
@@ -172,6 +202,54 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
 	public void setGitPull(String gitPull) {
 		this.gitPull = gitPull;
 	}
+	
+	public String getAdvanceSett() {
+		return advanceSett;
+	}
+
+	public void setAdvanceSett(String advanceSett) {
+		this.advanceSett = advanceSett;
+	}
+     
+	public String getScript() {
+		return script;
+	}
+
+	public void setScript(String script) {
+		this.script = script;
+	}
+
+	public String getPage() {
+		return page;
+	}
+
+	public void setPage(String page) {
+		this.page = page;
+	}
+
+	public String getUrlHeader() {
+		return urlHeader;
+	}
+
+	public void setUrlHeader(String urlHeader) {
+		this.urlHeader = urlHeader;
+	}
+
+	public String getHiddenBox() {
+		return hiddenBox;
+	}
+
+	public void setHiddenBox(String hiddenBox) {
+		this.hiddenBox = hiddenBox;
+	}
+	
+	public String getProfile() {
+		return profile;
+	}
+
+	public void setProfile(String profile) {
+		this.profile = profile;
+	}
 
 @Override
   public void perform(Run<?, ?> run, FilePath fp, Launcher lnchr, TaskListener taskListener) throws InterruptedException, IOException {
@@ -182,8 +260,8 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
    PrintStream logg = taskListener.getLogger();
    
    logg.println("Calling NetstormConnectionManager constructor ..........");
-   
-   NetStormConnectionManager netstormConnectionManger = new NetStormConnectionManager(URLConnectionString, username, password, project, subProject, scenario, testMode, baselineType, pollInterval,gitPull);      
+   logg.println("hiddenBox ---------->"+hiddenBox);
+   NetStormConnectionManager netstormConnectionManger = new NetStormConnectionManager(URLConnectionString, username, password, project, subProject, scenario, testMode, baselineType, pollInterval,profile,hiddenBox,gitPull);      
    StringBuffer errMsg = new StringBuffer();
    
    logg.println("Starting loop ............");
@@ -415,6 +493,17 @@ public void getGitConfigurationFromNS(){
 	  }
 }
 
+	@JavaScriptMethod
+	public String getAddedHeaders(){
+		try{
+			logger.log(Level.INFO, "getAddedHeaders called ...hiddenBox -"+this.hiddenBox);
+			return this.hiddenBox;
+		}catch(Exception e){
+			logger.log(Level.SEVERE, "Unknown exception in getAddedHeaders.",e);
+			return "";
+		}
+	}
+
   /*Method is used to create json for check rule*/
   public JSONObject createJsonForFileUpload(FilePath fp, PrintStream logger) {
 	  try {
@@ -579,9 +668,9 @@ public void getGitConfigurationFromNS(){
         }
         
         @JavaScriptMethod
-        public ArrayList<String> getPulledObjects(String value,String URLConnectionString,String username,String password,String project,String subProject,String testMode){
+        public ArrayList<String> getPulledObjects(String value,String URLConnectionString,String username,String password,String project,String subProject,String testMode,String profile){
         	try{
-        		logger.log(Level.INFO,"getPulledObjects args - value :"+value+",url -"+URLConnectionString+", project -"+project+", subProject -"+subProject+",testMode -"+testMode);
+        		logger.log(Level.INFO,"getPulledObjects args - value :"+value+",url -"+URLConnectionString+", project -"+project+", subProject -"+subProject+",testMode -"+testMode+", profile -"+profile);
         		ArrayList<String> res = new ArrayList<String>();
         		
         		StringBuffer errMsg = new StringBuffer();
@@ -589,13 +678,13 @@ public void getGitConfigurationFromNS(){
         			NetStormConnectionManager connection = new NetStormConnectionManager(URLConnectionString, username, Secret.fromString(password), false);
         			if(value.equals("P")){
         				logger.log(Level.INFO,"in P.......");
-        				res = connection.getProjectList(errMsg);
+        				res = connection.getProjectList(errMsg,profile);
         			}else if(value.equals("SP")){
         				logger.log(Level.INFO,"in SP.......");
-        				res = connection.getSubProjectList(errMsg, project);
+        				res = connection.getSubProjectList(errMsg, project,profile);
         			}else if(value.equals("S")){
         				logger.log(Level.INFO,"in S.......");
-        				res = connection.getScenarioList(errMsg, project, subProject, testMode);
+        				res = connection.getScenarioList(errMsg, project, subProject, testMode, profile);
         			}
             	}
         		if(res!=null && res.size()>0){
@@ -714,7 +803,7 @@ public void getGitConfigurationFromNS(){
             
         	return status;
         }
-
+        
         /**
          *
          * @param URLConnectionString
@@ -740,7 +829,7 @@ public void getGitConfigurationFromNS(){
             return validationResult;
         }
         
-        public FormValidation doPullObjectsFromGit(@QueryParameter("URLConnectionString") final String URLConnectionString, @QueryParameter("username") final String username, @QueryParameter("password") String password) {
+        public FormValidation doPullObjectsFromGit(@QueryParameter("URLConnectionString") final String URLConnectionString, @QueryParameter("username") final String username, @QueryParameter("password") String password, @QueryParameter("profile") String profile) {
 
         	
             FormValidation validationResult;
@@ -760,7 +849,7 @@ public void getGitConfigurationFromNS(){
             }else{
             	validationResult = FormValidation.warning("GIT Pull was unsuccessful.");
             }
-            doFillProjectItems(URLConnectionString,username,password);
+            doFillProjectItems(URLConnectionString,username,password, profile);
 //            ArrayList<String> projectList = netstormConnectionManger.getProjectList(errMsg);
             return validationResult;
         }
@@ -853,8 +942,9 @@ public void getGitConfigurationFromNS(){
         	
         	return validationResult;
         }
-           
-        public synchronized ListBoxModel doFillProjectItems(@QueryParameter("URLConnectionString") final String URLConnectionString, @QueryParameter("username") final String username, @QueryParameter("password") String password)
+        
+     // method for git profiles.............
+        public synchronized ListBoxModel doFillProfileItems(@QueryParameter("URLConnectionString") final String URLConnectionString, @QueryParameter("username") final String username, @QueryParameter("password") String password)
         {
         	
           ListBoxModel models = new ListBoxModel();
@@ -863,14 +953,52 @@ public void getGitConfigurationFromNS(){
           //IF creadentials are null or blank
           if(URLConnectionString == null || URLConnectionString.trim().equals("") || username == null || username.trim().equals("") || password == null || password.trim().equals(""))
           {
-            models.add("---Select Project ---");   
+            models.add("---Select Profile ---");   
             return models;
           }  
           
           //Making connection server to get project list
           NetStormConnectionManager objProject = new NetStormConnectionManager(URLConnectionString, username, Secret.fromString(password), false);
          
-          ArrayList<String> projectList = objProject.getProjectList(errMsg);
+          ArrayList<String> profileList = objProject.getProfileList(errMsg);
+          
+          //IF project list is found null
+          if(profileList == null || profileList.size() == 0)
+          {
+            models.add("---Select Profile ---");   
+            return models;
+          }
+          
+          for(String profile : profileList)
+            models.add(profile);
+          
+          return models;
+        }
+        
+                 
+        public synchronized ListBoxModel doFillProjectItems(@QueryParameter("URLConnectionString") final String URLConnectionString, @QueryParameter("username") final String username, @QueryParameter("password") String password,@QueryParameter("profile") final String profile)
+        {
+        	
+          ListBoxModel models = new ListBoxModel();
+          StringBuffer errMsg = new StringBuffer();
+          
+          //IF creadentials are null or blank
+          if(URLConnectionString == null || URLConnectionString.trim().equals("") || username == null || username.trim().equals("") || password == null || password.trim().equals("") || profile == null || profile.trim().equals(""))
+          {
+            models.add("---Select Project ---");   
+            return models;
+          }
+          
+          if(profile.trim().equals("---Select Profile ---"))
+          {
+            models.add("---Select Project ---");   
+            return models;
+          }
+          
+          //Making connection server to get project list
+          NetStormConnectionManager objProject = new NetStormConnectionManager(URLConnectionString, username, Secret.fromString(password), false);
+         
+          ArrayList<String> projectList = objProject.getProjectList(errMsg,profile);
           
           //IF project list is found null
           if(projectList == null || projectList.size() == 0)
@@ -883,8 +1011,7 @@ public void getGitConfigurationFromNS(){
             models.add(project);
           
           return models;
-        }
-        
+        }        
         
         // for baseline dropdown...
         public synchronized ListBoxModel doFillBaselineTypeItems()
@@ -899,7 +1026,7 @@ public void getGitConfigurationFromNS(){
             return models;
         }
        
-        public synchronized ListBoxModel doFillSubProjectItems(@QueryParameter("URLConnectionString") final String URLConnectionString, @QueryParameter("username") final String username, @QueryParameter("password") String password, @QueryParameter("project") final String project )
+        public synchronized ListBoxModel doFillSubProjectItems(@QueryParameter("URLConnectionString") final String URLConnectionString, @QueryParameter("username") final String username, @QueryParameter("password") String password, @QueryParameter("profile") final String profile, @QueryParameter("project") final String project )
         {
         	
           ListBoxModel models = new ListBoxModel();
@@ -918,7 +1045,7 @@ public void getGitConfigurationFromNS(){
           
           NetStormConnectionManager connection = new NetStormConnectionManager(URLConnectionString, username, Secret.fromString(password), false);
           StringBuffer errMsg = new StringBuffer();
-          ArrayList<String> subProjectList = connection.getSubProjectList(errMsg, project);
+          ArrayList<String> subProjectList = connection.getSubProjectList(errMsg, project, profile);
           
           if(subProjectList == null || subProjectList.size() == 0)
           {
@@ -934,7 +1061,7 @@ public void getGitConfigurationFromNS(){
           return models;
         }
         
-        public synchronized ListBoxModel doFillScenarioItems(@QueryParameter("URLConnectionString") final String URLConnectionString, @QueryParameter("username") final String username, @QueryParameter("password") String password, @QueryParameter("project") final String project, @QueryParameter("subProject") final String subProject , @QueryParameter("testMode") final String testMode )
+        public synchronized ListBoxModel doFillScenarioItems(@QueryParameter("URLConnectionString") final String URLConnectionString, @QueryParameter("username") final String username, @QueryParameter("password") String password, @QueryParameter("profile") final String profile, @QueryParameter("project") final String project, @QueryParameter("subProject") final String subProject , @QueryParameter("testMode") final String testMode )
         {
         	        	
           ListBoxModel models = new ListBoxModel();
@@ -953,7 +1080,7 @@ public void getGitConfigurationFromNS(){
           
           NetStormConnectionManager connection = new NetStormConnectionManager(URLConnectionString, username, Secret.fromString(password), false);
           StringBuffer errMsg = new StringBuffer();
-          ArrayList<String> scenariosList = connection.getScenarioList(errMsg, project, subProject, testMode);
+          ArrayList<String> scenariosList = connection.getScenarioList(errMsg, project, subProject, testMode, profile);
           
           if(scenariosList == null || scenariosList.size() == 0)
           {
@@ -977,6 +1104,102 @@ public void getGitConfigurationFromNS(){
            model.add("Test Suite" , "T");
            
            return model;
+        }
+        
+        public synchronized ListBoxModel doFillScriptItems(@QueryParameter("URLConnectionString") final String URLConnectionString, @QueryParameter("username") final String username, @QueryParameter("password") String password,@QueryParameter("profile") String profile,@QueryParameter("scenario") String scenario,@QueryParameter("project") String project,@QueryParameter("subProject") String subProject,@QueryParameter("testMode") String testMode)
+        {
+        	
+          ListBoxModel models = new ListBoxModel();
+          StringBuffer errMsg = new StringBuffer();
+          logger.log(Level.INFO, "scriptList: url -"+URLConnectionString+",username -"+username+",password -"+password);
+          logger.log(Level.INFO, "scriptList: profile -"+profile+",project -"+project+",sub project -"+subProject+",testmode -"+testMode);
+          //IF creadentials are null or blank
+          if(URLConnectionString == null || URLConnectionString.trim().equals("") || username == null || username.trim().equals("") || password == null || password.trim().equals(""))
+          {
+            models.add("---Select Script---");   
+            return models;
+          }
+          
+          NetStormConnectionManager objProject = new NetStormConnectionManager(URLConnectionString, username, Secret.fromString(password), false);
+          
+          JSONArray scriptList = objProject.getScriptList(profile,scenario,project,subProject,testMode);
+          logger.log(Level.INFO, "scriptList size -"+scriptList.size());
+          //IF page list is found null
+          if(scriptList == null || scriptList.size() == 0)
+          {
+            models.add("---Select Profile ---");   
+            return models;
+          }          
+          
+          //Iterator<String> iterator = scriptList.iterator();
+          //while(iterator.hasNext()) {
+        //	  logger.log(Level.INFO, "pageList item -"+iterator.next());
+        //	  String temp = iterator.next();
+        //	  logger.log(Level.INFO, "temp item -"+temp);
+        //	  models.add(temp);
+         // }
+          
+	 for(int i=0;i<scriptList.size();i++){
+	   logger.log(Level.INFO, "scriptList item -"+(String)scriptList.get(i));
+	   models.add((String)scriptList.get(i));
+	 }
+
+          return models;
+        }
+        
+        public synchronized ListBoxModel doFillPageItems(@QueryParameter("URLConnectionString") final String URLConnectionString, @QueryParameter("username") final String username, @QueryParameter("password") String password, @QueryParameter("script") String script,@QueryParameter("profile") String profile,@QueryParameter("scenario") String scenario,@QueryParameter("project") String project,@QueryParameter("subProject") String subProject,@QueryParameter("testMode") String testMode)
+        {
+        	
+          ListBoxModel models = new ListBoxModel();
+          StringBuffer errMsg = new StringBuffer();
+          logger.log(Level.INFO, "pageList: url -"+URLConnectionString+",username -"+username+",password -"+password);
+          logger.log(Level.INFO, "pageList: profile -"+profile+",project -"+project+",sub project -"+subProject+",testmode -"+testMode);
+          
+          //IF creadentials are null or blank
+          if(URLConnectionString == null || URLConnectionString.trim().equals("") || username == null || username.trim().equals("") || password == null || password.trim().equals("") || script.equals("---Select Script---"))
+          {
+            models.add("---Select Page---");   
+            return models;
+          }  
+          
+          //Making connection server to get project list
+          NetStormConnectionManager objProject = new NetStormConnectionManager(URLConnectionString, username, Secret.fromString(password), false);
+         
+          if(!script.equals("All")){
+          JSONArray pageList = objProject.getPageList(script,scenario,profile,testMode,project,subProject);
+          logger.log(Level.INFO, "pageList size -"+pageList.size());
+          //IF page list is found null
+          if(pageList == null || pageList.size() == 0)
+          {
+            models.add("---Select Profile ---");   
+            return models;
+          }
+                    
+          for(int i=0;i<pageList.size();i++){
+        	  logger.log(Level.INFO, "pageList item -"+(String)pageList.get(i));
+        	  String temp = (String)pageList.get(i);
+        	  temp = temp.replace("\"", "");
+        	  logger.log(Level.INFO, "temp -"+temp);
+        	  models.add(temp);
+          }
+          }else if(script.equals("All")){
+        	  logger.log(Level.INFO, "in all check ...");
+              models.add("All");        	  
+          }
+        
+          return models;
+        }
+        
+        public synchronized ListBoxModel doFillUrlHeaderItems()
+        {
+        	
+          ListBoxModel models = new ListBoxModel();
+          StringBuffer errMsg = new StringBuffer();
+          models.add("Main");
+    	  models.add("Inline");
+    	  models.add("ALL");
+    	 
+    	  return models;
         }
     }
 }
