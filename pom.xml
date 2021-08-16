@@ -45,9 +45,9 @@ THE SOFTWARE.
     </licenses>
    
     <scm>
-      <connection>scm:git:ssh://github.com/jenkinsci/cavisson-ns-nd-integration.git</connection>
-      <developerConnection>scm:git:ssh://git@github.com/jenkinsci/cavisson-ns-nd-integration.git</developerConnection>
-	  <url>https://github.com/jenkinsci/cavisson-ns-nd-integration</url>
+      <connection>scm:git:ssh://github.com/jenkinsci/cavisson-ns-nd-integration-plugin.git</connection>
+      <developerConnection>scm:git:ssh://git@github.com/jenkinsci/cavisson-ns-nd-integration-plugin.git</developerConnection>
+	  <url>https://github.com/jenkinsci/cavisson-ns-nd-integration-plugin</url>
      <tag>HEAD</tag>
    </scm>
    
