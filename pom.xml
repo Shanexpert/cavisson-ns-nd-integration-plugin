@@ -28,13 +28,13 @@ THE SOFTWARE.
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>4.6.1.42-SNAPSHOT</version>
+        <version>3.2</version>
         <relativePath />
     </parent>
 
    <groupId>io.jenkins.plugins</groupId>
    <artifactId>cavisson-ns-nd-integration</artifactId>
-    <version>4.6.1.42-SNAPSHOT</version>
+    <version>4.6.1.41-SNAPSHOT</version>
     <packaging>hpi</packaging>
 
     <name>NS-ND Integration Performance Publisher Plugin</name>
