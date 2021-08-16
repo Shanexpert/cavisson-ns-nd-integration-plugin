@@ -48,6 +48,12 @@ import hudson.model.Result;
 import hudson.model.Run;
 import hudson.util.Secret;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import com.cavisson.jenkins.PageDetail;
 
 /**
@@ -94,6 +100,7 @@ public class NetStormConnectionManager {
   private boolean durationPhase = false;
   private String profile = "";
   private String hiddenBox = "";
+  private int timeout = -1;
   
   private HashMap<String,String> slaValueMap =  new HashMap<String,String> ();
 
@@ -248,6 +255,14 @@ public class NetStormConnectionManager {
   public void setProfile(String profile) {
 	this.profile = profile;
   }
+  
+  public int getTimeout() {
+	return timeout;
+  }
+
+  public void setTimeout(int timeout) {
+	this.timeout = timeout;
+  }
 
 private static void disableSslVerification() 
   {
@@ -314,7 +329,7 @@ private static void disableSslVerification()
     START_TEST, AUTHENTICATE_USER, GETDATA, GETPROJECT, GETSUBPROJECT, GETSCENARIOS
   };
 
-  public NetStormConnectionManager(String URLConnectionString, String username, Secret password, boolean durationPhase)
+  public NetStormConnectionManager(String URLConnectionString, String username, Secret password, boolean durationPhase, int timeout)
   {
     logger.log(Level.INFO, "NetstormConnectionManger constructor called with parameters with username:{0}", new Object[]{username});
 
@@ -322,6 +337,7 @@ private static void disableSslVerification()
     this.username = username;
     this.password = password;
     this.durationPhase = durationPhase;
+    this.timeout = timeout;
   }
 
   public NetStormConnectionManager(String URLConnectionString, String username, Secret password, String project, String subProject, String scenario, String testMode, String baselineType, String pollInterval, String profile,String hiddenBox,String... gitPull)
@@ -1592,6 +1608,7 @@ public JSONObject pullObjectsFromGit(){
 	     try {
 
 	     logger.log(Level.INFO, "Test is stopped. Now getting report from Netstorm. It may take some time. URL = " + pollReportURL);
+	     logger.log(Level.INFO, "timeout =" + timeout);
 	     
 	      /* Creating the thread. */
 	      Runnable pollReportState = new Runnable()
@@ -1694,23 +1711,40 @@ public JSONObject pullObjectsFromGit(){
 	      };
 
 	      // Creating and Starting thread for Getting Graph Data.
-	      Thread pollTestRunThread = new Thread(pollReportState, "pollTestRunThread");
+	     // Thread pollTestRunThread = new Thread(pollReportState, "pollTestRunThread");
 
 	      // Running it with Executor Service to provide concurrency.
 	      ExecutorService threadExecutorService = Executors.newFixedThreadPool(1);
 
 	      // Executing thread in thread Pool.
-	      threadExecutorService.execute(pollTestRunThread);
-
+	      //threadExecutorService.execute(pollTestRunThread);
+	      
+	      final Future future = threadExecutorService.submit(pollReportState);
+	      
 	      // Shutting down in order.
 	      threadExecutorService.shutdown();
+	      
+	      try { 
+	    	  future.get(timeout, TimeUnit.MINUTES); 
+	    	}
+	    	catch (InterruptedException ie) { 
+	    	  /* Handle the interruption. Or ignore it. */ 
+	    	}
+	    	catch (ExecutionException ee) { 
+	    	  /* Handle the error. Or ignore it. */ 
+	    	}
+	    	catch (TimeoutException te) { 
+	    	  /* Handle the timeout. Or ignore it. */ 
+	    	}
+	    	if (!threadExecutorService.isTerminated())
+	    		threadExecutorService.shutdownNow();
 
 	      // Checking for running state.
 	      // Wait until thread is not terminated.
-	      while (!threadExecutorService.isTerminated())
-	      {
-	      }    
-	      
+//	      while (!threadExecutorService.isTerminated())
+//	      {
+//	      }    
+	       
 	    } catch (Exception e) {
 	      logger.log(Level.SEVERE, "Error in polling report.", e);
 	    }

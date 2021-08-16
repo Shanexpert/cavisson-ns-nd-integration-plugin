@@ -464,7 +464,7 @@ public void getGitConfigurationFromNS(){
 		  System.out.println("In method getGitConfigurationFromNS ...");
 		  logger.log(Level.INFO, "In method getGitConfigurationFromNS ...");
 		  
-		  NetStormConnectionManager netstormConnectionManger = new NetStormConnectionManager(URLConnectionString, username, password, false);
+		  NetStormConnectionManager netstormConnectionManger = new NetStormConnectionManager(URLConnectionString, username, password, false, 15);
 		  String res = netstormConnectionManger.getGitConfiguration();
 		  logger.log(Level.INFO, "getGitConfigurationFromNS res ..."+res);
 		  System.out.println("getGitConfigurationFromNS resss ..."+res);
@@ -675,7 +675,7 @@ public void getGitConfigurationFromNS(){
         		
         		StringBuffer errMsg = new StringBuffer();
         		if(!URLConnectionString.equals("")&&!URLConnectionString.equals("NA")&&!URLConnectionString.equals(" ")&&URLConnectionString != null&&!password.equals("") && !password.equals("NA")&&!password.equals(" ") && password != null&&!username.equals("") && !username.equals("NA") && !username.equals(" ") && username != null){
-        			NetStormConnectionManager connection = new NetStormConnectionManager(URLConnectionString, username, Secret.fromString(password), false);
+        			NetStormConnectionManager connection = new NetStormConnectionManager(URLConnectionString, username, Secret.fromString(password), false, 15);
         			if(value.equals("P")){
         				logger.log(Level.INFO,"in P.......");
         				res = connection.getProjectList(errMsg,profile);
@@ -781,7 +781,7 @@ public void getGitConfigurationFromNS(){
         		return status;
         	}
         	
-            NetStormConnectionManager netstormConnectionManger = new NetStormConnectionManager(URLConnectionString, username, Secret.fromString(password), false);
+            NetStormConnectionManager netstormConnectionManger = new NetStormConnectionManager(URLConnectionString, username, Secret.fromString(password), false, 15);
             JSONObject res = netstormConnectionManger.pullObjectsFromGit();
             logger.log(Level.INFO, "performGitpull: project before ..."+project);
             if(res != null && !res.isEmpty()){
@@ -817,7 +817,7 @@ public void getGitConfigurationFromNS(){
             FormValidation validationResult;
             
             
-            NetStormConnectionManager netstormConnectionManger = new NetStormConnectionManager(URLConnectionString, username, Secret.fromString(password), false);
+            NetStormConnectionManager netstormConnectionManger = new NetStormConnectionManager(URLConnectionString, username, Secret.fromString(password), false, 15);
             
             StringBuffer errMsg = new StringBuffer();
             
@@ -835,7 +835,7 @@ public void getGitConfigurationFromNS(){
             FormValidation validationResult;
             StringBuffer errMsg = new StringBuffer();
                         
-            NetStormConnectionManager netstormConnectionManger = new NetStormConnectionManager(URLConnectionString, username, Secret.fromString(password), false);
+            NetStormConnectionManager netstormConnectionManger = new NetStormConnectionManager(URLConnectionString, username, Secret.fromString(password), false, 15);
             JSONObject res = netstormConnectionManger.pullObjectsFromGit();
             logger.log(Level.INFO, "res in doPullObjectsFromGit -"+res);
             if(res != null && !res.isEmpty()){
@@ -887,7 +887,7 @@ public void getGitConfigurationFromNS(){
         		return validationResult;
         	}
         	
-        	NetStormConnectionManager netstormConnectionManger = new NetStormConnectionManager(URLConnectionString, username, Secret.fromString(password), false);
+        	NetStormConnectionManager netstormConnectionManger = new NetStormConnectionManager(URLConnectionString, username, Secret.fromString(password), false, 15);
         	JSONObject res = netstormConnectionManger.checkGitConfiguration(protocol.toLowerCase(),repoIp,repoPort,repoPath,repoUserName,repoPassword,"NA");
         	if(res != null && !res.isEmpty()){
         		if(res.get("errMsg").toString().equals("")){
@@ -935,7 +935,7 @@ public void getGitConfigurationFromNS(){
         		return validationResult;
         	}
         	
-        	NetStormConnectionManager netstormConnectionManger = new NetStormConnectionManager(URLConnectionString, username, Secret.fromString(password), false);
+        	NetStormConnectionManager netstormConnectionManger = new NetStormConnectionManager(URLConnectionString, username, Secret.fromString(password), false, 15);
         	String res = netstormConnectionManger.saveGitConfiguration(protocol.toLowerCase(), repoIp, repoPort, repoPath, repoUserName, repoPassword, "NA");
         	logger.log(Level.INFO, "res.............."+res);
         	validationResult=FormValidation.ok(res);
@@ -958,7 +958,7 @@ public void getGitConfigurationFromNS(){
           }  
           
           //Making connection server to get project list
-          NetStormConnectionManager objProject = new NetStormConnectionManager(URLConnectionString, username, Secret.fromString(password), false);
+          NetStormConnectionManager objProject = new NetStormConnectionManager(URLConnectionString, username, Secret.fromString(password), false, 15);
          
           ArrayList<String> profileList = objProject.getProfileList(errMsg);
           
@@ -996,7 +996,7 @@ public void getGitConfigurationFromNS(){
           }
           
           //Making connection server to get project list
-          NetStormConnectionManager objProject = new NetStormConnectionManager(URLConnectionString, username, Secret.fromString(password), false);
+          NetStormConnectionManager objProject = new NetStormConnectionManager(URLConnectionString, username, Secret.fromString(password), false, 15);
          
           ArrayList<String> projectList = objProject.getProjectList(errMsg,profile);
           
@@ -1043,7 +1043,7 @@ public void getGitConfigurationFromNS(){
             return models;
           } 
           
-          NetStormConnectionManager connection = new NetStormConnectionManager(URLConnectionString, username, Secret.fromString(password), false);
+          NetStormConnectionManager connection = new NetStormConnectionManager(URLConnectionString, username, Secret.fromString(password), false, 15);
           StringBuffer errMsg = new StringBuffer();
           ArrayList<String> subProjectList = connection.getSubProjectList(errMsg, project, profile);
           
@@ -1078,7 +1078,7 @@ public void getGitConfigurationFromNS(){
             return models;
           } 
           
-          NetStormConnectionManager connection = new NetStormConnectionManager(URLConnectionString, username, Secret.fromString(password), false);
+          NetStormConnectionManager connection = new NetStormConnectionManager(URLConnectionString, username, Secret.fromString(password), false, 15);
           StringBuffer errMsg = new StringBuffer();
           ArrayList<String> scenariosList = connection.getScenarioList(errMsg, project, subProject, testMode, profile);
           
@@ -1120,7 +1120,7 @@ public void getGitConfigurationFromNS(){
             return models;
           }
           
-          NetStormConnectionManager objProject = new NetStormConnectionManager(URLConnectionString, username, Secret.fromString(password), false);
+          NetStormConnectionManager objProject = new NetStormConnectionManager(URLConnectionString, username, Secret.fromString(password), false, 15);
           
           JSONArray scriptList = objProject.getScriptList(profile,scenario,project,subProject,testMode);
           logger.log(Level.INFO, "scriptList size -"+scriptList.size());
@@ -1163,7 +1163,7 @@ public void getGitConfigurationFromNS(){
           }  
           
           //Making connection server to get project list
-          NetStormConnectionManager objProject = new NetStormConnectionManager(URLConnectionString, username, Secret.fromString(password), false);
+          NetStormConnectionManager objProject = new NetStormConnectionManager(URLConnectionString, username, Secret.fromString(password), false, 15);
          
           if(!script.equals("All")){
           JSONArray pageList = objProject.getPageList(script,scenario,profile,testMode,project,subProject);

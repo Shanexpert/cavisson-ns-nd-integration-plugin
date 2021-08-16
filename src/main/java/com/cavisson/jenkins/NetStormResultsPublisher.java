@@ -94,6 +94,14 @@ public class NetStormResultsPublisher extends Recorder implements SimpleBuildSte
   public boolean isDurationReport() {
 	return durationReport;
 }
+  
+  public String getTimeout() {
+	return timeout;
+}
+
+public void setTimeout(String timeout) {
+	this.timeout = timeout;
+}
 
 public void setDurationReport(boolean durationReport) {
 	this.durationReport = durationReport;
@@ -215,7 +223,7 @@ public String getUsername()
    
    //NetStormResultsPublisher.password = Secret.fromString(password);
    
-  NetStormConnectionManager connection = new NetStormConnectionManager(netstormRestUri, username, Secret.fromString(password), false);
+  NetStormConnectionManager connection = new NetStormConnectionManager(netstormRestUri, username, Secret.fromString(password), false, 15);
     
    if (!connection.testNSConnection(errMsg)) 
    { 
@@ -245,11 +253,12 @@ public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
  private String htmlTablePath = null;
  private boolean durationReport = false;
  private String profile = "";
+ private String timeout = "15";
   
  @DataBoundConstructor
- public NetStormResultsPublisher(final String netstormUri, final String username,String password, final JSONObject htmlTable,final String project, final String subProject, final String scenario, final boolean  durationReport, final String profile)
+ public NetStormResultsPublisher(final String netstormUri, final String username,String password, final JSONObject htmlTable,final String project, final String subProject, final String scenario, final boolean  durationReport, final String profile, final String timeout)
  {
-   System.out.println(" getting constructor parmeter== "+netstormUri +", username = "+username+", project = "+project+", subProject = " +subProject);
+   System.out.println(" getting constructor parmeter== "+netstormUri +", username = "+username+", project = "+project+", subProject = " +subProject+", timeout = "+timeout);
      logger.log(Level.INFO, "duration check = " + durationReport + ", uri = " + netstormUri+", profile -"+profile);
    setNetstormUri(netstormUri);
    setUsername(username);
@@ -261,15 +270,17 @@ public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
    setDurationReport(durationReport);
    this.htmlTable = htmlTable;
    this.profile = profile;
+   setTimeout(timeout);
  }
  
 
- NetStormResultsPublisher(final String netstormUri, final String username,String password, final String htmlTable, final JSONObject  durationReport) {
+ NetStormResultsPublisher(final String netstormUri, final String username,String password, final String htmlTable, final JSONObject  durationReport, final String timeout) {
      System.out.println(" getting constructor parmeter== "+netstormUri +", username = "+username);
     logger.log(Level.INFO, "duration  repport = " + durationReport);
    setNetstormUri(netstormUri);
    setUsername(username);
    setPassword(password);
+   setTimeout(timeout);
   // setDurationCheckBox(durationReport);
  }
   
@@ -310,7 +321,7 @@ public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
     StringBuffer errMsg = new StringBuffer();
     
     
-     NetStormConnectionManager connection = new NetStormConnectionManager(netstormUri, username, password, durationReport);
+     NetStormConnectionManager connection = new NetStormConnectionManager(netstormUri, username, password, durationReport, Integer.parseInt(timeout));
     
     logger.println("Verify connection to NetStorm interface ..." + durationReport);
     
@@ -355,6 +366,7 @@ public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
                connection.setSubProject(((NetStormBuilder)currentBuilder).getSubProject());
                connection.setScenario(((NetStormBuilder)currentBuilder).getScenario());
                connection.setProfile(((NetStormBuilder)currentBuilder).getProfile());
+               connection.setTimeout(Integer.parseInt(timeout));
              }
              break;
           }
@@ -376,13 +388,21 @@ public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
     try
     {
       NetStormReport report = dataCollector.createReportFromMeasurements(logger, fp);
+      
+      if(!run.getResult().equals(Result.UNSTABLE)) {
       boolean pdfUpload = dumpPdfInWorkspace(fp, connection);
       logger.println("Pdf Uploaded = " + pdfUpload);
        boolean htmlReport = getHTMLReport(fp, connection);
+      }
      // NetStormBuildAction buildAction = new NetStormBuildAction(run, report);
       //run.addAction(buildAction);
       run.setDisplayName(NetStormBuilder.testRunNumber);
       NetStormBuilder.testRunNumber = "-1";
+      
+      if(run.getResult().equals(Result.UNSTABLE)) {
+        logger.println("Error in fetching report.");
+        return;
+      }
       logger.println("Ready building NetStorm report");
     
    // List<NetStormReport> previousReportList = getListOfPreviousReports( run, report.getTimestamp());

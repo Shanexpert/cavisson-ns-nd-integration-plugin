@@ -49,7 +49,7 @@ public class NetoceanActionResult {
          /*activating a HPD Server*/
          public String activateHPD() {
              try {
-                NetStormConnectionManager netStormConnectionManager = new NetStormConnectionManager(URLConnectionString, username, password, false);
+                NetStormConnectionManager netStormConnectionManager = new NetStormConnectionManager(URLConnectionString, username, password, false, 15);
                 
               URL url;
     	      url = new URL(URLConnectionString+"/ProductUI/productSummary/NetOceanWebService/restartHPD");
@@ -92,7 +92,7 @@ public class NetoceanActionResult {
          try {
              
             /*creating a connection with m/c*/ 
-            NetStormConnectionManager netStormConnectionManager = new NetStormConnectionManager(URLConnectionString, username, password, false);
+            NetStormConnectionManager netStormConnectionManager = new NetStormConnectionManager(URLConnectionString, username, password, false, 15);
             
             JSONObject jsonResponse  = null;
             /*Json object for creating a service*/
@@ -168,7 +168,7 @@ public class NetoceanActionResult {
          try {
                 
             /*creating a connection with m/c*/ 
-            NetStormConnectionManager netStormConnectionManager = new NetStormConnectionManager(URLConnectionString, username, password, false);
+            NetStormConnectionManager netStormConnectionManager = new NetStormConnectionManager(URLConnectionString, username, password, false, 15);
             
             String enableUrlinfo = "?services=" + service + "&enableUrl=" + enableUrl + "&user=" + user;
               /*Url object for intialize a req*/
@@ -211,7 +211,7 @@ public class NetoceanActionResult {
      public String disableService(String service, String disableUrl, String user) {
          try {
                 /*creating a connection with m/c*/ 
-            NetStormConnectionManager netStormConnectionManager = new NetStormConnectionManager(URLConnectionString, username, password, false);
+            NetStormConnectionManager netStormConnectionManager = new NetStormConnectionManager(URLConnectionString, username, password, false, 15);
             
             String disableUrlInfo = "?services=" + service + "&disableUrl=" + disableUrl + "&user=" + user;
               /*Url object for intialize a req*/
@@ -255,7 +255,7 @@ public class NetoceanActionResult {
       public String deleteService(String service) {
          try {
                   /*creating a connection with m/c*/ 
-            NetStormConnectionManager netStormConnectionManager = new NetStormConnectionManager(URLConnectionString, username, password, false);
+            NetStormConnectionManager netStormConnectionManager = new NetStormConnectionManager(URLConnectionString, username, password, false, 15);
             
             String disableUrlInfo = "?host=default&deleteServices=" + service; 
             
@@ -299,7 +299,7 @@ public class NetoceanActionResult {
       public String exportNetoceanService(String tarName, String services) {
           try {
             /*creating a connection with m/c*/ 
-            NetStormConnectionManager netStormConnectionManager = new NetStormConnectionManager(URLConnectionString, username, password, false);
+            NetStormConnectionManager netStormConnectionManager = new NetStormConnectionManager(URLConnectionString, username, password, false, 15);
             
             String exportUrlInfo = "?tarName=" + tarName + "&serviceName=" + services; 
             
@@ -339,7 +339,7 @@ public class NetoceanActionResult {
       public String copyExportJar(String hostIp, String filepath, String directory, String isExport) {
           try {
             /*creating a connection with m/c*/ 
-            NetStormConnectionManager netStormConnectionManager = new NetStormConnectionManager(URLConnectionString, username, password, false);
+            NetStormConnectionManager netStormConnectionManager = new NetStormConnectionManager(URLConnectionString, username, password, false, 15);
              String filePath = "";
             if (isExport.equals("true")) {
              filePath = "$NS_WDIR/webapps/" + filepath;
@@ -399,7 +399,7 @@ public class NetoceanActionResult {
     public String importServices(String tarName) {
         try {
              /*creating a connection with m/c*/ 
-            NetStormConnectionManager netStormConnectionManager = new NetStormConnectionManager(URLConnectionString, username, password, false);
+            NetStormConnectionManager netStormConnectionManager = new NetStormConnectionManager(URLConnectionString, username, password, false, 15);
             
             String importurlInfo = "?tarName=" + tarName;
               /*Url object for intialize a req*/
@@ -439,7 +439,7 @@ public class NetoceanActionResult {
     public String applyRtc(String cmdArgs, String isTemp, String level, String service) {
         try {
             /*creating a connection with m/c*/ 
-            NetStormConnectionManager netStormConnectionManager = new NetStormConnectionManager(URLConnectionString, username, password, false);
+            NetStormConnectionManager netStormConnectionManager = new NetStormConnectionManager(URLConnectionString, username, password, false, 15);
              
              JSONObject jsonResponse  = null;
             /*Json object for creating a service*/

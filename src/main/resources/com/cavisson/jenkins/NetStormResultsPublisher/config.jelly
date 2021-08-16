@@ -12,6 +12,10 @@
   <f:entry title="${%netstorm.password.title}" description="${%netstorm.password.description}">
     <f:password field="password"/>
   </f:entry>
+  
+  <f:entry title="Timeout" description="It is the job timeout value in minutes">
+    <f:textbox field="timeout" default="15"/>
+  </f:entry>
 
   <f:validateButton
       title="${%netstorm.connection.test.title}" progress="${%netstorm.connection.test.progress}"
