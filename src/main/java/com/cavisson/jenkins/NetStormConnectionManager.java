@@ -377,7 +377,7 @@ private static void disableSslVerification()
 	 JSONObject reqObj = new JSONObject();
 	 reqObj.put("username", this.username);
 	 reqObj.put("password" ,this.password.getPlainText()); 
-     reqObj.put("URLConnectionString", urlString);
+     reqObj.put("URLConnectionString", urlString); 
          
 	  URL url ;
 	  String str = getUrlString(); // URLConnectionString.substring(0,URLConnectionString.lastIndexOf("/"));
