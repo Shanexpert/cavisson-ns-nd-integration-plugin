@@ -129,6 +129,7 @@ public class NetStormConnectionManager {
     this.autoScript = autoScript;
   }
   
+
   public String gettName() {
     return tName;
   }
