@@ -34,7 +34,7 @@ THE SOFTWARE.
 
    <groupId>io.jenkins.plugins</groupId>
    <artifactId>cavisson-ns-nd-integration</artifactId>
-    <version>4.6.1.67-SNAPSHOT</version>
+    <version>4.6.1.67</version>
     <packaging>hpi</packaging>
 
     <name>NS-ND Integration Performance Publisher Plugin</name>
@@ -48,7 +48,7 @@ THE SOFTWARE.
 	    <connection>scm:git:ssh://github.com/jenkinsci/cavisson-ns-nd-integration-plugin.git</connection> 
       <developerConnection>scm:git:ssh://git@github.com/jenkinsci/cavisson-ns-nd-integration-plugin.git</developerConnection>
 	  <url>https://github.com/jenkinsci/cavisson-ns-nd-integration-plugin.git</url>
-     <tag>HEAD</tag>
+     <tag>cavisson-ns-nd-integration-4.6.1.67</tag>
    </scm>
    
     <properties>
