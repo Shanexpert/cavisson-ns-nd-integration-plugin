@@ -1,0 +1,16 @@
+# --- GDF Version History ---
+#  1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Spring Boot Service Extended Stats|10544|vector|11|0|Spring Boot Metrics|Tier>Server>Instance>Service|Spring Boot Service Stats provides metrics related to information along with HTTP request amd response.
+Graph|Average Response Time (Sec)|1|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Average Response time obtained from this server in seconds.
+Graph|Responses 1xx/Sec|2|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of responses per second obtained from this server with HTTP status code of 1xx series.
+Graph|Responses 2xx/Sec|3|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of responses per second obtained from this server with HTTP status code of 2xx series.
+Graph|Responses 3xx/Sec|4|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of responses per second obtained from this server with HTTP status code of 3xx series.
+Graph|Responses 4xx/Sec|5|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of responses per second obtained from this server with HTTP status code of 4xx series.
+Graph|Responses 5xx/Sec|6|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of responses per second obtained from this server with HTTP status code of 5xx series.
+Graph|Responses 1xx (Pct)|7|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Percentage of 1xx response.
+Graph|Responses 2xx (Pct)|8|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Percentage of 2xx response.
+Graph|Responses 3xx (Pct)|9|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Percentage of 3xx response.
+Graph|Responses 4xx (Pct)|10|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Percentage of 4xx response.
+Graph|Responses 5xx (Pct)|11|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Percentage of 5xx response.

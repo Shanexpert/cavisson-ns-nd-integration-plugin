@@ -1,0 +1,11 @@
+# --- GDF Version History ---
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS Inspector Template Stats|11237|vector|4|0|AWS Metrics|AccountName>Region>AssessmentTemplateName>AssessmentTemplateARN|Amazon Inspector is an automated security assessment service that helps improve the security and compliance of applications deployed on AWS
+
+Graph|AWS Inspector Assessment Run|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of assessment runs for this template.
+Graph|AWS Inspector Matching Agent|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of agents that match this template.
+Graph|AWS Inspector Healthy Agent|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of agents that match this template that are healthy.
+Graph|AWS Inspector Assessment Run Finding|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of findings for this template.

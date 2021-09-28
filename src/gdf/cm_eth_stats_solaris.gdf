@@ -1,0 +1,19 @@
+# --- GDF Version History ---
+#  1.0 - Initial version
+#  2.0 - Change done for match Long_data and Long_long_data to double
+#  3.0 - Changes done for Dynamic data in Execution GUI
+#  3.1 - Use future1 field of group line for Metric group name
+#
+#LAST_MAX_ASSIGNED_GRAPH_ID = 10
+#LAST_MODIFIED_DATE = 11/13/09 15:49:36
+
+Info|1.1|1|-|-|-1|-1|-
+Group|Network traffic (Solaris)|10198|vector|6|0|Network Metrics|Tier>Server>Interface|Netstat prints information about the Linux networking subsystem.
+
+Graph|Input Pkts OK/Sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Input Ok Packets/Sec in the sampling period
+Graph|Input Pkts Error/Sec|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Input Error Packets/Sec
+Graph|Output Pkts OK/Sec|3|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Output Ok Packets/Sec
+Graph|Output Pkts Error/Sec|4|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Output Error Packets/Sec
+Graph|Colls/Sec|5|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Collision Packets/Sec
+Graph|Queue/Sec|6|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Queue Packets/Sec
+

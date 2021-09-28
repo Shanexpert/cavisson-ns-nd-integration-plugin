@@ -1,0 +1,18 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+Group|End Response Stats|10495|vector|12|0|Tomcat Metrics|Tier>Server>Instance>Source>Message Type|OCI End to End Response Time stats.
+
+Graph|Messages/Sec|1|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of messages which are responce by server.
+Graph|Min Response Time (ms)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Minimum time in millisecond for responce in server.
+Graph|Max Response Time (ms)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum time in millisecond for responce in server.
+Graph|Mean (ms)|4|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Mean rate of on responce time.
+Graph|StdDev Response Time (ms)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|standard time in millisecond for responce in server.
+Graph|50th Percentile Response Time (ms)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|50th percentile of time taken for responce in millisecond.
+Graph|75th Percentile Response Time (ms)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|75th percentile of time taken for responce in millisecond.
+Graph|95th Percentile Response Time (ms)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|95th percentile of time taken for responce in millisecond.
+Graph|98th Percentile Response Time (ms)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|98th percentile of time taken for responce in millisecond.
+Graph|99th Percentile Response Time (ms)|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|99th percentile of time taken for responce in millisecond.
+Graph|999th Percentile Response Time (ms)|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|99.9th percentile of time taken for responce in millisecond.
+Graph|Snapshot Size|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Snapshot size.

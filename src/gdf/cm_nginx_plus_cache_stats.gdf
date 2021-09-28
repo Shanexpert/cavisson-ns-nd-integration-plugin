@@ -1,0 +1,24 @@
+Info|3.1|1|-|-|-1|-1|-
+Group|NGINX Plus Cache Stats|10460|vector|22|0|NGINX Metrics|Tier>Server>Instance>Cache|NGINX Plus Resource Stats provides metrics related to Nginx Cache.
+Graph|NGINX Cache Size (MB)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current size of the cache in MegaBytes.
+Graph|NGINX Maximum Cache Size (MB)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum size of the cache specified in the configuration.
+Graph|NGINX Hits/Sec|3|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of responses read from the cache per second.
+Graph|NGINX Average Hit Response (KB)|4|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average response in KiloBytes from the cache hits.
+Graph|NGINX Stale Responses/Sec|5|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of stale responses read from the cache per second.
+Graph|NGINX Average Stale Response (KB)|6|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average response in KiloBytes from cache where response was stale.
+Graph|NGINX Updating Responses/Sec|7|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of updating responses read from the cache per second.
+Graph|NGINX Average Updating Responses (KB)|8|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average response in KiloBytes from cache where response were updating.
+Graph|NGINX Revalidated Responses/Sec|9|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of revalidated responses read from the cache per second.
+Graph|NGINX Average revalidated Data Read (KB)|10|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average response in KiloBytes from the cache where response was revalidated.
+Graph|NGINX Misses/Sec|11|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of responses per second, which is not taken from the cache.
+Graph|NGINX Average Miss Response (KB)|12|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average response in KiloBytes from the proxy server.
+Graph|NGINX Miss Responses Written/Sec|13|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of responses per second written to the cache.
+Graph|NGINX Average Miss Response Write (KB)|14|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average response in KiloBytes written to cache when response is fetched from proxy server.
+Graph|NGINX Expired Responses/Sec|15|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of responses expired per second.
+Graph|NGINX Average Expired Response (KB)|16|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average response in KiloBytes from the proxy server due to response is expired from cache.
+Graph|NGINX Expired Responses Written/Sec|17|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of expired responses written to the cache per second.
+Graph|NGINX Average Expired Response Write (KB)|18|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average expired response in KiloBytes written to cache when response is fetched from proxy server.
+Graph|NGINX Bypass Responses/Sec|19|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of responses bypass per second.
+Graph|NGINX Average Bypass Response (KB)|20|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average response in KiloBytes from the proxy server due to response is bypass from cache.
+Graph|NGINX Bypass Responses Written/Sec|21|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of bypass responses written to the cache per second.
+Graph|NGINX Average Bypass Response Write (KB)|22|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average bypass response in KiloBytes written to cache when response is fetched from proxy server.

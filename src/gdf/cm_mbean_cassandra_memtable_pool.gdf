@@ -1,0 +1,39 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+# ObjectName : org.apache.cassandra.metrics:type=MemtablePool,name=BlockedOnAllocation
+info|3.1|1|-|-|-1|-1|-
+Group|Apache Cassandra Memtable Pool Stats|14111|vector|15|0|Apache Cassandra Metrics|Tier>Server>Instance|This stats gives information of threads are blocked by memtable allocation.
+#G1
+Graph|Apache Cassandra Blocked Memtable Pool Count|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number threads are blocked by memtable allocation.
+#G2
+Graph|Apache Cassandra Blocked Memtable Pool Maximum |2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Maximum threads are blocked by memtable allocation.
+#G3
+Graph|Apache Cassandra Blocked Memtable Pool Minimum |3|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Minimum threads are blocked by memtable allocation.
+#G4
+Graph|Apache Cassandra Blocked Memtable Pool Mean|4|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Mean threads are blocked by memtable allocation.
+#G5
+Graph|Apache Cassandra Blocked Memtable Pool Mean Rate|5|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Mean rate of threads are blocked by memtable allocation.
+#G6
+Graph|Apache Cassandra Blocked Memtable Pool Std Dev |6|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Standard deviation for threads are blocked by memtable allocation.
+#G7
+Graph|Apache Cassandra Blocked Memtable Pool/One Minute|7|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Threads are blocked by memtable allocation per one minute rate.
+#G8
+Graph|Apache Cassandra Blocked Memtable Pool/Five Minute|8|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Threads are blocked by memtable allocation per five minutes rate.
+#G9
+Graph|Apache Cassandra Blocked Memtable Pool/Fifteen Minute|9|scalar|sample|-|None|0|AS|-1|-1|NA|NA||Threads are blocked by memtable allocation per fifteen minutes rate.
+#G10
+Graph|Apache Cassandra Blocked Memtable Pool 50th Percentile|10|scalar|sample|-|None|0|AS|-1|-1|NA|NA|50th percentile threads are blocked by memtable allocation.
+#G11      
+Graph|Apache Cassandra Blocked Memtable Pool 75th Percentile|11|scalar|sample|-|None|0|AS|-1|-1|NA|NA|75th percentile threads are blocked by memtable allocation.
+#G12
+Graph|Apache Cassandra Blocked Memtable Pool 95th Percentile|12|scalar|sample|-|None|0|AS|-1|-1|NA|NA|95th percentile threads are blocked by memtable allocation.
+#G13
+Graph|Apache Cassandra Blocked Memtable Pool 98th Percentile|13|scalar|sample|-|None|0|AS|-1|-1|NA|NA|98th percentile threads are blocked by memtable allocation.
+#G14
+Graph|Apache Cassandra Blocked Memtable Pool 99th Percentile|14|scalar|sample|-|None|0|AS|-1|-1|NA|NA|99th percentile threads are blocked by memtable allocation.
+#G15
+Graph|Apache Cassandra Blocked Memtable Pool 999th Percentile|15|scalar|sample|-|None|0|AS|-1|-1|NA|NA|999th percentile threads are blocked by memtable allocation.
+

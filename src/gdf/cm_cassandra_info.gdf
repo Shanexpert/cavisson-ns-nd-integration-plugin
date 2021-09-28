@@ -1,0 +1,22 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Cassandra Node Stats|10156|vector|12|0|Cassandra Metrics|Tier>Server>Instance|Cassandra Node Stats provides metrics about Load on Disk Storage, Heap Memory Usage, Exceptions, Key Cache (Size, Capacity, Hit Rate, Requests) etc.
+
+Graph|Cassandra Load on Disk Storage(MB)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total disk space used in Megabytes. This metric has been derived from 'org.apache.cassandra.metrics:type=Storage,name=Load', where attribute name is 'Count', captured in bytes and publishing into Megabytes.
+Graph|Cassandra Heap Memory Usage(MB)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Heap memory usage in Megabytes. This metric has been derived from 'java.lang:type=Memory', where attribute name is 'HeapMemoryUsage' and item name is 'used', captured in bytes and publishing into Megabytes.
+Graph|Cassandra Total Heap Memory(MB)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total heap memory in Megabytes. This metric has been derived from 'java.lang:type=Memory', where attribute name is 'HeapMemoryUsage' and item name is 'max', captured in bytes and publishing into Megabytes.
+Graph|Cassandra Exceptions/Sec|4|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of exceptions per second. This metric has been derived from 'org.apache.cassandra.metrics:type=Storage,name=Exceptions', where attribute name is 'Count', captured in cumulative and publishing into rate.
+Graph|Cassandra Key Cache Size(MB)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Key cache size in Megabytes. This metric has been derived from 'org.apache.cassandra.metrics:type=Cache,scope=KeyCache,name=Size', where attribute name is 'Value', captured in bytes and publishing into Megabytes.
+Graph|Cassandra Key Cache Capacity(MB)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Key cache capacity in MegaBytes. This metric has been derived from 'org.apache.cassandra.metrics:type=Cache,scope=KeyCache,name=Capacity', where attribute name is 'Value', captured in bytes and publishing into Megabytes.
+Graph|Cassandra Key Cache Hits/Sec|7|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Key cache hits per second. This metric has been derived from 'org.apache.cassandra.metrics:type=Cache,scope=KeyCache,name=Hits', where attribute name is 'Count', captured in cumulative and publishing into rate.
+Graph|Cassandra Key Cache Requests/Sec|8|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Key cache requests per second. This metric has been derived from 'org.apache.cassandra.metrics:type=Cache,scope=KeyCache,name=Requests', where attribute name is 'Count', captured in cumulative and publishing into rate.
+Graph|Cassandra Key Cache Hit Rate(Pct)|9|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Key Cache hit rate. This metric has been derived from 'org.apache.cassandra.metrics:type=Cache,scope=KeyCache,name=HitRate', where attribute name is 'Value', captured in rate and publishing into percentage.
+Graph|Cassandra Uptime(Sec)|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Node uptime in seconds. This metric has been derived from 'java.lang:type=Runtime', where attribute name is 'Uptime', captured in milliseconds and publishing into seconds.
+Graph|Cassandra Key Cache Entries|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of key cache entries. This metric has been derived from 'org.apache.cassandra.metrics:type=Cache,scope=KeyCache,name=Entries', where attribute name is 'Value'.
+Graph|Cassandra Key Cache Save Period(Sec)|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Key cache save period in Seconds. This metric has been derived from 'org.apache.cassandra.db:type=Caches', where attribute name is 'KeyCacheSavePeriodInSeconds'.

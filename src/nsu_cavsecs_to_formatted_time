@@ -1,0 +1,86 @@
+#!/bin/sh
+
+#********************************************************************************************
+#  Shell	: nsu_cavsecs_to_formatted_time
+#  Author	: Ambuj Singh
+#  Purpose	: This is a tool to convert the timestamp given to it in a formatted date
+#		  This will take test run number and time stamp(in sec) as argument 
+#		  eg : 
+#			nsu_cavsecs_to_formatted_time --testrun 1234 --timestamp 123432
+#
+#  Date		: April 17th 2014 
+#********************************************************************************************
+
+if [ "XX$NS_WDIR" == "XX" ]; then
+  NS_WDIR=/home/cavisson/work
+fi
+
+chk_args_of_option()
+{
+  if [ "X$2" == "X" ];then
+    echo "Option $1 required a value."
+  fi
+}
+
+usage()
+{
+  echo
+  echo "$*"
+  echo
+  echo "USAGE"
+  echo "====="
+  echo "$0 --testrun <trnum> --timestamp <value>"
+  echo
+  echo "Where"
+  echo "  --testrun is the test run number, which is a mandatory argument."
+  echo "  --timestamp is the value to be converted to formatted date. It is a mandatory argument"
+  echo
+
+  exit 1
+}
+
+ALL_ARGS="$*"
+
+if [ "X$ALL_ARGS" == "X" ]; then
+  usage "No arguments provided."
+fi
+
+if [ $# -lt 3 ]; then
+  usage "Lesser number of arguments are provided"
+fi
+
+while [ "$1" != "" ]; do
+  case $1 in
+    "--testrun")
+    	shift
+	chk_args_of_option "--testrun" "$1"
+	TRNUM=$1;;
+    "--timestamp")
+    	shift
+	chk_args_of_option "--timestamp" "$1"
+	TIMESTAMP=$1;;
+    --*)usage "Invalid Option" ;;
+      *)usage;;
+  esac
+  shift
+done
+
+# Checking whether the Test exists or not
+if [ ! -d $NS_WDIR/logs/TR$TRNUM ]; then
+  usage "Testrun $TRNUM does not exists"
+else
+  TRDIR="$NS_WDIR/logs/TR$TRNUM"
+fi
+
+
+# Checking the existence of .cav_epoch.diff file
+if [ ! -f $TRDIR/.cav_epoch.diff ]; then
+  usage "This Testrun does not have cav_epoch.diff file"
+else
+  CAV_EPOCH_DIFF=`cat $TRDIR/.cav_epoch.diff`
+fi
+
+ABS_TIMESTAMP=`expr $CAV_EPOCH_DIFF + $TIMESTAMP`
+echo "`date -d@$ABS_TIMESTAMP`"
+
+exit 0

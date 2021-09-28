@@ -1,0 +1,121 @@
+#
+# Name: nsi_stop_rpr
+# Purpsose: To stop recorder proxy (nsu_rpr). pid of recorder is taken from lock file
+#
+# Usage:  nsi_stop_rpr [-f] [-P <protocol>]
+#	  -P is the protocol. Right now only socket is supported. We'll merge nsi_stop_monitor in it in future.
+#         -f is is option and is used for stopping forcefully.
+#
+# Exit Values:
+#  0 - Successfully send stop signal to recorder or recorder was stopped forcefully. 
+# -1 - Either lock file is not present or recorder is not running or could not send the stop signal or recoder could not be stopped forcefully.
+#
+
+protocol=""
+FORCE=0
+
+RPRRecordingStopped=1
+
+if [ "XX" = "XX$NS_WDIR" ]
+then
+  NS_WDIR=/home/cavisson/work
+fi
+
+SocketLockFile=$NS_WDIR/bin/.nsu_rpr.lock
+RPRLogFile=$NS_WDIR/webapps/netstorm/logs/stop_rpr.log
+
+> $RPRLogFile
+
+msgout ()
+{
+  echo "$1" >>$RPRLogFile
+  echo "$1"
+}
+
+stop_socket_proto_rpr()
+{
+  msgout "Checking if http script recorder is running." >> $RPRLogFile
+  cd $NS_WDIR
+  if [ ! -f $SocketLockFile ];then
+    msgout "ERROR: Lock file ($SocketLockFile) not found. Recorder may not be running." 
+    RPRRecordingStopped=0
+    return
+  fi
+
+ 
+  pid=`cat $SocketLockFile`
+  if [ ! -e /proc/$pid ];then
+    rm -f $SocketLockFile
+    msgout "ERROR: Script recorder (pid = $pid) is not running."
+    RPRRecordingStopped=0
+    return
+  fi
+
+  #if pid is present and process in nor nsu_rpr, don't kill it.
+  grep $PROCESS_NAME /proc/$pid/comm >/dev/null 2>&1
+  if [ $? -ne 0 ]; then
+    msgout "ERROR: Script recorder nsu_rpr is not running."
+    RPRRecordingStopped=0
+    return
+  fi
+    
+  # Normal stopping of recorder
+  if [ $FORCE -eq 0 ];then
+    msgout "Stopping http service script recorder"
+    kill -2 $pid
+    if [ $? -eq 0 ];then
+      msgout "Stop signal send to recorder."
+      msgout "Please note that recorder may take upto few mintues to stop."
+    else
+      msgout "ERROR: Could not send stop signal to recorder."
+      RPRRecordingStopped=0
+      return
+    fi  
+  else
+  # Forceful stopping of recorder
+    msgout "Force stopping script recorder."
+    kill -9 $pid
+    if [ $? -eq 0 ];then 
+      return
+    else 
+      msgout "ERROR: Script recorder is not stopped."
+      RPRRecordingStopped=0
+      return
+    fi
+  fi
+}
+
+usage()
+{
+  echo "Usage: $0 <-p protocol > <-f Forcefully>"
+  exit -1 
+}
+
+args=""
+while getopts p:f c
+do
+  case $c in
+  p) protocol="$OPTARG";;
+  f) FORCE=1;;
+  ?) usage;;
+  esac
+done
+
+if [ "X$protocol" == "Xsocket" ]; then
+  PROCESS_NAME="nsu_rpr"
+  stop_socket_proto_rpr
+else
+  msgout "Error: Protocol can only be socket "
+  usage
+  exit -1
+fi
+
+#if http is 1 and other is 1
+if [ $RPRRecordingStopped -eq 1 ]; then
+  msgout "Script recorder is stopped."
+  exit 0
+fi 
+
+exit -1
+
+# End of program

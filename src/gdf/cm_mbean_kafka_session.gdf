@@ -1,0 +1,14 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+#kafka.server:type=SessionExpireListener
+info|3.1|1|-|-|-1|-1|-
+Group|Apache Kafka Session Expire Stats|11453|vector|5|0|Apache Kafka Metrics|Tier>Server>Instance>Name|ZooKeeperAuthFailuresPerSec =An attempt to connect to the ensemble failed because the client has not provided correct credentials,ZooKeeperDisconnectsPerSec =ZooKeeper client is currently disconnected from the ensemble,ZooKeeperExpiresPerSec =The ZooKeeper session has expired,ZooKeeperSyncConnectsPerSec =ZooKeeper client is connected to the ensemble and ready to execute operations,ZooKeeperReadOnlyConnectsPerSec =The client can only read the ZooKeeper state, but not make any changes,ZooKeeperSaslAuthenticationsPerSec =Client has successfully authenticated,SessionState =Zookeeper connection status.
+#Graphs
+Graph|Apache Kafka Session Expire Count|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Total number of Session expire of  connection.
+Graph|Apache Kafka Session Expire Mean Rate|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Mean Rate of session expire of connection.
+Graph|Apache Kafka Session Expire/One Minute|3|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Session expire of connection per one minute.
+Graph|Apache Kafka Session Expire/Five Minute|4|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Session expire of connection per five minute.
+Graph|Apache Kafka Session Expire/Fifteen Minute|5|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Session expire of connection per fifteen minute.

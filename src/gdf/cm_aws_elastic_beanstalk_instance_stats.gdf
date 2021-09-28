@@ -1,0 +1,33 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS Elastic BeanStalk Environment Instance Stats|11323|vector|25|0|AWS Metrics|AccountName>Region>InstanceID|By using AWS Elastic Beanstalk, you can quickly deploy and manage applications in the AWS Cloud without worrying about the infrastructure that runs those applications.
+
+Graph|AWS Elastic BeanStalk Instance Health|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The health status of the instance. Status can be one of these. 0 – OK, 1 – Info, 5 – Unknown, 10 – No data, 15 – Warning, 20 – Degraded and 25 – Severe.
+Graph|AWS Elastic BeanStalk Disk Space (%)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of disk space in use.
+Graph|AWS Elastic BeanStalk Load Average 1 Minute (%)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average CPU load over the last minute in percentage.
+Graph|AWS Elastic BeanStalk Load Average 5 Minute (%)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average CPU load over the last five minutes in percentage.
+Graph|AWS Elastic BeanStalk CPU Idle Time (%)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of time the CPU was in the idle state in the last minute.
+Graph|AWS Elastic BeanStalk CPU IO Wait Time (%)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of time the CPU was in the I/O wait state in the last minute.
+Graph|AWS Elastic BeanStalk CPU Interrupted Time (%)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of time the CPU was in the interrupt request state in the last minute.
+Graph|AWS Elastic BeanStalk CPU Soft Interrupted Time (%)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of time the CPU was in the soft interrupt request state in the last minute.
+Graph|AWS Elastic BeanStalk CPU User Time (%)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of time the CPU was in the user state in the last minute.
+Graph|AWS Elastic BeanStalk CPU Nice Time (%)|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of time the CPU was in the nice state in the last minute.
+Graph|AWS Elastic BeanStalk CPU Privileged Time (%)|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of time the CPU was in the privileged state in the last minute.
+Graph|AWS Elastic BeanStalk CPU System Time (%)|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA| The percentage of time the CPU was in the system state in the last minute.
+Graph|AWS Elastic BeanStalk Application Request|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of requests completed by the instance or environment.
+Graph|AWS Elastic BeanStalk Application Request 2xx|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of requests that completed with a 2XX status code.
+Graph|AWS Elastic BeanStalk Application Request 3xx|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of requests that completed with a 3XX status code.
+Graph|AWS Elastic BeanStalk Application Request 4xx|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|	The number of requests that completed with a 4XX status code.
+Graph|AWS Elastic BeanStalk Application Request 5xx|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of requests that completed with a 5XX status code.
+Graph|AWS Elastic BeanStalk Application Latency P10 (Sec)|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average time to complete the fastest 10 percent of requests.
+Graph|AWS Elastic BeanStalk Application Latency P50 (Sec)|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average time to complete the fastest 50 percent of requests.
+Graph|AWS Elastic BeanStalk Application Latency P75 (Sec)|20|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average time to complete the fastest 75 percent of requests.
+Graph|AWS Elastic BeanStalk Application Latency P85 (Sec)|21|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average time to complete the fastest 85 percent of requests.
+Graph|AWS Elastic BeanStalk Application Latency P90 (Sec)|22|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average time to complete the fastest 90 percent of requests.
+Graph|AWS Elastic BeanStalk Application Latency P95 (Sec)|23|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average time to complete the fastest 95 percent of requests.
+Graph|AWS Elastic BeanStalk Application Latency P99 (Sec)|24|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average time to complete the fastest 99 percent of requests.
+Graph|AWS Elastic BeanStalk Application Latency P99.9 (Sec)|25|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average time to complete the fastest 99.9 percent of requests.

@@ -1,0 +1,5 @@
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Ethernet Throughput|10169|vector|2|0|System Metrics|Tier>Server>Interface|Ethernet interface throughput stats
+Graph|Received Throughput (Kbps)|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Received throughput in kbps
+Graph|Transmitted Throughput (Kbps)|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Transmitted throughput in kbps

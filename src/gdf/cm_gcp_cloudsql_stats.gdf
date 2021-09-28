@@ -1,0 +1,35 @@
+# 1.0 - Initial version
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP Cloud SQL Stats|10669|vector|31|0|GCP Metrics|Tier>Server>ProjectID>Region>DatabaseID|GCP CloudSQL stats provides metrics details related to cloud sql and postgres metrics.
+Graph|CloudSql Reserved Cores|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of cores reserved for the database.
+Graph|CloudSql CPU Usage Time (Millisecond/Sec)|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|CPU usage time in millisecond per second.
+Graph|CloudSql Reserved CPU Utilization (Pct)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Fraction of the reserved cpu that is currently in use.
+Graph|CloudSql Bytes Used|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Data utilization in bytes.
+Graph|CloudSql Disk Quota (GB)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum data disk size in giga bytes.
+Graph|CloudSql Read Operations/Sec|6|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of data disk read i/o operations per second.
+Graph|CloudSql Reserved Disk Utilization (Pct)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Fraction of the disk quota that is currently used in percentage.
+Graph|CloudSql Write Operations/Sec|8|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of disk write i/o operations per second.
+Graph|CloudSql Memory Quota (GB)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum ram size in giga bytes.
+Graph|CloudSql Memory Usage (MB)|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|RAM usage in mega bytes.
+Graph|CloudSql Reserved Memory Utilization (Pct)|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Fraction of the memory quota that is currently used in percentage.
+Graph|CloudSql Unflushed Pages In InnoDB Buffer Pool|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of unflushed pages in the inno db buffer pool.
+Graph|CloudSql Unused Pages In InnoDB Buffer Pool|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of unused pages in the inno db buffer pool.
+Graph|CloudSql Total Pages In InnoDB Buffer Pool|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of pages in the inno db buffer pool.
+Graph|CloudSql InnoDB Fsync() Calls/Sec|15|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of inno db fsync() calls per second.
+Graph|CloudSql InnoDB Fsync() Calls To Log File/Sec|16|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of inno db fsync() calls to the log file per second.
+Graph|CloudSql InnoDB Pages Read/Sec|17|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of inno db pages read per second.
+Graph|CloudSql InnoDB Pages Written/Sec|18|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of inno db pages written per second.
+Graph|CloudSql Queries Executed By Server/Sec|19|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of statements executed by the server per second.
+Graph|CloudSql Statements Executed By Server Sent By The Client/Sec|20|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of statements executed by the server sent by the client per second.
+Graph|CloudSql Bytes Received By MySQL Process/Sec|21|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of bytes received by mysql process per second.
+Graph|CloudSql Failover Operations Available On Master Instance|22|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of failover operations is available on the master instance per second.
+Graph|CloudSql Read Replica Is Behind Its Master (Sec)|23|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of seconds the read replica is behind its master.
+Graph|CloudSql Bytes Sent By MySQL Process/Sec|24|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of bytes sent by mysql process per second.
+Graph|CloudSql Connections To MySQL Instance|25|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of connections to the cloud sql  mysql instance.
+Graph|CloudSql Bytes Received Through Network/Sec|26|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of bytes received through the network per second.
+Graph|CloudSql Bytes Sent Count Through Network/Sec|27|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of bytes sent through the network per second.
+Graph|CloudSql Cloud SQL PostgreSQL Instance Connections|28|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of connections to the cloud sql postgresql instance.
+Graph|CloudSql Transaction Count/Sec|29|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of transactions in postgresql per second.
+Graph|CloudSql Server UP Status|30|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Indicates if the server is up or not. On-demand instances are spun down if no connections are made for a sufficient amount of time.
+Graph|CloudSql Instance Running Time (Millisecond/Sec)|31|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Total time in seconds the instance has been running per second.

@@ -1,0 +1,10 @@
+#!/bin/sh
+
+INCLUDE_DIR=/usr/include/pgsql/server/
+
+gcc -fpic -c percentile.c -I${INCLUDE_DIR}
+gcc -shared -o percentile.so percentile.o
+
+psql test <<+
+\i insert_aggregate.sql
++

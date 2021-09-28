@@ -1,0 +1,22 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Kafka Producer Stats|10355|vector|14|0|Kafka Metrics|Tier>Server>Instance>Producer|Kafka Producer Stats monitors metrics to ensure a steady stream of incoming data.
+Graph|Kafka Producer Response/Sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of response received per second.
+Graph|Kafka Producer Request/Sec|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of requests sent per second to brokers.
+Graph|Kafka Producer Average Request Latency (Sec)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average request latency in seconds.
+Graph|Kafka Producer Maximum Request Latency (Sec)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum request latency in seconds.
+Graph|Kafka Producer Average Requests Size (KB)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average size of requests in kilobytes for all the brokers.
+Graph|Kafka Producer Average Record Size (KB)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average size of records in kilobytes for all the brokers.
+Graph|Kafka Producer Record Sent/Sec|7|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of records sent per second to all the brokers.
+Graph|Kafka Producer Bytes Sent/Sec|8|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of outgoing bytes sent per second to all brokers.
+Graph|Kafka Producer Bytes Received/Sec|9|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of incoming bytes received per second from all brokers.
+Graph|Kafka Producer Connections|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current number of active connections.
+Graph|Kafka Producer Connections Created/Sec|11|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of connections created per second.
+Graph|Kafka Producer Connections Closed/Sec|12|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of connections closed per second.
+Graph|Kafka Producer IO Wait Time (ms)|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average time the I/O thread spent waiting for a socket ready for reads or writes in miliseconds.
+Graph|Kafka Producer Throttle Time (ms)|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average time in milliseconds a producer request was throttled by the brokers.
+
+

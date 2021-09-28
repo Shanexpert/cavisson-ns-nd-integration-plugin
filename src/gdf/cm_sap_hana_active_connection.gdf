@@ -1,0 +1,9 @@
+
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+
+Info|3.1|1|-|-|-1|-1|-
+Group|SAP HANA Active Connection|10827|vector|1|0|SAP Metrics|Tier>Server>Service>Port|It provides the conection  metrics related to database based on queries.
+
+Graph|HANA Active Connection|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Display number of active connection of  database.

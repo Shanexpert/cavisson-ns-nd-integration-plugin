@@ -1,0 +1,11 @@
+
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Akamai Content Provider Stats|10851|vector|4|0|Akamai Metrics|Tier>Server>Instance|It provides the Edgehits, originhits offload(pct) metrics related to Akamai Content Provider (CP) codes.
+
+Graph|Akamai CP Edgehits|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Display the edgehits of akamai cp.
+Graph|Akamai CP Originhits|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Display the originhits of akamai cp.
+Graph|Akamai CP Offload (pct)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Display the offload (pct) of akamai cp.
+Graph|Akamai CP Query Time|4|scalar|sample|-|-|0|I|-1|-1|NA|NA|Display time taken by query.

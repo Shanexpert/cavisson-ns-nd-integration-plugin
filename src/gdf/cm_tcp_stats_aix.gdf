@@ -1,0 +1,82 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|TCP Stats AIX|10020|vector|74|0|Network Metrics|Tier>Server|TCP Stats for AIX
+Graph|Cumulative Packet Sent|1|scalar|cumulative|-|-|0|A|-1|-1|NA|NA|Total Number of packets  sent by the machine.
+Graph|Cumulative Data Packet Sent|2|scalar|cumulative|-|-|0|A|-1|-1|NA|NA|Out  of the total packets sent, new data packets, which are sent .
+Graph|Cumulative Data Packet Retransmitted|3|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Number of data packets are sent , which came from previous session
+Graph|Cumulative Ack Only Packet|4|scalar|cumulative|-|-|0|A|-1|-1|NA|NA|Number of packets are used only for acknowledgment purpose and have no data in it
+Graph|Cumulative Urgent Only Packet|5|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Number of Urgent Packets
+Graph|Cumulative Window Probe Packets|6|scalar|cumulative|-|-|0|A|-1|-1|NA|NA|The count of all the window probe packets seen. (Window probe packets are typically sent by a sender when the receiver last advertised a zero receive window, to see if the window has opened up now)
+Graph|Cumulative Window Update Packets|7|scalar|cumulative|-|-|0|A|-1|-1|NA|NA|TCP uses a sliding window flow control protocol. In each TCP segment, the receiver specifies in the receive window field the amount of additional received data (in bytes) that it is willing to buffer for the connection. The sending host can send only up to that amount of data before it must wait for an acknowledgment and window update from the receiving host.
+Graph|Cumulative Control Packets|8|scalar|cumulative|-|-|0|A|-1|-1|NA|NA|Number of control packets sent
+Graph|Cumulative Large Send|9|scalar|cumulative|-|-|0|A|-1|-1|NA|NA|The TCP large send offload option allows the AIX® TCP layer to build a TCP message up to 64 KB long and send it in one call down the stack through IP and the Ethernet device driver.
+Graph|Cumulative Bytes Using Large Send|10|scalar|cumulative|-|-|0|A|-1|-1|NA|NA|Bytes sent using large send
+Graph|Biggest Large Send|11|scalar|cumulative|-|-|0|A|-1|-1|NA|NA|Bytes is the biggest large send
+Graph|Cumulative Packet received|12|scalar|cumulative|-|-|0|A|-1|-1|NA|NA|Number of packets which are received.
+Graph|Cumulative Ack Received|13|scalar|cumulative|-|-|0|A|-1|-1|NA|NA|Number of acknowledgments received 
+Graph|Cumulative Duplicate Ack|14|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Number of duplicate acknowledgments 
+Graph|Cumulative Ack Received for Unsent Data|15|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|ACKs received for the data that was unsent.
+Graph|Cumulative Packet Received in Sequence|16|scalar|cumulative|-|-|0|A|-1|-1|NA|NA|Number of packets which are received in sequence that is, in proper order .
+Graph|Cumulative Duplicate Packet Received|17|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Number of duplicate packets which were received .
+Graph|Cumulative Old Duplicate Packets|18|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Number of duplicate packets which were received from a previous session.
+Graph|Cumulative Packets With Some Duplicate |19|scalar|cumulative|-|-|0|A|-1|-1|NA|NA|Number of packets which had duplicate or same data in it.
+Graph|Cumulative Out Of Order Packets|20|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Out of order Packets
+Graph|Cumulative Packets Received After Window|21|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Packets received after the connection was closed.
+Graph|Cumulative Probing Window Packets Received|22|scalar|cumulative|-|-|0|A|-1|-1|NA|NA|Number of probing window packers received
+Graph|Cumulative Update Window Packets Received|23|scalar|cumulative|-|-|0|A|-1|-1|NA|NA|Number of window update packets received
+Graph|Cumulative Packets Received After Close|24|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Packets received after close
+Graph|Cumulative Packets With h/w Assist Chksum|25|scalar|cumulative|-|-|0|A|-1|-1|NA|NA|Some packets are sent to tell that the checksum related to harwdare has failed.. This shows the number of such packets
+Graph|Cumulative Discarded for bad checksums|26|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Discarded for bad checksums
+Graph|Cumulative Bad Header Offset Field Packets Discarded|27|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Number of packets which had bad or wrong header offset field in it.
+Graph|Cumulative Short Packets Discarded|28|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Number of packets that were received which has less size as expected
+Graph|Cumulative Packets Discarded By Listeners|29|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Number of packets that were rejected by the listening party, or where the packets were sent.
+Graph|Cumulative Packets Discarded Due to Listeners Queue Full|30|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Number of packets discarded because the Number of packets that the listener can listen to at a time has become full
+Graph|Cumulative Ack Packets Correctly Predicted|31|scalar|cumulative|-|-|0|A|-1|-1|NA|NA|Number of acknowledgment packets that were correctly predicted
+Graph|Cumulative Data Packets Correctly Predicted|32|scalar|cumulative|-|-|0|A|-1|-1|NA|NA|Number of data packets that were correctly predicted
+Graph|Cumulative Connection Requests|33|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Number of connections which were requested by the machine
+Graph|Cumulative Connection Accepts|34|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Number of connections that were accepted by the machine
+Graph|Cumulative Connection Established (including Accepts)|35|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Total Number of connections that were established including the ones that were accepted by the machine
+Graph|Cumulative Connection Closed (including Drops)|36|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Number of connections that were closed including that ones that were dropped and were not completed.
+Graph|Cumulative Connection with ECN |37|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Number of connections that have the explicit congession notification capabilty
+Graph|Cumulative Number of Times Responded To ECN|38|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Number of times a response was sent to a explicit congession notification.
+Graph|Cumulative Embryonic Connecton Drops|39|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|An embryonic connection refers to a TCP connection which is in the process of being established.this shows the Number of such connections that were dropped.
+Graph|Cumulative Segment Updated rtt|40|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Segment Updated rtt
+Graph|Cumulative Segments With Congestion Window Reduced Bit Set|41|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Segments With Congestion Window Reduced Bit Set
+Graph|Cumulative Segments With Congestion Experienced Bit Set|42|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Segments With Congestion Experienced Bit Set
+Graph|Cumulative Packets Resends Due To Path MTU Discovery|43|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Packets Resends Due To Path MTU Discovery
+Graph|Cumulative Path MTU Discovery Terminations Due To Retransmits|44|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Number of path MTU terminations because of retramisions of packets
+Graph|Cumulative Retransmit Timeouts|45|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Number of timeouts due to retransmissions
+Graph|Cumulative Connections Dropped By Rexmit Timeout|46|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Number of connections that were dropped due to retransmission time outs..
+Graph|Cumulative Fast Retransmits|47|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Number of fast retransmits
+Graph|Cumulative Fast Retransmits For Congestion Window Less Than 4 Segments|48|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Number of fast retransmits when the size of congestion window was less than 4 segments
+Graph|Cumulative Newreno Retransmits|49|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Newreno Retransmits
+Graph|Cumulative Number of Times Avoided False Fast Retransmits|50|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Times Avoided False Fast Retransmits
+Graph|Cumulative Persist Timeouts|51|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Persist Timeouts
+Graph|Cumulative Connections Dropped Due To Persist Timeout|52|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Connections Dropped Due To Persist Timeout
+Graph|Cumulative Keep Alive Timeouts|53|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Number of times, times outs occurred while making a keepalive connection
+Graph|Cumulative Keep Alive Prob Sent|54|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Number of keepalive probes sent
+Graph|Cumulative Connection Dropped By Keep Alive|55|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Number of connections dropped by already established keepalive connection.
+Graph|Cumulative Number of Times SACK Blocks Array is Extended|56|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Number of times the selective acknowledgment blocks were extended
+Graph|Cumulative Number of Times SACK Holes Array is Extended|57|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Number of time the SACK holes array was extended 
+Graph|Cumulative Packets Dropped Due To Memory Allocation Failure|58|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|the Number of packets that were dropped due to memory allocation failure
+Graph|Cumulative Connections In TIMEWAIT Reused|59|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|there are some connections that are sent in wait state, which can be reused. This shows those many Number of connections. 
+Graph|Cumulative Delayed ACKs For SYN|60|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|delayed acknowledgments for SYN flag.. If the SYN flag is set, then this is the initial sequence Number. The sequence Number of the actual first data byte will then be this sequence Number plus 1.If the SYN flag is not set, then this is the sequence Number of the first data byte
+Graph|Cumulative Delayed ACKs For FIN|61|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|FIN flag states that - No more data from sender, this states the Number of Acks for the packets that have FIN flag set.
+Graph|Cumulative Send And Disconnects|62|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Send And Disconnects
+Graph|Cumulative Spliced Connections|63|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Spliced Connections
+Graph|Cumulative Spliced Connections Closed|64|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Number of spliced connections closed
+Graph|Cumulative Spliced Connections Reset|65|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Number of spliced connections that were reset
+Graph|Cumulative Spliced Connections Timeout |66|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Number of spliced connections that were timed out
+Graph|Cumulative Spliced Connections Persist Timeouts|67|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Number of spliced connections which were persist timeout
+Graph|Cumulative Spliced Connections Closed|68|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Number of spliced connections that were keepalive timeout
+Graph|Cumulative TCP Checksum Offload Disabled During Retransmit|69|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Number of TCP checksums disabled for retransmitting the packets
+Graph|Cumulative Connection Dropped Due to Bad ACKs|70|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Number of connections rejected due to improper acknowledgments
+Graph|Cumulative Connection Dropped Due To Duplicate SYN Packets|71|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Number of connections that were rejected due to same SYN packets
+Graph|Cumulative Fastpath Loopback Connection|72|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Number of Fastpath Loopback Connection
+Graph|Cumulative Fastpath Loopback Sent Packet|73|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Number of Fastpath Loopback Sent Packet
+Graph|Cumulative Fastpath Loopback Received Packet|74|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Number of Fastpath Loopback Received Packet

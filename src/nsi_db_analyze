@@ -1,0 +1,197 @@
+#!/bin/bash
+
+function Usage()
+{
+  echo
+  echo -n "$0 >> ERROR: "
+  echo $*
+  echo
+  echo "Usage: $0 --testrun <Testrun Number> --interval <interval> --ppid <Parent Pid>"
+  echo "Example:"
+  echo "  $0 --testrun 1234"
+  echo "--testrun   : Test run number on which analyze has to be run."
+  echo "--interval  : Interval in seconds. Shell will run analyze on all tables after this interval."
+  echo "              If interval is not provided or its value is 0, then shell will run analyze only once."
+  echo "--ppid      : If NSDBU is starting shell, then NSDBU should pass its pid to shell."
+  echo "              Shell will exit if NSDBU is not alive. "
+  echo "              If ppid is not provided or its value is 0, then shell will run analyze indefinitely."
+  exit -1
+}
+
+INTERVAL=0
+PARENT_PID=0
+
+# Including nsi_db_utils
+. $NS_WDIR/bin/nsi_db_utils
+
+chk_args_of_option()
+{
+  if [ "X$2" == "X" ];then
+    echo "Option $1 required a value."
+    Usage
+  fi
+}
+
+read_conf_file()
+{
+  #Read conf file and ignore blank and commented lines
+  #Save table names in array
+  #Ignore if table name field is empty or constraint field is "-" or "".
+  #Ignore orl tables if orl monitors are not on. orl tables has type 2 or 3 in csv.conf file
+  #Ignore mssql tables if mssql monitors are not on. mssql tables has type 4 or 5 in csv.conf file
+
+  CSV_CONF_FILE_PATH="$NS_WDIR/etc/dbconf/nd_db_csv.conf"
+  #Check if nd_db_csv.conf is present
+  if [ ! -f "$CSV_CONF_FILE_PATH" ]; then
+    echo "Error: $CSV_CONF_FILE_PATH file is not present."
+  else
+    ND_TABLE_NAMES=(`cat $CSV_CONF_FILE_PATH | egrep -v "^ *#|^ *$" | awk -F'|' '{if(($4 != "") && (tolower($4) != "urlrecord")) print $4}'`)
+
+    #Get total number of tables in file
+    ND_TOTAL_ENTRIES="${#ND_TABLE_NAMES[@]}"
+  fi
+
+  CSV_CONF_FILE_PATH="$NS_WDIR/etc/dbconf/ns_db_csv.conf"
+  #Check if nd_db_csv.conf is present
+  if [ ! -f "$CSV_CONF_FILE_PATH" ]; then
+    echo "Error: $CSV_CONF_FILE_PATH file is not present."
+  else
+    NS_TABLE_NAMES=(`cat $CSV_CONF_FILE_PATH | egrep -v "^ *#|^ *$" | awk -F'|' -v orl_pres="$orl_present" -v mssql_pres="$mssql_present" '{if(($4 != "") && (tolower($4) != "urlrecord") && ((orl_pres) || (!orl_pres && ($2 != "2") && ($2 != "3"))) && ((mssql_pres)|| (!mssql_pres && ($2 != "4") && ($2 != "5")))) print $4}'`)
+
+    #Get total number of tables in file
+    NS_TOTAL_ENTRIES="${#NS_TABLE_NAMES[@]}"
+  fi
+}
+
+run_db_analyze()
+{
+  #If machine config is NDE then dont run analyze on urlrecord table
+  if [ "X$MACHINE_CONFIG" != "XNDE" ];then
+  psql test cavisson >>$DEBUG_FILE_PATH  <<+ 2>>$DEBUG_FILE_PATH
+    ANALYZE URLRecord_$TRNUM;
++
+  fi
+
+  psql test cavisson >>$DEBUG_FILE_PATH  <<+ 2>>$DEBUG_FILE_PATH
+$NS_ANALYZE_QUERY
++
+ 
+  if [ "X$ISND" == "X1" ]; then
+    psql test cavisson >>$DEBUG_FILE_PATH <<+ 2>>$DEBUG_FILE_PATH
+$ND_ANALYZE_QUERY
++
+  fi
+}
+
+#######################################################
+#Read arguments
+while [ "$1" != "" ];do
+  case $1 in
+    "--testrun")
+        shift
+        chk_args_of_option "--testrun" "$1"
+        TRNUM=$1;;
+     "--interval")
+        shift
+        chk_args_of_option "--interval" "$1"
+        INTERVAL=$1;;
+     "--ppid")
+        shift
+        chk_args_of_option "--interval" "$1"
+        PARENT_PID=$1;;
+      --*)Usage "Invalid Options" ;;
+        *)Usage;;
+  esac
+  shift
+done
+
+#Checking if Test exist or not
+if [ ! -d $NS_WDIR/logs/TR$TRNUM ];then
+  Usage "TestRun does not exist"
+fi
+
+if [ $INTERVAL -lt 0 ]; then
+  echo "ERROR: INTERVAL $INTERVAL must be greater than or equal to 0."
+  exit 1
+fi
+
+if [ $PARENT_PID -lt 0 ]; then
+  echo "ERROR: PARENT_PID $PARENT_PID must be greater than or equal to 0."
+  exit 1
+fi
+
+#Check if orl monitors are present
+orl_present=0
+if [ -f $NS_WDIR/logs/TR$TRNUM/common_files/.oracle_sql_report ]; then
+  orl_present=1
+fi
+
+#Check if mssql monitors are present
+mssql_present=0
+if [ -f $NS_WDIR/logs/TR$TRNUM/common_files/.mssql_report ]; then
+  mssql_present=1
+fi
+
+#Read DBU configuration file
+read_conf_file
+
+#Following tables are not present in conf file. These are uploaded by nsi_upload_tmp_table shell
+NS_ANALYZE_QUERY="ANALYZE UserProfile_$TRNUM; ANALYZE ErrorCodes_$TRNUM; ANALYZE ActualServerTable_$TRNUM; ANALYZE RecordedServerTable_$TRNUM; ANALYZE SessionProfile_$TRNUM; ANALYZE LogPhaseTable_$TRNUM; "
+
+#Create analyze query for all tables present in configuration file
+for((i=0; i < $NS_TOTAL_ENTRIES;i++))
+do
+  NS_ANALYZE_QUERY="ANALYZE ${NS_TABLE_NAMES[i]}_$TRNUM; $NS_ANALYZE_QUERY"
+done
+
+for((i=0; i < $ND_TOTAL_ENTRIES;i++))
+do
+  ND_ANALYZE_QUERY="ANALYZE ${ND_TABLE_NAMES[i]}_$TRNUM; $ND_ANALYZE_QUERY"
+done
+
+DEBUG_FILE_PATH=$NS_WDIR/logs/TR$TRNUM/ns_logs/nsu_db_create_table.log
+# checking whether the test is of ND or NS
+check_is_nd_enabled
+MACHINE_CONFIG=`nsi_show_config -t`
+
+
+pid_list=(`ps -ef|grep $NS_WDIR/bin/nsi_db_analyze|grep -v grep | grep $TRNUM| awk -F" " -v"myid=$$" '{if($2 != myid) printf $2" "}'`)
+for pid in "${pid_list[@]}"
+do
+  echo "Stopping nsi_db_analyze($pid)" >>$DEBUG_FILE_PATH
+  kill $pid 2>/dev/null
+done
+
+
+START=`date +%s`
+
+echo "nsi_db_analyze: DB Analayze started at $START." >>$DEBUG_FILE_PATH
+
+#Set Exit handler to kill all background process(including sleep)
+trap 'kill -9 $(jobs -p) 2>/dev/null' EXIT SIGTERM SIGINT SIGRTMIN+3
+
+
+if [ $INTERVAL -ne 0 ];then
+  while :
+  do
+    echo "nsi_db_analyze: Next analyze will tentatively happen after $INTERVAL seconds....." >>$DEBUG_FILE_PATH
+    sleep $INTERVAL & wait
+    run_db_analyze
+    if [ $PARENT_PID -gt 0 ]; then
+      DB_UPLOAD_PID=`ps -ef | grep -w $PARENT_PID | grep -w "nsu_db_upload" | awk '{print $2}'`
+      if [ "X$DB_UPLOAD_PID" == "X" ];then
+        echo "nsi_db_analyze: Parent(nsu_db_upload) exitted so exitting....." >>$DEBUG_FILE_PATH
+        break
+      fi
+    fi
+  done
+else
+  echo "ANALYING in case interval is zero" >>$DEBUG_FILE_PATH
+  run_db_analyze
+fi 
+
+END=`date +%s`
+echo "nsi_db_analyze: DB Analayze ended at $END." >>$DEBUG_FILE_PATH
+DIFF=`expr $END - $START`
+echo "nsi_db_analyze: ANALYZING tables took $DIFF seconds" >>$DEBUG_FILE_PATH
+exit 0 

@@ -1,0 +1,110 @@
+#!/bin/sh
+# Name  : nsi_add_ip_all
+# Author: Achint
+# Usage : nsi_add_ip_all [load interface]
+# This script is used in assign the IP addresses on the time of reboot the machine.This script also used by nsu_reboot_eth, if user will like to reboot particular Load Interface and assigned IP for that Load Interface.
+# Only one load inteface argument can be given. Defaul is all load interfaces
+
+#IP_entries file will be only in $HOME_DIR/work/sys/ip_entries. IT is no longer Controller specific 
+IP_ENTRIES=$HOME_DIR/work/sys/ip_entries
+NSI_DEL_IP=$NS_WDIR/bin/nsi_del_ip
+CONFIG=`$HOME_DIR/work/bin/nsi_show_config`
+CAV_CONF=$HOME_DIR/etc/cav.conf
+
+USER=`whoami`
+if [ "X$USER" != "Xcavisson" ];then
+    echo "You must be logged in as cavisson user to execute this command"
+    exit -1
+fi
+
+ARG_LOAD=$1
+
+# Machines with configurations like 'NS>NO' or 'NS' will be assigned ip (s) which are client specific 
+# Machines with configuration like 'NO' will be assigned by server specific ip(s) . 
+
+get_admin_net_id()
+{
+  IP=`grep $1 $CAV_CONF|cut -d' ' -f2|cut -d'/' -f1`
+  PREFIX=`grep $1 $CAV_CONF|cut -d' ' -f2|cut -d'/' -f2`
+  IFS=. read -r i1 i2 i3 i4 <<< $IP
+  IFS=. read -r xx m1 m2 m3 m4 <<< $(for a in $(seq 1 32); do if [ $(((a - 1) % 8)) -eq 0 ]; then echo -n .; fi; if [ $a -le $PREFIX ]; then echo -n 1; else echo -n 0; fi; done)
+  ADMIN_NET_ID=`printf "%d.%d.%d.%d\n" "$((i1 & (2#$m1)))" "$((i2 & (2#$m2)))" "$((i3 & (2#$m3)))" "$((i4 & (2#$m4)))"`
+}
+#Achint - Do we really need this in case of NC? because on controller we dont need IPs.
+if [ $CONFIG == 'NS>NO' -o $CONFIG == 'NS' -o $CONFIG == 'NC' ];then
+  entity=C
+  get_admin_net_id "NSAdminIP"
+else
+  entity=S
+  get_admin_net_id "SRAdminIP"
+fi
+
+#check ip version type based on start ip 
+
+check_ip_version()
+{
+  if [ "$1" != "${1#*[0-9].[0-9]}" ]; then
+    return 1
+  elif [ "$1" != "${1#*:[0-9a-fA-F]}" ]; then
+    return 2
+  else
+    echo "Unrecognized IP format '$1'"
+  fi
+}
+
+#Get IP fields from the IP entries file.
+get_ip_fields()
+{
+  ENTITY=`echo $1 | cut -d "|" -f1`
+  NET_ID=`echo $1 | cut -d "|" -f2`
+  NET_BITS=`echo $1 | cut -d "|" -f3`
+  START_IP=`echo $1 | cut -d "|" -f4`
+  END_IP=`echo $1 | cut -d "|" -f5`
+  VLAN_ID=`echo $1 | cut -d "|" -f7`
+  GATEWAY=`echo $1 | cut -d "|" -f8`
+  EXCLUDE_IP=`echo $1 | cut -d "|" -f9`
+  LOAD=`echo $1 | cut -d "|" -f10`
+  check_ip_version $START_IP
+  IP_VERSION_TYPE=$?
+  if [ $NET_ID == $ADMIN_NET_ID ];then
+       NET_ID="-"
+  fi
+  VLAN_IP="-"
+}
+
+LOGFILE=/tmp/nsi_del_ip_all_log
+> $LOGFILE
+while read line
+do
+  if [ "XX$line" == "XX" ];then
+    continue
+  fi
+  get_ip_fields $line
+  # Here entity is machine configuration present in  $HOME_DIR/etc/cav.conf and ENTITY is Client or Server from work/sys/ip_entries 
+  if [ "$ENTITY" == "$entity" -a "$ENTITY" == "C" ];then
+    #Call nsi_add_ip script to assign the IPs.
+    if [ "XX$ARG_LOAD" != "XX" ];then
+       if [ "$ARG_LOAD" != "$LOAD" ];then  
+         continue
+       fi
+    fi
+     echo "Deleting IPs on client : $NSI_DEL_IP $ENTITY $START_IP $END_IP $VLAN_ID $NET_BITS $EXCLUDE_IP $NET_ID $GATEWAY $LOAD $VLAN_IP $IP_VERSION_TYPE" >>$LOGFILE
+    `$NSI_DEL_IP $ENTITY $START_IP $END_IP $VLAN_ID $NET_BITS $EXCLUDE_IP $NET_ID $GATEWAY $LOAD $VLAN_IP $IP_VERSION_TYPE`1>/dev/null 2>&1 
+  fi
+
+  # Here entity is machine configuration present in  $HOME_DIR/etc/cav.conf and ENTITY is Client or Server from work/sys/ip_entries 
+   if [ "$ENTITY" == "$entity" -a $ENTITY == "S" ];then 
+    #Call nsi_add_ip script to assign the IPs.
+    if [ "XX$ARG_LOAD" != "XX" ];then
+      if [ "$ARG_LOAD" != "$LOAD" ];then 
+        continue 
+      fi
+    fi
+     echo "Assigning IPs on Server : $NSI_DEL_IP $ENTITY $START_IP $END_IP $VLAN_ID $NET_BITS $EXCLUDE_IP $NET_ID $GATEWAY $LOAD $VLAN_IP $IP_VERSION_TYPE" >>$LOGFILE
+    `$NSI_DEL_IP $ENTITY $START_IP $END_IP $VLAN_ID $NET_BITS $EXCLUDE_IP $NET_ID $GATEWAY $LOAD $VLAN_IP $IP_VERSION_TYPE`1>/dev/null 2>&1
+  fi
+done <$IP_ENTRIES
+
+rm -f $LOGFILE
+
+exit 0

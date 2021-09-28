@@ -1,0 +1,79 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Azure webapp Container Stats|14018|vector|36|0|Azure Metrics|AccountName>Region>ResourceGroup>WebAppContainer|Web App for Containers (WAC) is part of the Azure App Service platform. It allows us to easily deploy and run containerised applications on Windows and Linux
+
+Graph|Azure WebApp Cpu Time(sec)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|CPU time of the app.
+
+Graph|Azure WebApp Requests|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of requests served by the app.
+
+Graph|Azure WebApp Bytes Received(Bytes)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of bytes received.
+
+Graph|Azure WebApp Bytes Sent(Bytes)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of bytes sent.
+
+Graph|Azure WebApp Http101|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of 101 requests served by the app.
+
+Graph|Azure WebApp Http2xx|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of 2xx requests served by the app.
+
+Graph|Azure WebApp Http3xx|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of 3xx requests served by the app.
+
+Graph|Azure WebApp Http401|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of 401 requests served by the app.
+
+Graph|Azure WebApp Http403|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of 403 requests served by the app.
+
+Graph|Azure WebApp Http404|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of 404 requests served by the app.
+
+Graph|Azure WebApp Http406|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of 406 requests served by the app.
+
+Graph|Azure WebApp Http4xx|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of 4xx requests served by the app.
+
+Graph|Azure WebApp Http5xx|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of 5xx requests served by the app.
+
+Graph|Azure WebApp Memory Working Set(Bytes)|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memory used by the app.
+
+Graph|Azure WebApp Average Memory Working Set(Bytes)|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average memory used by the app.
+
+Graph|Azure WebApp Average Response Time(sec)|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average response time of the app.
+
+Graph|Azure WebApp Http Response Time(sec)|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Response Time.
+
+Graph|Azure WebApp App Connections|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|of Azure WebApp Service Connections.
+
+Graph|Azure WebApp Handles|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Handle Count of Azure WebApp Service.
+
+Graph|Azure WebApp Threads|20|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Thread Count of Azure WebApp Service.
+
+Graph|Azure WebApp Private Bytes(Bytes)|21|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Private Bytes.
+
+Graph|Azure WebApp Io Ready Btes Per Second|22|scalar|rate|-|-|0|NA|-1|-1|NA|NA|IO Read Bytes Per Second.
+
+Graph|Azure WebApp Io Write Bytes Per Second|23|scalar|rate|-|-|0|NA|-1|-1|NA|NA|IO Write Bytes Per Second.
+
+Graph|Azure WebApp Io Other Bytes Per Second|24|scalar|rate|-|-|0|NA|-1|-1|NA|NA|IO Other Bytes Per Second.
+
+Graph|Azure WebApp Io Read Operations Per Second(Bytes/Sec)|25|scalar|rate|-|-|0|NA|-1|-1|NA|NA|IO Read Operations Per Second.
+
+Graph|Azure WebApp Io Write Operations Per Second(Bytes/Sec)|26|scalar|rate|-|-|0|NA|-1|-1|NA|NA|IO Write Operations Per Second.
+
+Graph|Azure WebApp Io Other Operations Per Second(Bytes/Sec)|27|scalar|rate|-|-|0|NA|-1|-1|NA|NA|IO Other Operations Per Second.
+
+Graph|Azure WebApp Requests In Application Queue|28|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Requests In Application Queue.
+
+Graph|Azure WebApp Current Assemblies|29|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current Assemblies.
+
+Graph|Azure WebApp Total App Domains|30|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total App Domains.
+
+Graph|Azure WebApp Total App Domains Unloaded|31|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total App Domains Unloaded.
+
+Graph|Azure WebApp Gen0 Collections|32|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Gen 0 Garbage Collections.
+
+Graph|Azure WebApp Gen1 Collections|33|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Gen 1 Garbage Collections.
+
+Graph|Azure WebApp Gen2 Collections|34|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Gen 2 Garbage Collections.
+
+Graph|Azure WebApp Health Check Status|35|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Health check status.
+
+Graph|Azure WebApp File System Usage(Bytes)|36|scalar|sample|-|-|0|NA|-1|-1|NA|NA|File System Usage.

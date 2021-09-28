@@ -1,0 +1,22 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+# 
+# Command to get data for this gdf on windows server : 
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# wmic path Win32_PerfFormattedData_NETFramework_NETCLRInterop.Name='_Global_' get NumberofCCWs,Numberofmarshalling,NumberofStubs,NumberofTLBexportsPersec,NumberofTLBimportsPersec /every:10
+#
+# Entry in mprof to get data through wmic :
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# CUSTOM_MONITOR 192.168.1.52 cm_win_NETCLRInterop_stats.gdf Win_Mon_NETCLRInterop 2 wmic path Win32_PerfFormattedData_NETFramework_NETCLRInterop.Name='_Global_' get NumberofCCWs,Numberofmarshalling,NumberofStubs,NumberofTLBexportsPersec,NumberofTLBimportsPersec /every:10
+#
+
+Info|3.1|1|-|-|-1|-1|-
+Group|.NET CLR Interop Stats|10045|vector|5|0|Application Metrics|Tier>Server>Instance|.NET CLR Interop stats. Classes in assemblies that are managed by the common language runtime (CLR) can be accessed in X++ code. This feature is called common language runtime (CLR) interoperability, or CLR interop. 
+Graph|Interop CCW Count|1|scalar|sample|-|-|0|NA|-1|-1|L|NA|Number of Com-Callable-Wrappers (CCWs). A CCW is a proxy for the .NET managed object being referenced from unmanaged COM client(s). This counter was designed to indicate the number of managed objects being referenced by unmanaged COM code.
+Graph|Marshal Operation/Sec|2|scalar|rate|-|CumToPS|0|NA|-1|-1|L|NA|Number of times arguments and return values have been marshaled per second from managed to unmanaged code and vice versa.
+Graph|Stub Count|3|scalar|sample|-|-|0|NA|-1|-1|L|NA|Number of stubs created by the CLR. Stubs are responsible for marshalling arguments and return values from managed to unmanaged code and vice versa, during a COM Interop call or PInvoke call.
+Graph|TLB Exports/Sec|4|scalar|rate|-|-|0|NA|-1|-1|L|NA|Number of times export Type Library as an Assembly per second.
+Graph|TLB Imports/Sec|5|scalar|rate|-|-|0|NA|-1|-1|L|NA|Number of times import Type Library as an Assembly per second.

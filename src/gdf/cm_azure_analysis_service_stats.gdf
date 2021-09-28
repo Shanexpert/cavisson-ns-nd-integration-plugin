@@ -1,0 +1,102 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Azure Analysis Service Stats|11516|vector|47|0|Azure Metrics|AccountName>Region>ResourceGroup>AnalysisServices|Azure Services is a fully managed platform as a service (PaaS) that provides enterprise-grade data models in the cloud.
+
+Graph|Azure Service Qpu Metric|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total QPU Range.
+
+Graph|Azure Service Memory Metric(Bytes)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total Memory Range.
+
+Graph|Azure Service Private Bytes Metric|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Private bytes.
+
+Graph|Azure Service Virtual Bytes Metric|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Virtual bytes.
+
+Graph|Azure Service Total Connection Requests|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total connection requests. These are arrivals.
+
+Graph|Azure Service Successfull Connections Per Sec(count per sec)|6|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Rate of successful connection completions.
+
+Graph|Azure Service Total Connection Failures|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of failed connection attempts.
+
+Graph|Azure Service Current User Sessions|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current number of user sessions established.
+
+Graph|Azure Service Query Pool Busy Threads|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of busy threads in the query thread pool.
+
+Graph|Azure Service Command Pool Job Queue Length|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of jobs in the queue of the command thread pool.
+
+Graph|Azure Service Processing Pool Job Queue Length|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of non-I,O jobs in the queue of the processing thread pool.
+
+Graph|Azure Service Current Connections|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current number of client connections established.
+
+Graph|Azure Service Cleaner Current Price|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current price of memory, $,byte,time, normalized to 1000.
+
+Graph|Azure Service Cleaner Memory Shrinkable(Bytes)|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of memory, in bytes, subject to purging by the background cleaner.
+
+Graph|Azure Service Cleaner Memory Nonshrinkable(Bytes)|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of memory, in bytes, not subject to purging by the background cleaner.
+
+Graph|Azure Service Memory Usage(Bytes)|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memory usage of the server process as used in calculating cleaner memory price. Equal to counter Process\PrivateBytes plus the size of memory-mapped data, ignoring any memory which was mapped or allocated by the xVelocity in-memory analytics engine (VertiPaq) in excess of the xVelocity engine Memory Limit.
+
+Graph|Azure Service Memory Limit Hard(Bytes)|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Hard memory limit, from configuration file.
+
+Graph|Azure Service Memory Limit High(Bytes)|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|High memory limit, from configuration file.
+
+Graph|Azure Service Memory Limit Low(Bytes)|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Low memory limit, from configuration file.
+
+Graph|Azure Service Memory Limit Verti Paq(Bytes)|20|scalar|sample|-|-|0|NA|-1|-1|NA|NA|In-memory limit, from configuration file.
+
+Graph|Azure Service Quota(Bytes)|21|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current memory quota, in bytes. Memory quota is also known as a memory grant or memory reservation.
+
+Graph|Azure Service Quota Blocked|22|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current number of quota requests that are blocked until other memory quotas are freed.
+
+Graph|Azure Service Verti Paq Nonpaged(Bytes)|23|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Bytes of memory locked in the working set for use by the in-memory engine.
+
+Graph|Azure Service Verti Paq Paged(Bytes)|24|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Bytes of paged memory in use for in-memory data.
+
+Graph|Azure Service Rows Read Per Sec(count per sec)|25|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Rate of rows read from all relational databases.
+
+Graph|Azure Service Rows Converted Per Sec(count per sec)|26|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Rate of rows converted during processing.
+
+Graph|Azure Service Rows Written Per Sec(count per sec)|27|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Rate of rows written during processing.
+
+Graph|Azure Service Command Pool Busy Threads|28|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of busy threads in the command thread pool.",
+
+Graph|Azure Service Command PoolIdle Threads|29|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of idle threads in the command thread pool.
+
+Graph|Azure Service Long Parsing Busy Threads|30|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of busy threads in the long parsing thread pool.
+
+Graph|Azure Service Long Parsing Idle Threads|31|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of idle threads in the long parsing thread pool.
+
+Graph|Azure Service Long Parsing Job Queue Length|32|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of jobs in the queue of the long parsing thread pool.
+
+Graph|Azure Service Processing Pool BusyIO Job Threads|33|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of threads running I,O jobs in the processing thread pool.
+
+Graph|Azure Service Processing Pool Busy NonIO Threads|34|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of threads running non-I,O jobs in the processing thread pool.
+
+Graph|Azure Service Processing PoolIO Job Queue Length|35|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of I,O jobs in the queue of the processing thread pool.
+
+Graph|Azure Service Processing Pool IdleIO Job Threads|36|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of idle threads for I,O jobs in the processing thread pool.
+
+Graph|Azure Service Processing Pool Idle NonIO Threads|37|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of idle threads in the processing thread pool dedicated to non-I,O jobs.
+
+Graph|Azure Service Query Pool Idle Threads|38|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of idle threads for I,O jobs in the processing thread pool.
+
+Graph|Azure Service QueryPool Job Queue Length|39|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of jobs in the queue of the query thread pool.
+
+Graph|Azure Service Short Parsing Busy Threads|40|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of busy threads in the short parsing thread pool.
+
+Graph|Azure Service Short Parsing Idle Threads|41|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of idle threads in the short parsing thread pool.
+
+Graph|Azure Service Short Parsing Job Queue Length|42|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of jobs in the queue of the short parsing thread pool.
+
+Graph|Azure Service Memory Thrashing Metric(%)|43|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average memory thrashing.
+
+Graph|Azure Service Mashup Engine Qpu Metric|44|scalar|sample|-|-|0|NA|-1|-1|NA|NA|QPU usage by mashup engine processes
+
+Graph|Azure Service Mashup Engine Memory Metric(Bytes)|45|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memory usage by mashup engine processes
+
+Graph|Azure Service Mashup Engine Private Bytes Metric|46|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Private bytes usage by mashup engine processes.
+
+Graph|Azure Service Mashup Engine Virtual Bytes Metric|47|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Virtual bytes usage by mashup engine processes.
+

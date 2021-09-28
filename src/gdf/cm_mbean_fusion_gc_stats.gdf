@@ -1,0 +1,20 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+#
+# General information line
+# Info|msgVersion|numGroups|startIndex|testRun|sizeOfMsgData|interval|testRunStartDate/Time
+#
+# Group information line
+# Group|groupName|rptGrpId|groupType|numGraphs|numVectors
+#
+# Graph information line
+# Graph|graphName|rptId|graphType|dataType|graphDataIndex|formula|numVectors
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Fusion Garbage Collection Stats|10800|vector|4|0|Fusion Metrics|Tier>Server>Instance|Fusion Garbage Collection Statistics.
+Graph|Concurrent Mark Sweep count|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of times Concurrent Mark-Sweep garbage collector has occur.
+Graph|Concurrent Mark Sweep Time (ms)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total time the Concurrent Mark-Sweep has run in millisecond.
+Graph|Parallel GC Count|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of times the parallel garbage collector has run.
+Graph|Parallel GC Time (ms)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total time the parallel garbage collector has run in millisecond.
+

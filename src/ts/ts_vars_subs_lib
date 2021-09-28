@@ -1,0 +1,812 @@
+#! /bin/bash
+# Author: Anuj Dhiman
+# Date:   08/01/08
+
+# Description:
+# This shell is used for the substitution of the variables with in the scenario file or in the script/*.capture file
+# This shell reads from the iteration.spec file, it get the var name from there and replace the values of the corrosponding variables, the first line will replace the values for the 1st iteration and so on......
+# The variables starting with '$' should be replaced in the scenario file.
+# The variables starting with '%' should be replaced in the script. 
+# ASSUMPTION: If any keyword requiring more than 1 value than they must be provided explicitly with the keyword
+# Ex: RUM_TIME $time $mode 
+CAV_CONF=$HOME/etc/cav.conf
+debug_log ()
+{
+  #echo "$*"
+  echo >/dev/null
+}
+
+#************************************************************************************************
+PROJ=""
+SUB_PROJ=""
+SCRIPT_DIR=""
+set_proj_subproj_script_name()
+{
+   PROJ=`echo ${1} | egrep "/" | cut -d'/' -f1`
+   SUB_PROJ=`echo ${1} | egrep "/" | cut -d'/' -f2`
+   SCRIPT_DIR=`echo ${1} | egrep "/" | cut -d'/' -f3`
+}
+#************************************************************************************************
+#creates iteration.tmp for spec mode 2
+create_temp_spec_file()
+{
+  debug_log "Calling mthd create_temp_spec_file()"
+  debug_log "Creating $ITERATION_SPEC_FILE file for spec mode $SPEC_MODE from $NS_WDIR/$TEST_SUITE_NAME_CONF"
+  echo $line | cut -d" " -f6 >$ITERATION_SPEC_FILE
+  echo $line | cut -d" " -f7- | awk -F';' '{ for(i=1;i<=NF;i++) print $i }' >>$ITERATION_SPEC_FILE
+  debug_log "The temporary iteration.spec is = $ITERATION_SPEC_FILE"
+  debug_log `cat $ITERATION_SPEC_FILE`
+}
+
+# This mthd will capture the script name or URL from the scenario file
+create_script_arr()
+{
+  debug_log "Calling mthd create_script_arr()"
+  # intializing the SCRIPT_NAME_ARR
+  unset SCRIPT_NAME_ARR[*]
+  script_count=0
+  while read line 
+  do
+    IF_SGRP=`echo $line | cut -s -d " " -f1`
+    
+    debug_log "The IF_SGRP is $IF_SGRP"
+    if [ "$IF_SGRP" == "SGRP" ]
+    then
+      NUM_FIELDS=`echo $line | gawk 'BEGIN { FS = " " } { print NF }'` 
+      if [ $NUM_FIELDS -eq 7 ]; then
+        TYPE=`echo $line | cut -s -d " " -f5`
+        if [ $TYPE == 0 ]
+        then
+          SCRIPT_NAME=`echo $line | cut -s -d " " -f6`
+          debug_log "The SCRIPT_NAME with SGRP keyword is $SCRIPT_NAME"
+          SCRIPT_NAME_ARR[script_count]=$SCRIPT_NAME
+          script_count=`expr $script_count + 1`
+        fi
+        elif [ $NUM_FIELDS == 8 ]; then
+      # The field 4 of the SGRP keyword specifies that what we are using if -f4 is 0 - script name or if -f4 is 1 - URL
+      TYPE=`echo $line | cut -s -d " " -f6`
+      if [ $TYPE == 0 ]
+      then
+        SCRIPT_NAME=`echo $line | cut -s -d " " -f7`
+        debug_log "The SCRIPT_NAME with SGRP keyword is $SCRIPT_NAME"
+        SCRIPT_NAME_ARR[script_count]=$SCRIPT_NAME
+        script_count=`expr $script_count + 1`
+      fi
+    fi
+   fi
+    debug_log "The total no of scripts used in the scenario with SGRP is ${#SCRIPT_NAME_ARR[@]}"
+
+    IF_SG=`echo $line | cut -s -d " " -f1`
+    debug_log "The IF_SG is $IF_SG"
+    if [ "$IF_SG" == "SG" ]
+    then
+        # The field 4 of the SG keyword specifies the script name we are using 
+        SCRIPT_NAME=`echo $line | cut -s -d " " -f4`
+        debug_log "The SCRIPT_NAME with SG keyword is $SCRIPT_NAME"
+        SCRIPT_NAME_ARR[script_count]=$SCRIPT_NAME
+        script_count=`expr $script_count + 1`
+    fi
+    debug_log "The total no of scripts used in the scenario with SGRP and SG is ${#SCRIPT_NAME_ARR[@]}"
+
+  done < $SCENARIO_FILE
+  debug_log "Ending mthd create_script_arr()"
+}
+
+# This mtd is for testing only
+get_script_name()
+{
+  debug_log "Calling mthd get_script_name()"
+  i=0
+  while [ $i -lt ${#SCRIPT_NAME_ARR[@]}  ]
+  do
+    debug_log "The $i element of SCRIPT_NAME_ARR is = ${SCRIPT_NAME_ARR[$i]}"
+    i=`expr $i + 1`  
+  done
+  debug_log "Ending mthd get_script_name()"
+}
+
+# Creating the Array for the var_names VAR_NAME_ARR
+# Assumption: VAR_NAME_LINE will have atleast one variable
+create_var_name_arr()
+{
+  debug_log "Calling mthd create_var_name_arr()"
+  unset VAR_NAME_ARR[*]
+  found=1
+  field_no=1
+  Index=0
+  VAR_NAME_SUM=""
+  VAR_NAME_SUM_RESULT=""
+  while [ $found == 1 ]
+  do
+    if [ $field_no == 1 ];then
+     VAR_NAME=`echo $VAR_NAME_LINE | cut -d '|' -f$field_no`
+    fi
+    if [ $field_no != 1 ];then
+     VAR_NAME=`echo $VAR_NAME_LINE | cut -s -d '|' -f$field_no`
+    fi
+    if [ "XX$VAR_NAME" == "XX" ]
+    then
+      found=0
+      break
+    fi
+  
+    VAR_NAME_ARR[Index]=$VAR_NAME
+    VAR_NAME_SUM_RESULT=`echo -e "$VAR_NAME_SUM_RESULT,$VAR_NAME"`
+  
+    field_no=`expr $field_no + 1`
+    Index=`expr $Index + 1`
+  done
+  debug_log "VAR_NAME_SUM_RESULT=$VAR_NAME_SUM_RESULT"
+  export VAR_NAME_SUM_RESULT=$VAR_NAME_SUM_RESULT  # This for ts_summary_result
+  debug_log "Ending mthd create_var_name_arr()"
+}
+
+# This method is for setting the no of variable counts for scenario and scripts
+get_var_count()
+{
+  debug_log "get_var_count() starts"
+  SCENARIO_VAR_COUNT=0
+  SCRIPT_VAR_COUNT=0
+  debug_log "get_var_count() The no of elemnts in the VAR_NAME_ARR is ${#VAR_NAME_ARR[@]}"
+
+  arr_cnt=0
+  while [ $arr_cnt -lt ${#VAR_NAME_ARR[@]} ]
+  do 
+    VAR_FIRST_BYTE=`echo ${VAR_NAME_ARR[$arr_cnt]} | cut -b 1`
+    debug_log "The VAR_FIRST_BYTE=$VAR_FIRST_BYTE for ${VAR_NAME_ARR[$arr_cnt]}"
+    if [ "$VAR_FIRST_BYTE" == "$" ];then
+      SCENARIO_VAR_COUNT=`expr $SCENARIO_VAR_COUNT + 1`
+    elif [ "$VAR_FIRST_BYTE" == "%" ];then
+      SCRIPT_VAR_COUNT=`expr $SCRIPT_VAR_COUNT + 1`
+    else
+      echo "ERROR: The variable name \"${VAR_NAME_ARR[$arr_cnt]}\" supplied in the $ITERATION_SPEC_FILE file is not a valid name, hence exiting... " | tee -a $CYCLE_SUMMARY_REPORT
+      exit -1
+    fi
+
+    arr_cnt=`expr $arr_cnt + 1`
+  done
+
+  debug_log "The number of variables given for Scenario is $SCENARIO_VAR_COUNT"
+  debug_log "The number of variables given for Scripts is $SCRIPT_VAR_COUNT"
+}
+
+# This mthd checks that is there any '/' with the any value, if there then it preceed this '/' with '\\', now user does not need to manually supply the '\\' before '/' in the iteration.spec file, it will take then internally
+check_slash()
+{
+  unset VAR_CHECKED
+  debug_log "The length of the variable $VAR_VALUE is ${#VAR_VALUE}"
+  b=1
+  while [ $b -le ${#VAR_VALUE} ]
+  do
+    VAR_BYTE="`echo \"${VAR_VALUE}\" | cut -b $b`"
+    debug_log "The $b VAR_BYTE of $VAR_VALUE is \"$VAR_BYTE\""
+    if [ "X$VAR_BYTE" == "X/" ];then
+      VAR_CHECKED=`echo $VAR_CHECKED'\\'$VAR_BYTE`
+    elif [ "X$VAR_BYTE" == "X&" ];then
+      VAR_CHECKED=`echo $VAR_CHECKED'\'$VAR_BYTE`
+    elif [ "X$VAR_BYTE" == "X*" ];then
+      VAR_CHECKED=`echo $VAR_CHECKED'\'$VAR_BYTE`
+    elif [ "X$VAR_BYTE" == "X$" ];then
+      VAR_CHECKED=`echo $VAR_CHECKED'\'$VAR_BYTE`
+    elif [ "X$VAR_BYTE" == "X^" ];then
+      VAR_CHECKED=`echo $VAR_CHECKED'\'$VAR_BYTE`
+    elif [ "X$VAR_BYTE" == "X?" ];then
+      VAR_CHECKED=`echo $VAR_CHECKED'\'$VAR_BYTE`
+    elif [ "X$VAR_BYTE" == "X#" ];then
+      VAR_CHECKED=`echo $VAR_CHECKED'\'$VAR_BYTE`
+    else
+      VAR_CHECKED=$VAR_CHECKED$VAR_BYTE #changed here arun
+    fi
+    debug_log "The variable $VAR_VALUE after $b byte is $VAR_CHECKED"
+    b=`expr $b + 1`
+  done
+  debug_log "The variable $VAR_VALUE after check_slash() is $VAR_CHECKED"
+}
+
+# Creating the array for the var_value VAR_VALUE_ARR
+# Assumption: VAR_VALUE_LINE will have atleast one variable
+create_var_value_arr()
+{
+  debug_log "Calling mthd create_var_value_arr()"
+  unset VAR_VALUE_ARR[*]
+  export VAR_VALUE_LINE=${VAR_VALUE_LINE_ARR[$1]}
+
+  found=1
+  field_no=1
+  Index=0
+  VAR_VALUE_SUM_RESULT=""  # So it will not the exported value of previous iteration
+  while  [ $found == 1 ]
+  do
+    if [ $field_no == 1 ];then
+      VAR_VALUE=`echo $VAR_VALUE_LINE | cut -d '|' -f$field_no`
+    fi
+
+    if [ $field_no != 1 ];then
+      VAR_VALUE=`echo $VAR_VALUE_LINE | cut -s -d '|' -f$field_no`
+    fi
+
+    if [ "XX$VAR_VALUE" == "XX" ]
+    then
+      found=0
+      break
+    fi
+
+    debug_log "The VAR_VALUE is $VAR_VALUE"    
+
+    check_slash
+   
+    VAR_VALUE_ARR[Index]=$VAR_CHECKED
+    debug_log "The $Index element of VAR_VALUE_ARR is ${VAR_VALUE_ARR[$Index]}"    
+    VAR_VALUE_SUM_RESULT=`echo -e "$VAR_VALUE_SUM_RESULT,$VAR_VALUE"`
+    field_no=`expr $field_no + 1`
+    Index=`expr $Index + 1`
+  done
+  debug_log "VAR_VALUE_SUM_RESULT = $VAR_VALUE_SUM_RESULT"
+  export VAR_VALUE_SUM_RESULT=$VAR_VALUE_SUM_RESULT  # This for ts_summary_result
+  debug_log "Ending mthd create_var_value_arr()"
+}
+
+# This mthd checks the no of variables is equals to no of values or not?
+validate_spec_file()
+{
+  debug_log "Calling mthd validate_spec_file()"
+  if [ ${#VAR_NAME_ARR[@]} -ne ${#VAR_VALUE_ARR[@]} ]
+  then
+  #print that var name line : arun
+  LINE_NO=0
+  LINE_COUNT=0
+  while read line
+  do
+    # Ignore commented lines
+    echo $line | egrep "^#" >/dev/null
+    if [ $? == 0 ];then
+      LINE_NO=`expr $LINE_NO + 1`
+      continue
+    fi
+    # Check for blank lines in the interartion.spec
+    # only blanks lines will be ignored, lines with whitespaces not allowed
+    if [ "XX$line" == "XX"  ];then
+      LINE_NO=`expr $LINE_NO + 1`
+      continue
+    fi
+
+    LINE_COUNT=`expr $LINE_COUNT + 1` 
+    # Getting the line containing the variable name
+    if [ $LINE_COUNT == 1 ];then
+      echo -e "Line No. $LINE_NO :\n$line"
+      LINE_NO=`expr $LINE_NO + 1`
+      continue
+    fi
+      echo -e "Line No. $LINE_NO :\n$line"
+  done < $ITERATION_SPEC_FILE
+  echo "The number of variables defined ${#VAR_NAME_ARR[@]} in the Scenario $SCENARIO_NAME is not equals to the number of values supplied ${#VAR_VALUE_ARR[@]} by the user, exiting...."
+   # exit -1  //dont exit as other lines may have correct no of fields
+   return
+  fi
+}
+
+# This mtd is for testing only
+get_var_name_arr()
+{
+  debug_log "Calling mthd get_var_name_arr()"
+  i=0
+  while [ $i -lt ${#VAR_NAME_ARR[@]}  ]
+  do
+    debug_log "The $i element of VAR_NAME_ARR is = ${VAR_NAME_ARR[$i]}"
+    i=`expr $i + 1`  
+  done
+  debug_log "Ending mthd get_var_name_arr()"
+}
+
+# This mtd is for testing only
+get_var_value_arr()
+{
+  debug_log "Calling mthd get_var_value_arr()"
+  i=0
+  while [ $i -lt ${#VAR_VALUE_ARR[@]}  ]
+  do
+    debug_log "The $i element of VAR_NAME_ARR is = ${VAR_VALUE_ARR[$i]}"
+    i=`expr $i + 1`  
+  done
+  debug_log "Ending mthd get_var_value_arr()"
+}
+
+# We can take the ${#VAR_VALUE_ARR[@]} instead of using ${#VAR_NAME_ARR[@]} in the for loop, coz they will be same alwayz
+# create_sed_cmd <$ or %>
+create_sed_cmd()
+{
+  debug_log "Calling mthd create_sed_cmd()"
+  get_var_value_arr
+  INITIAL=$1
+  #UPD_CMD="sed " 
+  UPD_CMD="sed '" 
+
+  i=0
+  while [ $i -lt ${#VAR_NAME_ARR[@]} ]
+  do
+    debug_log "The UPD_CMD = $UPD_CMD"
+    VAR_INITIAL=`echo ${VAR_NAME_ARR[$i]} | cut -b 1`
+    debug_log "The INITIAL = $INITIAL, and the VAR_INITIAL of variable ${VAR_NAME_ARR[$i]} is $VAR_INITIAL"
+    if [ $VAR_INITIAL == $INITIAL ]
+    then
+      #UPD_CMD=`echo "${UPD_CMD}s/${VAR_NAME_ARR[$i]}/${VAR_VALUE_ARR[$i]}/g;"`
+      UPD_CMD="${UPD_CMD}s/${VAR_NAME_ARR[$i]}\b/${VAR_VALUE_ARR[$i]}/g;"
+    fi
+    i=`expr $i + 1` 
+  done
+  UPD_CMD="$UPD_CMD'"
+  debug_log "The UPD_CMD = $UPD_CMD"
+  debug_log "Ending mthd create_sed_cmd()"
+}
+
+get_project_sub_project()
+{
+  debug_log "Calling mthd get_project_sub_project()"
+  SCEN_STR=$1
+  NUM_FIELDS=`echo $SCEN_STR | awk -F'/' '{print NF}'`
+  debug_log "SCEN_STR = $SCEN_STR, NUM_FIELDS = $NUM_FIELDS"
+
+  if [ $NUM_FIELDS == 1 ];then
+    PROJECT="default"
+    SUB_PROJECT="default"
+    SCENARIO_NAME="$SCEN_STR"
+  elif [ $NUM_FIELDS == 3 ];then
+    PROJECT=`echo $SCEN_STR | awk -F'/' '{print $1}'`
+    SUB_PROJECT=`echo $SCEN_STR | awk -F'/' '{print $2}'`
+    SCENARIO_NAME=`echo $SCEN_STR | awk -F'/' '{print $3}'`  
+  else
+    echo "ERROR: Format should be 'SCENARIO_NAME <proj/sub_proj/scenario_name>' in $TESTCASE_CONF" | tee -a $CYCLE_SUMMARY_REPORT
+    exit -1
+  fi
+}
+
+get_script_file_to_change()
+{
+  #This function will return the list of the files which have to be change 
+  ##Case(i)SCRIPT_TYPE=Legacy:  returned file will be "script.capture"
+  ##Case(ii)SCRIPT_TYPE=Legacy: returned file will be "runlogic.c", "init_script.c","exit_script.c","flow1.c","flow2.c",etc..
+  #call GetScriptType operation of nsu_script_tool
+  #nsu_script_tool -o GetScriptType -s <project/sub_project/script_name> -w <workspace/profile>
+  #nsu_script_tool -o UsedFlowList -s <project/sub_project/script_name> -w <workspace/profile>
+
+  debug_log "Calling routine get_script_file_to_change() for script $1"
+  SCRIPT_NAME_WITH_PS=$1
+  SCRIPT_TYPE=`$NS_WDIR/bin/nsu_script_tool -o GetScriptType -s $SCRIPT_NAME_WITH_PS -w $WORK_PROFILE`
+  if [ $? != 0 ]; then
+    echo "ERROR: Error in getting script type. Exiting" | tee -a $CYCLE_SUMMARY_REPORT
+    exit  -1
+  fi
+
+  debug_log "scripy_type: $SCRIPT_TYPE"
+  
+  if [ "X$SCRIPT_TYPE" == "XLegacy" -o "X$SCRIPT_TYPE" == "XLEGACY" ];then
+    echo "script.capture"
+    echo "script.detail"
+    echo "script.c"
+  elif [ "X$SCRIPT_TYPE" == "XC" ];then 
+    LIST=`$NS_WDIR/bin/nsu_script_tool -o UsedFlowList -s $SCRIPT_NAME_WITH_PS -w $WORK_PROFILE| tail -n +2 | awk '{print $1".c"}'`
+    if [ $? != 0 ]; then
+      echo "ERROR: Error in getting used flow list. Exiting" | tee -a $CYCLE_SUMMARY_REPORT
+      exit  -1
+    fi
+    echo "$LIST"
+    echo "runlogic.c"
+    echo "init_script.c"
+    echo "exit_script.c"
+    echo "registrations.spec"
+    elif [ "X$SCRIPT_TYPE" == "XJAVA" ];then
+      LIST=`$NS_WDIR/bin/nsu_script_tool -o UsedFlowList -s $SCRIPT_NAME_WITH_PS -w $WORK_PROFILE| tail -n +2 | awk '{print $1".java"}'`
+      if [ $? != 0 ]; then
+        echo "ERROR: Error in getting used flow list. Exiting" | tee -a $CYCLE_SUMMARY_REPORT
+        exit  -1
+      fi
+      echo "$LIST"
+      echo "runlogic.java"
+      echo "init_script.java"
+      echo "exit_script.java"
+      echo "registrations.spec"
+  else
+    echo "ERROR: Invalid script type $SCRIPT_TYPE" | tee -a $CYCLE_SUMMARY_REPORT
+    exit -1
+  fi
+} 
+
+update_scripts()
+{ 
+  SCRIPT_PATH=$1
+  FILE=$2
+  debug_log "update_scripts() - SCRIPT_PATH:$SCRIPT_PATH, FILE:$FILE, SCRIPT_VAR_COUNT=$SCRIPT_VAR_COUNT"
+
+  TSR_BKP_DIR=$SCRIPT_PATH/.tsr
+  BKP_FILE=$TSR_BKP_DIR/$FILE
+  ORIG_FILE=$SCRIPT_PATH/$FILE
+ 
+  cp $ORIG_FILE $BKP_FILE
+  #fix bug- 24782 
+  file_name=`basename $ORIG_FILE`
+  dir_name=`dirname ${BKP_FILE}`
+  cp $ORIG_FILE $dir_name/.${file_name}.orig 
+  
+  if [ $SCRIPT_VAR_COUNT -gt 0 ];then
+    debug_log "Below is the file $ORIG_FILE before updation"
+    debug_log `cat $ORIG_FILE`
+    create_sed_cmd '%'
+    eval $UPD_CMD $BKP_FILE > $ORIG_FILE
+    debug_log "Script file $ORIG_FILE has been updated"
+    debug_log "Below is the file $ORIG_FILE after updation"
+    debug_log `cat $ORIG_FILE`
+  fi
+}
+
+
+# The changes would be there in the SCENARIO_FILE not in the SCENARIO_FILE_ORG
+update_files()
+{
+  debug_log "Calling mthd update_files()"
+  TESTCASE_CONF=$NS_TA_DIR/$PROJECT_NAME/$SUB_PROJ_NAME/testcases/$TEST_CASE_NAME/testcase.conf
+  debug_log "TESTCASE_CONF = $TESTCASE_CONF"
+  TEMP_SCENARIO_NAME=`egrep "^SCENARIO_NAME" $TESTCASE_CONF | cut -d " " -f2`
+  debug_log "TEMP_SCENARIO_NAME = $TEMP_SCENARIO_NAME"
+  get_project_sub_project $TEMP_SCENARIO_NAME
+  #Now we copy the scenario file in /tmp & run scenario from there : Arun 04/07/08
+  SCENARIO_FILE_ORG="$NS_TA_DIR/$PROJECT/$SUB_PROJECT/scenarios/$SCENARIO_NAME.conf"
+  SCENARIO_FILE="$NS_TA_DIR/$PROJECT/$SUB_PROJECT/scenarios/.$SCENARIO_NAME.conf"
+
+  # Making a copy of the SCENARIO_FILE into /tmp
+  cp $SCENARIO_FILE_ORG $SCENARIO_FILE
+  debug_log "The no. SCENARIO_VAR_COUNT=$SCENARIO_VAR_COUNT"
+  if [ $SCENARIO_VAR_COUNT -gt 0 ];then
+
+    SED_TYPE="$"  
+    # updating the scenario file 
+    debug_log "Below is the file $SCENARIO_FILE before updation"
+    debug_log `cat $SCENARIO_FILE`
+    create_sed_cmd $SED_TYPE
+    debug_log "update_files() - Replacing the values in the scenario file $SCENARIO_FILE"
+    eval $UPD_CMD $SCENARIO_FILE_ORG > $SCENARIO_FILE
+    debug_log "The scenario file $SCENARIO_FILE has been updated"
+    debug_log "Below is the file $SCENARIO_FILE after updation"
+    debug_log `cat $SCENARIO_FILE`
+  fi
+
+  SED_TYPE="%"  
+  # Getting the script name out of scenario file
+  create_script_arr
+  debug_log `get_script_name`     # This mthd for testing only
+  # updating the script.capture
+  if [ ${#SCRIPT_NAME_ARR[@]} -gt 0 ];then
+    debug_log "The no. of scripts is ${#SCRIPT_NAME_ARR[@]}"
+    n=0
+    while [ $n -lt ${#SCRIPT_NAME_ARR[@]} ]
+    do 
+      NUM=`echo ${SCRIPT_NAME_ARR[$n]}|awk -F "/" '{print NF}'`
+      if [ "X$NUM" == "X1" ];then
+        SCRIPT_PATH=$NS_TA_DIR/$PROJECT/$SUB_PROJECT/scripts/${SCRIPT_NAME_ARR[$n]}
+        SCRIPT_NAME_WITH_PS=$PROJECT/$SUB_PROJECT/scripts/${SCRIPT_NAME_ARR[$n]}
+      else
+        set_proj_subproj_script_name ${SCRIPT_NAME_ARR[$n]}
+        SCRIPT_PATH=$NS_TA_DIR/${PROJ}/${SUB_PROJ}/scripts/${SCRIPT_DIR}
+        SCRIPT_NAME_WITH_PS=${PROJ}/${SUB_PROJ}/scripts/${SCRIPT_DIR}
+      fi
+      # We will keep orig files in .tsr for revert back
+      rm -rf $SCRIPT_PATH/.tsr; mkdir $SCRIPT_PATH/.tsr
+      FILE_LIST=`get_script_file_to_change $SCRIPT_NAME_WITH_PS`
+      debug_log "Script files to be updated:$FILE_LIST"
+      for FILE in $FILE_LIST
+      do
+        # Since registrations.spec is optinal, we added check for the presence of the file
+        if [ -f $SCRIPT_PATH/$FILE ]; then
+          update_scripts $SCRIPT_PATH $FILE
+        fi
+      done
+      n=`expr $n + 1`
+    done
+  fi
+  # Add check if %Var found but not script used (Later)
+  debug_log "Ending mthd update_files()"
+}
+
+# This mthd makes the VAR_NAME_ARR, VAR_VALUE_ARR and validate the iteration.spec
+subsitute_vars()
+{
+  debug_log "Calling mthd subsitute_vars()"
+  if [ $SPEC_MODE == 0 ];then
+    debug_log "The SPEC_MODE = $SPEC_MODE, hence returning from subsitute_vars"
+    return
+  fi
+
+  TEST_IDX=$1
+
+  create_var_name_arr
+  if [ ${#VAR_NAME_ARR[@]} == 0 ];then
+    echo "ERROR: subsitute_vars() - There is no variable name line specified in the $ITERATION_SPEC_FILE file, so exiting..." | tee -a $CYCLE_SUMMARY_REPORT
+    exit -1
+  fi
+  get_var_count
+
+  create_var_value_arr $TEST_IDX
+  if [ ${#VAR_VALUE_ARR[@]} == 0 ];then
+    echo "ERROR: subsitute_vars() - There is no variable value line specified in the $ITERATION_SPEC_FILE file,so exiting..." | tee -a $CYCLE_SUMMARY_REPORT
+    exit -1
+  fi
+
+  validate_spec_file
+  #  Save scenario and script as org
+  update_files
+  debug_log "Ending mthd subsitute_vars()"
+}
+
+# This will set that how many times netstorm needs to be run
+# TEST_COUNT defines that how many times netstorm will run, it will be 1, if SPEC_MODE=0, it will be equals to no. of value line in the spec file, if SPEC_MODE=1
+set_test_count()
+{
+  if [ $SPEC_MODE != 0 ];then
+    TEST_COUNT=${#VAR_VALUE_LINE_ARR[@]}
+  fi
+  debug_log "The TEST_COUNT=$TEST_COUNT for the SPEC_MODE=$SPEC_MODE"
+}
+
+restore_org_files()
+{ 
+  debug_log "Calling mthd restore_org_files()"
+  if [ $SPEC_MODE == 0 ];then
+    debug_log "The SPEC_MODE=$SPEC_MODE, hence returning from the restore_org_files()"
+    return
+  fi
+
+  i=0
+  # updating the script.capture
+  if [ ${#SCRIPT_NAME_ARR[@]} -gt 0 ];then
+    while [ $i -lt ${#SCRIPT_NAME_ARR[@]} ]
+    do
+      NUM=`echo ${SCRIPT_NAME_ARR[$i]}|awk -F "/" '{print NF}'`
+      if [ "X$NUM" == "X1" ];then
+        SCRIPT_PATH=$NS_TA_DIR/$PROJECT/$SUB_PROJECT/scripts/${SCRIPT_NAME_ARR[$i]}
+      else
+        set_proj_subproj_script_name ${SCRIPT_NAME_ARR[$i]}
+        SCRIPT_PATH=$NS_TA_DIR/${PROJ}/${SUB_PROJ}/scripts/${SCRIPT_DIR}
+        SCRIPT_PATH=$NS_TA_DIR/${PROJ}/${SUB_PROJ}/scripts/${SCRIPT_DIR}
+      fi
+      shopt -s dotglob
+      mv $SCRIPT_PATH/.tsr/* $SCRIPT_PATH
+      rm -rf $SCRIPT_PATH/.tsr
+      shopt -u dotglob
+      debug_log "restore_org_files() - Done for $SCRIPT_PATH"
+      i=`expr $i + 1`
+    done
+  fi
+  rm -f $SCENARIO_FILE 
+  debug_log "Ending mthd restore_org_files()"
+}
+
+# This mtd is for testing only
+get_var_value_line_arr()
+{
+  debug_log "Calling mthd get_var_value_line_arr()"
+  x=0
+  while [ $x -lt ${#VAR_VALUE_LINE_ARR[@]} ]
+  do
+    debug_log "The $x element of VAR_VALUE_LINE_ARR is = ${VAR_VALUE_LINE_ARR[$x]}"
+    x=`expr $x + 1`
+  done
+  debug_log "Ending mthd get_var_value_line_arr()"
+}
+
+# This method will clear the all the arrary and vriables related to the the spec file for new testrun,
+# This function is not getting the call, since there arrays must be reintialize at different times, not at once
+init()
+{
+  unset VAR_NAME_ARR[*]
+  unset VAR_VALUE_ARR[*]
+  unset SCRIPT_NAME_ARR[*]
+  unset VAR_NAME_LINE 
+  unset VAR_VALUE_LINE_ARR[*]
+} 
+
+# It create the VAR_VALUE_LINE_ARR for the spec file, array of variable value lines of the spec file
+read_spec_file()
+{
+  debug_log "Calling mthd read_spec_file()"
+
+  if [ $SPEC_MODE == 0 ];then
+    TEST_COUNT=1
+    debug_log "The SPEC_MODE = $SPEC_MODE, hence setting the TEST_COUNT=$TEST_COUNT and returning from read_spec_file()"
+    return
+  fi
+  
+  #init
+  # intializing the below array every time when the read_spec_file gets called, to remove the previous elments of the array
+  unset VAR_NAME_LINE 
+  unset VAR_VALUE_LINE_ARR[*]
+
+  if [ $SPEC_MODE == 1 ];then
+    ITERATION_SPEC_FILE=$NS_TA_DIR/$PROJECT_NAME/$SUB_PROJ_NAME/testcases/$TEST_CASE_NAME/iteration.spec
+    debug_log "The iteration file is $ITERATION_SPEC_FILE for SPEC_MODE = $SPEC_MODE"
+  fi
+
+  if [ $SPEC_MODE == 2 ];then
+    ITERATION_SPEC_FILE="/tmp/iteration.spec.$$"
+    create_temp_spec_file
+    debug_log "The iteration file is $ITERATION_SPEC_FILE for SPEC_MODE = $SPEC_MODE"
+  fi
+
+  if [ ! -f $ITERATION_SPEC_FILE ];then
+    echo "ERROR: $ITERATION_SPEC_FILE file not present, so exiting..." | tee -a $CYCLE_SUMMARY_REPORT
+    exit -1
+  fi
+
+  ITERATION_SPEC_FILE_ORG=$ITERATION_SPEC_FILE.org
+  cp $ITERATION_SPEC_FILE $ITERATION_SPEC_FILE_ORG
+
+  LINE_COUNT=0
+  VAL_LINE_INDEX=0
+  while read line
+  do
+    # Ignore commented lines
+    echo $line | egrep "^#" > /dev/null
+    if [ $? == 0 ];then
+      debug_log "read_spec_file() - ignoring commented line"
+      continue
+    fi
+    # Check for blank lines in the interartion.spec Anuj 29/01/08
+    # only blanks lines will be ignored, lines with whitespaces not allowed
+    if [ "XX$line" == "XX"  ];then
+       debug_log "read_spec_file() - Ignoring Blank line"
+       continue
+    fi
+
+    LINE_COUNT=`expr $LINE_COUNT + 1`
+    # Getting the line containing the variable name
+    if [ $LINE_COUNT == 1 ];then
+      export VAR_NAME_LINE=$line
+      debug_log "The VAR_NAME_LINE is $VAR_NAME_LINE"
+      continue
+    fi
+    # This code will get executed iff the LINE_COUNT is not 1, i.e it is a variable value line
+    VAR_VALUE_LINE_ARR[VAL_LINE_INDEX]=$line
+    debug_log "The VAR_VALUE_LINE_ARR[$VAL_LINE_INDEX] is ${VAR_VALUE_LINE_ARR[$VAL_LINE_INDEX]}"
+    if [ ${#VAR_VALUE_LINE_ARR[@]} == 0 ];then
+      debug_log "read_spec_file() - No value line has been specified in the $ITERATION_SPEC_FILE file, so exiting...."
+      echo "ERROR: read_spec_file() - No value line has been specified in the $ITERATION_SPEC_FILE file, so exiting...." | tee -a $CYCLE_SUMMARY_REPORT
+      exit -1
+    fi
+    VAL_LINE_INDEX=`expr $VAL_LINE_INDEX + 1`
+  done < $ITERATION_SPEC_FILE
+  
+  #Added by Arun on 03/31/08
+  #exit if there is no name line present
+  if [ $LINE_COUNT == 0 ];then
+    if [ $SPEC_MODE == 1 ];then
+      echo "ERROR: There must be a variable name line and a variable value line in the $ITERATION_SPEC_FILE file, with SPEC_MODE = $SPEC_MODE" | tee -a $CYCLE_SUMMARY_REPORT
+    elif [ $SPEC_MODE == 2 ];then
+      echo "ERROR: There must be a variable name and a variable value specified in the $NS_WDIR/$TEST_SUITE_NAME_CONF file, with SPEC_MODE = $SPEC_MODE" | tee -a $CYCLE_SUMMARY_REPORT
+    fi
+    exit -1
+  fi
+
+  # If user has supplied only single line in the iteration.spec file i.e. User has not given any VAR_VALUE_LINE
+  if [ $LINE_COUNT == 1 ];then
+    echo "ERROR: read_spec_file() - No value line has been specified in the $ITERATION_SPEC_FILE file, so exiting...." | tee -a $CYCLE_SUMMARY_REPORT
+    exit -1
+  fi
+
+  get_var_value_line_arr  # This mthd is for testing
+  debug_log "read_spec_file() - Total no of value lines in the $ITERATION_SPEC_FILE file is $VAL_LINE_INDEX, SPEC_MODE is $SPEC_MODE"
+
+  set_test_count
+  if [ $SPEC_MODE == 2 ];then
+    rm -f $ITERATION_SPEC_FILE
+    rm -f $ITERATION_SPEC_FILE_ORG
+  fi
+  debug_log "Ending mthd read_spec_file()"
+}
+
+# Start : added by arun 02/26/08
+#This mthd is used to get the required files from the summry.data file
+get_summmary_data_value()
+{
+  DATA_ELEMENT_NAME=$1
+  FIELD=$2
+
+  line=`egrep "$DATA_ELEMENT_NAME" $SUMMARY_DATA_FILE`
+  if [ "XX$line" = "XX" ];then
+    echo "NA"
+    return
+  fi
+  value=`echo $line | cut -d '|' -f$FIELD`
+  if [ "XX$value" = "XX" ];then
+    echo "NA"
+    return
+  fi
+  echo $value
+}
+
+# This mthd will be called from the "ts_summary_results", moved from ts_summary_result 
+#This mthd is used store the values taken from get_summmary_data_value in a variable
+#In this method naming convention is with SD_ prefix which stands for SUMMARY DATA
+get_all_summmary_data_value()
+{
+
+  TSR_NUM=$1 
+  TEST_CASE_NAME=$2
+  RESULT_FILE=$NS_WDIR/logs/tsr/$LOG_CYCLE_DIR_NAME/$TSR_NUM/${TEST_CASE_NAME}_results.csv
+  debug_log "get_all_summmary_data_value() - Method starts."
+  #exit if test run nimber not found : 03/17/08
+  if [ "X$TEST_RUN_NUM" == "X"  -o "X$TEST_RUN_NUM" == "XNA" ];then
+    echo "ERROR: Test Run Number not found hence exiting...." | tee -a $CYCLE_SUMMARY_REPORT
+    exit 1 
+  fi
+  SUMMARY_DATA_FILE=$NS_WDIR/logs/TR$TEST_RUN_NUM/summary.data
+  debug_log "get_all_summmary_data_value() - Summary data file is - $SUMMARY_DATA_FILE"
+  if [ ! -f $SUMMARY_DATA_FILE ];then
+    echo "ERROR: summary.data file is not present for TestRun=$TEST_RUN_NUM" | tee -a $CYCLE_SUMMARY_REPORT
+    if [ "XX$TSR_NUM" == "XX" -o "XX$TEST_CASE_NAME" == "XX" ];then
+      echo "ERROR: Error in creating results.csv file. TestSuiteNumber or TestCaseName not Found." | tee -a $CYCLE_SUMMARY_REPORT
+      #exit 1  #Bug 46976: Testsuite gets aborted
+      return 1
+    fi
+    echo "summary.data file is not present for TestRun=$TEST_RUN_NUM" >> $RESULT_FILE
+    #exit 1    #Bug 46976: Testsuite gets aborted
+    return 1
+  fi
+  SUMMARY_TOP_FILE=$NS_WDIR/logs/TR$TEST_RUN_NUM/summary.top
+
+  NSAdminIP=`egrep "^NSAdminIP" $CAV_CONF | cut -d " " -f2 | cut -d '/' -f1`
+  if [ "XX$NSAdminIP" == "XX" ];then
+    echo "ERROR: NSAdminIP is not found in the $HOME/etc/cav.conf. Hence exiting..." | tee -a $CYCLE_SUMMARY_REPORT
+    exit -1
+  fi
+
+  NOAdminIP=`egrep "^SRAdminIP" $CAV_CONF | cut -d " " -f2 | cut -d '/' -f1`
+  if [ "XX$NOAdminIP" == "XX" ];then
+    echo "ERROR: SRAdminIP is not found in the $HOME/etc/cav.conf. Hence exiting..." | tee -a $CYCLE_SUMMARY_REPORT
+    exit -1
+  fi
+
+  export SD_TotalConn=`get_summmary_data_value 'TCP Connections Total' 5`
+  export SD_TotalSuccConn=`get_summmary_data_value 'TCP Connections Success' 5`
+  # The SD_TotalPassPct and SD_URLFailures we are using in check_status
+  if [ $SD_TotalConn == "NA" -o $SD_TotalSuccConn == "NA" -o $SD_TotalConn == "0" ];then
+   export SD_TotalPassPct="NA"
+  else
+   export SD_TotalPassPct=`expr $SD_TotalSuccConn \* 100 / $SD_TotalConn`
+  fi
+  export SD_AvgURLTime=`get_summmary_data_value "Url Avg Time\(Sec\)" 5`
+  export SD_MaxURLTime=`get_summmary_data_value "Url Max Time\(Sec\)" 5`
+  export SD_MinURLTime=`get_summmary_data_value "Url Min Time\(Sec\)" 5`
+  export SD_TotalURLHits=`get_summmary_data_value 'Url Total' 5`
+  export SD_TotalSuccURL=`get_summmary_data_value 'Url Success' 5`
+  export SD_URLHitsPerSec=`get_summmary_data_value 'URL Hits/Sec' 5`
+  export SD_URLFailures=`get_summmary_data_value 'Url Failures' 5`
+
+  export SD_AvgTrasTime=`get_summmary_data_value "Trans. Avg Time\(Sec\)" 5`
+  export SD_MaxTrasTime=`get_summmary_data_value "Trans. Max Time\(Sec\)" 5`
+  export SD_MinTrasTime=`get_summmary_data_value "Trans. Min Time\(Sec\)" 5`
+  export SD_TotalTrasHits=`get_summmary_data_value 'Trans. Total' 5`
+  export SD_TotalSuccTras=`get_summmary_data_value 'Trans. Success' 5`
+  export SD_TrasHitsPerSec=`get_summmary_data_value 'Transactions/Sec' 5`
+  export SD_TrasFailures=`get_summmary_data_value 'Trans. Failures' 5`
+
+  export SD_TotalConnOpenSec=`get_summmary_data_value 'TCP Connections Open/Sec' 5`
+  export SD_TotalConnCloseSec=`get_summmary_data_value 'TCP Connections Close/Sec' 5`
+  export SD_TcpTx=`get_summmary_data_value "TCP Tx Throughput \(Kbps\)" 5`
+  export SD_TcpRx=`get_summmary_data_value "TCP Rx Throughput \(Kbps\)" 5`
+  export SD_EthTx=`get_summmary_data_value "Ethernet Tx Throughput \(Kbps\)" 5`
+  export SD_EthRx=`get_summmary_data_value "Ethernet Rx Throughput \(Kbps\)" 5`
+
+  export SD_CPUBusyNS=`get_summmary_data_value "Avg Pct CPU Sys Busy \($NSAdminIP\)" 5`
+  export SD_CPUBusyNO=`get_summmary_data_value "Avg Pct CPU Sys Busy \($NOAdminIP\)" 5`
+
+  export SD_DURATION=`cat $SUMMARY_TOP_FILE | cut -f 15 -d '|'`
+  debug_log "get_all_summmary_data_value() - Method ends"
+}
+# End   : added by arun
+
+# For testing purpose
+#get_var_name_arr
+#get_var_value_arr
+
+#get_script_name
+#update_files
+
+#exit 0

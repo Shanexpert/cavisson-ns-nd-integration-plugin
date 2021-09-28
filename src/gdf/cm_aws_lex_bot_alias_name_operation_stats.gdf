@@ -1,0 +1,16 @@
+# --- GDF Version History ---
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS Lex BotNameAlias Operation Stats|11257|vector|9|0|AWS Metrics|AccountName>Region>BotName>BotAlias>Operation|Amazon Lex is an AWS service for building conversational interfaces for applications using voice and text
+
+Graph|AWS Lex Missed Utterance|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of utterances that were not recognized in the specified period.
+Graph|AWS Lex Runtime Request|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of runtime requests in the specified period.
+Graph|AWS Lex Runtime Sucessful Request Latency (ms)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The latency for successful requests between the time that the request was made and the response was passed back.
+Graph|AWS Lex Runtime Invalid Lambda Response|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of invalid AWS Lambda (Lambda) responses in the specified period.
+Graph|AWS Lex Runtime Lambda Error|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of Lambda runtime errors in the specified period.
+Graph|AWS Lex Runtime Polly Error|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of invalid Amazon Polly responses in the specified period.
+Graph|AWS Lex Runtime System Error|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of system errors in the specified period. The response code range for a system error is 500 to 599.
+Graph|AWS Lex Runtime Throttled Event|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of throttled requests. Amazon Lex throttles a request when it receives more requests than the limit of transactions per second set for your account.
+Graph|AWS Lex Runtime User Error|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of user errors in the specified period. The response code range for a user error is 400 to 499.

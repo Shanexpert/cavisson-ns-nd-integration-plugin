@@ -1,0 +1,16 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+#
+#cm_nd_fp_stats
+#Note - Group Id and graph should not be changed as these are used in Dashboard GUI
+
+Info|3.1|1|-|-|-1|-1|-
+Group|ND Method Stats|10180|vector|4|0|Application Metrics|Tier>Server>Instance>Method|ND Method stats
+
+Graph|Total Method Invocations|1|scalar|cumulative|-|-|0|E|-1|-1|L|NA|Cumulative method invocation count
+Graph|Method Invocations/Sec|2|scalar|rate|-|-|0|NA|-1|-1|L|NA|Method invocations rate per sec 
+Graph|Method Execution Time(ms)|3|scalar|times|-|-|0|NA|-1|-1|L|NA|Method execution wall time in ms
+Graph|Method CPU Time(ms)|4|scalar|times|-|-|0|NA|-1|-1|L|NA|Method CPU time in ms

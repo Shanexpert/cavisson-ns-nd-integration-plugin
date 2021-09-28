@@ -1,0 +1,4 @@
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AJB Stats|10899|vector|1|0|AJB Status Metrics|Tier>Server>Instance|AJB stats.
+Graph|AJB Status|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Status of AJB (ERROR-1 and other than ERROR-0).

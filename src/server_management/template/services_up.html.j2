@@ -1,0 +1,21 @@
+{% extends 'base.html.j2' %}
+{% block content %}
+  <thead>
+    <tr>
+      <th>Server Name</th>
+      <th>Server IP</th>
+      <th>UP Time</th>
+      <th>Duration</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in data %}
+      <tr>
+        <td>{{ item.server_name }}</td>
+        <td>{{ item.server_ip }}</td>
+        <td>{{ item.uptime }}</td>
+        <td>{{ item.duration }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+{% endblock%}

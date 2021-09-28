@@ -1,0 +1,6 @@
+# 1.0 - Initial version
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP App Engine Memcache|11592|vector|2|0|GCP Metrics|ProjectID>Zone>ModuleID>VersionID|It provide metrics related to cache memory of app engine.
+Graph|GCP App Engine Memcache Hit Ratio (Pct)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percentage of successful hits compared to all memcache operations.
+Graph|GCP App Engine Memcache Used Cache Size (Bytes)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Size of the cache in bytes, calculated as the total size of all items stored.

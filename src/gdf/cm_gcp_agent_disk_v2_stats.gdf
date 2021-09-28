@@ -1,0 +1,13 @@
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP Disk Stats V2|11429|vector|10|0|GCP Metrics|ProjectID>Instance>Zone>DiskDeviceName|Disk stats provide metrics related VM disk.
+Graph|Disk Bytes Used (MB)|1|scalar|sample|-|-|0|D|-1|-1|NA|DIV(G1,1048576)|Disk bytes used in megabytes, where type of usage (free, used, and reserved) in device.
+Graph|Average I/O Time (ms)/Sec|2|scalar|rate|-|-|0|D|-1|-1|NA|MUL(G2,1000)|Average time in millisecond an I/O-operation took to complete in device per second.
+Graph|Merged Operations/Sec|3|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of merged operations per second, where direction (read and write) in device.
+Graph|Operations/Sec|4|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of disk operations per second, where direction (read and write) in device.
+Graph|Operation Time (ms)/Sec|5|scalar|rate|-|-|0|D|-1|-1|NA|MUL(G5,1000)|Total time in millisecond spent In disk operations (read and write) in device per second.
+Graph|Average Pending Operations|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of Pending operations in device.
+Graph|Disk Used (Pct)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Disk percent used, where type of usage are free, used, and reserved in device.
+Graph|Bytes Read/Sec|8|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Disk bytes read in device per second.
+Graph|Weighted I/O Time (ms)/Sec|9|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Weighted number of millisecond spent I/O operation in device per second.
+Graph|Disk Bytes Transferred Kilobytes/Sec|10|scalar|rate|-|-|0|D|-1|-1|NA|DIV(G10,1024)|Disk bytes transferred in kilobytes per second.

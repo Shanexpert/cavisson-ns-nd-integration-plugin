@@ -1,0 +1,19 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+
+#ObjectName amx:pp=/J2EEDomain/J2EEServer[server],type=WebModule,name=nsecom,j2eeType=WebModule,J2EEServer=server,J2EEApplication=null
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Glassfish WebModule Stats|11523|vector|2|0|Glassfish Metrics|Tier>Server>Instance|This group shows the interface for querying web module statistics.
+
+
+Graph|Glassfish Start Time|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Glassfish Start Time describe about the time that the managed object was started.
+
+Graph|Glassfish State|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Glassfish State describe the starting,running,stopping,failed state.
+
+
+

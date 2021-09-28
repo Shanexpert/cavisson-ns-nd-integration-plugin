@@ -1,0 +1,13 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS Cassandra Keyspace Operation Table Stats|11497|vector|4|0|AWS Metrics|AccountName>Region>Keyspace>Operation>TableName|Amazon Keyspaces (for Apache Cassandra) is a scalable, highly available, and managed Apache Cassandra–compatible database service.
+
+Graph|AWS Cassandra User Error|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Requests to Amazon Keyspaces that generate an InvalidRequest error during the specified time period.
+Graph|AWS Cassandra Returned Item|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of rows returned by SELECT operations during the specified time period.
+Graph|AWS Cassandra Successful Request|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|AWS Cassandra Successful Request Count
+Graph|AWS Cassandra Successful Request Latency (ms)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The successful requests to Amazon Keyspaces during the specified time period. 
+

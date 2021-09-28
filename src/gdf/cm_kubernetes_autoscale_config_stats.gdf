@@ -1,0 +1,16 @@
+# --- GDF Version History ---
+#  1.0 - Initial version
+#  2.0 - Change done for match Long_data and Long_long_data to double
+#  3.0 - Changes done for Dynamic data in Execution GUI
+#  3.1 - Use future1 field of group line for Metric group name
+#
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Kubernetes Autoscale Config Stats|10561|vector|7|0|Kubernetes Metrics|Tier>Server>Namespace|Show stats of deployment configuration in kubernetes.
+Graph|Minimum Replicas|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Minimum number of replicas.
+Graph|Maximum Replicas|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum number of replicas.
+Graph|Target CPU Utilization (Pct)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Target CPU utilization percentge.
+Graph|Last Scale Time (sec)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Last scale time in second.
+Graph|Current Replicas|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current number of replicas.
+Graph|Desired Replicas|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Desired number of replicas.
+Graph|Current CPU Utilization (Pct)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current CPU utilization percentage.

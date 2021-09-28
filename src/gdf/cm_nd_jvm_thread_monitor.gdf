@@ -1,0 +1,11 @@
+#Note - Group Id and graph should not be changed as these are used in Dashboard GUI
+
+Info|3.1|1|-|-|-1|-1|-
+Group|JVM Thread CPU Stats|10244|vector|6|0|Application Metrics|Tier>Server>Instance>ThreadName|JVM thread stats such as CPU time
+
+Graph|Thread CPU Time (Pct)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|CPU time used by thread in percentage
+Graph|Thread User CPU Time (Pct)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|User CPU time used by thread in percentage
+Graph|Thread Waiting Entries/Sec|3|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Total number of time thread entered waiting or timed waiting state per second
+Graph|Thread Waited Time (Pct)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total time in seconds thread is in waiting or times waiting state in percentage
+Graph|Thread Blocked Entries/Sec|5|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Total number of time thread entered blocked state per second
+Graph|Thread Blocked Time (Pct)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total time in seconds thread is in blocked state in percentage

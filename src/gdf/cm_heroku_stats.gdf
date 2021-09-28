@@ -1,0 +1,11 @@
+Info|3.1|1|-|-|-1|-1|-
+Group|Heroku Stats|10288|vector|9|0|System Metrics|Tier>Server>DrainId>Dyno|Heroku System Stats such as load averages, memory, pages read/write
+Graph|Load Average(Last 1 Minute)|1|scalar|sample|-|-|0|A|-1|-1|NA|NA|Load average of last 1 minute
+Graph|Load Average(Last 5 Minutes)|2|scalar|sample|-|-|0|A|-1|-1|NA|NA|Load average of last 5 minutes
+Graph|Load Average(Last 15 Minutes)|3|scalar|sample|-|-|0|A|-1|-1|NA|NA|Load average of last 15 minutes
+Graph|Total Memory Used (MB)|4|scalar|sample|-|-|0|A|-1|-1|NA|NA|Total Memory Used in MB
+Graph|Resident Memory (MB)|5|scalar|sample|-|-|0|A|-1|-1|NA|NA|Resident Memory in MB
+Graph|Disk Cache Memory (MB)|6|scalar|sample|-|-|0|A|-1|-1|NA|NA|Disk Cache Memory in MB
+Graph|Swap Memory (MB)|7|scalar|sample|-|-|0|A|-1|-1|NA|NA|Swap Memory in MB
+Graph|Pages Read from Disk|8|scalar|sample|-|-|0|A|-1|-1|NA|NA|Pages read from disk(Page out)
+Graph|Pages Written to Disk|9|scalar|sample|-|-|0|A|-1|-1|NA|NA||Pages written to disk(Page in)

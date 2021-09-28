@@ -1,0 +1,24 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+
+#ObjectName :com.bea:ServerRuntime=AdminServer,Name=*,Type=PersistentStoreConnectionRuntime,PersistentStoreRuntime=*
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Weblogic Persistent Store Connection Runtime Stats|14206|vector|5|0|Weblogic Metrics|Tier>Server>Instance>Name>PersistentStoreRuntime|This stats provides informtion related to Persistent Store Connection.
+
+Graph|Weblogic Create Count|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of create requests issued by this connection.
+
+Graph|Weblogic Update Count|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of update requests issued by this connection.
+
+Graph|Weblogic Object Count|3|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of objects contained in the connection.
+
+Graph|Weblogic Delete Count|4|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of delete requests issued by this connection.
+
+Graph|Weblogic Read Count|5|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of read requests issued by this connection, including requests that occur during store initialization.
+
+

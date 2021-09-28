@@ -1,0 +1,9 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Memorypool Stats|11620|vector|4|0|New Relic Metrics|AccountName>ApplicationName>InstanceName>Memorypool|Memorypool stats provides memorypool related data for different instances running in new relic applications.
+Graph|Average Value (MB)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memorypool average value in megabytes.
+Graph|Calls/Min|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memorypool calls per minute.
+Graph|Call Count|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memorypool call count.
+Graph|Standard Deviation|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memorypool standard deviation.

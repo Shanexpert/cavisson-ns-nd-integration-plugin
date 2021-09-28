@@ -1,0 +1,14 @@
+Info|1.0|1|-|-|-1|-1|-
+
+Group|Host Device Stats|10545|vector|11|0|Infrastructure Metrics|Tier>Server>Device|Kubernetes host device stats.
+Graph|Read Completed/Sec|1|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of read requests issued to the device per second.
+Graph|Read Merged|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Reads and writes which are adjacent to each other may be merged for efficiency.
+Graph|Sector Read/Sec|3|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of sectors read per second successfully.
+Graph|Time Spent Reading (ms)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total time in  milliseconds spent by all reads (as measured from make_request() to end_that_request_last()).
+Graph|Write Completed/Sec|5|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of write requests issued to the device per second.
+Graph|Write Merged|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Reads and writes which are adjacent to each other may be merged for efficiency.
+Graph|Sector Written/Sec|7|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of sectors written per second successfully.
+Graph|Time Spent Writing (ms)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of milliseconds spent by all write (as measured from make_request() to end_that_request_last()).
+Graph|I/O Operation|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of input-output operation in progress.
+Graph|I/O operation Time (ms)|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Time spent on input-output operation in milliseconds.
+Graph|Weighted I/O Opeation Time (ms)|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Time spent in milliseconds for weighted operation, This field is incremented at each I/O start, I/O completion, I/O merge, or read of these stats by the number of I/Os in progress I/O Running times the number of milliseconds spent doing I/O since the last update of this field.  This can provide an easy measure of both I/O completion time and the backlog that may be accumulating.

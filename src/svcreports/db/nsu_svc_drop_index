@@ -1,0 +1,31 @@
+#! /bin/sh
+
+#Here we are drop indexes for DB tables related with servcie report
+
+if [ -d $PWD/TR$1 ]; then
+  BASE_DIR=$PWD
+elif [ -d $NS_WDIR/logs/TR$1 ]; then
+  BASE_DIR=$NS_WDIR/logs
+else
+  echo "Error: Test run number $1 is not a valid test run number"
+  exit -1
+fi
+
+echo "nsu_svc_drop_index: Please wait indexes will be dropped ..."
+START=`date +%s`
+
+psql test cavisson <<+
+
+drop index if exists svctable_$1;
+drop index if exists svcsignaturetable_$1;
+drop index if exists svcerrorcode_$1;
+drop index if exists svcrecord_$1;
++
+
+END=`date +%s`
+#echo $END
+#echo $START
+DIFF=`expr $END - $START`
+#echo $DIFF
+echo "nsu_svc_drop_index: Deletion of indexes took $DIFF seconds"
+

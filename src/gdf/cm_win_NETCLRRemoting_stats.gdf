@@ -1,0 +1,23 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+# Command to get data for this gdf on windows server : 
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# wmic path Win32_PerfFormattedData_NETFramework_NETCLRRemoting.Name='_Global_' get Channels,ContextBoundClassesLoaded,ContextBoundObjectsAllocPersec,ContextProxies,Contexts,RemoteCallsPersec,TotalRemoteCalls /every:10
+#
+# Entry in mprof to get data through wmic :
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# CUSTOM_MONITOR 192.168.1.52 cm_win_NETCLRRemoting_stats.gdf Win_Mon_NETCLRRemoting 2 wmic path Win32_PerfFormattedData_NETFramework_NETCLRRemoting.Name='_Global_' get Channels,ContextBoundClassesLoaded,ContextBoundObjectsAllocPersec,ContextProxies,Contexts,RemoteCallsPersec,TotalRemoteCalls /every:10
+#
+
+Info|3.1|1|-|-|-1|-1|-
+Group|.NET CLR Remoting Stats|10043|vector|7|0|Application Metrics|Tier>Server>Instance|.NET CLR Remoting stats. Remoting is a framework built into Common Language Runtime (CLR) in order to provide developers classes to build distributed applications and wide range of network services.
+Graph|Remote Channels Registration/Sec|1|scalar|rate|-|CumToPS|0|NA|-1|-1|L|NA|Number of remoting channels registered across all application domains per second.
+Graph|Context Bound Classes Loaded|2|scalar|sample|-|-|0|NA|-1|-1|L|NA|Number of classes that are marked with context attributes which provide usage rules for synchronization, thread affinity, transactions etc.
+Graph|Context Bound Objects Allocated/Sec|3|scalar|rate|-|-|0|NA|-1|-1|L|NA|Number of context-bound objects allocated per second.
+Graph|Remote Proxies/Sec|4|scalar|rate|-|CumToPS|0|NA|-1|-1|L|NA|Number of remoting proxy objects created in this process since the start of the process per second.
+Graph|Remoting Contexts Count|5|scalar|sample|-|-|0|NA|-1|-1|L|NA|Number of remoting contexts objects in the application.
+Graph|Remote Calls/Sec|6|scalar|rate|-|-|0|NA|-1|-1|H|NA|Number of remote procedure calls invoked per second.
+Graph|Total Remote Calls|7|scalar|cumulative|-|-|0|NA|-1|-1|L|NA|Total number of remote procedure calls invoked since the start of this application.

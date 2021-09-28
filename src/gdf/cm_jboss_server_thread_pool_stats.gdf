@@ -1,0 +1,19 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|JBoss ThreadPool|10109|vector|6|0|Application Metrics|Tier>Server>Instance>ThreadPool|JBoss Thread Pool Stats
+
+Graph|Maximum Threads|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The maximum number of request processing threads to be created by this Connector, which therefore determines the maximum number of simultaneous requests that can be handled. If not specified, this attribute is set to 200. If an executor is associated with this connector, this attribute is ignored as the connector will execute tasks using the executor rather than an internal thread pool.
+Graph|Acceptor Thread Count|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Acceptor Thread Count specifies the size of the acceptor thread pool. It is responsible for constructing the task objects from the requests coming to the socket.
+Graph|Current Thread Count|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current Thread Count specifies the Current number of worker threads. Worker Threads represents number of requests that can be processed concurrently by the Web server.
+Graph|Current Threads Busy Count|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current Threads Busy Count specifies the Current number of worker threads busy in processing various requests.
+Graph|Backlog|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The maximum queue length for incoming connection requests when all possible request processing threads are in use. Any requests received when the queue is full will be refused. The default value is 10.
+Graph|Thread Priority|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Thread Priority specifies that priority of the acceptor and poller threads.
+#Graph|Port|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The TCP port number on which this Connector will create a server socket and await incoming connections. Your operating system will allow only one server application to listen to a particular port number on a particular IP address.
+#Graph|So Linger Time (ms)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Socket Linger Time in milliseconds
+#Graph|So Timeout (ms)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Socket timeout in milliseconds

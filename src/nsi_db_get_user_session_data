@@ -1,0 +1,505 @@
+#!/bin/sh
+
+#######################################################################################################
+# Name   : nsi_db_get_user_session_data
+# Example:
+# Initial version : --
+#   Author: --
+#   Date: --
+# Modified version:
+#   Author: Nikita Pandey, Abhishek Mittal
+#   Date: 15 April 2012
+
+#How filters will work in this query?
+
+# These are taken from Session Record
+#   Script - Means show those session where this script is used
+#   Location - Means show those session where this location is used
+#   Access - Means show those session where this access is used
+#   Browser - Means show those session where this browser is used
+
+# TxName - Means show those session where this transaction is used
+# PageName - Means show those session where this page is used
+# UrlName - Means show those session where this Url is used
+#
+# RespTime -  Means show those session where at least one object response time meets the condition
+# Status -  Means show those session where at least one object status meets the condition
+
+# StartTime - Means show those session where at least one object start time meets the condition
+# EndTime - Means show those session where at least one object end time meets the condition
+# PhaseId - Means show those session where at least one object phase id time meets the condition
+#
+
+#########################################################################################################
+
+
+######################################################################
+#                     Variables and init settings
+#####################################################################
+
+# Including nsi_db_utils
+. $NS_WDIR/bin/nsi_db_utils
+
+# Set default values of variables
+TRNUM=""
+OBJECT_IDX=""
+LOCATION="NO"
+ACCESS="NO"
+BROWSER="NO"
+WANENV=0
+LIMIT=""
+OFFSET=""
+SCRIPT=""
+PAGE=""
+URL=""
+TRANS=""
+STATUS=-2
+GET_COUNT=0
+URLINDX=""
+
+
+DEBUG=0 # 0 --> off
+        # 1 --> on
+SELECT="select"
+
+########################################################################
+#                       Functions's Definitions
+#######################################################################
+debug_logs()
+{
+  if [ "X$DEBUG" != "X0" ];then
+    echo "$*"
+  fi
+}
+
+usage()
+{
+  echo "$*"
+  echo  "$0 --testrun <value> --child <value> --user <value> --wanenv <value> --urlidx <value> --runphase <value> --limit <value> --script <value> --starttime <value> --endtime <value> --resptimeqmode <value> --responsetime<value> --location <value> --access<value> --browser<value> --phaseidx<value>"
+  echo ""
+  echo "Where"
+  echo "  --testrun is test run number, which is mandatory argument."
+  echo "  --child and --user togather determines the unique user-id, which is mandatory argument."
+  echo "  --wan-env can be 0(disable) or 1(enable), which is mandatory argument."
+  echo "  --urlidx  url index in case of object value 0 ."
+  echo "  --runphase is 1 for run-time phase only, otherwise 0, which is optional argument."
+  echo "  --limit is for limit (This is the number of results returned by query statment (e.g. 10 it will show first 10 records)), which is optional argument"
+  echo " --offset is for offset (This is used to skip rows as specified by offset (e.g suppose you wanted to show results 11-20 then you can use offset 10)), which is optional argument"
+  echo "  --location is for particular location selection, which is optional argument"
+  echo "  --Browser is for particular browser selection, which is optional argument"
+  echo "  --phaseidx is for particular phase  selection, which is optional argument"
+  echo "  --access is for particular access selection, which is optional argument"
+  echo "  --status is selecting particular staus (status is 0 for Success only, positive for the Failure code, -1 for all failures -2 for All (Success and all failures)), which is optional argument"
+  echo "  --script is for selecting particular script result, which is optional argument"
+  echo "  --location is for selecting particular location, which is optional argument"
+  echo "  --access is for selecting particular access, which is optional argument"
+  echo "  --starttime and -endtime is for selecting result that comes under the given range, which is optional argument."
+  echo "  --resptimeqmode is the selection of responsetime(1-lessthen, 2-greaterthen, 3-equal), which is optional argument."
+  echo "  --object is object selection(0-URL, 1-Page, 2-Transaction, 3-Session), which is optional argument."
+  exit 1
+}
+
+chk_args()
+{
+  if [ "X$TRNUM" == "X" ]; then
+    usage "Test run argument is missing"
+  fi
+  if [ "X$CHILD" == "X" ]; then
+    usage "Child id is missing"
+  fi
+  if [ "X$USER" == "X" ]; then
+    usage "object type is missing"
+  fi
+}
+
+########################################################################
+#                            calling functions
+########################################################################
+
+
+chk_args_of_option()
+{
+  if [ "X$2" == "X" ];then
+    echo "Option $1 required a value."
+    usage
+    exit -1
+  fi
+}
+
+#args: TR-NUM child-id user-id wan-env
+if [ "X$1" == "X" ];then
+  usage
+fi
+
+while [ "$1" != "" ];do
+  debug_logs "ARGS=$1"
+  case $1 in
+    "--testrun")
+        shift
+        chk_args_of_option "--testrun" "$1"
+        TRNUM=$1;;
+    "--child")
+        shift
+        chk_args_of_option "--child" "$1"
+        CHILD=$1;;
+    "--user")
+        shift
+        chk_args_of_option "--user" "$1"
+        USER=$1;;
+    "--wanenv")
+        shift
+        chk_args_of_option "--wanenv" "$1"
+        WANENV=$1;;
+    "--limit")
+        shift
+        chk_args_of_option "--limit" "$1"
+        LIMIT=$1;;
+    "--offset")
+        shift
+        chk_args_of_option "--offset" "$1"
+        OFFSET=$1;;
+      "--urlidx")
+        shift
+        chk_args_of_option "--offset" "$1"
+        URLINDX=$1;;
+    "--script")
+        shift
+        chk_args_of_option "--script" "$1"
+        SCRIPT=$1;;
+    "--page")
+        shift
+        chk_args_of_option "--page" "$1"
+        PAGE=$1;;
+    "--trans")
+        shift
+        chk_args_of_option "--trans" "$1"
+        TRANS=$1;;
+    "--url")
+        shift
+        chk_args_of_option "--url" "$1"
+        URL=$1;;
+    "--starttime")
+        shift
+        chk_args_of_option "--starttime" "$1"
+        STARTTIME=$1;;
+    "--endtime")
+        shift
+        chk_args_of_option "--endtime" "$1"
+        ENDTIME=$1;;
+    "--abs_starttime")
+        shift
+        chk_args_of_option "--abs_starttime" "$1"
+        ABS_STARTTIME=$1;;
+    "--abs_endtime")
+        shift
+        chk_args_of_option "--abs_endtime" "$1"
+        ABS_ENDTIME=$1;;
+    "--responsetime")
+        shift
+        chk_args_of_option "--responsetime" "$1"
+        RESPONSETIME=$1;;
+    "--resptimeqmode")
+        shift
+        chk_args_of_option "--resptimeqmode" "$1"
+        RESPTIMEQMODE=$1;;
+    "--responsetime2")
+        shift
+        chk_args_of_option "--responsetime2" "$1"
+        RESPONSETIME2=$1;;
+    "--status")
+        shift
+        chk_args_of_option "--status" "$1"
+        STATUS=$1;;
+    "--location")
+        shift
+        chk_args_of_option "--location" "$1"
+        LOCATION=$1;;
+    "--access")
+        shift
+        chk_args_of_option "--access" "$1"
+        ACCESS=$1;;
+    "--browser")
+        shift
+        chk_args_of_option "--browser" "$1"
+        BROWSER=$1;;
+    "--object")
+        shift
+        chk_args_of_option "--object" "$1"
+        OBJECT=$1;;
+    "--get_count")
+        shift
+        chk_args_of_option "--get_count" "$1"
+        GET_COUNT=$1;;
+    "--phaseidx")
+        shift
+        chk_args_of_option "--phaseidx" "$1"
+        PHASEIDX=$1;;
+    "--generatorid")
+        shift
+        chk_args_of_option "--generatorid" "$1"
+        GENERATORID=$1;;
+
+    --*) usage "Invalid options";;
+    *) usage ;;
+  esac
+  shift
+done
+
+debug_logs "TRNUM = $TRNUM, CHILD = $CHILD, USER = $USER, WANENV = $WANENV, RUNPHASE=$RUNPHASE ,LIMIT=$LIMIT"
+
+JOIN_STATUS=0
+JOIN_RESP=0
+JOIN_URL=0
+JOIN_TRANS=0
+PGTBL_ADDED=0
+
+#checking the version and build for setting timestamp in MS
+set_testrun_version_and_build $TRNUM
+if [ \( $VERSION -lt 414 \) -o \( $VERSION -eq 414 -a $BUILD -le 20 \) ]; then
+  $0_old_tr $ALL_ARG
+  exit 0
+fi
+
+handle_time_filters_in_ms $TRNUM
+
+#Cheking mantatory arguments
+#chk_args
+set_query_files $TRNUM
+
+# Check if limit argument is given or not. It will limit number of rows to max this number
+if [ "X$LIMIT" != "X" ];then
+  LIMIT="LIMIT $LIMIT"
+fi
+
+# Check if Offset argument is given or not. This is used to skip rows as specified by offset.
+# For example, if offset is 1, then first row is skipped. If offset is 100, then first 100 rows are skipped
+if [ "X$OFFSET" != "X" ];then
+  OFFSET="OFFSET $OFFSET"
+fi
+
+#set OBJTBL according to OBJECT
+if [ $OBJECT -eq 0 ];then
+  OBJTBL="URLRecord_$TRNUM"
+  URLRECORD_TABLE_FLAG=1
+elif [ $OBJECT -eq 1 ];then
+  OBJTBL="PageRecord_$TRNUM"
+  PAGERECORD_TABLE_FLAG=1
+elif [ $OBJECT -eq 2 ];then
+  if [ -s $NS_WDIR/logs/TR$TRNUM/reports/csv/tprc.csv ];then
+    OBJTBL="TransPageRecord_$TRNUM"
+    TRANSPAGERECORD_TABLE_FLAG=1
+  else
+    OBJTBL="TransactionRecord_$TRNUM"
+    TRANSACTIONRECORD_TABLE_FLAG=1
+  fi
+elif [ $OBJECT -eq 3 ];then
+  OBJTBL="SessionRecord_$TRNUM"
+  SESSIONRECORD_TABLE_FLAG=1
+fi
+
+
+
+#Session Name|User Location|User Access|Child Index|Session ID|Start Time|Total Time|Status
+# We are adding distinct because we page are in a loop in the session and when we
+# join with session record we get multiple records.
+#
+
+
+  SELECT="SELECT distinct $NEWLINE  SessionName AS \"Script Name\","
+  SELECT="$SELECT $NEWLINE  location AS \"Location\","
+  SELECT="$SELECT $NEWLINE  access AS \"Access\","
+  SELECT="$SELECT $NEWLINE  browser As \"Browser\","
+  SELECT="$SELECT $NEWLINE  SessionRecord_$TRNUM.ChildIndex AS \"Child Index\","
+  SELECT="$SELECT $NEWLINE  SessionRecord_$TRNUM.SessionInstance AS \"Session Id\","
+
+  # For new test runs timestamp needs to be changed.
+  if [ "X$TR_NEW" != "X1" ]; then
+    # Relative timestamp
+    SELECT="$SELECT $NEWLINE  SessionRecord_$TRNUM.StartTime AS \"Start Time\","
+    # Absolute timestamp
+    SELECT="$SELECT $NEWLINE  (SessionRecord_$TRNUM.StartTime + $START_TIMESTAMP_RELATIVE_TO_UNIX_EPOCH) AS \"Absolute Start Time\","
+  else
+    # Relative timestamp
+    SELECT="$SELECT $NEWLINE  (SessionRecord_$TRNUM.StartTime - $TEST_START_RELATIVE_SINCE_CAV_EPOCH) AS \"Start Time\","
+    # Absolute timestamp
+    SELECT="$SELECT $NEWLINE  (SessionRecord_$TRNUM.StartTime + $CAV_EPOCH_TIME) AS \"Absolute Start Time\","
+  fi
+
+  SELECT="$SELECT $NEWLINE  SessionRecord_$TRNUM.RespTime As \"Total Time\","
+  SELECT="$SELECT $NEWLINE  SessionRecord_$TRNUM.Status AS \"Status\""
+
+  FROM="FROM $NEWLINE  SessionRecord_$TRNUM"
+  SESSIONRECORD_TABLE_FLAG=1
+  FROM="$FROM, $NEWLINE  SessionTable_$TRNUM"
+
+  WHERE="WHERE $NEWLINE  SessionRecord_$TRNUM.EndTime <> 0 "
+  WHERE="$WHERE $NEWLINE  AND SessionRecord_$TRNUM.SessionIndex = SessionTable_$TRNUM.SessionIndex"
+  WHERE="$WHERE $NEWLINE  AND SessionRecord_$TRNUM.ChildIndex = $CHILD "
+  WHERE="$WHERE $NEWLINE  AND SessionRecord_$TRNUM.UserIndex = $USER"
+
+  ORDER="ORDER BY \"Start Time\""
+
+
+
+JOIN_OBJTBL=0
+#Add status selection
+NOF=`echo $STATUS |awk -F ',' '{print NF}'`
+if [ $NOF -gt 1 ];then
+  WHERE="$WHERE $NEWLINE  AND $OBJTBL.Status in ($STATUS)"
+  JOIN_STATUS=1
+else
+  if [ $STATUS -eq -1 ];then
+    WHERE="$WHERE $NEWLINE  AND $OBJTBL.Status > 0"
+  elif [ $STATUS -ne -2 ];then
+    WHERE="$WHERE $NEWLINE  AND $OBJTBL.Status = $STATUS"
+  fi
+   JOIN_STATUS=1
+fi
+
+
+#Add Script selection
+if [ "X$SCRIPT" != "X" ];then
+  WHERE="$WHERE $NEWLINE  AND SessionTable_$TRNUM.SessionName = ""'"$SCRIPT"'"
+fi
+
+#Add Transaction selection
+if [ "X$TRANS" != "X" ];then
+ JOIN_TRANS=1
+
+ if [ -s $NS_WDIR/logs/TR$TRNUM/reports/csv/tprc.csv ];then
+    WHERE="$WHERE $NEWLINE  AND TransactionTable_$TRNUM.TransactionIndex = TransPageRecord_$TRNUM.TransactionIndex"
+    WHERE="$WHERE $NEWLINE  AND SessionRecord_$TRNUM.SessionInstance = TransPageRecord_$TRNUM.SessionInstance"
+    WHERE="$WHERE $NEWLINE  AND SessionRecord_$TRNUM.ChildIndex = TransPageRecord_$TRNUM.ChildIndex "
+ else
+    WHERE="$WHERE $NEWLINE  AND SessionRecord_$TRNUM.SessionInstance = TransactionRecord_$TRNUM.SessionInstance"
+    WHERE="$WHERE $NEWLINE  AND SessionRecord_$TRNUM.ChildIndex = TransactionRecord_$TRNUM.ChildIndex"
+    WHERE="$WHERE $NEWLINE  AND TransactionTable_$TRNUM.TransactionIndex = TransactionRecord_$TRNUM.TransactionIndex"
+ fi
+
+  WHERE="$WHERE $NEWLINE  AND TransactionTable_$TRNUM.TransactionName = ""'"$TRANS"'"
+  FROM="$FROM, $NEWLINE  TransactionTable_$TRNUM"
+fi
+
+#Add page selection
+if [ "X$PAGE" != "X" ];then
+ WHERE="$WHERE $NEWLINE  AND PageTable_$TRNUM.PageIndex = PageRecord_$TRNUM.PageIndex "
+  WHERE="$WHERE $NEWLINE  AND PageRecord_$TRNUM.ChildIndex = SessionRecord_$TRNUM.ChildIndex "
+  WHERE="$WHERE $NEWLINE  AND PageRecord_$TRNUM.SessionInstance = SessionRecord_$TRNUM.SessionInstance "
+
+  WHERE="$WHERE $NEWLINE  AND PageTable_$TRNUM.PageName = ""'"$PAGE"'"
+  FROM="$FROM, $NEWLINE  PageTable_$TRNUM"
+
+  if [  $OBJTBL  != "PageRecord_$TRNUM" -a $PGTBL_ADDED -eq 0  ];then
+    FROM="$FROM, $NEWLINE  PageRecord_$TRNUM"
+    PAGERECORD_TABLE_FLAG=1
+    PGTBL_ADDED=1
+  fi
+fi
+
+#Add Url selection
+if [ "X$URL" != "X" ];then
+
+  WHERE="$WHERE $NEWLINE  AND URLTable_$TRNUM.PageIndex = URLRecord_$TRNUM.PageIndex "
+  WHERE="$WHERE $NEWLINE  AND URLRecord_$TRNUM.ChildIndex = SessionRecord_$TRNUM.ChildIndex "
+  WHERE="$WHERE $NEWLINE  AND URLRecord_$TRNUM.SessionInstance = SessionRecord_$TRNUM.SessionInstance "
+
+  WHERE="$WHERE AND URLTable_$TRNUM.URLName = ""'"$URL"'"
+  FROM="$FROM, $NEWLINE  URLTable_$TRNUM"
+
+  if [  $OBJTBL  != "URLRecord_$TRNUM" ];then
+    FROM="$FROM, $NEWLINE  URLRecord_$TRNUM"
+    URLRECORD_TABLE_FLAG=1
+  fi
+
+fi
+
+
+#Add Url selection
+if [ "X$URLINDX" != "X" ];then
+
+  WHERE="$WHERE $NEWLINE  AND URLRecord_$TRNUM.ChildIndex = SessionRecord_$TRNUM.ChildIndex "
+  WHERE="$WHERE $NEWLINE  AND URLRecord_$TRNUM.SessionInstance = SessionRecord_$TRNUM.SessionInstance "
+
+  WHERE="$WHERE $NEWLINE  AND URLRecord_$TRNUM.urlindex in ($URLINDX)"
+
+  if [  $OBJTBL  != "URLRecord_$TRNUM" ];then
+    FROM="$FROM, $NEWLINE  URLRecord_$TRNUM"
+    URLRECORD_TABLE_FLAG=1
+  fi
+
+fi
+
+# match starttime and endtimeswith tables
+if [ "X$STARTTIME" != "X" -o "X$ENDTIME" != "X" -o "X$ABS_STARTTIME" != "X" -o "X$ABS_ENDTIME" != "X" ]; then
+  timestamp_filter_match
+fi
+
+#Add response time selection
+if [ "$RESPTIMEQMODE" != "X" -a "X$RESPONSETIME" != "X" ];then
+  JOIN_OBJTBL=1
+  if [ $RESPTIMEQMODE -eq 1 ];then
+    WHERE="$WHERE $NEWLINE  AND $OBJTBL.RespTime <= $RESPONSETIME"
+  elif [ $RESPTIMEQMODE -eq 2 ];then
+    WHERE="$WHERE $NEWLINE  AND $OBJTBL.RespTime >= $RESPONSETIME"
+  elif [ $RESPTIMEQMODE -eq 3 ];then
+    WHERE="$WHERE $NEWLINE  AND $OBJTBL.RespTime >= $RESPONSETIME"
+    WHERE="$WHERE $NEWLINE  AND $OBJTBL.RespTime <= $RESPONSETIME2"
+  fi
+fi
+#Add Location selection
+if [ $LOCATION != "All" -a $LOCATION != "NO" ];then
+  debug_logs " where location_selection = $WHERE"
+  WHERE="$WHERE $NEWLINE  AND LOCATION = ""'"$LOCATION"'"
+fi
+
+#Add Access selection
+if [ $ACCESS != "All" -a $ACCESS != "NO" ];then
+  WHERE="$WHERE $NEWLINE  AND ACCESS = ""'"$ACCESS"'"
+  debug_logs "location_selection WHERE = $WHERE"
+fi
+
+#Add Browser selection
+
+if [ $BROWSER != "All" -a $BROWSER != "NO" ];then
+  WHERE="$WHERE $NEWLINE  AND BROWSER = ""'"$BROWSER"'"
+fi
+#Add phase index selection
+if [ "X$PHASEIDX" != "X" ];then
+  WHERE="$WHERE $NEWLINE  AND SessionRecord_$TRNUM.PhaseIndex = $PHASEIDX"
+fi
+
+if [ $OBJECT -ne 3 ];then
+  if [ $JOIN_RESP -eq 1 -o  $JOIN_STATUS -eq 1 ];then
+      FROM="$FROM, $NEWLINE  $OBJTBL"
+  fi
+fi
+
+if [ $JOIN_TRANS -eq 1 ];then
+  if [ $OBJECT -ne 2  ];then
+    if [ -s $NS_WDIR/logs/TR$TRNUM/reports/csv/tprc.csv ];then
+       FROM="$FROM, $NEWLINE  TransPageRecord_$TRNUM"
+    else
+       FROM="$FROM, $NEWLINE  TransactionRecord_$TRNUM"
+    fi
+  fi
+fi
+
+if [ "X$GENERATORID" != "X" ]; then
+  FROM="$FROM, $NEWLINE  GeneratorTable_$TRNUM"
+  WHERE="$WHERE $NEWLINE  AND $OBJTBL.GeneratorId = GeneratorTable_$TRNUM.GeneratorId"
+  WHERE="$WHERE $NEWLINE  AND GeneratorTable_$TRNUM.GeneratorId = $GENERATORID"
+fi
+
+
+log_query
+if [ $GET_COUNT -eq 0 ];then
+  ns_run_query
+else
+ #FROM="FROM ($SELECT $FROM $WHERE $ORDER ) As \"Total \" "
+ SELECT="SELECT Count(*) As \"Rows \" $NEWLINE FROM ( $NEWLINE $SELECT"
+ OFFSET="$OFFSET $NEWLINE  ) As \"Total \" "
+ ns_run_query
+fi
+show_query_result
+
+exit 0

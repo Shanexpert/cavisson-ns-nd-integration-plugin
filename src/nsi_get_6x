@@ -1,0 +1,87 @@
+#!/bin/bash
+
+#args: TR-NUM obj-type obj location access
+
+if [ $# -lt 5 ];then
+    	echo "Usage: nsi_get_6x TR-NUM obj-type obj-id loc-selection acc-selection"
+	echo "TR-NUM is the test run number"
+	echo "obj-type can be 0,1,2 or 3"
+	echo "obj-id : -1: All , otherwise obj-id"
+	echo "location-slectection: All for all otherwise location name"
+	echo "access-slectection: All for all otherwise access name"
+	echo "run-time-flag is 1 for run-time phase only, otherwise 0"
+	exit 1
+fi
+
+TRNUM=$1
+
+if [ "XX" == "XX$NS_WDIR" ]
+then
+  NS_WDIR=/home/cavisson/work
+fi
+
+. $NS_WDIR/bin/nsi_db_utils
+set_query_files $TRNUM
+
+if [ $# -eq 5 ];then
+	RPO=0
+else
+	RPO=$6
+fi
+
+NEED_SESS_REC=1
+if [ $4 = "All" -a $5 = "All" ];then
+	NEED_SESS_REC=0
+fi
+
+if [ $2 -eq 0 ];then
+	OBJ="UrlRecord_$1"
+	IDX="UrlIndex"
+elif [ $2 -eq 1 ];then
+	OBJ="PageRecord_$1"
+	IDX="PageIndex"
+elif [ $2 -eq 2 ];then
+	OBJ="TransactionRecord_$1"
+	IDX="TransactionIndex"
+elif [ $2 -eq 3 ];then
+	OBJ="SessionRecord_$1"
+	IDX="SessionIndex"
+else
+	echo "ERROR:Undefined object-type $2, valid values 0-3"
+	exit 1
+fi
+
+SELECT="SELECT $OBJ.Status AS \"Failure Type\", count(*) As \"Number Of Failures\""
+FROM="FROM $OBJ"
+WHERE="WHERE $OBJ.Status != 0"
+GROUP="GROUP BY $OBJ.Status"
+
+if [ $3 -ne -1 ];then
+    WHERE="$WHERE AND $OBJ.$IDX = $3"
+fi
+
+if [ $RPO -eq 1 ];then
+	WHERE="$WHERE AND isRunPhase = true"
+	NEED_SESS_REC=1
+fi
+
+if [ $NEED_SESS_REC -eq 1 -a $2 -ne 3 ];then
+        WHERE="$WHERE AND $OBJ.SessionInstance = SessionRecord_$1.SessionInstance
+        AND $OBJ.ChildIndex = SessionRecord_$1.ChildIndex" 
+        FROM="$FROM,  SessionRecord_$1"
+fi
+
+#Add Location/Access
+if [ $4 != "All" ];then
+    WHERE="$WHERE AND Location = ""'"$4"'"
+fi
+
+if [ $5 != "All" ];then
+    WHERE="$WHERE AND Access = ""'"$5"'"
+fi
+
+log_query
+run_query
+show_query_result
+
+exit 0

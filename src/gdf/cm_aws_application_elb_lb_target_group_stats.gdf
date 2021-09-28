@@ -1,0 +1,21 @@
+# --- GDF Version History ---
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS Application ELB LoadBal Target Group Stats|11352|vector|15|0|AWS Metrics|AccountName>Region>LoadBalancer>TargetGroup|The load balancer distributes incoming application traffic across multiple targets, such as EC2 instances, in multiple Availability Zones. 
+Graph|AWS Application ELB Request|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of completed requests that were received and routed to the registered instances.
+Graph|AWS Application ELB Healthy Host|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average number of healthy instances in each Availability Zone.
+Graph|AWS Application ELB Unhealthy Host|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average number of unhealthy instances in each Availability Zone.
+Graph|AWS Application ELB Httpcode Target 2xx|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of HTTP 2XX response codes genesampled by registered instances.
+Graph|AWS Application ELB Httpcode Target 3xx|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of HTTP 3XX response codes genesampled by registered instances.
+Graph|AWS Application ELB Httpcode Target 4xx|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of HTTP 4XX response codes genesampled by registered instances.
+Graph|AWS Application ELB Consumed LCU|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of load balancer capacity units (LCU) used by your load balancer.
+Graph|AWS Application ELB Httpcode Target 5xx|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of HTTP 5XX response codes genesampled by registered instances.
+Graph|AWS Application ELB Forwarded Invalid Header Request|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Forwardedi Invalid Header Request Count
+Graph|AWS Application ELB Non sticky Request|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of requests where the load balancer chose a new target because it couldn't use an existing sticky session.
+Graph|AWS Application ELB Requests/Target|11|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The average number of requests received by each target in a target group.
+Graph|AWS Application ELB Target Connection Error|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of connections that were not successfully established between the load balancer and the registered instances.
+Graph|AWS Application ELB Httpcode Target 3xx|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of HTTP 3XX redirection codes that originate from the load balancer.
+Graph|AWS Application ELB Lambda Internal Error|14|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The number of requests to a Lambda function that failed because of an issue internal to the load balancer or AWS Lambda.
+Graph|AWS Application ELB Lambda User Error|15|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The number of requests to a Lambda function that failed because of an issue with the Lambda function.

@@ -1,0 +1,18 @@
+# --- GDF Version History ---
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS EBS Volume Stats|11239|vector|11|0|AWS Metrics|AccountName>Region>VolumeID|Amazon Elastic Block Store (Amazon EBS) provides block level storage volumes for use with EC2 instances.
+
+Graph|AWS EBS Read Operations|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of read operations. This metric contains values for all volume types including io1.
+Graph|AWS EBS Write Operations|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of write operations. This metric contains values for all volume types including io1.
+Graph|AWS EBS Idle Time (Sec)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of seconds in a specified period of time when no read or write operations were submitted. This metric contains values for all volume types including IO1.
+Graph|AWS EBS Queue Length|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of read and write operation requests waiting to be completed. This metric contains values for all volume types including io1.
+Graph|AWS EBS Write Size (Bytes)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average size of each write operation in bytes. This metric contains values for all volume types including io1.
+Graph|AWS EBS Total Write Time (sec)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average time spent by write operations in seconds. This metric contains values for all volume types including io1.
+Graph|AWS EBS Burst Balance (Pct)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Balance available in the burst bucket in percentage. This metric contains values for all volume types including io1.
+Graph|AWS EBS Read Size (Bytes)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average size of each read operation in bytes. This metric contains values for all volume types including io1.
+Graph|AWS EBS Total Read Time (Sec)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The Average time spent by read operations. This metric contains values for all volume types including io1.
+Graph|AWS EBS Throughput (Pct)|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of I/O operations per second delivered of the total IOPS provisioned for an Amazon EBS volume. Only for io1 volume types.
+Graph|AWS EBS Consumed Read Write Operations|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total amount of read and write operations. Only for io1 volume types.

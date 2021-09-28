@@ -1,0 +1,8 @@
+.iso.org.dod.internet.mgmt.mib-2.tcp.tcpActiveOpens.0,cumulative,Total TCP Active Opens
+.iso.org.dod.internet.mgmt.mib-2.tcp.tcpPassiveOpens.0,cumulative,Total TCP Passive Opens
+.iso.org.dod.internet.mgmt.mib-2.tcp.tcpAttemptFails.0,cumulative,Total TCP Attemp Fails
+.iso.org.dod.internet.mgmt.mib-2.tcp.tcpEstabResets.0,cumulative,Total TCP Resets
+.iso.org.dod.internet.mgmt.mib-2.tcp.tcpCurrEstab.0,sample,Current TCP Established Connections
+.iso.org.dod.internet.mgmt.mib-2.tcp.tcpInSegs.0,cumulative,Total TCP In Segments
+.iso.org.dod.internet.mgmt.mib-2.tcp.tcpOutSegs.0,cumulative,Total TCP Out Segments
+.iso.org.dod.internet.mgmt.mib-2.tcp.tcpRetransSegs.0,cumulative,Total TCP Transmitted Segments

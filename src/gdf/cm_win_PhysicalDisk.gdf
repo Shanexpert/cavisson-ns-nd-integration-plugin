@@ -1,0 +1,39 @@
+# --- GDF Version History ---
+# # 1.0 - Initial version
+# # 2.0 - Change done for match Long_data and Long_long_data to double
+# # 3.0 - Changes done for Dynamic data in Execution GUI
+# # 3.1 - Use future1 field of group line for Metric group name
+#
+# Command to get data for this gdf on windows server :
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# wmic path Win32 Win32_PerfFormattedData_PerfDisk_PhysicalDisk.Name='_Global_' get  AvgDiskBytesPerRead, AvgDiskBytesPerTransfer, AvgDiskBytesPerWrite, AvgDiskQueueLength, AvgDiskReadQueueLength, AvgDisksecPerRead, AvgDisksecPerTransfer, AvgDisksecPerWrite, AvgDiskWriteQueueLength, CurrentDiskQueueLength, DiskBytesPersec, DiskReadBytesPersec, DiskReadsPersec, DiskTransfersPersec, DiskWriteBytesPersec, DiskWritesPersec, PercentDiskReadTime, PercentDiskTime, PercentDiskWriteTime, PercentIdleTime, SplitIOPerSec /every:10
+#
+# Entry in mprof to get data :
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# CUSTOM_MONITOR <server ip> cm_win_PhysicalDisk.gdf <PhysicalDisk> 2 wmic path Win32 Win32_PerfFormattedData_PerfDisk_PhysicalDisk.Name='_Global_' get  AvgDiskBytesPerRead, AvgDiskBytesPerTransfer, AvgDiskBytesPerWrite, AvgDiskQueueLength, AvgDiskReadQueueLength, AvgDisksecPerRead, AvgDisksecPerTransfer, AvgDisksecPerWrite, AvgDiskWriteQueueLength, CurrentDiskQueueLength, DiskBytesPersec, DiskReadBytesPersec, DiskReadsPersec, DiskTransfersPersec, DiskWriteBytesPersec, DiskWritesPersec, PercentDiskReadTime, PercentDiskTime, PercentDiskWriteTime, PercentIdleTime, SplitIOPerSec /every:10
+#
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Windows Physical Disk Stats|10094|vector|21|0|System Metrics|Tier>Server>Disk|Physical Disk Stats monitor metrics related to physical disk.
+
+Graph|Average Disk Read (MB)|1|scalar|sample|-|-|0|NA|-1|-1|L|NA|Average disk read in Megabytes.
+Graph|Average Disk Transfer (MB)|2|scalar|sample|-|-|0|NA|-1|-1|H|NA|Average disk transferred to or from in Megabytes.
+Graph|Average Disk Write (MB)|3|scalar|sample|-|-|0|NA|-1|-1|M|NA|Average disk written in Megabytes.
+Graph|Average Disk Queue Length|4|scalar|sample|-|-|0|NA|-1|-1|H|NA|Average number of both read and write requests that were queued for the selected disk.
+Graph|Average Disk Read Queue Length|5|scalar|sample|-|-|0|NA|-1|-1|L|NA|Average number of read requests that were queued for the selected disk.
+Graph|Average Disk Read Time (Sec)|6|scalar|sample|-|-|0|NA|-1|-1|M|NA|Average time taken to read data from disk in seconds.
+Graph|Average Disk Transfer Time (Sec)|7|scalar|sample|-|-|0|NA|-1|-1|L|NA|Average time take to transfer data from disk in seconds.
+Graph|Average Disk Write Time (Sec)|8|scalar|sample|-|-|0|NA|-1|-1|M|NA|Average time to write data to the disk in seconds.
+Graph|Average Disk Write Queue Length|9|scalar|sample|-|-|0|NA|-1|-1|L|NA|Average number of write requests that were queued for the selected disk.
+Graph|Current Disk Queue Length|10|scalar|sample|-|-|0|NA|-1|-1|L|NA|Number of requests outstanding on the disk at the time the performance data is collected.
+Graph|Disk Bytes/Sec|11|scalar|rate|-|-|0|NA|-1|-1|L|NA|Rate bytes are transferred to or from the disk during write or read operations.
+Graph|Disk Read Bytes/Sec|12|scalar|rate|-|-|0|NA|-1|-1|L|NA|Rate at which bytes are transferred from the disk during read operations.
+Graph|Disk Reads/Sec|13|scalar|rate|-|-|0|NA|-1|-1|M|NA|Rate of read operations on the disk.
+Graph|Disk Transfers/Sec|14|scalar|rate|-|-|0|NA|-1|-1|L|NA|Rate of read and write operations on the disk.
+Graph|Disk Write Bytes/Sec|15|scalar|rate|-|-|0|NA|-1|-1|L|NA|Rate at which bytes are transferred to the disk during write operations.
+Graph|Disk Writes/Sec|16|scalar|rate|-|-|0|NA|-1|-1|M|NA|Rate of write operations on the disk.
+Graph|Disk Read Time (Pct)|17|scalar|sample|-|-|0|NA|-1|-1|L|NA|Percentage of elapsed time that the selected disk drive was busy servicing read requests
+Graph|Disk Time (Pct)|18|scalar|sample|-|-|0|NA|-1|-1|L|NA|Percentage of elapsed time that the selected disk drive was busy servicing read or write requests.
+Graph|Disk Write Time (Pct)|19|scalar|sample|-|-|0|NA|-1|-1|L|NA|Percentage of elapsed time that the selected disk drive was busy servicing write requests.
+Graph|Idle Time (Pct)|20|scalar|sample|-|-|0|NA|-1|-1|L|NA|Percentage of time in which disk was idle.
+Graph|Split IO/Sec|21|scalar|rate|-|-|0|NA|-1|-1|L|NA|Rate at which I/Os to the disk were split into multiple I/O operation per seond.

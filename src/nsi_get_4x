@@ -1,0 +1,179 @@
+#!/bin/bash
+
+
+if [ $# -lt 8 -o $# -gt 11 ];then
+  echo "Usage: nsi_get_4x test-run-number wan-env(0/1) obj-type obj-status obj-selection loc-selection acc-selection query-type [phase] [limit] [offset]"
+  echo "Where: "
+  echo "  test-run-number is the test run number e.g. 1234"
+  echo "  wan-env 0 or 1. 1 is for displaying location and access info. GUI passes 1 if test was run with internet simulation (WAN_ENV 1) option to get location and access columns"
+  echo "  obj-type is 0 for URL, 1 for Page, 2 for transaction and 3 for session"
+  echo "  obj-status is 0 for Success only, positive for the Failure code, -1 for all failures -2 for All (Success and all failures)"
+  echo "  obj-selection: -1: All objects or Id (>=0) of the object. For example, if data is required for transaction HomePage and HomePage transaction Id is 2, then pass 2"
+  echo "  location-selection: All for all locations otherwise location name (e.g. NewYork)"
+  echo "  access-selection: All for all acesses or access name (e.g. DSL)"
+  echo "  query-type : 0 for all instances of the object: 1 for unique instances of the object"
+  echo "  phase is 1 for run phase only and 0 for complete test duration. Run phase is application to simple and scenario based schedule only. 0 is default"
+  echo " Limit: This is the number of results returned by query statment (e.g. 10 it will show first 10 records)"
+  echo " Offset: This is used to skip rows as specified by offset (e.g suppose you wanted to show results 11-20 then you can use offset 10)"
+  exit 1
+fi
+
+NUM_ARG=$#
+TRNUM=$1
+
+if [ "XX" == "XX$NS_WDIR" ]
+then
+  NS_WDIR=/home/cavisson/work
+fi
+
+. $NS_WDIR/bin/nsi_db_utils
+set_query_files $TRNUM
+
+if [ $# -eq 8 ];then
+	RPO=0
+else
+	RPO=$9
+fi
+
+
+# Check if limit argument is given or not. It will limit number of rows to max this number
+LIMIT=""
+if [ $NUM_ARG -gt 9 ];then
+  LIMIT="LIMIT ${10}"
+#  echo "Limit is $LIMIT"
+fi 
+
+# Check if Offset argument is given or not. This is used to skip rows as specified by offset.
+# For example, if offset is 1, then first row is skipped. If offset is 100, then first 100 rows are skipped
+OFFSET=""
+if [ $NUM_ARG -gt 10 ];then
+  OFFSET="OFFSET ${11}"
+#  echo "Offset is $OFFSET"
+fi 
+
+SELECT="select"
+GROUP="GROUP BY"
+
+#Add obj name
+if [ $3 -eq 0 ];then
+    OBJ="UrlRecord_$1"
+    SELECT="$SELECT SessionName AS \"Session Name\", PageName AS \"Page Name\", URLName AS \"URL Name\""
+    SEL="$SEL SessionName, PageName, URLName"
+    FROM="FROM  URLRecord_$1, SessionTable_$1, PageTable_$1, URLTable_$1"
+    WHERE="WHERE UrlRecord_$1.SessionIndex = SessionTable_$1.SessionIndex
+      AND UrlRecord_$1.PageIndex = PageTable_$1.PageIndex
+      AND URLRecord_$1.URLIndex = URLTable_$1.URLIndex"
+#    if [ $2 -eq 1 ];then
+        WHERE="$WHERE AND URLRecord_$1.SessionInstance = SessionRecord_$1.SessionInstance
+      	AND URLRecord_$1.ChildIndex = SessionRecord_$1.ChildIndex"
+        FROM="$FROM,  SessionRecord_$1"
+#    fi 
+    INST="UrlIndex"
+elif [ $3 -eq 1 ];then
+    OBJ="PageRecord_$1"
+    SELECT="$SELECT SessionName AS \"Session Name\", PageName AS \"Page Name\""
+    SEL="$SEL SessionName, PageName"
+    FROM="FROM  PageRecord_$1, SessionTable_$1, PageTable_$1"
+    WHERE="WHERE PageRecord_$1.SessionIndex = SessionTable_$1.SessionIndex
+      AND PageRecord_$1.PageIndex = PageTable_$1.PageIndex
+      AND PageRecord_$1.EndTime <> 0"
+#    if [ $2 -eq 1 ];then
+        WHERE="$WHERE AND PageRecord_$1.SessionInstance = SessionRecord_$1.SessionInstance
+        AND PageRecord_$1.ChildIndex = SessionRecord_$1.ChildIndex"
+        FROM="$FROM,  SessionRecord_$1"
+#    fi 
+    INST="PageIndex"
+elif [ $3 -eq 2 ];then
+    OBJ="TransactionRecord_$1"
+    SELECT="$SELECT TransactionName AS \"Transaction\""
+    SEL="$SEL TransactionName"
+    FROM="FROM TransactionRecord_$1, TransactionTable_$1, SessionTable_$1"
+    WHERE="WHERE TransactionRecord_$1.SessionIndex = SessionTable_$1.SessionIndex
+      AND TransactionRecord_$1.TransactionIndex = TransactionTable_$1.TransactionIndex
+      AND TransactionRecord_$1.EndTime <> 0"
+#    if [ $2 -eq 1 ];then
+        WHERE="$WHERE AND TransactionRecord_$1.SessionInstance = SessionRecord_$1.SessionInstance
+        AND TransactionRecord_$1.ChildIndex = SessionRecord_$1.ChildIndex" 
+        FROM="$FROM,  SessionRecord_$1"
+#    fi 
+    INST="TransactionIndex"
+elif [ $3 -eq 3 ];then
+    OBJ="SessionRecord_$1"
+    SELECT="$SELECT SessionName AS \"Session Name\""
+    SEL="$SEL SessionName"
+    FROM="FROM  SessionRecord_$1, SessionTable_$1"
+    WHERE="WHERE SessionRecord_$1.SessionIndex = SessionTable_$1.SessionIndex
+	AND SessionRecord_$1.EndTime <> 0"
+    INST="SessionIndex"
+else
+    echo "Invalid object-type (valid values 0-3)"
+    exit 1
+fi
+
+if [ $RPO -eq 1 ];then
+	WHERE="$WHERE AND isRunPhase = true"
+fi
+
+#echo "Select is $SELECT"
+
+#Add Location/Access
+if [ $2 -eq 1 ];then
+    SELECT="$SELECT,  Location AS \"User Location\", Access AS \"User Access\""
+    SEL="$SEL,  Location, Access"
+fi
+
+#Add obj-Status selection
+if [ $4 -eq -1 ];then
+    WHERE="$WHERE AND $OBJ.Status > 0"
+elif [ $4 -gt -1 ];then
+    WHERE="$WHERE AND $OBJ.Status = $4"
+fi
+
+#Add obj selection
+if [ $5 -ge 0 ];then
+    WHERE="$WHERE AND $OBJ.$INST = $5"
+fi
+
+#Add Location Selection
+if [ $6 != "All" ];then
+    WHERE="$WHERE AND LOCATION = ""'"$6"'"
+fi
+
+#Add Access Selection
+if [ $7 != "All" ];then
+    WHERE="$WHERE AND ACCESS = ""'"$7"'"
+fi
+
+#Add instance coulmns
+if [ $8 -eq 0 ];then
+    if [ $3 -eq 0 ];then
+        SELECT="$SELECT, UserIndex AS \"User Id\", $OBJ.SessionInstance AS \"Session Id\", $OBJ.PageInstance AS \"Page Instance\", $OBJ.UrlIndex AS \"URL Index\", $OBJ.ChildIndex AS \"Child Index\", $OBJ.StartTime AS \"Start Time\", ($OBJ.EndTime-$OBJ.StartTime) AS \"Total Time\", $OBJ.Status AS \"Status\", HttpResponseCode AS \"HTTP Code\""
+        SEL="$SEL, UserIndex, $OBJ.SessionInstance, $OBJ.PageInstance, $OBJ.UrlIndex, $OBJ.ChildIndex, $OBJ.StartTime, ($OBJ.EndTime-$OBJ.StartTime) AS TotalTime, $OBJ.Status, HttpResponseCode"
+    elif [ $3 -eq 1 ];then
+        SELECT="$SELECT, UserIndex AS \"User Id\", $OBJ.SessionInstance AS \"Session Id\", $OBJ.PageInstance AS \"Page Instance\", $OBJ.ChildIndex AS \"Child Index\", $OBJ.StartTime AS \"Start Time\", ($OBJ.EndTime-$OBJ.StartTime) AS \"Total Time\", $OBJ.Status AS \"Status\""
+        SEL="$SEL, UserIndex, $OBJ.SessionInstance, $OBJ.PageInstance, $OBJ.ChildIndex, $OBJ.StartTime, ($OBJ.EndTime-$OBJ.StartTime) AS TotalTime, $OBJ.Status"
+    elif [ $3 -eq 2 ];then
+        SELECT="$SELECT, UserIndex AS \"User Id\", $OBJ.SessionInstance AS \"Session Id\", $OBJ.TxInstance AS \"Tx Instance\", $OBJ.ChildIndex AS \"Child Index\", $OBJ.StartTime AS \"Start Time\", ($OBJ.EndTime-$OBJ.StartTime) AS \"Total Time\", $OBJ.Status AS \"Status\""
+        SEL="$SEL, UserIndex, $OBJ.SessionInstance, $OBJ.TxInstance, $OBJ.ChildIndex, $OBJ.StartTime, ($OBJ.EndTime-$OBJ.StartTime) AS TotalTime, $OBJ.Status"
+    else
+        SELECT="$SELECT, UserIndex AS \"User Id\", $OBJ.SessionInstance AS \"Session Id\", $OBJ.ChildIndex AS \"Child Index\", $OBJ.StartTime AS \"Start Time\", ($OBJ.EndTime-$OBJ.StartTime) AS \"Total Time\", $OBJ.Status AS \"Status\""
+        SEL="$SEL, UserIndex, $OBJ.SessionInstance, $OBJ.ChildIndex, $OBJ.StartTime, ($OBJ.EndTime-$OBJ.StartTime) AS TotalTime, $OBJ.Status"
+    fi
+    ORDER="ORDER BY $OBJ.StartTime"
+    GROUP=""
+else
+    if [ $3 -eq 0 ];then
+        SELECT="$SELECT, $OBJ.Status AS \"Status\", HttpResponseCode AS \"HTTP Code\""
+        SEL="$SEL, $OBJ.Status, HttpResponseCode"
+    else	
+        SELECT="$SELECT, $OBJ.Status AS \"Status\""
+        SEL="$SEL, $OBJ.Status"
+    fi
+    GROUP="GROUP BY $SEL"
+    ORDER="ORDER BY $SEL"
+fi
+
+log_query
+run_ns_query
+show_query_result
+exit 0

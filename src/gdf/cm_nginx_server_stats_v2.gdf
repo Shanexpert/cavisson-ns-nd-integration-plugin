@@ -1,0 +1,14 @@
+Info|3.1|1|-|-|-1|-1|-
+Group|NGINX Resource Stats V2|10571|vector|11|0|NGINX Metrics|Tier>Server>Instance|NGINX Resource Stats Version 2 provides metrics related to connections and user's requests and responses.
+Graph|Nginx Client Active Connections|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of active (accepted) connections from clients, which includes all connections with the status Idle / Waiting, Reading, and Writing.
+Graph|Nginx Client Waiting/Idle Connections|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of connections when no data is currently being received by or sent to the client.
+Graph|Nginx Client Reading Connections|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of (accepted) connections from clients where nginx is reading the request.
+Graph|Nginx Client Writing Connections|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of connections from clients where nginx is writing a response back to the client.
+Graph|Nginx Client Waiting/Idle Connections (Pct)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Waiting/Idle connection percentage.
+Graph|Nginx Client Dropped Connections (Pct)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Dropped connection percentage.
+Graph|Nginx Client Requests/Sec|7|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of requests from clients since the nginx master process started per second.
+Graph|Nginx Client Requests/Connection|8|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of requests from clients since the nginx master process started per connection.
+Graph|Nginx Client Accepted Connections/Sec|9|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of accepted connections from clients since the nginx master process started per second.
+Graph|Nginx Client Handled Connections/Sec|10|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of handled connections from clients since the nginx master process started per second.
+Graph|Nginx Client Dropped Connections/Sec|11|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of dropped connections per second,Nginx ended the connection prior to successfully completing the request.
+

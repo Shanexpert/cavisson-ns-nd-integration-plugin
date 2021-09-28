@@ -1,0 +1,22 @@
+# --- GDF Version History ---
+#  1.0 - Initial version
+#  2.0 - Change done for match Long_data and Long_long_data to double
+#  3.0 - Changes done for Dynamic data in Execution GUI
+#  3.1 - Use future1 field of group line for Metric group name
+#
+#LAST_MAX_ASSIGNED_GRAPH_ID = 11
+#LAST_MODIFIED_DATE = 11/28/11 14:07:38
+Info|3.1|1|-|-|-1|-1|-
+Group|Weblogic Thread Pool Data|10083|vector|12|0|Weblogic Metrics|Tier>Server>Instance|This is used to monitor the self-tuning queue
+Graph|Completed Request Count|1|scalar|sample|-|-|0|A|-1|-1|M|NA|The number of completed requests in the priority queue.
+Graph|Execute Thread Idle Count|2|scalar|sample|-|-|0|A|-1|-1|H|NA|The number of idle threads in the pool. This count does not include standby threads and stuck threads. The count indicates threads that are ready to pick up new work when it arrives.
+Graph|Execute Thread Total Count|3|scalar|sample|-|-|0|A|-1|-1|H|NA|The total number of threads in the pool.
+Graph|Hogging Thread Count|4|scalar|sample|-|-|0|A|-1|-1|H|NA|The threads that are being hogged by a request right now. These threads will either be declared as stuck after the configured timeout or will return to the pool before that. The self-tuning mechanism will backfill if necessary.
+Graph|Min Threads Constraints Completed|5|scalar|sample|-|-|0|A|-1|-1|L|NA|Number of requests with min threads constraint picked up out of order for execution immediately since their min threads requirement was not met. This does not include the case where threads are idle during schedule.
+Graph|Min Threads Constraints Pending|6|scalar|sample|-|-|0|A|-1|-1|L|NA|Number of requests that should be executed now to satisfy the min threads requirement.
+Graph|Pending User Request Count|7|scalar|sample|-|-|0|A|-1|-1|H|NA|The number of pending user requests in the priority queue. The priority queue contains requests from internal subsystems and users. This is just the count of all user requests.
+Graph|Queue Length|8|scalar|sample|-|-|0|A|-1|-1|H|NA|The number of pending requests in the priority queue. This is the total of internal system requests and user requests.
+Graph|Shared Capacity For Work Managers|9|scalar|sample|-|-|0|A|-1|-1|L|NA|Maximum amount of requests that can be accepted in the priority qeueue. Note that a request with higher priority will be accepted in place of a lower priority request already in the queue even after the threshold is reached. The lower priority request is kept waiting in the queue till all high priority requests are executed. Also note that further enqueues of the low priority requests are rejected right away.
+Graph|Standby Thread Count|10|scalar|sample|-|-|0|A|-1|-1|L|NA|The number of threads in the standby pool. Threads that are not needed to handle the present work load are designated as standby and added to the standby pool. These threads are activated when more threads are needed.
+Graph|Throughput|11|scalar|sample|-|-|0|A|-1|-1|L|NA|The mean number of requests completed per second
+Graph|Stuck Thread count|12|scalar|sample|-|-|0|A|-1|-1|L|NA|The number of thread that are considers stuck on the basis of any stuck thread constraints.

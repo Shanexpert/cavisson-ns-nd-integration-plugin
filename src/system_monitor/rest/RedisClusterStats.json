@@ -1,0 +1,14 @@
+{
+  "metaData": "Tier>Server>Instance",
+  "agent-type": "CMON",
+  "program-name": "cm_generic_rest_monitor",
+  "mhp": "0",
+  "cfg": ".system/rest/RedisClusterStats.xml.enc",
+  "custom-mon-name": "RedisClusterStats",
+  "pgm-type": "java",
+  "options": "",
+  "gdf-name": "cm_cav_rest_redis_cluster_stats.gdf",
+  "type": "rest",
+  "category": "Redis",
+  "djn": "GenericRestMonitor.json"
+}

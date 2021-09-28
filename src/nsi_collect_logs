@@ -1,0 +1,267 @@
+#!/bin/bash
+
+# This shell is used to collect following information :
+# i.   Build Info 
+# ii.  Test Run Details   
+# iii. Memory and Disk Info			      
+# iv.  top,iotop details		
+# v.   Configuration files: site.env,server.xml,web.xml	
+# vi.  Thread Dump,Heap Dump of tomcat process	       
+# vii. logs: rtgDebug, rtgError,catalina.out,tomcat access log,guiDebug.log,guiError.log,Tomcat GC File
+#       lps logs, nd logs, ns logs
+# update history: 22/06/2018 : abhishek : root to cavisson migration
+
+USER=`whoami`
+if [ "X$USER" != "Xcavisson" ]; then
+   echo You are login from user : $USER
+   echo "Please Login from cavisson user to run this shell"
+   exit 1
+fi
+
+ctrl_count=0  
+ctrl_string=""  
+ctrl_list()  
+{
+   root_flag=$1
+   user_name=`whoami`
+   controller_list=`cat $CONTROLLER_CONFIG_FILE |grep -v '^#' |awk -F'|' '{if(NR!=1)print $1}'`
+   i=1
+   ctrl_name=`echo $controller_list |awk '{print $1}'`
+   while [ "X$ctrl_name" !=  "X" ];do
+     grep "^$user_name|" $HOME_DIR/$ctrl_name/users/user_profiles.dat>>/dev/null
+     if [ $? -eq 0 ] || [ $root_flag -eq 0 ];then
+       ctrl_count=`expr $ctrl_count + 1`
+       echo [$ctrl_count] $ctrl_name
+       ctrl_string="$ctrl_string$ctrl_name|"
+     fi
+     i=`expr $i + 1`
+     ctrl_name=`echo $controller_list |  awk -v "j=$i" '{print $j}'`
+   done
+}
+
+CONTROLLER_CONFIG_FILE="$HOME_DIR/etc/cav_controller.conf"
+if [ ! -f $CONTROLLER_CONFIG_FILE ];then
+   return
+fi
+
+echo "Please enter the controller name for which you want to collect logs information"
+if [ `id -u` -eq 0 ];then
+   ctrl_list 0
+else
+   ctrl_list 1
+fi
+echo " "
+echo " "
+## Set trap for Signal Ctrl+C
+trap 'exit -1'  2
+read CTRL_NAME
+while [ "XX$CTRL_NAME" = "XX" ];do
+    echo "Entered controller name does not exist"
+    echo "please Re-enter controller name"
+    read CTRL_NAME
+done
+   echo $CTRL_NAME |grep '^[0-9]*$' >>/dev/null
+   if [ $? -eq 0 ];then
+      CTRL_NAME=`echo $ctrl_string | awk -v var=$CTRL_NAME -F '|' '{if(var<NF){print $(var)}else{print var}}'`
+   fi
+   CHECK_CTRL_NAME=`cat $CONTROLLER_CONFIG_FILE | awk -F '|' '{print $1}'|grep -w "$CTRL_NAME"`
+   while [ "XX$CHECK_CTRL_NAME" != "XX$CTRL_NAME" ]
+   do
+      echo "Entered controller name does not exist"
+      echo "please Re-enter controller name"
+      read CTRL_NAME
+      echo $CTRL_NAME |grep '^[0-9]*$' >>/dev/null
+      if [ $? -eq 0 ];then
+         CTRL_NAME=`echo $ctrl_string | awk -v var=$CTRL_NAME -F '|' '{if(var<NF){print $(var)}else{print var}}'`
+      fi
+      CHECK_CTRL_NAME=`cat $CONTROLLER_CONFIG_FILE | awk -F '|' '{print $1}'|grep -w "$CTRL_NAME"`
+   done
+
+## Reset the trap for Signal Ctrl+C
+PID=""
+trap 2
+Controller_Name=$CTRL_NAME
+NS_WDIR=$HOME_DIR/$Controller_Name
+echo -e "Working directory is: $NS_WDIR"
+
+foldertimestamp=$(date +%Y%m%d)
+subfoldertimestamp=$(date +%Y%m%d%H%M%S)
+Dir_timestamp=$NS_WDIR/webapps/netstorm/temp/cav_logs_${foldertimestamp}/cav_logs_${subfoldertimestamp}
+mkdir -p  $Dir_timestamp
+
+nsu_get_version > $Dir_timestamp/BuildInfo
+
+LOG_PATH=$Dir_timestamp/TestRunDetailsInfo_$(date +%Y%m%d%H%M%S)
+TR_NUM=`nsu_show_netstorm | tail -1 | awk '{print $1}'`
+if [ "XX$TR_NUM" == "XX" ];then 
+   echo " Test is not running on controller: $Controller_Name" >> $LOG_PATH
+else 
+   echo -e "Running Test Run Number = $TR_NUM" >> $LOG_PATH
+   ## Get the current parition from CurPartitionIdx keyword instead of last time from .curPartition file(Bug - 80222)
+   #CUR_PART=`cat $NS_WDIR/logs/TR$TR_NUM/.curPartition | tail -1 | cut -d '=' -f2`
+   CUR_PART=`cat $NS_WDIR/logs/TR$TR_NUM/.curPartition | grep CurPartitionIdx | cut -d '=' -f2`
+   echo -e "Current Partition = $CUR_PART" >> $LOG_PATH
+   cd $NS_WDIR/logs/TR$TR_NUM/$CUR_PART
+   COUNT=`ls $NS_WDIR/logs/TR$TR_NUM/$CUR_PART/testrun.gdf* | grep -v "diff" | wc -l`
+   if [ $COUNT -eq 1 ]; then
+      GDF_COUNT=1
+   else
+      COUNT=`expr $COUNT - 1`
+      flag=`expr $COUNT \/ 2`
+      GDF_COUNT=`expr $flag + 1`
+   fi
+   echo -e "Total testrun.gdf = $GDF_COUNT" >> $LOG_PATH
+   CUR_GDF=`ls testrun.gdf* | grep -v "diff" | sort | tail -1`
+   echo -e "Current testrun.gdf = $CUR_GDF" >> $LOG_PATH
+   PKT_SIZE_FIRST_GDF=`head -1 testrun.gdf |cut -d '|' -f6`
+   echo -e "packet size in first gdf: testrun.gdf = $PKT_SIZE_FIRST_GDF Bytes" >> $LOG_PATH
+   PKT_SIZE_CUR_GDF=`head -1 $CUR_GDF | cut -d '|' -f6`
+   echo -e "packet size in current gdf: $CUR_GDF = $PKT_SIZE_CUR_GDF Bytes" >> $LOG_PATH
+   SAMPLE_INTERVAL=`head -1 $CUR_GDF | cut -d '|' -f7`
+   echo -e "Sample Interval in current Running Test Run: $SAMPLE_INTERVAL ms" >> $LOG_PATH
+   cp $CUR_GDF $Dir_timestamp/$CUR_GDF
+
+   #copying ns logs file
+   echo -e "************* Saving ns logs file *****************"
+   LOG_PATH=$Dir_timestamp/ns_logs_$(date +%Y%m%d%H%M%S)
+   if [ ! -d $LOG_PATH ]; then
+      mkdir $LOG_PATH
+   fi
+   cp $NS_WDIR/webapps/logs/TR$TR_NUM/$CUR_PART/ns_logs/*.log ${LOG_PATH}/
+   
+   #copying nd logs file
+   echo -e "************* Saving nd logs file *****************"
+   LOG_PATH=$Dir_timestamp/nd_logs_$(date +%Y%m%d%H%M%S)
+   if [ ! -d $LOG_PATH ]; then
+     mkdir $LOG_PATH
+   fi
+   cp -r $NS_WDIR/webapps/logs/TR$TR_NUM/$CUR_PART/nd/logs/. ${LOG_PATH}/
+fi
+
+echo -e "******** Saving user details ***********************"
+nsu_show_user |cut -d '|' -f1 |grep -Ew "cavisson|netstorm|admin|ndeadmin|guest" > $Dir_timestamp/UserInfoDetails
+echo -e "******** Saving Memory and Disk Info Output ********"
+LOG_PATH=$Dir_timestamp/MemoryDiskInfo_$(date +%Y%m%d%H%M%S).txt
+echo -e "**** free -lg ****" > $LOG_PATH
+free -lg >> $LOG_PATH
+echo -e "**** df -h ****" >> $LOG_PATH
+df -h >> $LOG_PATH
+echo -e "**** df -i ****" >> $LOG_PATH
+df -i >> $LOG_PATH
+
+PID=`ps -lef | grep tomcat | grep -w $Controller_Name | grep bootstrap.jar | awk '{print $4}'`
+echo -e "Tomcat PID of Controller $Controller_Name is: $PID"
+if [ "XX$PID" == XX ];then
+   echo "Tomcat for $Controller_Name controller is not running."
+   exit 0
+fi
+
+echo -e "******** Saving netstat command ouptput for PID: $PID of tomcat ********"
+sudo netstat -nap | grep $PID > $Dir_timestamp/netstatInfo
+echo -e "******** Saving top output ********"
+top -b -n2 > $Dir_timestamp/top_$(date +%Y%m%d%H%M%S).txt
+
+echo -e "******** Saving iotop output ********"
+sudo iotop -b -n2 > $Dir_timestamp/iotop_$(date +%Y%m%d%H%M%S).txt
+
+for i in `seq 1 3`
+do 
+   echo -e "******** Taking thread dump gracefully using command: jstack -l of tomcat process of Controller: $Controller_Name with PID - $PID ********"
+   jstack -l $PID > $Dir_timestamp/threaddump_jstack_l_$(date +%Y%m%d%H%M%S).txt 2>/dev/null
+   sleep 10
+done
+
+for i in `seq 1 2`
+do
+   echo -e "******** Taking thread dump forcefully using command: jstack -F of tomcat process of Controller: $Controller_Name with PID - $PID ********"
+   jstack -F $PID > $Dir_timestamp/threaddump_jstack_F_$(date +%Y%m%d%H%M%S).txt 2>/dev/null
+   sleep 10
+done
+
+for i in `seq 1 3`
+do
+   echo -e "******** Taking thread dump using jcmd of tomcat process of Controller: $Controller_Name with PID - $PID ********"
+   jcmd  $PID Thread.print > $Dir_timestamp/threaddump_jcmd_$(date +%Y%m%d%H%M%S).txt 2>/dev/null
+   sleep 10
+done
+
+echo -e "******** Taking heap dump summary of tomcat process of Controller: $Controller_Name with PID - $PID ********"
+if [ "X$JAVA_HOME" != "X" ];then
+  sudo $JAVA_HOME/bin/jmap -heap $PID > $Dir_timestamp/heapdump_$(date +%Y%m%d%H%M%S).txt 2>/dev/null
+else
+  sudo jmap -heap $PID > $Dir_timestamp/heapdump_$(date +%Y%m%d%H%M%S).txt 2>/dev/null
+fi
+
+echo -e "******** Saving java memory histogram of tomcat process of Controller: $Controller_Name with PID - $PID ********"
+if [ "X$JAVA_HOME" != "X" ];then
+  $JAVA_HOME/bin/jmap -histo $PID > $Dir_timestamp/histo_$(date +%Y%m%d%H%M%S).txt 2>/dev/null
+else
+  jmap -histo $PID > $Dir_timestamp/histo_$(date +%Y%m%d%H%M%S).txt 2>/dev/null
+fi
+
+echo -e "************* Saving site.env file *************"
+cp $NS_WDIR/sys/site.env $Dir_timestamp/site.env
+
+echo -e "************* Saving config.ini file *************"
+cp $NS_WDIR/webapps/sys/config.ini $Dir_timestamp/config.ini
+
+echo -e "************* Saving Tomcat GC file *************" 
+GCFilePATH=`grep "^export TOMCAT_OPTS" $NS_WDIR/sys/site.env | awk -F 'Xloggc:' '{print $2}' | awk -F ':| ' '{print $1}' | tr -d '"'`
+echo " ***** GCFile Path: $GCFilePATH *****" > $Dir_timestamp/TomcatGC_$(date +%Y%m%d%H%M%S).log
+cp $GCFilePATH $Dir_timestamp/TomcatGC_$(date +%Y%m%d%H%M%S).log
+
+echo -e "************* Saving rtgDebug.log & rtgError.log file *************"
+cp $NS_WDIR/webapps/netstorm/logs/rtgDebug.log $Dir_timestamp/rtgDebug_$(date +%Y%m%d%H%M%S).log
+cp $NS_WDIR/webapps/netstorm/logs/rtgError.log $Dir_timestamp/rtgError_$(date +%Y%m%d%H%M%S).log
+
+echo -e "************* Saving guiDebug.log & guiError.log file *************"
+cp $NS_WDIR/webapps/netstorm/logs/guiDebug.log $Dir_timestamp/guiDebug_$(date +%Y%m%d%H%M%S).log
+cp $NS_WDIR/webapps/netstorm/logs/guiError.log $Dir_timestamp/guiError_$(date +%Y%m%d%H%M%S).log
+
+echo -e "************* Saving KPIDCServer.log.0 & KPIDCError.log.0 file *************"
+cp $NS_WDIR/webapps/netstorm/logs/KPIDCServer.log.0 $Dir_timestamp/KPIDCServer_$(date +%Y%m%d%H%M%S).log
+cp $NS_WDIR/webapps/netstorm/logs/KPIDCError.log.0 $Dir_timestamp/KPIDCError_$(date +%Y%m%d%H%M%S).log
+
+echo -e "************* Saving KPIServer.log.0 & KPIError.log.0 file *************"
+cp $NS_WDIR/webapps/netstorm/logs/KPIServer.log.0 $Dir_timestamp/KPIServer_$(date +%Y%m%d%H%M%S).log
+cp $NS_WDIR/webapps/netstorm/logs/KPIError.log.0 $Dir_timestamp/KPIError_$(date +%Y%m%d%H%M%S).log
+
+echo -e "************* Saving serverActionLogs  *************"
+cp $NS_WDIR/webapps/netstorm/logs/.serverActionLogs/.dashboardserverlog.csv $Dir_timestamp/dashboardserverlog_$(date +%Y%m%d%H%M%S).csv
+cp $NS_WDIR/webapps/netstorm/logs/.serverActionLogs/.accessControlLogs.csv $Dir_timestamp/accessControlLogs_$(date +%Y%m%d%H%M%S).csv
+
+echo -e "************* Saving tomcat log file *************"
+cp $NS_WDIR/apps/apache-tomcat-7*/conf/server.xml $Dir_timestamp/server.xml
+cp $NS_WDIR/apps/apache-tomcat-7*/conf/web.xml $Dir_timestamp/web.xml
+tail -n 5K $NS_WDIR/apps/apache-tomcat-7*/logs/catalina.out >$Dir_timestamp/catalina_$(date +%Y%m%d%H%M%S).out
+tomcat_txt_file_path=`ls $NS_WDIR/apps/apache-tomcat-7*/logs/localhost_access_log*|sort|tail -1`
+cp $tomcat_txt_file_path $Dir_timestamp/tomcat_access_log_$(date +%Y%m%d%H%M%S).txt    
+
+echo -e "************* Saving kernel logs file *************"
+cp /var/log/kern.log $Dir_timestamp/kern_$(date +%Y%m%d%H%M%S).log 2>/dev/null
+
+#copying lps logs file
+
+echo -e "************* Saving lps logs file ****************"
+cp $NS_WDIR/lps/logs/lps.log $Dir_timestamp/lps_log_$(date +%Y%m%d%H%M%S).log
+
+echo -e 'Do you want to save full Heap Dump -(Yes/No) ?'
+read msg
+if [ "X$msg" = "XYes" ] || [ "X$msg" = "Xyes" ] || [ "X$msg" = "XYES" ]
+then
+ DIRECTORY=/home/cavisson/HeapDump
+ if [ ! -d "$DIRECTORY" ]; then
+    mkdir -p $DIRECTORY
+ fi
+echo -e "************* Saving full Heap Dump *************"   
+  if [ "X$JAVA_HOME" != "X" ];then
+     $JAVA_HOME/bin/jmap -dump:format=b,file=/home/cavisson/HeapDump/heap_$(date +%Y%m%d%H%M%S).hprof $PID 2>/dev/null 
+  else
+     jmap -dump:format=b,file=/home/cavisson/HeapDump/heap_$(date +%Y%m%d%H%M%S).hprof $PID 2>/dev/null
+  fi
+
+echo -e "**** Heap Dump is saved on path /home/cavisson/HeapDump *****" 
+
+fi
+
+echo -e "All logs are saved on path $Dir_timestamp"

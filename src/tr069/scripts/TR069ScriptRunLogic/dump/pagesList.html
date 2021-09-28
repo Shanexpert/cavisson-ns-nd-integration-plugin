@@ -1,0 +1,89 @@
+<!-- Netstorm GUI4  -->
+<html>
+<head><title>Page Response Snapshots for recorded script</title></head>
+<!-- Title of the screen -->
+  <link rel="stylesheet" href="/netstorm/css/Netstorm.css" type="text/css" /link>
+  <script language="javascript">
+
+    function showRecordedPageOnFrame(url)
+    {
+      parent.Dump.location = url;
+    }
+    //These functions highlight the row when we pass/hover on current row
+    function over(row)
+    {
+      row.oldBackgroundColor = row.style.backgroundColor;
+      row.style.backgroundColor = 'FFFFCC';
+    }
+
+    function out(row)
+    {
+      row.style.backgroundColor = row.oldBackgroundColor;
+    }
+
+</script>
+</head>
+<body onLoad=showRecordedPageOnFrame('127.0.0.1/ns_tr069_cpe_invoke_inform')>
+  <form id="form1" name="form1" method="post" action="">
+       <table border="0" cellpadding="0" cellspacing="0" id="header">
+       <tr><td width="95%" align="left" valign="top"><img src="/netstorm/images/logo.png"/></td>
+       <tr><td align="center" colspan="2">
+       <table width="98%" cellpadding="0" cellspacing="0">
+       <tr ><td colspan="2" align="left" class="screenTitle">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Response Page Snapshots </td></tr></table></td></tr></table><table  cellpadding="0" cellspacing="0" id="text">
+       <tr><td align="center">
+       <br /><br /></table>
+  <table cellpadding="0" cellspacing="0" class="table" width="98%" align="center" max-width=1200px>
+       <td width="970" align="center" class="tableTitle">Page Dump Table</td>       </tr><tr>
+       <td colspan="2" align="center" valign="top">
+       <table width =" 100%" border="0"  align =" center" cellpadding =" 0" cellspacing =" 0" id="table02" style="width:100%; display;">
+       <tr align="center" class="tableHeader">
+       <td height="20"><b>Page Number</b></td>
+       <td><b>Page Name</b></td>
+ <tr align="center" class="tableRowOdd" onmouseover='over(this);' onmouseout='out(this);'>
+     <td height="20" valign =" middle"><a href=javascript:showRecordedPageOnFrame('./headers/page_1.txt')>01</a></td>
+<td valign =" middle" ><a href=javascript:showRecordedPageOnFrame('./127.0.0.1/ns_tr069_cpe_invoke_inform')>ns_tr069_cpe_invoke_inform</a></td>
+ <tr align="center" class="tableRowEven" onmouseover='over(this);' onmouseout='out(this);'>
+     <td height="20" valign =" middle"><a href=javascript:showRecordedPageOnFrame('./headers/page_2.txt')>02</a></td>
+<td valign =" middle" ><a href=javascript:showRecordedPageOnFrame('./127.0.0.1/ns_tr069_cpe_invite_rpc')>ns_tr069_cpe_invite_rpc</a></td>
+ <tr align="center" class="tableRowOdd" onmouseover='over(this);' onmouseout='out(this);'>
+     <td height="20" valign =" middle"><a href=javascript:showRecordedPageOnFrame('./headers/page_3.txt')>03</a></td>
+<td valign =" middle" ><a href=javascript:showRecordedPageOnFrame('./127.0.0.1/NS_TR069_GET_RPC_METHODS')>NS_TR069_GET_RPC_METHODS</a></td>
+ <tr align="center" class="tableRowEven" onmouseover='over(this);' onmouseout='out(this);'>
+     <td height="20" valign =" middle"><a href=javascript:showRecordedPageOnFrame('./headers/page_4.txt')>04</a></td>
+<td valign =" middle" ><a href=javascript:showRecordedPageOnFrame('./127.0.0.1/NS_TR069_GET_PARAMETER_NAMES')>NS_TR069_GET_PARAMETER_NAMES</a></td>
+ <tr align="center" class="tableRowOdd" onmouseover='over(this);' onmouseout='out(this);'>
+     <td height="20" valign =" middle"><a href=javascript:showRecordedPageOnFrame('./headers/page_5.txt')>05</a></td>
+<td valign =" middle" ><a href=javascript:showRecordedPageOnFrame('./127.0.0.1/NS_TR069_GET_PARAMETER_VALUES')>NS_TR069_GET_PARAMETER_VALUE</a></td>
+ <tr align="center" class="tableRowEven" onmouseover='over(this);' onmouseout='out(this);'>
+     <td height="20" valign =" middle"><a href=javascript:showRecordedPageOnFrame('./headers/page_6.txt')>06</a></td>
+<td valign =" middle" ><a href=javascript:showRecordedPageOnFrame('./127.0.0.1/NS_TR069_GET_PARAMETER_ATTRIBUTES')>NS_TR069_GET_PARAMETER_ATTRI</a></td>
+ <tr align="center" class="tableRowOdd" onmouseover='over(this);' onmouseout='out(this);'>
+     <td height="20" valign =" middle"><a href=javascript:showRecordedPageOnFrame('./headers/page_7.txt')>07</a></td>
+<td valign =" middle" ><a href=javascript:showRecordedPageOnFrame('./127.0.0.1/NS_TR069_SET_PARAMETER_VALUES')>NS_TR069_SET_PARAMETER_VALUE</a></td>
+ <tr align="center" class="tableRowEven" onmouseover='over(this);' onmouseout='out(this);'>
+     <td height="20" valign =" middle"><a href=javascript:showRecordedPageOnFrame('./headers/page_8.txt')>08</a></td>
+<td valign =" middle" ><a href=javascript:showRecordedPageOnFrame('./127.0.0.1/NS_TR069_SET_PARAMETER_ATTRIBUTES')>NS_TR069_SET_PARAMETER_ATTRI</a></td>
+ <tr align="center" class="tableRowOdd" onmouseover='over(this);' onmouseout='out(this);'>
+     <td height="20" valign =" middle"><a href=javascript:showRecordedPageOnFrame('./headers/page_9.txt')>09</a></td>
+<td valign =" middle" ><a href=javascript:showRecordedPageOnFrame('./127.0.0.1/NS_TR069_ADD_OBJECT')>NS_TR069_ADD_OBJECT</a></td>
+ <tr align="center" class="tableRowEven" onmouseover='over(this);' onmouseout='out(this);'>
+     <td height="20" valign =" middle"><a href=javascript:showRecordedPageOnFrame('./headers/page_10.txt')>10</a></td>
+<td valign =" middle" ><a href=javascript:showRecordedPageOnFrame('./127.0.0.1/NS_TR069_DELETE_OBJECT')>NS_TR069_DELETE_OBJECT</a></td>
+ <tr align="center" class="tableRowOdd" onmouseover='over(this);' onmouseout='out(this);'>
+     <td height="20" valign =" middle"><a href=javascript:showRecordedPageOnFrame('./headers/page_11.txt')>11</a></td>
+<td valign =" middle" ><a href=javascript:showRecordedPageOnFrame('./127.0.0.1/NS_TR069_DOWNLOAD')>NS_TR069_DOWNLOAD</a></td>
+ <tr align="center" class="tableRowEven" onmouseover='over(this);' onmouseout='out(this);'>
+     <td height="20" valign =" middle"><a href=javascript:showRecordedPageOnFrame('./headers/page_12.txt')>12</a></td>
+<td valign =" middle" ><a href=javascript:showRecordedPageOnFrame('./127.0.0.1/NS_TR069_REBOOT')>NS_TR069_REBOOT</a></td>
+ </td></tr>
+ </table>
+ </table>
+ <table width="100%" border="0" cellspacing="0" cellpadding="0">
+ <br>
+<br>
+<tr>
+ </table>
+<br/>
+</form>
+</body>
+</html>

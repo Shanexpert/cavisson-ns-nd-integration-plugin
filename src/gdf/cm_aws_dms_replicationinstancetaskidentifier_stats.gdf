@@ -1,0 +1,16 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS DMS ReplicationInstanceTaskIdentifier Stats|11360|vector|4|0|AWS Metrics|AccountName>Region>ReplicationInstanceIdentifier>ReplicationTaskIdentifier|AWS Database Migration Service (AWS DMS) is a web service that you can use to migrate data from a source data store to a target data store. These two data stores are called endpoints.
+
+Graph|AWS DMS CPU Utilization (%)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The amount of CPU used.
+
+Graph|AWS DMS Memory Allocated|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The amount of memory allocated.
+
+Graph|AWS DMS Memory Usage|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The amount of memory usage
+
+Graph|AWS DMS CPU Allocated|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The amount of cpu allocated.
+

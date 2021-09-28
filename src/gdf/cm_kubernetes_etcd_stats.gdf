@@ -1,0 +1,99 @@
+Info|3.1|1|-|-|-1|-1|-
+Group|Kubernetes Etcd Stats|14151|vector|96|0|Kubernetes Control Plane Metrics|Cluster>MasterNode|Kubernetes Etcd Stats
+
+Graph|Etcd MVCC DB Keys Compacted/Sec|1|scalar|sample_4B|-|CumToPS|0|NA|-1|-1|H|NA|DB keys compacted.
+Graph|Etcd MVCC DB Compaction Request Pause/Sec|2|scalar|sample_4B|-|CumToPS|0|NA|-1|-1|M|NA|DB Compaction Request Pause per sec
+Graph|Etcd MVCC DB Compaction Pause Time(ms)|3|scalar|sample_4B_1000|-|None|0|NA|-1|-1|M|NA|DB Compaction Pause Time(ms) in a sample
+Graph|Etcd MVCC DB Compaction Request/Sec|4|scalar|sample_4B|-|CumToPS|0|NA|-1|-1|H|NA|DB Compaction Request per sec
+Graph|Etcd MVCC DB Compaction Time (ms)|5|scalar|sample_4B_1000|-|None|0|NA|-1|-1|H|NA|DB Compaction Time (ms) in a sample
+Graph|Etcd MVCC Delete/Sec|6|scalar|sample_4B|-|CumToPS|0|NA|-1|-1|H|NA|Deletes per sec
+Graph|Etcd MVCC Events/Sec|7|scalar|sample_4B|-|CumToPS|0|NA|-1|-1|H|NA|Events per sec
+Graph|Etcd MVCC Index Compaction Pause Request/Sec|8|scalar|sample_4B|-|CumToPS|0|NA|-1|-1|M|NA|Index Compaction Pause Request per sec
+Graph|Etcd MVCC Index Compaction Pause Time(ms)|9|scalar|sample_4B_1000|-|None|0|NA|-1|-1|M|NA|Index Compaction Pause Time(ms) in a sample.
+Graph|Etcd MVCC Keys|10|scalar|sample_4B|-|None|0|NA|-1|-1|H|NA|Count of keys.
+Graph|Etcd MVCC Pending Events|11|scalar|sample_4B|-|None|0|NA|-1|-1|H|NA|Count of pending events to be sent.
+Graph|Etcd MVCC Put/Sec|12|scalar|sample_4B|-|CumToPS|0|NA|-1|-1|H|NA|Puts per sec
+Graph|Etcd MVCC Range/Sec|13|scalar|sample_4B|-|CumToPS|0|NA|-1|-1|M|NA|Ranges per sec
+Graph|Etcd MVCC Slow Watcher|14|scalar|sample_4B|-|None|0|NA|-1|-1|L|NA|Count of unsynced slow watchers.
+Graph|Etcd Txn/Sec|15|scalar|sample_4B|-|CumToPS|0|NA|-1|-1|H|NA|Txns per sec
+Graph|Etcd MVCC Watch Stream|16|scalar|sample_4B|-|None|0|NA|-1|-1|H|NA|Count of watch streams.
+Graph|Etcd MVCC Watcher|17|scalar|sample_4B|-|None|0|NA|-1|-1|H|NA|Count of watchers.
+Graph|Etcd Server Expired Leases/Sec|18|scalar|sample_4B|-|CumToPS|0|NA|-1|-1|H|NA|Expired leases per sec
+Graph|Etcd Snap Marshalling Request/Sec|19|scalar|sample_4B|-|CumToPS|0|NA|-1|-1|H|NA|Marshalling request per sec called by snapshot.
+Graph|Etcd Snap Marshalling Time(ms)|20|scalar|sample_4B_1000|-|None|0|NA|-1|-1|H|NA|Marshalling Time (ms) called by snapshot.
+Graph|Etcd Snap Save Request/Sec|21|scalar|sample_4B|-|CumToPS|0|NA|-1|-1|H|NA|Snap Save Request per sec called by snapshot.
+Graph|Etcd Snap Save Response Time(ms)|22|scalar|sample_4B_1000|-|None|0|NA|-1|-1|H|NA|Snap Save Average Response Time(ms) called by snapshot.
+Graph|Etcd Store Expires/Sec|23|scalar|sample_4B|-|CumToPS|0|NA|-1|-1|NA|NA|Count of expired keys per sec
+Graph|Etcd Store Reads/Sec|24|scalar|sample_4B|-|CumToPS|0|NA|-1|-1|H|NA|Count of reads per sec action by (get/getRecursive)
+Graph|Etcd Store Watch Requests/Sec|25|scalar|sample_4B|-|CumToPS|0|NA|-1|-1|H|NA|Count of incoming watch requests (new or reestablished) per sec
+Graph|Etcd Store Watchers|26|scalar|sample_4B|-|None|0|NA|-1|-1|H|NA|Count of currently active watchers.
+Graph|Etcd Store Writes/Sec|27|scalar|sample_4B|-|CumToPS|0|NA|-1|-1|H|NA|Count of writes (set/compare/Delete) per sec
+Graph|Etcd Disk Backend Commit Request/Sec|28|scalar|sample_4B|-|CumToPS|0|NA|-1|-1|H|NA|Request per Sec of Backend Commit
+Graph|Etcd Disk Backend Commit Response Time(ms)|29|scalar|sample_4B_1000|-|None|0|NA|-1|-1|H|NA|Average Response Time (ms) of Backend Commit
+Graph|Etcd Disk Backend Defrag Request/Sec|30|scalar|sample_4B|-|CumToPS|0|NA|-1|-1|H|NA|Request per Sec of backend defragmentation.
+Graph|Etcd Disk Backend Defrag Response Time(ms)|31|scalar|sample_4B_1000|-|None|0|NA|-1|-1|H|NA|Average Response Time(ms) of backend defragmentation.
+Graph|Etcd Disk Backend Snapshot Request/Sec|32|scalar|sample_4B|-|CumToPS|0|NA|-1|-1|H|NA|Request per Sec of Backend Snapshot
+Graph|Etcd Disk Backend Snapshot Response Time(ms)|33|scalar|sample_4B_1000|-|None|0|NA|-1|-1|H|NA|Average Response Time (ms) of Backend Snapshots.
+Graph|Etcd Disk Wal Fsync Request/Sec|34|scalar|sample_4B|-|CumToPS|0|NA|-1|-1|H|NA|Request per Sec of fsync called by wal.
+Graph|Etcd Disk Wal Fsync Response Time(ms)|35|scalar|sample_4B_1000|-|None|0|NA|-1|-1|H|NA|Average Response Time (ms) of fsync called by wal.
+Graph|Etcd GRPC Proxy Cache Keys|36|scalar|sample_4B|-|None|0|NA|-1|-1|H|NA|Count of keys/ranges cached.
+Graph|Etcd GRPC Proxy Cache Hits|37|scalar|sample_4B|-|None|0|NA|-1|-1|H|NA|Count of cache hits.
+Graph|Etcd GRPC Proxy Cache Misses|38|scalar|sample_4B|-|None|0|NA|-1|-1|H|NA|Count of cache misses.
+Graph|Etcd GRPC Proxy Events Coalescing/Sec|39|scalar|sample_4B|-|CumToPS|0|NA|-1|-1|H|NA|Count of events coalescing per sec
+Graph|Etcd GRPC Proxy Watchers Coalescing|40|scalar|sample_4B|-|None|0|NA|-1|-1|H|NA|Count of current watchers coalescing.
+Graph|Etcd MVCC Physical DB Size(MB)|41|scalar|sample_4B_1000|-|None|0|NA|-1|-1|H|NA|Total size(MB) of the underlying database physically allocated.
+Graph|Etcd MVCC Logical DB Size(MB)|42|scalar|sample_4B_1000|-|None|0|NA|-1|-1|H|NA|Total size(MB) of the underlying database logically in use
+Graph|Etcd MVCC Hash Request/Sec|43|scalar|sample_4B|-|CumToPS|0|NA|-1|-1|H|NA|Request per Sec of storage hash operation.
+Graph|Etcd MVCC Hash Response Time(ms)|44|scalar|sample_4B_1000|-|None|0|NA|-1|-1|H|NA|Average Response Time (ms) of storage hash operation.
+Graph|Etcd MVCC Hash Rev Request/Sec|45|scalar|sample_4B|-|CumToPS|0|NA|-1|-1|M|NA|Request per Sec of storage hash by revision operation.
+Graph|Etcd MVCC Hash Rev Response Time(ms)|46|scalar|sample_4B_1000|-|None|0|NA|-1|-1|M|NA|Average Response Time (ms) of storage hash by revision operation.
+Graph|Etcd Network Client GRPC Received Throughput(Mbps)|47|scalar|rate_4B_1000|-|CumToPS|0|NA|-1|-1|H|NA|Throughput(Mbps) received from grpc clients.
+Graph|Etcd Network Client GRPC Sent Throughput(Mbps)|48|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Throughput (Mbps) sent to grpc clients.
+Graph|Etcd Server Go Version|49|scalar|sample_4B|-|None|0|NA|-1|-1|L|NA|Which Go version server is running with. 1 for 'server_go_version' label with current version.
+Graph|Etcd Server Has Leader |50|scalar|sample_4B|-|None|0|NA|-1|-1|H|NA| Whether or not a leader exists. Values(1 is existence, 0 is not)
+Graph|Etcd Server Health Failures/Sec|51|scalar|sample_4B|-|CumToPS|0|NA|-1|-1|H|NA|Count of failed health checks per sec
+Graph|Etcd Server Health Success/Sec|52|scalar|sample_4B|-|CumToPS|0|NA|-1|-1|M|NA|Count of successful health checks per sec
+Graph|Etcd Server Heartbeat Failures/Sec|53|scalar|sample_4B|-|CumToPS|0|NA|-1|-1|H|NA|Count of leader heartbeat send failures (likely overloaded from slow disk) per sec
+Graph|Etcd Server Id|54|scalar|sample_4B|-|None|0|NA|-1|-1|L|NA|Value is 1 for 'server_id' label with current ID.
+Graph|Etcd Server IsLeader|55|scalar|sample_4B|-|None|0|NA|-1|-1|H|NA|Whether or not this member is a leader. Value is 1 if it is Leader
+Graph|Etcd Server Leader Changes/Sec|56|scalar|sample_4B|-|CumToPS|0|NA|-1|-1|M|NA|Count of leader changes seen per sec
+Graph|Etcd Server Proposals Applied|57|scalar|sample_4B|-|None|0|NA|-1|-1|M|NA|Count of consensus proposals applied.
+Graph|Etcd Server Proposals Committed|58|scalar|sample_4B|-|None|0|NA|-1|-1|H|NA|Count of consensus proposals committed.
+Graph|Etcd Server Proposals Failed/Sec|59|scalar|sample_4B|-|CumToPS|0|NA|-1|-1|H|NA|Count of failed proposals seen per sec
+Graph|Etcd Server Proposals Pending|60|scalar|sample_4B|-|None|0|NA|-1|-1|H|NA|Count of pending proposals to commit.
+Graph|Etcd Server Backend Storage Quota(MB)|61|scalar|sample_4B_1000|-|None|0|NA|-1|-1|H|NA|Current backend storage quota size in MB.
+Graph|Etcd Server Read Indexes Failed/Sec|62|scalar|sample_4B|-|CumToPS|0|NA|-1|-1|H|NA|Count of failed read indexes seen per sec
+Graph|Etcd Server Slow Apply/Sec|63|scalar|sample_4B|-|CumToPS|0|NA|-1|-1|H|NA|Count of slow apply requests (likely overloaded from slow disk) per sec.
+Graph|Etcd Server Slow Read Indexes/Sec|64|scalar|sample_4B|-|CumToPS|0|NA|-1|-1|H|NA|Count of pending read indexes not in sync with leader's or timed out read index requests.
+Graph|Etcd Server Snapshot In Progress|65|scalar|sample_4B|-|None|0|NA|-1|-1|H|NA|Value is 1 if the server is applying the incoming snapshot otherwise 0 
+Graph|Etcd Server Version IsCurrent|66|scalar|sample_4B|-|None|0|NA|-1|-1|H|NA|Which version is running. 1 for 'server_version' label with current version.
+Graph|Etcd Snap DB Fsync Request/Sec|67|scalar|sample_4B|-|CumToPS|0|NA|-1|-1|H|NA|Request per Sec of fsyncing .snap.db file.
+Graph|Etcd Snap DB Fsync Response Time(ms)|68|scalar|sample_4B_1000|-|None|0|NA|-1|-1|H|NA|Average Response Time(ms) of fsyncing .snap.db file.
+Graph|Etcd Snap DB Save Request/Sec|69|scalar|sample_4B|-|CumToPS|0|NA|-1|-1|M|NA|Request per Sec of v3 snapshot save.
+Graph|Etcd Snap DB Save Response Time(ms)|70|scalar|sample_4B_1000|-|None|0|NA|-1|-1|M|NA|Average Response Time (ms) of v3 snapshot save.
+Graph|Etcd OS Threads|71|scalar|sample_4B|-|None|0|NA|-1|-1|H|NA|Count of OS threads created
+Graph|Etcd Process CPU (%)|72|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Total user and system CPU (%) in a sample
+Graph|Etcd Process Max Open Files Limit|73|scalar|sample_4B|-|None|0|NA|-1|-1|H|NA|Maximum number of open file descriptors.
+Graph|Etcd Process Open Files|74|scalar|sample_4B|-|None|0|NA|-1|-1|H|NA|Count of open file descriptors.
+Graph|Etcd Process Resident Memory(MB)|75|scalar|sample_4B_1000|-|None|0|NA|-1|-1|H|NA|Resident memory size(MB).
+Graph|Etcd Process Start Time(sec)|76|scalar|sample|-|None|0|NA|-1|-1|H|NA|Start time of the process since unix epoch in seconds.
+Graph|Etcd Process Virtual Memory(GB)|77|scalar|sample_4B_1000|-|None|0|NA|-1|-1|H|NA|Virtual memory size(GB).
+Graph|Etcd Go Routines|78|scalar|sample_4B|-|None|0|NA|-1|-1|H|NA|Count of goroutines that currently exist.
+Graph|Etcd Go Memstats Allocated Memory(MB)|79|scalar|sample_4B_1000|-|None|0|NA|-1|-1|H|NA|Allocated Memory in system(MB)
+Graph|Etcd Go Memstats Bucket size(MB)|80|scalar|sample_4B_1000|-|None|0|NA|-1|-1|H|NA|Profiling bucket hash table size(MB)
+Graph|Etcd Go Memstats Free/Sec|81|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Memstats Frees per sec
+Graph|Etcd Go Memstats GC Cpu Time(ms)|82|scalar|sample_4B_1000|-|None|0|NA|-1|-1|H|NA|The fraction of this program's available CPU time(ms) used by the GC since the program started.
+Graph|Etcd Go Memstats GC Memory(MB)|83|scalar|sample_4B_1000|-|None|0|NA|-1|-1|H|NA|Garbage collection system metadata size(MB)
+Graph|Etcd Go Memstats Allocated Heap Size(MB)|84|scalar|sample_4B_1000|-|None|0|NA|-1|-1|H|NA|Heap size (MB) allocated and still in use.
+Graph|Etcd Go Memstats Idle Heap Size(MB)|85|scalar|sample_4B_1000|-|None|0|NA|-1|-1|H|NA|Heap size (MB) waiting to be used.
+Graph|Etcd Go Memstats Used Heap Size(MB)|86|scalar|sample_4B_1000|-|None|0|NA|-1|-1|H|NA|Used Heap Size(MB)
+Graph|Etcd Go Memstats Allocated Heap Objects|87|scalar|sample_4B|-|None|0|NA|-1|-1|H|NA|Count of allocated objects.
+Graph|Etcd Go Memstats Last GC Time(sec)|88|scalar|sample|-|None|0|NA|-1|-1|H|NA|Count of seconds since 1970 of last garbage collection.
+Graph|Etcd Go Memstats Lookups/Sec|89|scalar|sample_4B|-|CumToPS|0|NA|-1|-1|H|NA|Count of pointer lookups per sec
+Graph|Etcd Go Memstats Mallocs/Sec|90|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Count of Mallocs per sec
+Graph|Etcd Go Memstats System Allocated Mcache Structures size(KB)|91|scalar|sample_4B_1000|-|None|0|NA|-1|-1|H|NA|Mcache structures(kb) obtained from system.
+Graph|Etcd Go Memstats Mcache Structures Used size(KB)|92|scalar|sample_4B_1000|-|None|0|NA|-1|-1|H|NA|Mcache structures Used size(kb)
+Graph|Etcd Go Memstats System Allocated Mspan Structures size(KB)|93|scalar|sample_4B_1000|-|None|0|NA|-1|-1|H|NA|Mcache structures(kb) obtained from system 
+Graph|Etcd Go Memstats Mspan Structures Used size(KB)|94|scalar|sample_4B_1000|-|None|0|NA|-1|-1|H|NA|Mspan structures Used size(kb).
+Graph|Etcd Go Memstats System Stack Allocator size(KB)|95|scalar|sample_4B_1000|-|None|0|NA|-1|-1|H|NA|Stack allocator size(kb) obtained from system
+Graph|Etcd Go Memstats Stack Allocator Used size(KB)|96|scalar|sample_4B_1000|-|None|0|NA|-1|-1|H|NA|Count of bytes in use by the stack allocator.

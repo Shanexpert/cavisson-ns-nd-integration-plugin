@@ -1,0 +1,5 @@
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP Composer Task Queue|14037|vector|1|0|GCP Metrics|ProjectID>LocationID>EnvironmentName>QueueName>ImageVersion|It provides metrics related to task Queue stats for composer.
+
+Graph|GCP Composer Task Queue Length|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of tasks in queue.

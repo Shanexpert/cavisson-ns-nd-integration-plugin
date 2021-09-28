@@ -1,0 +1,21 @@
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Network Stats|14230|vector|12|0|Dynatrace Metrics|AccountName>Host>NetworkInterface|Dynatrace Network data.
+
+Graph|Received packets dropped/Sec|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Network interface received packets dropped on host PerSecond.
+Graph|Sent packets dropped/Sec|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Network interface sent packets dropped on host PerSecond.
+Graph|Received packet errors/Sec|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Network interface received packet errors on host PerSecond.
+Graph|Sent packet errors/Sec|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Network interface sent packet errors on host PerSecond.
+Graph|Packets received/Sec|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Network interface packets received on host PerSecond.
+Graph|Packets sent/Sec|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Network interface packets sent on host PerSecond.
+Graph|Bytes received/Sec|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Network interface bytes received on host.
+Graph|Bytes sent/Sec|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Network interface bytes sent on host.
+Graph|Receive link utilization (Pct)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Network interface receive link utilization on host in percent.
+Graph|Transmit link utilization (Pct)|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Network interface transmit link utilization on host in percent.
+Graph|Traffic in (Bits/Sec)|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Traffic in  bits per second.
+Graph|Traffic out (Bits/Sec)|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Traffic out bits per second.

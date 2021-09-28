@@ -1,0 +1,109 @@
+#!/bin/bash
+#######################################################################################################
+# Name   : nsi_db_get_phase_list
+# Syntax : nsi_db_get_phase_list --testrun <value> 
+#
+#   Author : Ankit Agarwal
+#   Date :   25 June 2012
+#   Purpose : This shell will create nsi_db_phase_list.dat (for the given test run). if it does not exist it will run
+#             the query and create it.
+# Example : nsi_db_get_phase_list --testrun 11642
+#
+#
+#########################################################################################################
+
+
+######################################################################
+#                     Variables and init settings
+#####################################################################
+
+# Including nsi_db_utils
+. $NS_WDIR/bin/nsi_db_utils
+
+#Set default values of variables
+TRNUM=""
+SELECT=""
+FROM=""
+WHERE=""
+GROUP=""
+FILE_CACHED="nsi_db_phase_list.dat"
+
+########################################################################
+#                       Functions's Definitions
+#######################################################################
+
+#Function for displaying usage
+usage()
+{
+  echo "$*"
+  echo "Usage:"
+  echo "$0 --testrun <value> [--type <name>] "
+  echo ""
+  echo "Where"
+  echo "  --testrun is test run number, which is mandatory argument."
+  exit 1
+}
+
+#Function for checking mandatory arguments
+check_arg()
+{
+   if [ "X$TRNUM" == "X" ]; then
+    usage "Test run argument is missing"
+   fi
+}
+
+########################################################################
+#                            calling functions
+########################################################################
+
+#Parsing the arguments
+if [ "X$*" = "X" ];then
+usage 
+fi
+init $*
+RUNNING=$?
+#RET value 0 -if file already cached and test is not running, 1- if file not cached and test is not running ,              2- if test is running
+if [ $RUNNING -ne 2 ];then
+ check_cached "$FILE_CACHED"
+ RET=$?
+else
+ RET=2
+fi
+
+#Checking mendatory arguments
+check_arg
+
+#Setting query files
+set_query_files $TRNUM
+
+SELECT="SELECT logphasetable_$TRNUM.PhaseIndex As \"Phase Index\","
+SELECT="$SELECT $NEWLINE  logphasetable_$TRNUM.GroupName As \"Group Name\","
+SELECT="$SELECT $NEWLINE  logphasetable_$TRNUM.PhaseType As \"Phase Type\","
+SELECT="$SELECT $NEWLINE  logphasetable_$TRNUM.PhaseName As \"Phase Name\""
+
+FROM="FROM logphasetable_$TRNUM,SessionRecord_$TRNUM" 
+GROUP="GROUP BY \"Phase Index\",\"Group Name\",\"Phase Type\",\"Phase Name\""
+
+#We are doing Order by Phase Index not Phase name
+#In GUI we are showing the phase name as they define in the scenario,that's why we are doing order by phase index
+ORDER="ORDER BY \"Phase Index\""
+ 
+if [ $RET -eq 1 -o $RET -eq 2 ];then
+  log_query
+  ns_run_query
+  sed '$d' $QUERY_OUT_FILE | grep -v "row)" | grep -v "rows)" | grep -v ^$ | sed '2,$s/ //g' >/tmp/nsi_db_get_phase_list.$$ 
+  cat /tmp/nsi_db_get_phase_list.$$   
+  
+  # Save file if test is not running
+  if [ $RET -eq 1 ];then  
+    cat /tmp/nsi_db_get_phase_list.$$  > $DBQ_CACHE_DIR/$FILE_CACHED
+  fi
+  rm -f /tmp/nsi_db_get_phase_list.$$
+  remove_files
+
+#Show Only File Contents if query is already cached
+elif [ $RET -eq 0 ];then
+  cat $DBQ_CACHE_DIR/$FILE_CACHED
+fi
+
+exit 0

@@ -1,0 +1,13 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS IoT Rule Stats|14052|vector|4|0|AWS Metrics|AccountName>Region>RuleName|AWS IoT rule specify what to do when a rule is triggered.
+
+Graph|AWS IoT JSON Parse Error|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of JSON parse errors that occurred in messages published on a topic on which a rule is listening.
+Graph|AWS IoT Rule Message Throttled|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of messages throttled by the rules engine because of malicious behavior or because the number of messages exceeds the rules engine throttle limit.
+Graph|AWS IoT Rule Not Found|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The rule to be triggered could not be found.
+Graph|AWS IoT Topic Match|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of incoming messages published on a topic on which a rule is listening.
+

@@ -1,0 +1,5 @@
+Info|3.1|1|-|-|-1|-1|-
+Group|Windows MSExchange Transport SMTP Error Stats|10938|vector|3|0|Application Metrics|Tier>Server>Instance|Windows MSExchange Transport SMTP Error Stats by error type.
+Graph|Last Hour Receive TLS Errors|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of SMTP receive TLS errors in the last hour, by error type. Perfmon metric name: TLS errors last hour (receive).
+Graph|Last Hour Send TLS Errors|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of SMTP send TLS errors in the last hour, by error type. Perfmon metric name: TLS errors last hour (send).
+Graph|Last Hour Outbound Proxy TLS Errors|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of SMTP outbound proxy TLS errors in the last hour, by error type. Perfmon metric name: TLS errors last hour (outbound proxy).

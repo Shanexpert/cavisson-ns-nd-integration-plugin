@@ -1,0 +1,27 @@
+#LAST_MAX_ASSIGNED_GRAPH_ID = 22
+#LAST_MODIFIED_DATE = 09/01/16 01:56:09
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+ 
+#We are taking same group id as cm_apache_svc_time.gdf in future we will delete cm_apache_svc_time.gdf
+Info|3.1|1|-|-|-1|-1|-
+Group|RabbitMQ Cluster Stats|10374|vector|16|0|Application Metrics|Tier>Sever>Cluster|RabbitMQ Cluster Stats monitors over all  metrics related to messsages, queues, nodes and consumers etc.
+Graph|RabbitMQ Channels|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of channels registered in the cluster.
+Graph|RabbitMQ Consumers|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of Consumers registered in the cluster.
+Graph|RabbitMQ Connections|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of connections registered in the cluster.
+Graph|RabbitMQ Exchanges|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of exchanges registered in the cluster.
+Graph|RabbitMQ Nodes|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of nodes in the cluster.
+Graph|Rabbit Running Nodes|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of running node in the cluster.
+Graph|RabbitMQ Queues|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of queues registered in the cluster.
+Graph|RabbitMQ Messages Available|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of messages avialable in the cluster.
+Graph|RabbitMQ Messages Pending Acknowledgments|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total Number of messages pending for acknowledgment in the cluster.
+Graph|RabbitMQ Messages Acknowledged/Sec|10|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of messages acknowledged per second in the cluster.
+Graph|RabbitMQ Messages/Sec|11|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of messages per second in the cluster.
+Graph|RabbitMQ Messages Delivered/Sec|12|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of messages delivered per second in the cluster.
+Graph|RabbitMQ Messages Delivered No-Ack/Sec|13|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of messages delivered per second without acknowledgment in the cluster.
+Graph|RabbitMQ Messages Total Delivered/Sec|14|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Total delivered messages per second in the cluster.
+Graph|RabbitMQ Messages Published/Sec|15|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of message published per second in the cluster.
+Graph|RabbitMQ Messages Redelivered/Sec|16|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of messages redelivered per second in the cluster.

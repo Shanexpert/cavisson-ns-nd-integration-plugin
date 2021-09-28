@@ -1,0 +1,25 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS EKS Pod Stats|11374|vector|9|0|AWS Metrics|AccountName>Region>ClusterName>Namespace>PodName|Amazon Elastic Kubernetes Service (Amazon EKS) is a managed service that makes it easy for you to run Kubernetes on AWS without needing to stand up or maintain your own Kubernetes control plane.
+
+Graph|AWS EKS Pod Cpu Reserved Capacity (%)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|pod cpu reserved capacity
+
+Graph|AWS EKS Pod Cpu Utilization (%)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|pod cpu utilization
+
+Graph|AWS EKS Pod Cpu Limit Utilization (%)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|pod cpu utilization over pod limit
+
+Graph|AWS EKS Pod Memory Reserved Capacity (%)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|pod memory reserved capacity
+
+Graph|AWS EKS Pod Memory Utilization (%)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|pod memory utilization
+
+Graph|AWS EKS Pod Memory Limit Utilization (%)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|pod memory utilization over pod limit
+
+Graph|AWS EKS Pod Network Received (Bytes/Sec)|7|scalar|rate|-|-|0|NA|-1|-1|NA|NA|pod network rx bytes
+
+Graph|AWS EKS Pod Network Transmitted (Bytes/Sec)|8|scalar|rate|-|-|0|NA|-1|-1|NA|NA|pod network tx bytes
+
+Graph|AWS EKS Pod Number of Container Restarts|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|pod number of container restarts

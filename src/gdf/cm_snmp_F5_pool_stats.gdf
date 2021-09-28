@@ -1,0 +1,11 @@
+Info|3.1|1|-|-|-1|-1|-
+Group|F5 Pool Stats|10375|vector|9|0|Application Metrics|Tier>Server>F5Tier>F5Server>PoolTier>PoolServer>Port|F5 Pool Stats
+Graph|F5 Pool Server Pkts In/Sec|1|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|The number of packets received per second by the system from server-side
+Graph|F5 Pool Server Bytes In/Sec|2|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|The number of bytes received per second by the system from server-side
+Graph|F5 Pool Server Pkts Out/Sec|3|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|The number of packets sent per second to server-side from the system
+Graph|F5 Pool Server Bytes Out/Sec|4|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|The number of bytes sent per second to server-side from the system
+Graph|F5 Pool Server Max Conns|5|scalar|sample|-|NA|0|NA|-1|-1|H|NA|The maximum connections per second from server-side to the system
+Graph|F5 Pool Server Total Conns|6|scalar|cumulative|-|NA|0|NA|-1|-1|H|NA|The total connections per second from server-side to the system
+Graph|F5 Pool Server Current Conns|7|scalar|sample|-|-|0|NA|-1|-1|H|NA|The current connections from server-side to the system
+Graph|F5 Pool Server Total Request/Sec|8|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|The total requests per second from server-side to the system
+Graph|F5 Pool Server Available State|9|scalar|sample|-|-|0|NA|-1|-1|H|NA|The available state of the server

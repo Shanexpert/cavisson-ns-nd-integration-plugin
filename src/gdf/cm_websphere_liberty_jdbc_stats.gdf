@@ -1,0 +1,10 @@
+#LAST_MAX_ASSIGNED_GRAPH_ID = 6
+#LAST_MODIFIED_DATE = 10/18/14 20:47:29
+Info|3.1|1|-|-|-1|-1|-
+Group|Websphere Liberty JDBC Connection Pool Stats|10223|vector|6|0|WebSphere Metrics|Tier>Server>Instance>JDBCProvider|Websphere Liberty JDBC Connection pool stats
+Graph|CreateCount|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of connections created.
+Graph|DestroyCount|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of connections destroyed.
+Graph|ManagedConnectionCount|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of ManagedConnection objects that are in use.
+Graph|WaitTime(s)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average waiting time in seconds until a connection is granted.
+Graph|ConnectionHandleCount|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of Connection objects that are in use.
+Graph|FreeConnectionCount|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of free connections in the pool.

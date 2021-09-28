@@ -1,0 +1,72 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS Glue Stats|11243|vector|32|0|AWS Metrics|AccountName>Region>JobName>JobRunId|AWS Glue is a fully managed ETL (extract, transform, and load) service that makes it simple and cost-effective to categorize your data, clean it, enrich it, and move it reliably between various data stores and data streams.
+
+Graph|AWS Glue ALL JVM Heap Usage (%)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average fraction of memory used by the JVM heap for this driver (scale: 0-1) for all executors.
+
+Graph|AWS Glue ALL JVM Heap Used (Bytes)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of memory bytes used by the JVM heap for all executors.
+
+Graph|AWS Glue ALL S3 File System Read (Bytes)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of bytes read from Amazon S3 all executors since the previous report.
+
+Graph|AWS Glue ALL S3 File System Write (Bytes)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of bytes written to Amazon S3 by the all executors since the previous report.
+
+Graph|AWS Glue ALL System CPU System Load (%)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average fraction of CPU system load used (scale: 0-1) by all executors.
+
+Graph|AWS Glue Driver Aggregate Bytes Read|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of bytes read from all data sources by all completed Spark tasks running in all executors.
+
+Graph|AWS Glue Driver Aggregate ElapsedTime (ms)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The ETL elapsed time in milliseconds (does not include the job bootstrap times).
+
+Graph|AWS Glue Driver Aggregate Completed Stages|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of completed stages in the job.
+
+Graph|AWS Glue Driver Aggregate Completed Tasks|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of completed tasks in the job.
+
+Graph|AWS Glue Driver Aggregate Failed Tasks|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of failed tasks.
+
+Graph|AWS Glue Driver Aggregate Killed Tasks|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of tasks killed.
+
+Graph|AWS Glue Driver Aggregate Records Read|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of records read from all data sources by all completed Spark tasks running in all executors.
+
+Graph|AWS Glue Driver Aggregate Shuffle Bytes Written|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of bytes written by all executors to shuffle data between them since the previous report.
+
+Graph|AWS Glue Driver Aggregate Shuffle Bytes Read|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of bytes read by all executors to shuffle data between them since the previous report.
+
+Graph|AWS Glue Driver Block Manager Disk Space Used (MB)|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of megabytes of disk spaced used across all executors.
+
+Graph|AWS Glue Driver Executor Allocation Manager Running Executor|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of actively running job executors.
+
+Graph|AWS Glue Driver Executor Allocation Manager Max Running Executor|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of maximum (actively running and pending) job executors needed to satisfy the current load.
+
+Graph|AWS Glue Driver JVM Heap Usage (%)|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average fraction of memory used by the JVM heap for this driver (scale: 0-1) for driver.
+
+Graph|AWS Glue Driver JVM Heap Used (Bytes)|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of memory bytes used by the JVM heap for the driver.
+
+Graph|AWS Glue Driver S3 File System Read (Bytes)|20|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of bytes read from Amazon S3 by the driver since the previous report.
+
+Graph|AWS Glue Driver S3 File System Write (Bytes)|21|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of bytes written to Amazon S3 by the driver since the previous report.
+
+Graph|AWS Glue Driver System CPU System Load (%)|22|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average fraction of CPU system load used (scale: 0-1) by the driver.
+
+Graph|AWS Glue Executor Id Jvm Heap Usage (%)|23|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average fraction of memory used by the JVM heap for this driver (scale: 0-1) for executor identified.
+
+Graph|AWS Glue Executor Id Jvm Heap Used (Bytes)|24|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of memory bytes used by the JVM heap for the executor identified.
+
+Graph|AWS Glue Executor Id S3 File System Read (Bytes)|25|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of bytes read from Amazon S3 by the executor identified since the previous report.
+
+Graph|AWS Glue Executor Id S3 File System Write (Bytes)|26|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of bytes written to Amazon S3 by the executor identified since the previous report.
+
+Graph|AWS Glue Executor Id System CPU System Load (%)|27|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average fraction of CPU system load used (scale: 0-1) by the executor identified.
+
+Graph|AWS Glue Jvm Heap Usage (%)|28|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average fraction of memory used by the JVM heap for this driver (scale: 0-1) for driver.
+
+Graph|AWS Glue Jvm Heap Used (%)|29|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of memory bytes used by the JVM heap for the executor identified.
+
+Graph|AWS Glue System CPU System Load (%)|30|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average fraction of CPU system load used (scale: 0-1) by the driver.
+
+Graph|AWS Glue S3 File System Write (Bytes)|31|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of bytes written to Amazon S3 by the driver since the previous report.
+
+Graph|AWS Glue S3 File System Read (Bytes)|32|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of bytes read from Amazon S3 by the driver since the previous report.
+

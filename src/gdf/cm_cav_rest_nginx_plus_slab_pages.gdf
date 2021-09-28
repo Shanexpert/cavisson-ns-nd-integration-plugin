@@ -1,0 +1,6 @@
+info|3.1|1|-|-|-1|-1|-
+
+Group|NGINX Plus Slab Pages Stats|11622|vector|2|0|NGINX Metrics|Tier>Server>SharedMemory|It provides metrics related to slab page usage for nginx shared memory.
+Graph|NGINX Plus Slab Pages Used|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The current number of used memory pages.
+Graph|NGINX Plus Slab Pages Free|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The current number of free memory pages.
+

@@ -1,0 +1,131 @@
+#!/bin/bash
+#    
+#script to untar script tar files and store them in some destination project and subproject.
+# Usage: nsu_make_script_untar -f
+#    
+#Exit Values:
+# 0-Successful
+# 1-Usage Error
+#     
+# display_help_and_exit() To print help
+#      
+#      
+        
+clear
+    
+OVERRIDE_SCRIPT=0
+DUPLICTAE_SCRIPT_PRESENT=0
+display_help_and_exit()
+{
+  echo $1 
+  echo "Option Usage:$0 -f <give tar name> -o <enable override>"
+  echo " -f is used to get the tar name. It is a mandatory argument."
+  echo " -o is used to disable override subproject and script"
+  exit 1
+
+}  
+
+#Start main procedure
+# 
+# 
+#Set default value for variable
+# 
+
+SCRIPT_TAR_NAME=""
+PRJ_SUBPRJ1=/tmp/nsu_make_script_untar1.$$
+PRJ_SUBPRJ2=/tmp/nsu_make_script_untar2.$$
+  
+while getopts f:w:o? opt
+do 
+  case "$opt" in 
+    f)SCRIPT_TAR_NAME="$OPTARG";;
+    w)WORK_PROFILE=$OPTARG;;
+    o)OVERRIDE_SCRIPT=1;;
+    ?)display_help_and_exit;;
+    *)display_help_and_exit;;
+  esac
+done
+  
+  if [ "X$NS_WDIR" == "X" ];then
+    echo "NS_WDIR is not set, hence exiting."
+    exit 1
+  fi
+
+  #check for mandatory Tar file name argument.
+  if [ "X$SCRIPT_TAR_NAME" == "X" ]; then
+    display_help_and_exit "Error: Tar_name is mandatory argument."
+    exit 1
+  fi
+ 
+  echo "$SCRIPT_TAR_NAME" |grep '.tar.gz'
+  if [ $? -ne 0 ];then
+    echo "Changing Tar Name from $SCRIPT_TAR_NAME to ${SCRIPT_TAR_NAME}.tar.gz"
+    SCRIPT_TAR_NAME=${SCRIPT_TAR_NAME}.tar.gz
+  fi
+  
+  TEXTFILE=tar_convention.txt
+  #split Tar name to identify source project, subproject and script.
+  nsu_show_projects -w $WORK_PROFILE >$PRJ_SUBPRJ1
+  if [ ! -s $PRJ_SUBPRJ1 ];then
+    echo "No Project/SubProject Found"
+    exit 1
+  fi
+
+  SCRIPT_PATH="$NS_WDIR/workspace/$WORK_PROFILE/cavisson"
+  cd $SCRIPT_PATH
+
+
+  #getting the text file
+  if [ ! -f $SCRIPT_TAR_NAME ]; then
+    echo "ERROR: Tar file $SCRIPT_TAR_NAME is not present"
+    exit 1
+  fi
+  
+  tar -xzf $SCRIPT_TAR_NAME $TEXTFILE
+
+  if [ ! -f $TEXTFILE ];then
+    echo "ERROR: $TEXTFILE does not exists"
+    exit 1
+  fi
+
+  tar -tf $SCRIPT_TAR_NAME |awk -F'/' '{print $1,$2}' |grep -v $TEXTFILE |uniq >$PRJ_SUBPRJ2
+  
+  #check if proj & subproject alredy present or not...if not then add project 
+  while read line
+  do
+    PROJ1=`echo $line |awk -F' ' '{print $1}'`
+    SUBPROJ1=`echo $line |awk -F' ' '{print $2}'`
+    grep -w "$PROJ1|$SUBPROJ1" $PRJ_SUBPRJ1 >/dev/null 2>&1
+    if [ $? -ne 0 ];then
+       nsu_add_project -p $PROJ1/$SUBPROJ1 -w $WORK_PROFILE #ashwini
+       if [ $? -eq 0 ];then
+         echo "Added $PROJ1/$SUBPROJ1"
+       fi
+    fi
+  done <$PRJ_SUBPRJ2
+
+  if [ $OVERRIDE_SCRIPT -eq 1 ] ; then
+    nsu_show_scripts -w $WORK_PROFILE | grep "^$PROJ1" | cut -d'|' -f 1,2,3,4 >$PRJ_SUBPRJ1  
+    sed -i '1d' $PRJ_SUBPRJ1
+      for script in `cat $TEXTFILE`
+      do 
+	grep -w $script $PRJ_SUBPRJ1 >/dev/null 2>&1
+	if [ $? -eq 0 ];then
+          if [ "X$DUPLICTAE_SCRIPT_PRESENT" == "X0" ] ; then
+            DUPLICTAE_SCRIPT_PRESENT=1
+            echo "ERROR: Following scripts already present on current machine"
+          fi
+	  echo "       $script"
+	fi
+      done
+  fi
+  if [ "X$DUPLICTAE_SCRIPT_PRESENT" == "X1" ] ; then
+    exit -1
+  fi
+
+  tar -xzf $SCRIPT_TAR_NAME
+  #rm -f $SCRIPT_TAR_NAME $TEXTFILE $PRJ_SUBPRJ1 $PRJ_SUBPRJ2 2>/dev/null
+  
+  cd - >/dev/null
+ 
+  exit 0

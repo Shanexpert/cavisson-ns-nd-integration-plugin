@@ -1,0 +1,16 @@
+#!/bin/sh
+
+NUM=`ls -1l NS*| wc -l`
+if [ $NUM -ne 1 ];then
+	echo "More than one netstorm versions are avilable in current idirectory (NS tars)"
+	echo "Please remove/rename old ones"
+	exit 1
+fi
+
+echo "Choose one of the options"
+echo "1 : Upgrade with the Netstorm version available in current directory"
+echo "2 : Clean install Netstorm version available in current directory"
+echo "3 : Upgrade with the Netstorm version from archive"
+echo "4 : Clean install Netstorm version from archive"
+echo "5 : List the Netstorm versions archived"
+echo "6 : Remove the Archive Netstorm version"

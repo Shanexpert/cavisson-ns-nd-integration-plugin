@@ -1,0 +1,14 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Azure Cognitive Search stats|11463|vector|3|0|Azure Metrics|AccountName>Region>ResourceGroup>CognitiveSearchServices|Azure Cognitive Search is a search-as-a-service cloud solution that gives developers APIs and tools for adding a rich search experience over private, heterogeneous content in web, mobile, and enterprise applications.
+
+Graph|Azure Cognitive services Search Latency(sec)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average search latency for the search service
+
+Graph|Azure Cognitive Services Search Queries Per Second (Count/Sec)|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Search queries per second for the search service
+
+Graph|Azure Cognitive Services Throttled Search Queries Percentage(%)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percentage of search queries that were throttled for the search service
+

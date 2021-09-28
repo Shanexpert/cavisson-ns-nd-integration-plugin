@@ -1,0 +1,80 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Azure APIApp Stats|14023|vector|36|0|Azure Metrics|AccountName>Region>ResourceGroup>Websites|Azure API Apps provide a platform that enables creating, hosting and using API‘s for cloud and on premises infrastructure. It enables in creating and app that can provide API based application / software accessibility, connectivity for SaaS / hybrid cloud environments and a central API management platform.
+
+Graph|AZURE Apiapp Cpu Time(sec)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|CPU Time of the app.
+
+Graph|AZURE Apiapp Requests|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of requests served by the app.
+
+Graph|AZURE Apiapp Bytes Received(Bytes)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of bytes received.
+
+Graph|AZURE Apiapp Bytes Sent(Bytes)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of bytes sent.
+
+Graph|AZURE Apiapp Http101|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of 101 requests served by the app.
+
+Graph|AZURE Apiapp Http2xx|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of 2xx requests served by the app.
+
+Graph|AZURE Apiapp Http3xx|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of 3xx requests served by the app.
+
+Graph|AZURE Apiapp Http401|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of 401 requests served by the app.
+
+Graph|AZURE Apiapp Http403|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of 403 requests served by the app.
+
+Graph|AZURE Apiapp Http404|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of 404 requests served by the app.
+
+Graph|AZURE Apiapp Http406|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of 406 requests served by the app.
+
+Graph|AZURE Apiapp Http4xx|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of 4xx requests served by the app.
+
+Graph|AZURE Apiapp Http5xx|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of 5xx requests served by the app.
+
+Graph|AZURE Apiapp Memory Working Set(Bytes)|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memory used by the app.
+
+Graph|AZURE Apiapp Average Memory Working Set(Bytes)|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average memory used by the app.
+
+Graph|AZURE Apiapp Average Response Time(sec)|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average response time of the app.
+
+Graph|AZURE Apiapp Http Response Time(sec)|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Response Time.
+
+Graph|AZURE Apiapp App Connections|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of Azure WebApp Service Connections.
+
+Graph|AZURE Apiapp Handles|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Handle Count of Azure ApiApp Service.
+
+Graph|AZURE Apiapp Threads|20|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Thread Count of Azure ApiApp Service.
+
+Graph|AZURE Apiapp Private Bytes(Bytes)|21|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Private Bytes.
+
+Graph|AZURE Apiapp Io Read Bytes Per Second|22|scalar|rate|-|-|0|NA|-1|-1|NA|NA|IO Read Bytes Per Second.
+
+Graph|AZURE Apiapp Io Write Bytes Per Second|23|scalar|rate|-|-|0|NA|-1|-1|NA|NA|IO Write Bytes Per Second.
+
+Graph|AZURE Apiapp Io Other Bytes Per Second|24|scalar|rate|-|-|0|NA|-1|-1|NA|NA|IO Other Bytes Per Second.
+
+Graph|AZURE Apiapp Io Read Operations Per Second(Bytes/Sec)|25|scalar|rate|-|-|0|NA|-1|-1|NA|NA|IO Read Operations Per Second.
+
+Graph|AZURE Apiapp Io Write Operations Per Second(Bytes/Sec)|26|scalar|rate|-|-|0|NA|-1|-1|NA|NA|IO Write Operations Per Second.
+
+Graph|AZURE Apiapp Io Other Operations Per Second(Bytes/Sec)|27|scalar|rate|-|-|0|NA|-1|-1|NA|NA|IO Other Operations Per Second.
+
+Graph|AZURE Apiapp Requests In Application Queue|28|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Requests In Application Queue.
+
+Graph|AZURE Apiapp Current Assemblies|29|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current Assemblies.
+
+Graph|AZURE Apiapp Total App Domains|30|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total App Domains.
+
+Graph|AZURE Apiapp Total App Domains Unloaded|31|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total App Domains Unloaded.
+
+Graph|AZURE Apiapp Gen 0 Collections|32|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total App Domains Unloaded.
+
+Graph|AZURE Apiapp Gen 1 Collections|33|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Gen 1 Garbage Collections.
+
+Graph|AZURE Apiapp Gen 2 Collections|34|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Gen 2 Garbage Collections.
+
+Graph|AZURE Apiapp Health Check Status|35|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Health check status.
+
+Graph|AZURE Apiapp File System Usage(Bytes)|36|scalar|sample|-|-|0|NA|-1|-1|NA|NA|File System Usage.
+

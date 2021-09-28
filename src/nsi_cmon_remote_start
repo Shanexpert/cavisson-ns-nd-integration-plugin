@@ -1,0 +1,21 @@
+#!/usr/bin/expect -f
+
+# ./nsi_cmon_remote_start /opt/cavisson/monitors 192.168.18.101 root abeona
+
+set INSTALL_DIR [lindex $argv 0]
+set HOST [lindex $argv 1]
+set USERNAME [lindex $argv 2]
+set PASSWORD [lindex $argv 3]
+
+spawn -noecho ssh -l $USERNAME $HOST $INSTALL_DIR/bin/cmon start
+
+set timeout 2
+expect "Are you sure you want to continue connecting (yes/no)?" {
+send "yes\r" }
+
+set timeout 8
+expect -nocase "*password:*" {
+send "$PASSWORD\r" }
+
+set timeout -1
+expect eof

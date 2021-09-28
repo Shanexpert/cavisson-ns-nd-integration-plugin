@@ -1,0 +1,121 @@
+#! /bin/sh
+
+
+# Temporarily fix for bug #9305
+# For this fix, 3 files is modify (logging_reader.c ns_db_upload.c and nsu_import) and a new shall is added nsi_upload_tmp_table.
+#
+# logging_reader.c changes.
+# Truncate hat.csv, hrt.csv, spf.csv, upf.csv and log_phase_table.csv.
+# Function start_db_upload_tmp_table_process is added for start nsi_upload_tmp_table while dupping csv files.
+#
+# ns_db_upload.c changes.
+# In nsu_db_upload comment the entry for these csv files. 
+# Means data is not upload from nsu_db_upload for these csv.
+#
+# nsi_upload_tmp_table added.
+# New shall nsi_upload_tmp_table added to truncate the coraspondance table of these csv 
+# and copy again the data in db.
+
+
+
+BASE_DIR=""
+
+function Usage()
+{
+  echo $*
+  #echo "Usage: nsu_create_table <Test Run Number>"
+  echo "Usage: nsi_upload_tmp_table <Test Run Number>"
+  echo "Example:"
+  echo "  nsu_create_table 1234"
+  exit -1
+}
+
+#Checking if test number is numeric
+echo $1 | egrep '^[0-9]+$' >/dev/null 2>&1
+if [ "$?" -eq "1" ]; then
+  Usage "Test run number is not numeric"
+fi
+
+if [ "X$3" = "X" ]; then
+  COMMON_FILES=""
+else
+  COMMON_FILES="common_files"
+fi
+
+LOGFILE="$2/logs/TR$1/DBUploadTable.log"
+echo 
+echo "nsi_upload_tmp_table: Deleting existing table data and copy ..." >>$LOGFILE
+
+psql test cavisson >>$LOGFILE  2>&1 <<+
+drop table if exists UserProfile_$1;
+drop table if exists ErrorCodes_$1;
+drop table if exists ActualServerTable_$1;
+drop table if exists RecordedServerTable_$1;
+drop table if exists SessionProfile_$1;
+drop table if exists LogPhaseTable_$1; 
+
+create table UserProfile_$1 (
+        TestIndex int,
+        --UserProfileIndex smallint,
+        UserProfileIndex int,
+        UserProfileName VARCHAR(128),
+        UpType VARCHAR(32),
+        --ValueIndex smallint,
+        ValueIndex int,
+        Pct smallint,
+        Value VARCHAR (128)
+);
+
+create table ErrorCodes_$1 (
+        ObjectType int,
+        ErrorCode int,
+        ErrorName VARCHAR(256)
+);
+
+create table ActualServerTable_$1 (
+        TestIndex int,
+        ServerGroup int,
+        ServerName VARCHAR(128),
+        ServerPort int,
+        ServerLocation VARCHAR(128),
+        GroupIdx int
+);
+
+create table RecordedServerTable_$1 (
+        TestIndex int,
+        ServerGroup int,
+        ServerIndex int,
+        ServerName VARCHAR(128),
+        ServerPort int,
+        SelectionAgenda bool,
+        ServerType smallint
+);
+
+create table SessionProfile_$1 (
+        TestIndex int,
+        --SessionProfileIndex smallint,
+        SessionProfileIndex int,
+        --SessionIndex smallint,
+        SessionIndex int,
+        Pct smallint,
+        SessionProfileName VARCHAR(128)
+);
+
+create table LogPhaseTable_$1 (
+        PhaseIndex int,
+        GroupName VARCHAR(64),
+        Phasetype int,
+        PhaseName VARCHAR(256)
+);
+
+
+\copy UserProfile_$1 from '$2/logs/TR$1/$COMMON_FILES/reports/csv/upf.csv' WITH DELIMITER ',' NULL AS '' 
+\copy ErrorCodes_$1 from '$2/logs/TR$1/$COMMON_FILES/reports/csv/ect.csv' WITH DELIMITER ',' NULL AS '' 
+\copy ActualServerTable_$1 from '$2/logs/TR$1/$COMMON_FILES/reports/csv/hat.csv' WITH DELIMITER ',' NULL AS '' 
+\copy RecordedServerTable_$1 from '$2/logs/TR$1/$COMMON_FILES/reports/csv/hrt.csv' WITH DELIMITER ',' NULL AS '' 
+\copy SessionProfile_$1 from '$2/logs/TR$1/$COMMON_FILES/reports/csv/spf.csv' WITH DELIMITER ',' NULL AS '' 
+\copy LogPhaseTable_$1 from '$2/logs/TR$1/$COMMON_FILES/reports/csv/log_phase_table.csv' WITH DELIMITER ',' NULL AS '' 
+
++
+
+echo "nsi_upload_tmp_table: ... Done deleting and creating tables." >>$LOGFILE

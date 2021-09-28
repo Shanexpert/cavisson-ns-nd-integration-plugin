@@ -1,0 +1,19 @@
+
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Weblogic JMS Queue Stats|10266|vector|12|0|Weblogic Metrics|Tier>Server>Instance>JMSServer>Module>Queue|Weblogic JMS Server Queue Stats
+Graph|Number Of Consumer Acessing Queue|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current number of consumers accessing this destination (queue).
+Graph|Maximum Number Of Consumer Acessing Queue|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Peak number of consumers accessing this   destination since the last reset.
+Graph|Total Number Of Consumer Acessing Queue|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of consumers accessing this destination since the last reset.  
+Graph|Current Number Of Messages In Queue|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current number of messages in the destination. This does not include the pending messages.
+Graph|Number Of Messages Pending In Queue|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of pending messages in the destination.Pending messages are over and above the current number of messages. A pending message is one that has either been sent in a transaction and not committed, or that has been received and not committed or acknowledged.
+Graph|Maximum Number Of Message In Queue|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Peak number of messages in the destination since the last reset.
+Graph|Number Of Messages Received In Queue|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of messages received in this destination since the last reset.
+Graph|Bytes Stored In Queue|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of bytes stored in the destination.This does not include the pending bytes.
+Graph|Maximum Bytes Stored In Queue|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Peak number of bytes stored in the destination since the   last reset.
+Graph|Pending Bytes In Queue|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of pending bytes stored in the destination.
+Graph|Bytes Received In Queue|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of bytes received in this destination since the last reset.
+Graph|BytesThresholdTime|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of time in the threshold condition since the last reset.

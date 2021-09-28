@@ -1,0 +1,62 @@
+Group|NDC Health Stats|10666|vector|60|0|Cavisson Metrics|Tier>Server>Instance|It will give runtime stats of NDC
+
+Graph|NDC Tiers|1|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Number of Tiers.
+Graph|NDC Servers|2|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Number of Servers.
+Graph|NDC Instances|3|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Number of Instances.
+Graph|NDC Total Active Servers|4|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Total active servers including NDAgent and CMON.
+Graph|NDC Total Active Instances|5|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Total active instances including NDAgent and CMON.
+Graph|NDC Blocked Tiers|6|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Number of Tiers which are blocked. 
+Graph|NDC Blocked Servers|7|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Number of Servers which are blocked. Blocked server are those whose VM going up and down frequently
+Graph|NDC Data Throughput (Mbps)|8|scalar|rate|-|-|0|AS|-1|-1|NA|NA|NDC data received from all instances on data connection in Mbps.
+Graph|NDC CMON Active Instances|9|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Number of active CMON Instances.
+Graph|NDC CMON Control Connections|10|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Number of control connections with CMON.
+Graph|NDC CMON Data Connections|11|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Number of data connections with CMON.
+Graph|NDC CMON Closed Control Connections|12|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of closed control connections with CMON.
+Graph|NDC CMON Closed Data Connections|13|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of closed data connections with CMON.
+Graph|NDC Agent Active Instances|14|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Number of active BCI Instances.
+Graph|NDC Agent Control Connections|15|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Number of control connections with Agent.
+Graph|NDC Agent Data Connections|16|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Number of data connections with Agent.
+Graph|NDC Agent AutoSensor Connections|17|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Number of AutoSensor connections with Agent.
+Graph|NDC Agent Closed Control Connections|18|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of closed control connections with Agent
+Graph|NDC Agent Closed Data Connections|19|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of closed data connections with Agent.
+Graph|NDC Agent Closed AutoSensor Connections|20|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of closed autosensor connections with Agent.
+Graph|NDC TCP Connections|21|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Number of TCP connections.
+Graph|NDC Websocket Connections|22|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Number of Websocket connections.
+Graph|NDC WebSocket Secure Connections|23|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Number of websocket connections.
+Graph|NDC Metadata Recovery Time (ms)|24|scalar|times|-|-|0|AS|-1|-1|NA|NA|Time taken by NDC for metadata recovery.
+Graph|NDC AsyncCommand Time (ms)|25|scalar|times|-|-|0|AS|-1|-1|NA|NA|Time taken by NDC for Async Command .
+Graph|NDC SyncCommand Time (ms)|26|scalar|times|-|-|0|AS|-1|-1|NA|NA|Time taken by NDC for sync Command.
+Graph|NDC NDP Restarts Count|27|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of times NDP gets restarted.
+Graph|NDC Errors|28|scalar|sample|-|-|0|AS|-1|-1|NA|NA|NDC Errors for read, write and connection erros.
+Graph|NDC Instances Mismatches|29|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Number of NDC Instance gets mismatches
+Graph|NDC Control Data Throughput (Mbps)|30|scalar|rate|-|-|0|AS|-1|-1|NA|NA|NDC data received from all instances on control connection in Mbps.
+Graph|NDC New Connections|31|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Number of new Connections NDC recieved
+Graph|NDC NS Partition Mismatch|32|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Partition Mismatch of NDC and NS
+Graph|NDC NDEmain Connection Count|33|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Number of connection count NDC-NDEMAIN
+Graph|NDC NDEmain Monitor Data Loss(Bytes)|34|scalar|times|-|-|0|AS|-1|-1|NA|NA|Number of bytes data loss of Monitoring
+Graph|NDC NDEmain Connection Break Count|35|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Number of Connection break count with NDEmain
+Graph|NDC Tier ID Limit|36|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Maximum Tier id Limit 
+Graph|NDC Server ID Limit|37|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Maximum Server id Limit
+Graph|NDC Instance ID Limit|38|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Maximum Instance id Limit 
+Graph|NDC Max Used Tier ID|39|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Maximum Tier id currenlty being used
+Graph|NDC Max Used Server ID|40|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Maximum Server id currently being used
+Graph|NDC Max Used Instance ID|41|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Maximum Instance id currenly being used
+Graph|No Data From Agent|42|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Data Not Coming from Agent
+Graph|NDC NDEmain BT Percentile Throughput(Kbps)|43|scalar|rate|-|-|0|AS|-1|-1|NA|NA|NDC data sent to NS for BT Percentile in Kbps.
+Graph|NDC NDEmain BT Throughput(Kbps)|44|scalar|rate|-|-|0|AS|-1|-1|NA|NA|NDC data sent to NS for BT in Kbps.
+Graph|NDC NDEmain IP Percentile Throughput(Kbps)|45|scalar|rate|-|-|0|AS|-1|-1|NA|NA|NDC data sent to NS for IP Percentile in Kbps.
+Graph|NDC NDEmain Thread Hotspot Stats(Kbps)|46|scalar|rate|-|-|0|AS|-1|-1|NA|NA|NDC data sent to NS for Thread Hotspot in Kbps.
+Graph|NDC NDEmain IntegrationPoint Stats(Kbps)|47|scalar|rate|-|-|0|AS|-1|-1|NA|NA|NDC data sent to NS for IntegrationPoint in Kbps.
+Graph|NDC NDEmain Monitor Data Errors|48|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Error in Sending Monitor data to NS
+Graph|NDC Cache Files|49|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Total Files Cached by NDC
+Graph|NDC Cache Request Count|50|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Total Cache Reques
+Graph|NDC Cache Error Count|51|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Error Count in Cache 
+Graph|NDC Cache Hit Count|52|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Total Hit Count of Files
+Graph|NDC Cache Miss Count|53|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Total Miss Count of Files
+Graph|NDC Cache Size (KB)|54|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Cache Size in KB 
+Graph|NDC Cache File Check Count|55|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Total File Check Count after gaurd window expire
+Graph|NDC Cache File Change Count|56|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Total File Change Count 
+Graph|NDC File Load Time (ns)|57|scalar|times|-|-|0|AS|-1|-1|NA|NA|Time taken by NDC to load file from disk  in nano second
+Graph|NDC Cache Load Time (ns)|58|scalar|times|-|-|0|AS|-1|-1|NA|NA|Time taken by NDC to load file from cache in nano second
+Graph|NDC Use Stale File on File Not Found|59|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Total count for no of old cache used if file is unavailable
+Graph|NDC Use Stale File on Cache Limit Exceed|60|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Total count for no of old cache used if cache limit exceed

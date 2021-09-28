@@ -1,0 +1,18 @@
+# --- GDF Version History ---
+#  1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Redis System Stats|10304|vector|12|0|Redis Metrics|Tier>Server>Instance|Redis server system stats monitor measure health of redis server. It provides metrics related to used Memory, user cpu time, system cpu time, IO SYN Lag Time.
+
+Graph|Redis Used Memory (MB)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of Megabytes allocated by Redis.
+Graph|Redis Memory Fragmentation Ratio|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Ratio of memory used by the operating system to memory allocated by Redis.
+Graph|Redis User CPU Time (Sec)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|User CPU consumed by Redis server.
+Graph|Redis System CPU Time (Sec)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|System CPU consumed by the Redis server.
+Graph|Redis IO SYN Lag Time (sec)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of seconds since last transfer I/O during a SYNC operation.
+Graph|Redis Used Memory RSS (MB)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Redis allocated memory in megabytes as seen by the operating system.
+Graph|Redis Used Memory Peak (MB)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Peak memory consumed by Redis in megabytes.
+Graph|Redis Used Memory Lua (MB)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Used memory in megabytes by the Lua engine.
+Graph|Redis Up Time (sec)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of seconds since Redis server started.
+Graph|Redis Up Time (day)|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of days since Redis server started.
+Graph|Redis Children System CPU Time (Sec)|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|System CPU consumed by the background processes.
+Graph|Redis Children User CPU Time (Sec)|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|User CPU consumed by the background processes.

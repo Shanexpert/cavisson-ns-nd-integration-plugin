@@ -1,0 +1,20 @@
+Group|NDP Overall Health Stats|10654|vector|18|0|Cavisson Metrics|Tier>Server>Instance|NDP Overall Health Stats
+
+Graph|NDP Active Instance Count|1|scalar|sample|-|-|0|AS|-1|-1|NA|NA|NDP Active Instance Count
+Graph|NDP HTTPHeader Metadata File Size (MB)|2|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Size of HTTPHeader Metadata File in MB 
+Graph|NDP NDFunctionalGroup Metadata File Size (MB)|3|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Size of NDFunctionalGroup Metadata File in MB
+Graph|NDP NDIPResource Metadata File Size (MB)|4|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Size of NDIPResource Metadata File in MB 
+Graph|NDP NDExceptionThrowingMethod Metadata File Size (MB)|5|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Size of NDExceptionThrowingMethod Metadata File in MB
+Graph|NDP NDExceptionThrowingClass Metadata File Size (MB)|6|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Size of NDExceptionThrowingClass Metadata File in MB
+Graph|NDP NDExceptionStackTrace Metadata File Size (MB)|7|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Size of NDExceptionStackTrace Metadata File in MB 
+Graph|NDP NDExceptionMessage Metadata File Size (MB)|8|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Size of NDExceptionMessage Metadata File in MB
+Graph|NDP NDExceptionClass Metadata File Size (MB)|9|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Size of NDExceptionClass Metadata File in MB
+Graph|NDP NDExceptionCause Metadata File Size (MB)|10|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Size of NDExceptionCause Metadata File in MB 
+Graph|NDP NDMethodData Metadata File Size (MB)|11|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Size of NDMetaData Metadata File in MB
+Graph|NDP NDURLTable Metadata File Size (MB)|12|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Size of NDURLTable Metadata File in MB
+Graph|NDP NDSQL Metadata File Size (MB)|13|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Size of NDSQL Metadata File in MB
+Graph|NDP Process Done Lag |14|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Number of partiitons ndp_process_done_v2.txt file lags 
+Graph|NDP Lagging Instance Count |15|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Number of instances lagging more than two partitions 
+Graph|NDP Scandir Execution Time (ms)|16|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Time taken by scandir to scan the NS_WDIR/TR/Partition/nd/raw_data/ directory to get all instances
+Graph|NDP Instances Discovered by Periodic Scandir|17|scalar|sample|-|-|0|AS|-1|-1|NA|NA|This graph specifies total number of instances which have been discovered while performing periodic scandir of raw data files in current partition.
+Graph|NDP Raw Data Errors Count|18|scalar|sum|-|-|0|AS|-1|-1|NA|NA|Total count of raw data errors

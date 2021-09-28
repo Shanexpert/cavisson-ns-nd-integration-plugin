@@ -1,0 +1,6 @@
+info|3.1|1|-|-|-1|-1|-
+
+Group|AWS Usage Stats|11406|vector|2|0|AWS Metrics|AccountName>Region>Service>Resource>Type>Class|Usage Metrics provide visibility into resource and API utilization for your AWS services. CloudWatch collects metrics that track the usage of some AWS resources. These metrics correspond to AWS service quotas. Tracking these metrics can help you proactively manage your quotas. 
+
+Graph|AWS Usage Call Count|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of specified operations performed in your account.
+Graph|AWS Usage Resource Count|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of specified resources in your account.

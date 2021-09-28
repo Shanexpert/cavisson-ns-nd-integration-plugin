@@ -1,0 +1,9 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS KMS Stats|11244|vector|1|0|AWS Metrics|AccountName>Region>KeyId|AWS Key Management Service (AWS KMS) is a managed service that makes it easy for you to create and control customer master keys (CMKs), the encryption keys used to encrypt your data
+
+Graph|AWS KMS Remaining Time (Sec)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|This metric tracks the number of seconds remaining until imported key material expires. 

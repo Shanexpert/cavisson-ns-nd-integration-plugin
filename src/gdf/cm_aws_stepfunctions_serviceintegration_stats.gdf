@@ -1,0 +1,24 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS StepFunctions ServiceIntegrationResourceArn Stats|11478|vector|8|0|AWS Metrics|AccountName>Region>ServiceIntegrationResourceArn|AWS Step Functions is a web service that enables you to coordinate the components of distributed applications and microservices using visual workflows.
+
+Graph|AWS StepFunctions Service Integration Run Time (ms)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The interval, in milliseconds, between the time the Service Task starts and the time it closes.
+
+Graph|AWS StepFunctions Service Integration Schedule Time (ms)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The interval, in milliseconds, for which the Service Task stays in the schedule state.
+
+Graph|AWS StepFunctions Service Integration Time (ms)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The interval, in milliseconds, between the time the Service Task is scheduled and the time it closes.
+
+Graph|AWS StepFunctions Service Integration Failed|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of failed Service Tasks.
+
+Graph|AWS StepFunctions Service Integration Scheduled|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of scheduled Service Tasks.
+
+Graph|AWS StepFunctions Service Integration Started|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of started Service Tasks.
+
+Graph|AWS StepFunctions Service Integration Succeeded|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of successfully completed Service Tasks.
+
+Graph|AWS StepFunctions Service Integration TimedOut|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of Service Tasks that time out on close.
+

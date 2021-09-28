@@ -1,0 +1,21 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS Route53 Stats|11471|vector|6|0|AWS Metrics|AccountName>Region>HealthCheckId|Amazon Route 53 is a highly available and scalable Domain Name System (DNS) web service.
+
+Graph|AWS Route53 Connection Time (ms)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average time, in milliseconds, that it took Route 53 health checkers to establish a TCP connection with the endpoint. You can view ConnectionTime for a health check either across all regions or for a selected geographic region.
+
+Graph|AWS Route53 Health Check Healthy (%)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of Route 53 health checkers that consider the selected endpoint to be healthy. You can view HealthCheckPercentageHealthy only across all regions; data is not available for a selected region.
+
+Graph|AWS Route53 Health Check Status|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The status of the health check endpoint that CloudWatch is checking. 1 indicates healthy, and 0 indicates unhealthy. You can view HealthCheckStatus only across all regions; data is not available for a selected region.
+
+Graph|AWS Route53 SSL Handshake Time (ms)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average time, in milliseconds, that it took Route 53 health checkers to complete the SSL handshake. You can view SSLHandshakeTime for a health check either across all regions or for a selected geographic region.
+
+Graph|AWS Route53 Time To First Byte (ms)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average time, in milliseconds, that it took Route 53 health checkers to receive the first byte of the response to an HTTP or HTTPS request. You can view TimeToFirstByte for a health check either across all regions or for a selected geographic region.
+
+Graph|AWS Route53 Child Health Check Healthy Count|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|For a calculated health check, the number of health checks that are healthy among the health checks that Route 53 is monitoring.
+
+

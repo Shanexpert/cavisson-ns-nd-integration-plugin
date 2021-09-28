@@ -1,0 +1,22 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|AppDynamics Business Transaction|14263|vector|13|0|AppDynamics Metrics|AppName>Tier>BT>Node|To get appdynamics business transaction.
+
+Graph|95th Percentile Response Time (ms)|1|scalar|times|-|None|0|NA|-1|-1|NA|NA|95th percentile response time in milliseconds.
+Graph|Average Async Processing Time (ms)|2|scalar|times|-|None|0|NA|-1|-1|NA|NA|Average Async Processing Time in milliseconds.
+Graph|Average Block Time (ms)|3|scalar|times|-|None|0|NA|-1|-1|NA|NA|Average Block Time in milliseconds.
+Graph|Average CPU Used (ms)|4|scalar|times|-|None|0|NA|-1|-1|NA|NA|Average CPU Used in milliseconds.
+Graph|Average Request Size|5|scalar|times|-|None|0|NA|-1|-1|NA|NA|Average Request Size.
+Graph|Average Response Time (ms)|6|scalar|times|-|None|0|NA|-1|-1|NA|NA|Average Response Time in milliseconds.
+Graph|Average Wait Time|7|scalar|times|-|None|0|NA|-1|-1|NA|NA|Average Wait Time in milliseconds.
+Graph|Calls per Minute|8|scalar|times|-|None|0|NA|-1|-1|NA|NA|Calls per Minute.
+Graph|Errors per Minute|9|scalar|times|-|None|0|NA|-1|-1|NA|NA|Errors per Minute.
+Graph|Normal Average Response Time|10|scalar|times|-|None|0|NA|-1|-1|NA|NA|Normal Average Response Time.
+Graph|Number of Slow Calls|11|scalar|times|-|None|0|NA|-1|-1|NA|NA|Number of Slow Calls.
+Graph|Number of Very Slow Calls|12|scalar|times|-|None|0|NA|-1|-1|NA|NA|Number of Very Slow Calls.
+Graph|Stall Count|13|scalar|times|-|None|0|NA|-1|-1|NA|NA|Stall Count.

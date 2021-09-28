@@ -1,0 +1,19 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|MySQL Replication Stats|10619|vector|9|0|MySQL Metrics|Tier>Server>Instance|MySQL Replication monitors metrics related to slave Replication.
+
+Graph|MySQL Slave IO State|1|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|The current state of the slave. Slave IO state is 1 = Checking master version, 2 = Connecting to master, 3 = Queueing master event to the relay log, 4 = Reconnecting after a failed binlog dump request, 5 = Reconnecting after a failed master event read, 6 = Registering slave on master, 7 = Requesting binlog dump, 8 = Waiting for its turn to commit, 9 = Waiting for master to send event, 10 = Waiting for master update, 11 = Waiting for slave mutex on exit, 12 = Waiting for the slave SQL thread to free enough relay log space, 13 = Waiting to reconnect after a failed binlog dump request, 14 = Waiting to reconnect after a failed master event read.
+Graph|MySQL Slave IO Running|2|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|Whether I/O thread for reading the master's binary log is running. Slave IO running is 0 = No, 1 = Yes, 2 = Connecting. 
+Graph|MySQL Slave SQL Running|3|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|Whether SQL thread for executing events in the relay log is running. Slave Sql running is 0 = No, 1 = Yes.
+Graph|MySQL Second Behind Master (Sec)|4|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|The number of seconds that the slave SQL thread is behind processing the master binary log.
+Graph|MySQL Relay Log Space (MB)|5|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|The total combined size of all existing relay log files in Megabytes.
+Graph|MySQL Sql Delay (Sec)|6|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|The number of seconds that the slave must lag the master.
+Graph|MySQL Sql Remaining Delay (Sec)|7|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|When Slave SQL Running State is Waiting until MASTER DELAY seconds after master executed event, It contains the number of delay seconds remaining.
+Graph|MySQL Slave Sql Running State|8|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|The state of the SQL thread. Slave Sql Running state is 1 = Killing slave, 2 = Making temporary file (append) before replaying LOAD DATA INFILE, 3 = Making temporary file (create) before replaying LOAD DATA INFILE, 4 = Reading event from the relay log, 5 = Slave has read all relay log; waiting for more updates, 6 = Waiting for an event from Coordinator, 7 = Waiting for slave mutex on exit, 8 = Waiting for Slave Workers to free pending events, 9 = Waiting for the next event in relay log, 10 = Waiting until MASTER_DELAY seconds after master executed event.
+Graph|MySQL Master Retry Count/Sec|9|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|The number of times the slave can attempt to reconnect to the master in the event of a lost connection per second.

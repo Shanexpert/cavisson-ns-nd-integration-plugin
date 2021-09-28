@@ -1,0 +1,17 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Apache Nifi Controller Stats|10376|vector|9|0|Application Metrics|Tier>Server>Instance>ProcessGroup|Apache Nifi Controller stats.
+Graph|Nifi Running Component|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of currently running component.
+Graph|Nifi Stopped Component|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of currently stopped component.
+Graph|Nifi Invalid Component|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of currently invalid component.
+Graph|Nifi Disabled Component|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of currently disabled component.
+Graph|Nifi Total Component|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of total component.
+Graph|Nifi Active Remote Port|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of active remote port.
+Graph|Nifi Inactive Remote Port|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of inactive remote port.
+Graph|Nifi Input Port|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of input port.
+Graph|Nifi Output Port|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of output port.

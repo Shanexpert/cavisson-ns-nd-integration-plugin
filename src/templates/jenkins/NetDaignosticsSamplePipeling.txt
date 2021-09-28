@@ -1,0 +1,46 @@
+#Pipeling is supported with jenkins version 2.89.3. And this the sample script for netdaignostics pipeline 
+
+pipeline {
+  
+  agent any
+  
+  /*Intializing ND Reporting configuration*/
+  environment {
+                def netdiagnosticsUri = "http://10.10.30.24:8003/"
+                def username = "cavisson"  //Acl user
+                def password = "cavisson"  //Acl password
+                def baseStartTime = "07/25/2018 16:00:00" //In case of no time, Null or "" will be provided and date time format will be "DD/MM/YYYY HH:MM:SS"
+                def baseEndTime = "07/25/2018 16:05:00"
+                def initStartTime = "07/25/2018 16:10:00"
+                def initEndTime = "07/25/2018 16:15:00" 
+                def checkProfilePath = "default/default/Auto_002.cprof" // Used for CheckProfile 
+                def criThreshold = "60"
+                def warThreshold = "30"
+                def failThreshold = "10"
+                def curStartTime ="07/25/2018 16:20:00"
+                def curEndTime="07/25/2018 16:25:00"
+  }
+
+  stages {
+      
+    stage('Generating a ND Report') {
+      steps {
+        script {
+                 echo 'Generating a ND Report'
+                 
+                 /*
+                 * Refrece variable for netstorm builder
+                 */
+                
+                 step([$class: 'NetDiagnosticsResultsPublisher',netdiagnosticsUri: netdiagnosticsUri,
+                 username: username, password: password, baseStartTime: baseStartTime, 
+                 baseEndTime: baseEndTime, initEndTime: initEndTime, initStartTime: initStartTime,
+                 checkProfilePath: checkProfilePath, criThreshold: criThreshold, warThreshold: warThreshold,
+                 failThreshold: failThreshold,curStartTime:curStartTime,curEndTime:curEndTime,previousDuration:true,initialDuration:true])
+                 
+                 //In case of disable previousDuration, initialDuration, we need to pass false                  
+        }
+      }
+    }
+  }    
+}

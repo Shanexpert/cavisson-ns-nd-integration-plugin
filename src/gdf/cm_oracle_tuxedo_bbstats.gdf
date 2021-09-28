@@ -1,0 +1,12 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|1.0|1|-|-|-1|-1|-
+
+Group|Oracle Tuxedo BBStats|10824|vector|5|0|Oracle Tuxedo Metrics|Tier>Server|Bulletin Board Statistics
+
+Graph|Servers|1|scalar|sample|-|-|0|NA|-1|-1|L|NA|Number of servers.
+Graph|Services|2|scalar|sample|-|-|0|NA|-1|-1|L|NA|Number of services.
+Graph|Request Queues|3|scalar|sample|-|-|0|NA|-1|-1|L|NA|Number of request queues.
+Graph|Groups|4|scalar|sample|-|-|0|NA|-1|-1|L|NA|Number of groups.
+Graph|Interfaces|5|scalar|sample|-|-|0|NA|-1|-1|L|NA|Number of interfaces.

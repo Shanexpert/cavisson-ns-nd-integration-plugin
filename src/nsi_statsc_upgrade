@@ -1,0 +1,75 @@
+#! /bin/sh
+
+# Basename is exported from nsi_upgrade shell
+export WORK=$BASENAME
+
+RELEASE_CMD="nsi_get_linux_release_ex"
+DISTRO=`$RELEASE_CMD -d`
+
+#msgout_both "############################################################"
+if [ "X$STATSC_ROOT" = "X" ];then
+  export STATSC_ROOT=$NS_WDIR/statsc
+  export STATSC_CMD=statsc
+fi
+msgout_both "Start statsc upgradation STATSC_CMD = $STATSC_CMD"
+if [ -f /etc/init.d/$STATSC_CMD ];then
+  msgout_both "Stopping statsc releated processes"
+  /etc/init.d/$STATSC_CMD stop
+fi
+
+#sudo update-rc.d -f $STATSC_CMD remove >/dev/null 2>&1
+
+mkdir -p $STATSC_ROOT
+cd $STATSC_ROOT
+
+msgout_both "Removing directories of old version."
+rm -rf bin etc
+
+msgout_both "Uncompressing tar file - $GZ"
+cp $NS_WDIR/.rel/$GZ .
+tar xvzf $GZ >> $LOG_FILE_NAME
+rm $GZ
+
+if [ "$?" != 0 ];then
+  msgout_both "Error: Error in uncompressing the $GZ"
+  exit 1
+fi
+
+cp -r statsc/* .
+rm -rf statsc
+#Change perm to 777 so that custom monitor (remote) can open log files if not running as root
+# DO it after untar as tar also has logs dir
+mkdir -p logs
+chmod 777 logs
+
+if [ ! -f "$STATSC_ROOT/conf/statsc.conf" ];then
+  mkdir -p  $STATSC_ROOT/conf
+  cp sample/statsc.conf  conf/
+  if [ "X$STATSC_LISTEN_PORT" != "X" ];then
+    sed -i "s/PORT 7892/PORT $STATSC_LISTEN_PORT/g" conf/statsc.conf
+  fi
+fi
+
+#msgout_both "Copying statsc startup shell to /etc/init.d/$STATSC_CMD"
+#pwd
+#echo "Copying statsc startup shell to /etc/init.d/$STATSC_CMD"
+  #sudo cp bin/statsc /etc/init.d/$STATSC_CMD
+  #sudo chmod +x /etc/init.d/$STATSC_CMD
+
+  #Adding LSB headers to the init script so as to remove warning coming in build
+#  echo -e "### BEGIN INIT INFO\n# Provides: $STATSC_CMD\n# Required-Start:\n# Required-Stop:\n# Default-Start:\n# Default-Stop:\n# Short-Description: start|stop|restart|show|version|show_monitors|show_pid $STATSC_CMD\n# Description: Starting Log Parsing System Server (HPD)\n### END INIT INFO\n" >>/etc/init.d/$STATSC_CMD
+#if [ "X$STATSC_CMD" != "statsc" ];then
+#  sudo sed -i "s/export STATSC_ROOT=\/home\/cavisson\/work\/statsc/export STATSC_ROOT=\/home\/cavisson\/$WORK\/statsc/g" /etc/init.d/$STATSC_CMD
+#  sudo sed -i "s/export STATSC_CMD=statsc/export STATSC_CMD=$STATSC_CMD/g" /etc/init.d/$STATSC_CMD
+#  sudo sed -i "s/export NS_CONTROLLER_NAME=work/export NS_CONTROLLER_NAME=$WORK/g" /etc/init.d/$STATSC_CMD
+#fi
+cp /etc/init.d/$STATSC_CMD $STATSC_ROOT/bin/statsc 
+
+#Change the directory owner:group
+#chown -R cavisson:cavisson ../statsc
+
+#msgout_both "Starting statsc Server"
+/etc/init.d/$STATSC_CMD start
+#sudo update-rc.d $STATSC_CMD defaults
+exit 0
+

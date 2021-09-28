@@ -1,0 +1,24 @@
+# --- GDF Version History ---
+#  1.0 - Initial version
+# GDF For Redis Rest Base Monitor
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Android Device Stats|10776|vector|16|0|Android Metrics|Store>Tier>Device|Android monitor provide the information about RAM, ROM, Battery Level,CPU frequency,Latitude,Longitude,Network Recived And Transmit bytes of android device.
+
+Graph|Android Battery Level (Pct)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Battery level in percentage of android device.
+Graph|Android Available RAM (MB)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Available RAM of android device in megabytes.
+Graph|Android Total RAM (MB)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total RAM of android device in megabytes.
+Graph|Android Used RAM (MB)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Used RAM of android device in megabytes.
+Graph|Android Available ROM (MB)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Available ROM of android device in megabytes.
+Graph|Android Total ROM (MB)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total ROM of android device in megabytes.
+Graph|Android Used ROM (MB)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Used ROM of android device in megabytes.
+Graph|Android CPU Frequency (MHz)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|CPU frequency of android device in megaheartz.
+Graph|Android Network Received Throughput (Bytes/Sec)|9|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Network recieved bytes of android device in bytes/sec.
+Graph|Android Network Sent Throughput (Bytes/Sec)|10|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Network transmit bytes of android device in bytes/sec.
+Graph|Android WiFi Signal Strength|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Signal Strength Code: 1 = Bad, 2 = Average, 3 = Good, 4 = Very good, 5 = Excellent
+Graph|Android CPU Utilization (Pct)|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|CPU Utilization in Percentage
+Graph|Android WiFi Link Speed (Mbps)|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Wifi Link Speed in Mbps
+Graph|Android Running Apps|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Apps which are not system app.
+Graph|Android Longitude|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Android device longitude.
+Graph|Android Latitude|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Android device latitude

@@ -1,0 +1,19 @@
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Maxwell Message Publish Stats|10924|vector|15|0|Maxwell Metrics|Tier>Server>Instance|Maxwell stats related to message published.
+Graph|Maxwell Message Publish Count|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Count of messages published.
+Graph|Maxwell Maximum Messages Publish Time (Sec)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum messages which will publish to Kafka.
+Graph|Maxwell Mean Messages Publish Time (Sec)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Mean rate of messages which will publish to Kafka.
+Graph|Maxwell Minimum Messages Publish Time (Sec)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Mean rate of messages which will publish to Kafka.
+Graph|Maxwell 50th Percentile Time (Sec)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|50th percentile of total publish time in second.
+Graph|Maxwell 75th Percentile Time (Sec)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|75th percentile of total publish time in second.
+Graph|Maxwell 95th Percentile Time (Sec) |7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|95th percentile of total publish time in second.
+Graph|Maxwell 98th Percentile Time (Sec)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|98th percentile of total publish time in second.
+Graph|Maxwell 99th Percentile Time (Sec)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|99th percentile of total publish time in second.
+Graph|Maxwell 999th Percentile Time (Sec)|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|99.9th percentile of total publish time in second.
+Graph|Maxwell StdDev Publish Time|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Standard time of messages published. 
+Graph|Maxwell Message Publish/15 Second|12|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Fifteen second rate of messages published.
+Graph|Maxwell Message Publish/Second|13|scalar|rate|-|-|0|NA|-1|-1|NA|NA|One second rate of messages published.
+Graph|Maxwell Message Publish/5 Second|14|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Five second rate of messages published.
+Graph|Maxwell Message Mean Rate|15|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Mean rate of publishing messages.
+

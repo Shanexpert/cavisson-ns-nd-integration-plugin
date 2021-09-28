@@ -1,0 +1,108 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Azure SpringCloud Stats|11457|vector|50|0|Azure Metrics|AccountName>Region>ResourceGroup>AppPlatformSpring|The Spring on Azure project is designed to provide seamless Spring integration with Azure managed services.
+
+Graph|Azure AppPlatform Spring System Cpu Usage(%)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|system cpu usage
+
+Graph|Azure AppPlatform Spring Process Cpu Usage(%)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|process cpu usage
+
+Graph|Azure AppPlatform Spring Jvm Memory Committed(Bytes)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|jvm memory committed
+
+Graph|Azure AppPlatform Spring Jvm Memory Used(Bytes)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|jvm memory used
+
+Graph|Azure AppPlatform Spring Jvm Memory Max(Bytes)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|jvm memory max
+
+Graph|Azure AppPlatform Spring Jvm Gc Max Data Size(Bytes)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|jvm gc max data size
+
+Graph|Azure AppPlatform Spring Jvm Gc Live Data Size(Bytes)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|jvm gc live data size
+
+Graph|Azure AppPlatform Spring Jvm Gc Memory Promoted(Bytes)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|jvm gc memory promoted
+
+Graph|Azure AppPlatform Spring Jvm Gc Memory Allocated(Bytes)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|jvm gc memory allocated
+
+Graph|Azure AppPlatform Spring Jvm Gc Pause Total Count(Count)|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|jvm gc pause total count
+
+Graph|Azure AppPlatform Spring Jvm Gc Pause Total Time(ms)|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|jvm gc pause total time
+
+Graph|Azure AppPlatform Spring Tomcat Threads Config Max(Count)|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Tomcat threadsconfigmax
+
+Graph|Azure AppPlatform Spring Tomcat Threads Current(Count)|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Tomcat threadscurrent
+
+Graph|Azure AppPlatform Spring Tomcat Global Sent(Bytes)|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Tomcat globalsent
+
+Graph|Azure AppPlatform Spring Tomcat Global Received(Bytes)|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Tomcat globalreceived
+
+Graph|Azure AppPlatform Spring Tomcat Global Request Total Time(ms)|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Tomcat globalrequesttotaltime
+
+Graph|Azure AppPlatform Spring Tomcat Global Request Total Count(Count)|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Tomcat globalrequesttotalcount
+
+Graph|Azure AppPlatform Spring Tomcat Global Request Avg Time(ms)|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Tomcat globalrequestavgtime
+
+Graph|Azure AppPlatform Spring Tomcat Global Request Max(ms)|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Tomcat globalrequestmax
+
+Graph|Azure AppPlatform Spring Tomcat Global Error(Count)|20|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Tomcat globalerror
+
+Graph|Azure AppPlatform Spring Tomcat Session Max Active(Count)|21|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Tomcat SessionActiveMax
+
+Graph|Azure AppPlatform Spring Tomcat Session Max Alive Time(ms)|22|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Tomcat SessionAliveMax
+
+Graph|Azure AppPlatform Spring Tomcat Session Alive Count(Count)|23|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Tomcat SessionActiveCurrent
+
+Graph|Azure AppPlatform Spring Tomcat Session Created Count(Count)|24|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Tomcat SessionCreated
+
+Graph|Azure AppPlatform Spring Tomcat Session Expired Count(Count)|25|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Tomcat SessionExpired
+
+Graph|Azure AppPlatform Spring Tomcat Session Rejected Count(Count)|26|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Tomcat SessionRejected
+
+Graph|Azure AppPlatform Spring System Cpu Usage (%)|27|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The recent cpu usage for the whole system
+
+Graph|Azure AppPlatform Spring App Cpu Usage (%)|28|scalar|sample|-|-|0|NA|-1|-1|NA|NA|App JVM CPU Usage Percentage
+
+Graph|Azure AppPlatform Spring App Memory Committed (Bytes)|29|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memory assigned to JVM in bytes
+
+Graph|Azure AppPlatform Spring App Memory Used(Bytes)|30|scalar|sample|-|-|0|NA|-1|-1|NA|NA|App Memory Used in bytes
+
+Graph|Azure AppPlatform Spring App Memory Max(Bytes)|31|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The maximum amount of memory in bytes that can be used for memory management
+
+Graph|Azure AppPlatform Spring Max Old Gen Memory Pool Bytes(Bytes)|32|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Max size of old generation memory pool
+
+Graph|Azure AppPlatform Spring Old Gen Memory Pool Bytes(Bytes)|33|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Size of old generation memory pool after a full GC
+
+Graph|Azure AppPlatform Spring Old Gen Promoted Bytes(Bytes)|34|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Count of positive increases in the size of the old generation memory pool before GC to after GC
+
+Graph|Azure AppPlatform Spring Young Gen Promoted Bytes(Bytes)|35|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Incremented for an increase in the size of the young generation memory pool after one GC to before the next
+
+Graph|Azure AppPlatform Spring GC Pause Count(Count)|36|scalar|sample|-|-|0|NA|-1|-1|NA|NA|GC Pause Total Count
+
+Graph|Azure AppPlatform Spring GC Pause Total Time(ms)|37|scalar|sample|-|-|0|NA|-1|-1|NA|NA|GC Pause Total Time
+
+Graph|Azure AppPlatform Spring Tomcat Total Sent Bytes(Bytes)|38|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Tomcat Sent Bytes
+
+Graph|Azure AppPlatform Spring Tomcat Total Received Bytes(Bytes)|39|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Tomcat Received Bytes
+
+Graph|Azure AppPlatform Spring Tomcat Request Total Times(ms)|40|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Tomcat Request Total Time
+
+Graph|Azure AppPlatform Spring Tomcat Request Total Count(Count)|41|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Tomcat Request Total Count
+
+Graph|Azure AppPlatform Spring Tomcat Request Average Time(ms)|42|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Tomcat Response Avg Time
+
+Graph|Azure AppPlatform Spring Tomcat Request Max Time(ms)|43|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Tomcat Request Max Time
+
+Graph|Azure AppPlatform Spring Tomcat Error Count(Count)|44|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Tomcat Error Count
+
+Graph|Azure AppPlatform Spring Tomcat Session Active Max Count(Count)|45|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Tomcat Session Active Max Count
+
+Graph|Azure AppPlatform Spring Tomcat Session Max Alive Time(ms)|46|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Tomcat Session Alive Max Time
+
+Graph|Azure AppPlatform Spring Tomcat Session Active Current Count(Count)|47|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Tomcat Session Active Current Count
+
+Graph|Azure AppPlatform Spring Tomcat Session Created Count(Count)|48|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Tomcat Session Created Count
+
+Graph|Azure AppPlatform Spring Tomcat Session Expired Count(Count)|49|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Tomcat Session Expired Count
+
+Graph|Azure AppPlatform Spring Tomcat Session Rejected Count(Count)|50|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Tomcat Session Rejected Count
+

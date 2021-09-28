@@ -1,0 +1,22 @@
+
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Hazelcast CodaHale Flow Stats|10763|vector|15|0|Hazelcast Metrics|Tier>Server>Instance>Flow|Hazelcast CodaHale Flow stats.
+
+Graph|Hazelcast Flow Executed/Sec|1|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of flow executed per second.
+Graph|Hazelcast Flow Minimum Execution Time (ms)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Minimum time of executing flow in millisecond.
+Graph|Hazelcast Flow Maximum Execution Time (ms)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum time of executing flow in millisecond.
+Graph|Hazelcast Flow Mean Execution Time (ms)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Mean rate of executing flow time.
+Graph|Hazelcast Flow StdDev Execution Time (ms)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Standard deviation time of executing flow in millisecond.
+Graph|Hazelcast Flow 50th Percentile Execution Time (ms)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|50th percentile of time taken for executing flow in millisecond.
+Graph|Hazelcast Flow 75th Percentile Execution Time (ms)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|75th percentile of time taken for executing flow in millisecond.
+Graph|Hazelcast Flow 95th Percentile Execution Time (ms)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|95th percentile of time taken for executing flow in millisecond.
+Graph|Hazelcast Flow 98th Percentile Execution Time (ms)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|98th percentile of time taken for executing flow in millisecond.
+Graph|Hazelcast Flow 99th Percentile Execution Time (ms)|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|99th percentile of time taken for executing flow in millisecond.
+Graph|Hazelcast Flow 999th Percentile Execution Time (ms)|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|99.9th percentile of time taken for executing flow in millisecond.
+Graph|Hazelcast Flow Execution Mean Rate|12|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Mean rate of event flow recieved.
+Graph|Hazelcast Flow Execution/15 Minute|13|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Fifteen minute rate of flow event recieved.
+Graph|Hazelcast Flow Execution/5 Minute|14|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Five minute rate of flow event recieved.
+Graph|Hazelcast Flow Execution/Minute|15|scalar|rate|-|-|0|NA|-1|-1|NA|NA|One minute rate of flow event recieved.

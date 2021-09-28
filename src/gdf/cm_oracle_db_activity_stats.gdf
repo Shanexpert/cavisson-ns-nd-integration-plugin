@@ -1,0 +1,28 @@
+# --- GDF Version History ---
+# # 1.0 - Initial version
+# # 2.0 - Change done for match Long_data and Long_long_data to double
+# # 3.0 - Changes done for Dynamic data in Execution GUI
+# # 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Oracle DB Activity Stats|10410|vector|20|0|Oracle Metrics|Tier>Server>Instance|Oracle Activity monitors metrics related to Oracle database session, transactions, execution operations etc.
+Graph|Oracle Current Active Sessions|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of active sessions.
+Graph|Oracle Average Active Sessions|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average number of active sessions.
+Graph|Oracle Average Active Sessions/Logical CPU|3|scalar|rate|-|-|0|NA|-1|-1|NA|NA|This shows the average load the database imposes on each logical CPU (i.e. cores or hyperthreads).
+Graph|Oracle Current OS Load|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current OS load.
+Graph|Oracle DB Block Changes/Sec|5|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Database blocks changed in the buffer cache per second.
+Graph|Oracle DB Block Changes/Txn|6|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Database blocks changed in the buffer cache per SQL transaction.
+Graph|Oracle DB Block Gets/Sec|7|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Database blocks read from the buffer cache per second.
+Graph|Oracle DB Block Gets/Txn|8|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Database blocks read from the buffer cache per SQL transaction.
+Graph|Oracle Executions/Sec|9|scalar|rate|-|-|0|NA|-1|-1|NA|NA|SQL executions per second.
+Graph|Oracle Executions/Txn|10|scalar|rate|-|-|0|NA|-1|-1|NA|NA|SQL executions per SQL transaction.
+Graph|Oracle I/O MB/Sec|11|scalar|rate|-|-|0|NA|-1|-1|NA|NA|I/O Megabytes per second.
+Graph|Oracle Logical Reads/Sec|12|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Logical Reads Per second.
+Graph|Oracle Physical Reads/Sec|13|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Physical Reads Per second.
+Graph|Oracle Physical Read Total KB/Sec|14|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Physical read total kilobytes per second.
+Graph|Oracle Physical Write Total KB/Sec|15|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Physical write total kilobytes per second.
+Graph|Oracle User Calls/Sec|16|scalar|rate|-|-|0|NA|-1|-1|NA|NA|User calls per second.
+Graph|Orcale User Calls/Txn|17|scalar|rate|-|-|0|NA|-1|-1|NA|NA|User calls per transaction.
+Graph|Oracle User Commits/Sec|18|scalar|rate|-|-|0|NA|-1|-1|NA|NA|User commits per Second.
+Graph|Oracle User Rollbacks/Sec|19|scalar|rate|-|-|0|NA|-1|-1|NA|NA|User rollbacks per Second.
+Graph|Oracle GC CR Block Received/Sec|20|scalar|rate|-|-|0|NA|-1|-1|NA|NA|GC CR block received per second.

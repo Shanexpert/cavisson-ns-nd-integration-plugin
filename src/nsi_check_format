@@ -1,0 +1,177 @@
+#!/bin/sh
+
+#nsi_check_format format-type value
+#Check the input format
+#exits wth 0 on success and 1 on failure
+
+# To check IP address format : nsi_check_format -i ip-address   
+# To check IP address format and output numeric IP on stdout : nsi_check_format -I ip-address   
+# To check number format    : nsi_check_format -n number 
+# To check ip:num_ip format  : nsi_check_fromat -x ip:num
+# To check number format and output the number on stdout :  nsi_check_format -N number 
+  
+# To check ip:num_ip format  and output numeric IP and number on stdout, space separated : nsi_check_fromat -X ip:num
+
+#Validated IP format of first arg
+#if second arg is 1, print out nemric ip
+validate_ip ()
+{
+    start_ip=$1
+
+    # Check if the format is xxx.yyy.zzz.www
+    echo "$start_ip" | grep '^\([0-9]\{1,3\}\.\)\{3\}[0-9]\{1,3\}$' >/dev/null
+    if [ $? -ne 0 ];then
+        return 1
+    fi
+
+    #Check if dotted part of IP is between 0-255
+    XSPART=`echo "$start_ip" | cut -d. -f1`
+    YSPART=`echo "$start_ip" | cut -d. -f2`
+    ZSPART=`echo "$start_ip" | cut -d. -f3`
+    WSPART=`echo "$start_ip" | cut -d. -f4`
+
+    if [ $XSPART -gt 255 -o $YSPART -gt 255 -o $ZSPART -gt 255 -o $WSPART -gt 255 ];then
+        return 1   
+    fi
+    if [ $XSPART -lt 0 -o $YSPART -lt 0 -o $ZSPART -lt 0 -o $WSPART -lt 0 ];then
+     	return 1   
+    fi
+
+    #Convert IP to numeric IP
+    #256*256 = 65536 and 256*256*256 = 16777216
+    if [ $2 -eq 1 ];then
+        echo "`expr  \( 16777216 \* $XSPART \) + \( 65536 \* $YSPART \) + \( 256 \* $ZSPART \) + $WSPART`"
+    fi 
+
+    return 0
+}
+
+
+#validates that input is a positive number
+#exits with 1 on 1 error and 0 in success
+validate_number ()
+{
+    #Check if number has all digits
+
+    echo "$1" | grep '^[0-9][0-9]*$' >/dev/null
+    if [ $? -ne 0 ];then
+        return 1
+    fi
+
+    if [ $1 -lt 0 ];then
+    	return 1
+    fi
+
+    #Print number of IPs 
+    if [ $2 -eq 1 ];then
+        echo "$1"
+    fi 
+
+    return 0
+}
+
+#Validated IP:num_ip format of first arg
+#if second arg is 1, print out nemric_ip num_ip  ; example 192.168.0.21:21
+#exit status 1 on failure 0 on success
+validate_ip_colon_num ()
+{
+    # Check if the format is xxx.yyy.zzz.www
+    echo "$1" | grep '^\([0-9]\{1,3\}\.\)\{3\}[0-9]\{1,3\}:[0-9][0-9]*$' >/dev/null
+    if [ $? -ne 0 ];then
+        return 1
+    fi
+
+    start_ip=`echo "$1" | cut -d":" -f1`
+    num_ip=`echo "$1" | cut -d":" -f2`
+
+    #Validate IP
+    numeric_ip=`validate_ip $start_ip $2`
+    if [ $? -ne 0 ];then
+        return 1
+    fi
+
+    validate_number $num_ip 0 
+    if [ $? -ne 0 ];then
+        return 1
+    fi
+  
+    #Print output if required
+    if [ $2 -eq 1 ];then
+	echo "$numeric_ip $num_ip"
+    fi 
+
+    return 0
+}
+
+#Validated IP:num_ip format of first arg
+#if second arg is 1, print out nemric_ip num_ip  ; example 192.168.0.21:21
+#exit status 1 on failure 0 on success
+validate_ip_range ()
+{
+    # Check if the format is xxx.yyy.zzz.www
+    echo "$1" | grep '^\([0-9]\{1,3\}\.\)\{3\}[0-9]\{1,3\}-\([0-9]\{1,3\}\.\)\{3\}[0-9]\{1,3\}$' >/dev/null
+    if [ $? -ne 0 ];then
+        return 1
+    fi
+
+    start_ip=`echo "$1" | cut -d"-" -f1`
+    end_ip=`echo "$1" | cut -d"-" -f2`
+
+    #Validate IP
+    numeric_sip=`validate_ip $start_ip $2`
+    if [ $? -ne 0 ];then
+        return 1
+    fi
+
+    #Validate IP
+    numeric_eip=`validate_ip $end_ip $2`
+    if [ $? -ne 0 ];then
+        return 1
+    fi
+
+    #Print output if required
+    if [ $2 -eq 1 ];then
+	echo "$numeric_sip $numeric_eip"
+    fi 
+
+    return 0
+}
+
+#main
+#Check inputs
+if [ "$#" -ne 2 ];then
+    echo "To check IP address format : nsi_check_format -i ip-address"
+    echo "To check IP address format and output numeric IP on stdout : "
+    echo "                             nsi_check_format -I ip-address"
+    echo "To check number format    : nsi_check_format -n number "
+    echo "To check number format and output the number on stdout :"
+    echo "                             nsi_check_format -N number "
+    echo "To check ip:num_ip format  : nsi_check_fromat -x ip:num"
+    echo "To check ip:num_ip format  and output numeric IP and number on stdout: "
+    echo "                             nsi_check_fromat -X ip:num"
+    echo "To check ip-ip format      : nsi_check_format -r sip-eip"
+    echo "To check ip-ip format  and output numeric start and end IP on stdout: "
+    echo "                             nsi_check_fromat -R ip:num"
+    exit 1
+fi
+
+if [ $1 = "-i" ];then
+    validate_ip $2 0
+elif [ $1 = "-I" ];then
+    validate_ip $2 1
+elif [ $1 = "-n" ];then
+    validate_number $2 0
+elif [ $1 = "-N" ];then
+    validate_number $2 1
+elif [ $1 = "-x" ];then
+    validate_ip_colon_num $2 0
+elif [ $1 = "-X" ];then
+    validate_ip_colon_num $2 1
+elif [ $1 = "-r" ];then
+    validate_ip_range $2 0
+elif [ $1 = "-R" ];then
+    validate_ip_range $2 1
+else
+    echo "Unknown argument $1"
+    exit 1
+fi

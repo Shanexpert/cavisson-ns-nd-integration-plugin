@@ -1,0 +1,92 @@
+#!/bin/bash
+
+. $CAV_MON_HOME/bin/ns_check_monitor_func.sh
+
+MY_PID=$$
+
+add_pid_in_excp_list $MY_PID
+
+#This command is to ship generator TR to Controller
+#1. This command first make the tar of the test run in /$NS_WDIR/.tmp/  
+#2. Ship the tar to controller's $NS_CONTROLLER_WDIR/logs directory 
+display_help_and_exit()
+{
+  echo "ERROR: Incorrect usage"
+  echo $1
+  echo "Usage:"
+  echo "nii_ship_gen_tr <Controller's IP> <Generator's TR number>"
+  remove_pid_from_excp_list $MY_PID
+  exit 1
+}
+
+
+if [ $# -ne 2 ];then
+  display_help_and_exit
+fi
+
+CONTROLLER_IP=$1
+GEN_TR=$2
+GENERATOR_TR_TAR_PATH=$NS_WDIR/.tmp/TR$GEN_TR.tar
+GENERATOR_TR_TAR_GZ_PATH=$NS_WDIR/.tmp/TR$GEN_TR.tar.gz
+echo "$CONTROLLER_IP" | grep '^\([0-9]\{1,3\}\.\)\{3\}[0-9]\{1,3\}$' >/dev/null
+if [ $? -eq 1 ];then
+  echo "$CONTROLLER_IP Wrong IP Format"
+  remove_pid_from_excp_list $MY_PID
+  exit 1 
+fi 
+
+#NS_CONTROLLER_WDIR-controller wdir
+echo $GEN_TR | egrep -q '^[0-9]+$'
+if [ $? -ne 0 ];then
+  echo "Invalid format of generator test run number($GEN_TR)."
+  remove_pid_from_excp_list $MY_PID
+  exit 1
+fi
+
+if [ ! -d $NS_WDIR/logs/TR$GEN_TR ];then
+  echo "Given TR $GEN_TR directory not found."
+  remove_pid_from_excp_list $MY_PID
+  exit 1
+fi
+GENERATOR_NAME=`egrep -w "MACHINE_NAME" $NS_WDIR/logs/TR$GEN_TR/scenario | cut -d' ' -f2`
+#   NS_CONTROLLER_WDIR is the env variable for Controller's directory. This is set by nii_start_test script
+CONTROLLER_DIR_PATH=$NS_CONTROLLER_WDIR/logs/TR$NS_CONTROLLER_TEST_RUN/NetCloud/$GENERATOR_NAME
+
+cd $NS_WDIR/logs/
+# tar command changed to fix bug 6142
+# tar --ignore-failed-read -czf $GENERATOR_TR_TAR_PATH TR$GEN_TR
+tar --ignore-failed-read -cf $GENERATOR_TR_TAR_PATH --exclude=".*.offset" TR$GEN_TR
+if [ $? -ne 0 ];then
+  echo "Unable to create tar of TR$GEN_TR"
+  remove_pid_from_excp_list $MY_PID
+  exit 1
+fi
+
+gzip -c $GENERATOR_TR_TAR_PATH > $GENERATOR_TR_TAR_GZ_PATH
+if [ $? -ne 0 ];then
+  echo "Unable to create zip file of TR$GEN_TR"
+  remove_pid_from_excp_list $MY_PID
+  exit 1
+fi
+
+
+cd -
+nsu_server_admin -s $CONTROLLER_IP -i -F $GENERATOR_TR_TAR_PATH -D $CONTROLLER_DIR_PATH >/dev/null
+if [ $? != 0 ];then
+  echo "Command failed To FTP tar file to controller machine $CONTROLLER_IP"
+  remove_pid_from_excp_list $MY_PID
+  exit 1
+fi
+
+#Added Controller's user and group name, which help in changing ownership of generator TRs with respect to given user
+nsu_server_admin -s $CONTROLLER_IP -i -c "$NS_CONTROLLER_WDIR/bin/nsi_extract_tr $CONTROLLER_DIR_PATH $GEN_TR" >/dev/null
+if [ $? != 0 ];then
+  echo "Command failed to untar the generator TR at the controller path - $NS_CONTROLLER_WDIR/logs"
+  remove_pid_from_excp_list $MY_PID
+  exit 1
+fi
+
+rm -f $GENERATOR_TR_TAR_PATH
+
+remove_pid_from_excp_list $MY_PID
+exit 0

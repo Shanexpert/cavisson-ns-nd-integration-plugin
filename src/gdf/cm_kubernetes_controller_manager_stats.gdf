@@ -1,0 +1,11 @@
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Kubernetes Controller Manager Stats|14153|vector|7|0|Kubernetes Control Plane Metrics|Cluster>MasterNode|Kubernetes controller manager metrics Stats
+
+Graph|Controller Manager Leader IsMaster |1|scalar|sample_4B|-|None|0|NA|-1|-1|H|NA|Whether or not this member is a Master. Value is 1 if it is Master
+Graph|Controller Manager Process Resident Memory (MB) |2|scalar|sample_4B_1000|-|None|0|NA|-1|-1|H|NA|Resident memory size(MB)
+Graph|Controller Manager Process CPU (%) |3|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Total user and system CPU (%) in a sample.
+Graph|Controller Manager OS Thread |4|scalar|sample_4B|-|None|0|NA|-1|-1|H|NA|Count of OS threads created.
+Graph|Controller Manager Go Goroutines |5|scalar|sample_4B|-|None|0|NA|-1|-1|H|NA|Count of goroutines that currently exist.
+Graph|Controller Manager Open Files |6|scalar|sample_4B|-|None|0|NA|-1|-1|H|NA|Count of open file descriptors.
+Graph|Controller Manager Open Files Limit |7|scalar|sample_4B|-|None|0|NA|-1|-1|H|NA|Maximum Limit of open file descriptors.

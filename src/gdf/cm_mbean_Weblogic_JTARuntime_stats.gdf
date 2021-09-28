@@ -1,0 +1,44 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+
+#ObjectName :com.bea:ServerRuntime=AdminServer,Name=JTARuntime,Type=JTARuntime
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Weblogic JTA Transaction Runtime Stats|14187|vector|15|0|Weblogic Metrics|Tier>Server>Instance|This stats provides information about general JTA transaction runtime statistics.
+		
+
+Graph|Weblogic Transaction Read Only One Phase Committed Total Count|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The total number of transactions with more than one enlisted resource that were one-phase committed due to read-only optimization since the server was started.
+
+Graph|Weblogic Transaction One Resource One Phase Committed Total Count|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The total number of transactions with only one enlisted resource that were one-phase committed since the server was started.
+
+Graph|Weblogic Transaction Two Phase Committed Total Count|3|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The number of transactions that were rolled back due to an application error.
+
+Graph|Weblogic Transaction Rolled Back App Total Count|4|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The number of transactions that were rolled back since the server was started.
+
+Graph|Weblogic Transaction Rolled Back Total Count|5|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The number of transactions that were rolled back due to a resource error.
+
+Graph|Weblogic Transaction Rolled Back Resource Total Count|6|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The number of transactions that were rolled back due to an internal system error.
+
+Graph|Weblogic Transaction Rolled Back System Total Count|7|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The total number of transactions committed since the server was started.
+
+Graph|Weblogic Transaction Committed Total Count|8|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The total number of transactions committed since the server was started.
+
+Graph|Weblogic Seconds Active Total Count|9|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The total number of seconds that transactions were active for all committed transactions.
+
+Graph|Weblogic Transaction LLR Committed Total Count|10|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The total number of LLR transactions that were committed since the server was started.
+
+Graph|Weblogic Transaction Abandoned Total Count|11|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The total number of transactions that were abandoned since the server was started.
+
+Graph|Weblogic Transaction Rolled Back Timeout Total Count|12|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The number of transactions that were rolled back due to a timeout expiration.
+
+Graph|Weblogic Transaction No Resources Committed Total Count|13|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The total number of transactions with no enlisted resources that were committed since the server was started.
+
+Graph|Weblogic Transaction Total Count|14|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The total number of transactions processed. This total includes all committed, rolled back, and heuristic transaction completions since the server was started.
+
+Graph|Weblogic Transaction Heuristics Total Count|15|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The number of transactions that completed with a heuristic status since the server was started.
+

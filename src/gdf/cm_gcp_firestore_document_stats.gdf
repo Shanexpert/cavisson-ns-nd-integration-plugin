@@ -1,0 +1,6 @@
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP Firestore Document Stats|11507|vector|2|0|GCP Metrics|ProjectID>Module>Version>OperationType|GCP Firestore document stats provides metrics details related to firestore document read/write.
+
+Graph|GCP Firestore Document Reads/Sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The number of successful document reads from queries or lookups per second.
+Graph|GCP Firestore Document Writes/Sec|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The number of successful document writes per second.

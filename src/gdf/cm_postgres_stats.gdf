@@ -1,0 +1,19 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Postgress Stats|10228|vector|9|0|Cavisson Metrics|Tier>Server>DBName|Postgress statistics
+
+Graph|Total Connections|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of backends currently connected to this database.
+Graph|Active Connections|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of backends executing query in this database.
+Graph|Blocks Reads/Min|3|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of disk blocks read per minute.
+Graph|Blocks Write/Min|4|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of disk blocks write per minute.
+Graph|Locks Consumed|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of locks held by open transactions within the database server.
+Graph|SHR Memory (KB)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The amount of shared memory used by a task in (KB). It simply reflects memory that could be potentially shared with other processes.
+Graph|Cache Hits/Min|7|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of times disk blocks were found already in the buffer cache, so that a read was not necessary (this only includes hits in the PostgreSQL buffer cache, not the operating system's file system cache).
+Graph|Commits/Min|8|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of transactions in this database that have been committed.
+Graph|Time b/w consecutive checkpoints (Min)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Time b/w consecutive checkpoints in minutes 

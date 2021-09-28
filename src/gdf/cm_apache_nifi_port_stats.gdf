@@ -1,0 +1,14 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Apache Nifi Port Stats|10380|vector|6|0|Application Metrics|Tier>Server>Instance>ProcessGroup>PortType>Port|Apache Nifi Port Stats.
+Graph|Nifi Active Thread|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of active threads.
+Graph|Nifi Input Flow Files|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of flowfiles that entered from this port.
+Graph|Nifi Input Flow Files (KB)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total Size of all flowfiles that entered from this port in kilo bytes.
+Graph|Nifi Out Flow Files|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of flowfiles that pulled from this port.
+Graph|Nifi Out Flow Files (KB)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total Size of all flowfiles that pulled from this port.
+Graph|Nifi Port Status|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Status of port. Status is 1 = Stopped, 2 = Running, 3 = Disabled and 4 = Invalid.

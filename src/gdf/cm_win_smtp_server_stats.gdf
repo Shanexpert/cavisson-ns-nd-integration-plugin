@@ -1,0 +1,120 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Windows SMTP Server|10948|vector|115|0|System Metrics|Tier>Server>Instance|Windows SMTP Server
+Graph|Bytes Sent|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of bytes sent. Perfmon metric name: Bytes Sent Total.
+Graph|Bytes Sent/Sec|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Rate at which bytes are sent.  Perfmon metric name: Bytes Sent/sec.
+Graph|Bytes Received|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of bytes received. Perfmon metric name: Bytes Received Total.
+Graph|Bytes Received/Sec|4|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Rate at which bytes are received. Perfmon metric name: Bytes Received/sec.
+Graph|Bytes Total|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of bytes sent and received. Perfmon metric name: Bytes Total.
+Graph|Bytes Total/Sec|6|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Rate at which bytes are sent and received. Perfmon metric name: Bytes Total/Sec.
+Graph|Message Bytes Sent|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of bytes sent in messages. Perfmon metric name: Message Bytes Sent Total.
+Graph|Message Bytes Sent/Sec|8|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Rate at which bytes are sent in messages. Perfmon metric name: Message Bytes Sent/sec.
+Graph|Message Bytes Received|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of bytes received in messages. Perfmon metric name: Message Bytes Received Total.
+Graph|Message Bytes Received/Sec|10|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Rate at which bytes are received in messages. Perfmon metric name:  Message Bytes Received/sec.
+Graph|Message Bytes Total|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of bytes sent and received in messages. Perfmon metric name: Message Bytes Total.
+Graph|Message Bytes Total/Sec|12|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Rate at which bytes are sent and received in messages. Perfmon metric name: Message Bytes Total/sec.
+Graph|Messages Received|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of inbound messages accepted. Perfmon metric name: Messages Received Total.
+Graph|Messages Received/Sec|14|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Rate at which inbound messages are being received. Perfmon metric name: Messages Received/sec.
+Graph|Average Recipients/msg Received|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average number of recipients per inbound message received. Perfmon metric name: Avg Recipients/msg Received.
+Graph|Average Recipients/msg Sent|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average number of recipients per outbound messages sent. Perfmon metric name: Avg Recipients/msg Sent.
+Graph|Local Recipients (Pct)|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percentage of recipients that will be delivered locally. Perfmon metric name: % Recipients Local.
+Graph|Remote Recipients (Pct)|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percentage of recipients that will be delivered remotely. Perfmon metric name: % Recipients Remote.
+Graph|Messages Refused for Size|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of messages rejected because they were too big. Perfmon metric name: Messages Refused for Size.
+Graph|Messages Refused for Address Objects|20|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of messages refused due to no address objects. Perfmon metric name: Messages Refused for Address Objects.
+Graph|Messages Refused for Mail Objects|21|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of messages refused due to no mail objects. Perfmon metric name: Messages Refused for Mail Objects.
+Graph|Messages Delivered|22|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of messages delivered to local mailboxes. Perfmon metric name: Messages Delivered Total.
+Graph|Messages Delivered/Sec|23|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Rate at which messages are delivered to local mailboxes. Perfmon metric name: Messages Delivered/sec.
+Graph|Message Delivery Retries|24|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of local deliveries that were retried. Perfmon metric name: Message Delivery Retries.
+Graph|Message Send Retries|25|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of outbound message sends that were retried. Perfmon metric name: Message Send Retries.
+Graph|Average Retries/msg Delivered|26|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average number of retries per local delivery. Perfmon metric name: Avg Retries/msg Delivered.
+Graph|Average Retries/msg Sent|27|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average number of retries per outbound message sent. Perfmon metric name: Avg Retries/msg Sent.
+Graph|Pickup Directory Messages Retrieved|28|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of messages retrieved from the mail pick-up directory. Perfmon metric name: Pickup Directory Messages Retrieved Total.
+Graph|Pickup Directory Messages Retrieved/Sec|29|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Rate at which messages are being retrieved from the mail pick-up directory. Perfmon metric name: Pickup Directory Messages Retrieved/sec.
+Graph|NDRs Generated|30|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of non-delivery reports that have been generated. Perfmon metric name: NDRs Generated.
+Graph|Local Queue Length|31|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of messages in the local queue. Perfmon metric name: Local Queue Length.
+Graph|Local Retry Queue Length|32|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of messages in the local retry queue. Perfmon metric name: Local Retry Queue Length.
+Graph|Mail Files Open|33|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of handles to open mail files. Perfmon metric name: Number of MailFiles Open.
+Graph|Queue Files Open|34|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of handles to open queue files. Perfmon metric name: Number of QueueFiles Open.
+Graph|Categorizer Queue Length|35|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of messages in the categorizer queue. Perfmon metric name: Categorizer Queue Length.
+Graph|Messages Sent|36|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of outbound messages sent. Perfmon metric name: Messages Sent Total.
+Graph|Messages Sent/Sec|37|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Rate at which outbound messages are being sent. Perfmon metric name: Messages Sent/sec.
+Graph|Remote Queue Length|38|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of messages in the remote queue. Perfmon metric name: Remote Queue Length.
+Graph|Remote Retry Queue Length|39|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of messages in the retry queue for remote delivery. Perfmon metric name: Remote Retry Queue Length.
+Graph|Total DNS Queries|40|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of DNS lookups. Perfmon metric name: DNS Queries Total.
+Graph|DNS Queries/Sec|41|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Rate of DNS lookups. Perfmon metric name: DNS Queries/sec.
+Graph|Total Inbound Connections|42|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of inbound connections received. Perfmon metric name: Inbound Connections Total.
+Graph|Current Inbound Connections|43|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of connections currently inbound. Perfmon metric name: Inbound Connections Current.
+Graph|Total Outbound Connections|44|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of outbound connections attempted. Perfmon metric name: Outbound Connections Total.
+Graph|Current Outbound Connections|45|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of connections currently outbound. Perfmon metric name: Outbound Connections Current.
+Graph|Refused Outbound Connections|46|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of outbound connection attempts refused by remote sites. Perfmon metric name: Outbound Connections Refused.
+Graph|Total Connection Errors|47|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of connection errors. Perfmon metric name: Total Connection Errors.
+Graph|Connection Errors/Sec|48|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of connection errors per second. Perfmon metric name: Connection Errors/sec.
+Graph|Total Directory Drops|49|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of messages placed in a drop directory. Perfmon metric name: Directory Drops Total.
+Graph|Directory Drops/Sec|50|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Total number of messages placed in a drop directory per second. Perfmon metric name: Directory Drops/sec.
+Graph|Total Routing Table Lookups|51|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of routing table lookups. Perfmon metric name: Routing Table Lookups Total.
+Graph|Routing Table Lookups/Sec|52|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Total number of routing table lookups per second. Perfmon metric name: Routing Table Lookups/sec.
+Graph|Total ETRN Messages|53|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of ETRN messages received by the server. Perfmon metric name: ETRN Messages Total.
+Graph|ETRN Messages/Sec|54|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Total number of ETRN messages per second. Perfmon metric name: ETRN Messages/sec.
+Graph|No Recipients Badmailed Messages|55|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of messages sent to badmail because they had no recipients. Perfmon metric name: Badmailed Messages (No Recipients).
+Graph|Hop Count Exceeded Badmailed Messages|56|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of messages sent to badmail because they had exceeded the maximum hop count. Perfmon metric name: Badmailed Messages (Hop Count Exceeded).
+Graph|General Failure Badmailed Messages|57|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of messages sent to badmail for reasons not associated with a specific counter. Perfmon metric name: Badmailed Messages (General Failure).
+Graph|Bad Pickup File Badmailed Messages|58|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of malformed pickup messages sent to badmail. Perfmon metric name: Badmailed Messages (Bad Pickup File).
+Graph|Triggered via Event Badmailed Messages|59|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of messages sent to badmail at the request of a server event sink. Perfmon metric name: Badmailed Messages (Triggered via Event).
+Graph|NDR of DSN Badmailed Messages|60|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of Delivery Status Notifications sent to badmail becuase they could not be delivered. Perfmon metric name: Badmailed Messages (NDR of DSN).
+Graph|Messages Pending Routing|61|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of messages that have been categorized but not routed. Perfmon metric name: Messages Pending Routing.
+Graph|Messages Currently Undeliverable|62|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of messages that have been reported as currently undeliverable by routing. Perfmon metric name: Messages Currently Undeliverable.
+Graph|Submitted Messages|63|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total messages submitted to queuing for delivery. Perfmon metric name: Total messages submitted.
+Graph|Total DSN Failures|64|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of failed DSN generation attempts. Perfmon metric name: Total DSN Failures.
+Graph|Current Messages in Local Delivery|65|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of messages that are currently being processed by a server event sink for local delivery. Perfmon metric name: Current Messages in Local Delivery.
+Graph|Categorizer: Submitted Messages|66|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of messages submitted to the categorizer. Perfmon metric name: Cat: Messages submitted.
+Graph|Categorizer: Submitted Messages/Sec|67|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Rate at which messages are being submitted to the categorizer. Perfmon metric name: Cat: Messages submitted/sec.
+Graph|Categorizer: Categorizations Completed|68|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of messages submitted to categorizer that have finished categorization. In Perform: Cat: Categorizations completed.
+Graph|Categorizer: Categorizations Completed/Sec|69|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Rate of categorizations completed. Perfmon metric name: Cat: Categorizations completed/sec.
+Graph|Categorizer: Categorizations in progress|70|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of categorizations in progress. Perfmon metric name: Cat: Categorizations in progress.
+Graph|Categorizer: Successfully Categorizations|71|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of categorizations that completed without any errors. Perfmon metric name: Cat: Categorizations completed successfully.
+Graph|Categorizer: Non Retry-able Error Failed Categorizations|72|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of categorizations that failed with a hard error (not retryable). Perfmon metric name: Cat: Categorizations failed (non-retryable error).
+Graph|Categorizer: Retry-able Error Failed Categorizations|73|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of categorizations that failed with a retryable error. Perfmon metric name: Cat: Categorizations failed (retryable error).
+Graph|Categorizer: Out Of Memory Failed Categorizations|74|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of categorizations that failed due to lack of available memory. Perfmon metric name: Cat: Categorizations failed (Out Of Memory).
+Graph|Categorizer: DS logon failure Categorizations|75|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of categorizations that failed due to a DS logon failure. Perfmon metric name: Cat: Categorizations failed (DS logon failure).
+Graph|Categorizer: DS Connection Failure Categorizations|76|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of categorizations that failed due to a DS connection failure. Perfmon metric name: Cat: Categorizations failed (DS connection failure).
+Graph|Categorizer: Sink Retry-able Error Categorizations|77|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of categorizations that failed with a generic retryable error. Perfmon metric name: Cat: Categorizations failed (sink retryable error).
+Graph|Categorizer: Categorized Messages|78|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of messages categorizer has submitted to queueing. Perfmon metric name: Cat: Messages Categorized.
+Graph|Categorizer: Bifurcated Messages|79|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of new messages created by the categorizer (bifurcation). Perfmon metric name: Cat: Messages bifurcated.
+Graph|Categorizer: Aborted Messages|80|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of messages marked to be aborted by the categorizer. Perfmon metric name: Cat: Messages aborted.
+Graph|Categorizer: Recipients before categorization|81|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of mail msg recipients submitted to categorizer. Perfmon metric name: Cat: Recipients before categorization.
+Graph|Categorizer: Recipients after categorization|82|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of mail msg recipients submitted from categorizer to queueing. Perfmon metric name: Cat: Recipients after categorization.
+Graph|Categorizer: Recipients NDRd By Categorizer|83|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of recipients the categorizer is currently processing. Perfmon metric name: Cat: Recipients NDRd by categorizer.
+Graph|Categorizer: Unresolved NDRd Recipients|84|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of unresolved recipients (local addresses not found). Perfmon metric name: Cat: Recipients NDRd (unresolved).
+Graph|Categorizer: Ambiguous Address NDRd Recipients|85|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of recipients with addresses that match multiple DS objects. Perfmon metric name: Cat: Recipients NDRd (ambiguous address).
+Graph|Categorizer: Illegal Address NDRd Recipients|86|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of recipients with illegal addresses detected by the categorizer. Perfmon metric name: at: Recipients NDRd (illegal address).
+Graph|Categorizer: Forwarding Loop NDRd Recipients|87|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of recipients NDRd by the categorizer due to a forwarding loop detection. Perfmon metric name: Cat: Recipients NDRd (forwarding loop).
+Graph|Categorizer: Sink Error NDRd Recipients|88|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of recipients NDRd by the categorizer due to a generic recipient failure. Perfmon metric name: Cat: Recipients NDRd (sink recip errors).
+Graph|Categorizer: Recipients in categorization|89|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of recipients the categorizer is currently processing. Perfmon metric name: Cat: Recipients in categorization.
+Graph|Categorizer: Unresolved Senders|90|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of senders not found in the DS. Perfmon metric name: Cat: Senders unresolved.
+Graph|Categorizer: Ambiguous Addresses Senders|91|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of senders with addresses that match multiple DS objects. Perfmon metric name: Cat: Senders with ambiguous addresses.
+Graph|Categorizer: Lookups Address|92|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of DS lookups for individual addresses. Perfmon metric name: Cat: Address lookups.
+Graph|Categorizer: Lookups Address/Sec|93|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Total number of address lookups dispatched to the DS per second. Perfmon metric name: Cat: Address lookups/sec.
+Graph|Categorizer: Lookups Address completions|94|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of address lookup completions processed. Perfmon metric name: Cat: Address lookup completions.
+Graph|Categorizer: Lookups Address Completions/Sec|95|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Total number of address lookup completions processed per second. Perfmon metric name: Cat: Address lookup completions/sec.
+Graph|Categorizer: Lookups Address not found|96|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of address lookups that did not find any DS object. Perfmon metric name: Cat: Address lookups not found.
+Graph|Categorizer: Duplicate Mail Message Collisions|97|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of times a duplicate recipient address was detected by mailmsg/categorizer. Perfmon metric name: Cat: mailmsg duplicate collisions.
+Graph|Categorizer: LDAP connections|98|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of LDAP connections opened. Perfmon metric name: Cat: LDAP connections.
+Graph|Cat: LDAP connection failures|99|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of failures encountered connection to LDAP servers. Perfmon metric name: Cat: LDAP connection failures.
+Graph|Categorizer: LDAP Open Connections|100|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of LDAP connections currently open. Perfmon metric name: Cat: LDAP connections currently open.
+Graph|Categorizer: LDAP Binds|101|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of successful LDAP binds performed. Perfmon metric name: Cat: LDAP binds.
+Graph|Categorizer: LDAP Bind Failures|102|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of LDAP bind failures. Perfmon metric name: Cat: LDAP bind failures.
+Graph|Categorizer: LDAP Searches|103|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total LDAP searches successfully dispatched. Perfmon metric name: Cat: LDAP searches.
+Graph|Categorizer: LDAP Searches/Sec|104|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Total LDAP searches successfully dispatched per second. Perfmon metric name: Cat: LDAP searches/sec.
+Graph|Categorizer: LDAP Paged Searches|105|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total LDAP paged searches successfully dispatched. Perfmon metric name: Cat: LDAP paged searches.
+Graph|Categorizer: LDAP Search Failures|106|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of failures to dispatch an async LDAP search. Perfmon metric name: Cat: LDAP search failures.
+Graph|Categorizer: LDAP Paged Search Failures|107|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of failures to dispatch an async paged LDAP search. Perfmon metric name: Cat: LDAP paged search failures.
+Graph|Categorizer: LDAP Searches Completed|108|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of LDAP search completions processed. Perfmon metric name: Cat: LDAP searches completed.
+Graph|Categorizer: LDAP Searches Completed/Sec|109|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Total LDAP search completions processed/sec. Perfmon metric name: Cat: LDAP searches completed/sec.
+Graph|Categorizer: LDAP Paged Searches Completed|110|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of paged LDAP completions processed. Perfmon metric name: Cat: LDAP paged searches completed.
+Graph|Categorizer: LDAP Search Completion Failures|111|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of LDAP searches that completed with a failure. Perfmon metric name: Cat: LDAP search completion failures.
+Graph|Categorizer: LDAP Paged Search Completion Failures|112|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of LDAP paged searches that completed with a failure. Perfmon metric name: Cat: LDAP paged search completion failures.
+Graph|Categorizer: LDAP General Completion Failures|113|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of LDAP completions with a generic failure. Perfmon metric name: Cat: LDAP general completion failures.
+Graph|Categorizer: LDAP Abandoned searches|114|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of LDAP searches abandoned. Perfmon metric name: Cat: LDAP searches abandoned.
+Graph|Categorizer: LDAP Searches Completion Pending|115|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of LDAP searches pending async completion. Perfmon metric name: Cat: LDAP searches pending completion.

@@ -1,0 +1,106 @@
+#!/bin/sh
+
+#######################################################################################################
+# Name            : nsi_orl_get_sql_stmt_ord_by_elapsed_time 
+#
+# Synopsis        : 
+#
+#
+# Examples        :
+# 
+# History         : 
+#   
+# Version 1.0
+#   Author        : Ambuj 
+#   Date          : 11-June-2014
+#
+#######################################################################################################
+
+
+######################################################################
+#                     Variables and init settings
+#####################################################################
+                                                                                                       
+# Including nsi_db_utils
+. $NS_WDIR/bin/nsi_db_utils
+
+usage()
+{
+  echo
+  echo "$*"
+  echo
+  echo "USAGE:"
+  echo "====="
+  echo
+  echo "$0 --testrun <value> "
+
+  exit 1
+}
+
+chk_args()
+{
+  if [ "X$TRNUM" == "X" ]; then
+    usage "Missing mandatory option --testrun."
+  fi
+
+}
+
+while [ "$1" != "" ];do
+  case $1 in
+    "--testrun")
+        shift
+        chk_args_of_option "--testrun" "$1"
+        TRNUM=$1;;
+    "--limit")
+        shift
+        chk_args_of_option "--limit" "$1"
+        LIMIT=$1;;
+    "--offset")
+        shift
+        chk_args_of_option "--offset" "$1"
+        OFFSET=$1;;
+    "--normsqlid")
+        shift
+        chk_args_of_option "--normsqlid" "$1"
+        NORMSQLID=$1;;
+    --*) usage "Invalid option $1";;
+    *) usage ;;
+  esac
+  shift
+done
+
+SELECT="SELECT *"
+FROM="FROM OrlStatsSQLIdTable_$TRNUM"
+
+if [ "X$NORMSQLID" != "X" ]; then
+  WHERE="WHERE OrlStatsSQLIdTable_$TRNUM.NormSQLId = $NORMSQLID"
+fi
+
+ORDER="ORDER BY OrlStatsSQLIdTable_$TRNUM.NormSQLId"
+
+
+if [ "X$LIMIT" != "X" ]; then
+  LIMIT="LIMIT $LIMIT"
+fi
+
+if [ "X$OFFSET" != "X" ]; then
+  OFFSET="OFFSET $OFFSET"
+fi
+
+set_query_files $TRNUM
+
+if [ "X$GET_COUNT" != "X1" ]; then
+  ns_run_query
+else
+  FROM="FROM $NEWLINE  ($NEWLINE  $SELECT $NEWLINE$FROM $NEWLINE$WHERE $NEWLINE$GROUP $NEWLINE  ) As \"Total\" "
+  SELECT="SELECT $NEWLINE  Count(*) As \"Rows\" "
+  WHERE=""
+  GROUP=""
+  ORDER=""
+  ns_run_query
+fi
+
+show_query_result
+
+exit 0
+

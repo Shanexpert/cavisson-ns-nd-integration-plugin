@@ -1,0 +1,95 @@
+# Name             nsu_cmon_upgrade 
+# Purpose         : This shell is internally used in ns_server_admin.c to upgrade cmon build in servers 
+#                 : 1) Untar the package 
+#                 : 2) Update Version history
+#                 : 3) Restart cmon    
+#                 This is first FTPed to server and then it is run
+
+# Usage           : To upgrade
+#                   nsi_cmon_upgrade -u <InstallDir> -p <package> -s <server name>
+#                 : To Restart
+#                   nsi_cmon_upgrade -s <server name> -r
+#                   package MUST be tar (Not tar.gz)
+# Initial Version : Friday, May 01 2009 
+
+ERROR_LOG=/tmp/nsu_cmon_upgrade.err.$$
+
+usage()
+{
+  echo " Usage  : To upgrade"
+  echo "             nsi_cmon_upgrade -u <InstallDir> -p <package> -s <server name>"
+  echo "        : To Restart"
+  echo "             nsi_cmon_upgrade -s <server name> -r"
+  exit 1
+}
+
+upgrade_server()
+{
+  if [ ! -d $CAV_MON_HOME ];then
+    echo "Upgrade can't be done. Installation dir '$CAV_MON_HOME' does not exist." 
+    exit 1
+  fi
+
+  UPGRADE_HISTORY_LOG=$CAV_MON_HOME/logs/upgrade_history
+
+  echo "`date +"%D %r"`: Starting CavMon upgrade on Server '$SERVER_NAME' with package $PACKAGE" >>$UPGRADE_HISTORY_LOG
+
+  if [ ! -f $CAV_MON_HOME/$PACKAGE ];then
+    echo "Upgrade can't be done. Cmon package $PACKAGE' does not exist." | tee -a $UPGRADE_HISTORY_LOG
+    exit 1
+  fi
+  cd $CAV_MON_HOME
+
+  #tar xvf $PACKAGE >/dev/null 2>&1
+  #If cmon is running from different id then following error takes place:
+  # tar: ./etc: Cannot utime: Operation not permitted
+  #Hence changing:(tar xvf to tar xvmf)
+  tar xvmf $PACKAGE >/dev/null 2>$ERROR_LOG
+  if [ $? != 0 ];then
+    echo "Error: Upgrade can't be done for server '$SERVER_NAME'. Unable to untar $PACKAGE" | tee -a $UPGRADE_HISTORY_LOG
+    cat $ERROR_LOG | tee -a $UPGRADE_HISTORY_LOG
+    rm -f $ERROR_LOG
+    exit 1
+  fi
+  rm -f $ERROR_LOG
+
+  echo "Server '$SERVER_NAME' upgraded successfully." | tee -a $UPGRADE_HISTORY_LOG
+  echo "Upgrade Ended at `date +"%D %r"`" >>$UPGRADE_HISTORY_LOG
+  echo "`$CAV_MON_HOME/bin/cmon version`" | tee -a $UPGRADE_HISTORY_LOG
+  echo "****************************************" >>$UPGRADE_HISTORY_LOG
+}
+
+restart_server()
+{
+CMON_RESTART_LOG=$CAV_MON_HOME/logs/cmon_restart.log
+
+  echo "Restarting cmon on Server '$SERVER_NAME'" | tee -a $CMON_RESTART_LOG
+  nohup $CAV_MON_HOME/bin/cmon restart_from_cmon >>$CMON_RESTART_LOG 2>&1 &
+}
+
+
+RESTART=0
+
+while getopts p:rs:u:? arg
+do
+  case $arg in
+    p) PACKAGE=$OPTARG"";;
+    s) SERVER_NAME="$OPTARG";;
+    r) RESTART=1;;
+    u) CAV_MON_HOME="$OPTARG";;
+    ?) usage;;
+  esac
+done
+
+if [ "X$CAV_MON_HOME" == "X.." ];then
+  CAV_MON_HOME=`dirname \`pwd\``
+fi
+
+if [ $RESTART -eq 0 ];then
+  upgrade_server
+else
+  restart_server
+fi
+
+
+exit 0

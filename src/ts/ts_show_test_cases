@@ -1,0 +1,68 @@
+#!/bin/sh
+TEMP_TEST_CASES=/tmp/testcases.$$
+
+PRE_TEST_SETUP="No"
+POST_TEST_SETUP="No"
+CHECK_STATUS="No"
+SCENARIO="No"
+
+TEST_CASE_DIR=$NS_WDIR/testcases
+
+
+if [ ! -d $NS_WDIR/testcases ];then
+  echo "Theres is no directory named testcases in work"
+  exit 1
+fi
+
+ls $TEST_CASE_DIR >$TEMP_TEST_CASES
+
+create_header ()
+{
+  echo "    Test Case Name                   Pre  Post  Check   Scenario"
+  echo "    --------------                   ---  ----  -----   --------"
+}
+
+show_values()
+{
+  printf "  %-34s %-5s %-5s %-5s %s \n" $TEST_CASE_NAME $PRE_TEST_SETUP $POST_TEST_SETUP $CHECK_STATUS $SCENARIO
+}
+
+get_values_for_files ()
+{
+  VAR=$1
+  if [ -f $TEST_CASE_DIR/$TEST_CASE_NAME/pre_test_setup ];then
+    PRE_TEST_SETUP="Yes"
+  fi
+  
+  if [ -f $TEST_CASE_DIR/$TEST_CASE_NAME/post_test_setup ];then
+    POST_TEST_SETUP="Yes"
+  fi
+  
+  if [ -f $TEST_CASE_DIR/$TEST_CASE_NAME/check_status ];then
+    CHECK_STATUS="Yes"
+  fi
+  SCENARIO=`cat $TEST_CASE_DIR/$TEST_CASE_NAME/testcase.conf | grep SCENARIO_NAME | cut -d" " -f2 `
+  show_values
+}
+
+parse_testcase()
+{
+  while read line
+  do
+    TEST_CASE_NAME=$line
+    # Need to print only directories.  : Arun 02/25/08
+    if [ ! -d $NS_WDIR/testcases/$TEST_CASE_NAME ];then
+      continue;
+    fi;
+    #Always make these to default
+    PRE_TEST_SETUP="No"
+    POST_TEST_SETUP="No"
+    CHECK_STATUS="No"
+    get_values_for_files
+  done <$TEMP_TEST_CASES
+}
+
+create_header
+parse_testcase
+
+exit 0

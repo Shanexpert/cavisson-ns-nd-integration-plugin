@@ -1,0 +1,299 @@
+#!/bin/sh
+
+#Set it is not set for main controller
+if [ "X$HPD_CMD" == "X" ]; then
+  HPD_CMD=hpd
+fi
+
+NOCHANGE=0
+if [ $# -eq 1 ];then
+    if [ $1 == "-n" ];then
+ 	NOCHANGE=1
+    else
+	echo "Usage: nsu_configure conf-type NSAdminIF NSAdminIP NSAdminGW NSLoadIF SRAdminIF SRAdminIP SRAdminGW SRLoadIF"
+	echo "For NetStorm-NetOcean pair installation: conf-type is NS>NO for NetStorm & NO for NetOcean"
+	echo "NSAdminIP and SRAdminIP are in the format IP/netbits. example 192.168.100.10/24"
+	echo "If there is no gateway between NetStorm and NetOcean Admin IP's, NSAdminGW abd SRAdminGW should be -"
+	exit 1
+    fi
+elif [ $# -lt 9 ];then
+	echo "Usage: nsu_configure conf-type NSAdminIF NSAdminIP NSAdminGW NSLoadIF SRAdminIF SRAdminIP SRAdminGW SRLoadIF"
+	echo "For NetStorm-NetOcean pair installation: conf-type is NS>NO for NetStorm & NO for NetOcean"
+	echo "NSAdminIP and SRAdminIP are in the format IP/netbits. example 192.168.100.10/24"
+	echo "If there is no gateway between NetStorm and NetOcean Admin IP's, NSAdminGW abd SRAdminGW should be -"
+	exit 1
+fi
+
+USERID=`id -u`
+if [ $USERID -ne 0 ];then
+    echo "You must be root to execute this command"
+    exit 1
+fi
+
+if [ "XX$NS_WDIR" == "XX" ];then
+	echo "NS_WDIR is not defined"
+	exit 3
+fi
+
+#Get DISTRO and RELEASE
+#DISTRO=$(./nsi_get_linux_release_ex -d)
+#RELEASE=$(./nsi_get_linux_release_ex -r)
+
+
+
+# All Types -  Tomcat, Lps, Cmon, DB
+# NS - Java Server
+# NO - HPD
+
+set_cmon()
+{
+    #Check if cmon running, if not start it
+    NUM=`ps -lef | grep java | grep -c CavMonAgent`
+    if [ $NUM == 0 ];then
+        echo "cmon not running"
+        /etc/init.d/cmon start
+    fi
+    #cinfigure for autostart
+    if [[ $DISTRO == "Fedora" ]];then
+      /sbin/chkconfig --add cmon
+    elif [[ $DISTRO == "Ubuntu" ]];then
+      update-rc.d cmon  defaults
+    fi
+}
+
+set_lps()
+{
+    #Check if lps running, if not start it
+    NUM=`ps -lef | grep lps | grep -vc "grep"`
+    if [ $NUM == 0 ];then
+        echo "lps not running"
+        /etc/init.d/lps start
+    fi
+    #cinfigure for autostart
+    if [[ $DISTRO == "Fedora" ]];then
+      /sbin/chkconfig --add lps
+    elif [[ $DISTRO == "Ubuntu" ]];then
+      update-rc.d lps  defaults
+    fi
+}
+
+set_tomcat()
+{
+    #Check if tomcat running, if not start it
+    NUM=`ps -lef | grep tomcat | grep -c "$NS_WDIR "`
+    if [ $NUM -eq 0 ];then
+      /etc/init.d/$TOMCAT_CMD start
+    fi
+    #cinfigure for autostart
+    if [[ $DISTRO == "Fedora" ]];then
+      /sbin/chkconfig --add $TOMCAT_CMD
+    elif [[ $DISTRO == "Ubuntu" ]];then
+      update-rc.d $TOMCAT_CMD  defaults
+    fi
+  
+}
+
+#Starting 3.8.4, we allow BD to be running on all configuration
+set_db()
+{
+
+    #Check if Postgres running, if not start it
+    pgrep postmaster >/dev/null 2>&1
+    if [ $? -ne 0 ];then
+        /etc/init.d/postgresql start
+    fi
+    #cinfigure for autostart
+    if [[ $DISTRO == "Fedora" ]];then
+      /sbin/chkconfig --add postgresql
+    elif [[ $DISTRO == "Ubuntu" ]];then
+      update-rc.d postgresql  defaults
+    fi
+}
+
+set_common()
+{
+    set_db
+    set_tomcat
+    set_cmon
+    set_lps
+}
+
+set_netstorm ()
+{
+    set_common
+}
+
+unset_ndc ()
+{
+
+  NUM=`ps -lef | grep ndc | grep -c "$NS_WDIR"`
+  if [ $NUM -ne 0 ];then
+      /etc/init.d/$NDC_CMD stop
+    fi
+
+    #cinfigure for autostart
+    if [[ $DISTRO == "Fedora" ]];then
+      /sbin/chkconfig --del $NDC_CMD >/dev/null 2>&1
+    elif [[ $DISTRO == "Ubuntu" ]];then
+      update-rc.d -f $NDC_CMD remove
+    fi
+}
+
+unset_memcache()
+{
+  pkill -9 memcached
+}
+
+unset_snmpd()
+{
+  NUM=`ps -lef | grep snmpd | grep -vc "grep"`
+  if [ $NUM -ne 0 ];then
+      /etc/init.d/snmpd stop
+  fi
+
+  #cinfigure for autostart
+  if [[ $DISTRO == "Fedora" ]];then
+     /sbin/chkconfig --del snmpd
+  elif [[ $DISTRO == "Ubuntu" ]];then
+     update-rc.d snmpd defaults
+  fi
+}
+unset_tinyproxy ()
+{
+  NUM=`ps -lef | grep tinyproxy | grep -vc "grep"`
+  if [ $NUM -ne 0 ];then
+      /etc/init.d/tinyproxy stop
+  fi
+
+  #cinfigure for autostart
+  if [[ $DISTRO == "Fedora" ]];then
+     /sbin/chkconfig --del tinyproxy
+  elif [[ $DISTRO == "Ubuntu" ]];then
+     update-rc.d tinyproxy defaults
+  fi
+
+}
+
+#unset_dns ()
+#{
+ # NUM=`ps -lef | grep dnsmasq | grep -vc "grep"`
+  #if [ $NUM -ne 0 ];then
+   #   /etc/init.d/dnsmasq stop
+ # fi
+
+  #cinfigure for autostart
+  #if [[ $DISTRO == "Fedora" ]];then
+   #  /sbin/chkconfig --del dnsmasq
+ # elif [[ $DISTRO == "Ubuntu" ]];then
+  #   update-rc.d dnsmasq defaults
+ # fi
+#}
+
+unset_lps ()
+{
+  NUM=`ps -lef | grep lps | grep -vc "grep"`
+  if [ $NUM -ne 0 ];then
+      /etc/init.d/lps stop
+    fi
+
+    #cinfigure for autostart
+    if [[ $DISTRO == "Fedora" ]];then
+      /sbin/chkconfig --del lps
+    elif [[ $DISTRO == "Ubuntu" ]];then
+      update-rc.d lps defaults 
+    fi
+}
+set_netocean ()
+{
+    set_common
+
+    #Check if hpd running, if not start it
+    ps -lef | grep -v grep | grep $HPD_ROOT/bin/nsu_hpd >/dev/null
+    if [ $? -ne 0 ];then
+      /etc/init.d/$HPD_CMD start
+    fi
+    #cinfigure for autostart
+    if [[ $DISTRO == "Fedora" ]];then
+      /sbin/chkconfig --add $HPD_CMD
+    elif [[ $DISTRO == "Ubuntu" ]];then
+      update-rc.d $HPD_CMD  defaults
+    fi
+
+}
+
+unset_netocean ()
+{
+    #Check if hpd running, if not start it
+    ps -lef | grep -v grep | grep $HPD_ROOT/bin/nsu_hpd >/dev/null
+    if [ $? -eq 0 ];then
+      /etc/init.d/$HPD_CMD stop
+    fi
+    #cinfigure for autostart
+    if [[ $DISTRO == "Fedora" ]];then
+      /sbin/chkconfig --del $HPD_CMD >/dev/null 2>&1
+    elif [[ $DISTRO == "Ubuntu" ]];then
+      update-rc.d -f $HPD_CMD  remove 
+    fi
+  
+}
+
+if [ $NOCHANGE -eq 0 ];then
+    if [ ! -f  $HOME_DIR/etc/cav.conf ];then
+	touch $HOME_DIR/etc/cav.conf
+    fi
+
+    cp $HOME_DIR/etc/cav.conf $HOME_DIR/etc/cav.conf.last
+    >$HOME_DIR/etc/cav.conf
+    chmod 666 $HOME_DIR/etc/cav.conf
+
+    echo "CONFIG $1" >>$HOME_DIR/etc/cav.conf
+    echo "NSAdminIF $2" >>$HOME_DIR/etc/cav.conf
+    echo "NSAdminIP $3" >>$HOME_DIR/etc/cav.conf
+    echo "NSAdminGW $4" >>$HOME_DIR/etc/cav.conf
+    echo "NSLoadIF $5" >>$HOME_DIR/etc/cav.conf
+    echo "" >>$HOME_DIR/etc/cav.conf
+    echo "SRAdminIF $6" >>$HOME_DIR/etc/cav.conf
+    echo "SRAdminIP $7" >>$HOME_DIR/etc/cav.conf
+    echo "SRAdminGW $8" >>$HOME_DIR/etc/cav.conf
+    echo "SRLoadIF $9" >>$HOME_DIR/etc/cav.conf
+    CONFIG=$1
+else
+    if [ ! -f  $HOME_DIR/etc/cav.conf ];then
+	echo "Missing $HOME_DIR/etc/cav.conf"
+	exit 1
+    fi
+    CONFIG=`$NS_WDIR/bin/nsi_show_config`
+fi
+
+#unset tinyproxy in all machine configuration cases as we are not using it 
+unset_tinyproxy 
+
+if [ $CONFIG == 'NS>NO' ];then
+    unset_netocean
+    set_netstorm 
+elif [ $CONFIG == 'NS+NO' ];then
+    set_netstorm 
+    set_netocean
+elif [ $CONFIG == 'NS' -o $CONFIG == 'ED' -o $CONFIG == 'NC' ];then
+    unset_netocean
+    set_netstorm 
+elif [ $CONFIG == 'NCH' ];then
+    unset_netocean
+    set_netstorm 
+    unset_lps
+    unset_ndc
+elif [ $CONFIG == 'NO' ];then
+    set_netocean
+elif [ $CONFIG == 'NV' ];then
+    set_netstorm
+    set_netocean
+    unset_lps
+    unset_ndc
+    unset_memcache
+    unset_snmpd
+    #unset_dns
+else
+    echo "Invalid Cavisson Config. Valid values are NS, NO, NS+NO or NS>NO, NV, ED, NCH"
+fi
+
+exit 0

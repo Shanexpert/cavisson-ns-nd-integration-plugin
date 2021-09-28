@@ -1,0 +1,124 @@
+#!/bin/bash
+#
+# Name:    nsi_release_gen_instances
+
+ALLOCATION_ID=$1
+VENDOR=$2
+GEN_LIST=$3
+
+GCP_INST=0
+CAV_INST=0
+
+TEST_RUN=$ALLOCATION_ID
+if [ -d $NS_WDIR/logs/TR$TEST_RUN/NetCloud ]; then
+  DEBUG_LOG_FILENAME="$NS_WDIR/logs/TR$TEST_RUN/NetCloud/gen_inst.netstorm.log"
+  SCEN_FILE=$NS_WDIR/logs/TR$TEST_RUN/sorted_scenario.conf
+  GCP_INST=`grep -w "^GEN_LOCATION" $SCEN_FILE|awk '{if($2 == "GCP") print $3}'|wc -l`
+  CAV_INST=`grep -w "^GEN_LOCATION" $SCEN_FILE|awk '{if($2 == "CAV") print $3}'|wc -l`
+  CTRL_IP=`egrep ^NSAdminIP $NS_WDIR/logs/TR$TEST_RUN/cav.conf | awk -F " " '{print $2}'`
+  HOST=`gethostip -x $CTRL_IP|tr '[:upper:]' '[:lower:]'`
+  ALLOCATION_ID="i$HOST-tr$TEST_RUN"
+else
+  DATE=`date "+%Y-%m-%d"`
+  DEBUG_LOG_FILENAME="$NS_WDIR/webapps/netstorm/logs/gen_inst.netstorm-${DATE}.log"
+fi
+
+debug_log()
+{
+   echo "`date "+%D %H:%M:%S"`|[$REGION]$*" >> $DEBUG_LOG_FILENAME
+}
+
+##############################################################################
+# 1. If generator server is configured and It is the test controller then
+#      send Generator Release Request to Generator Server
+# 2. Else use local generator release service
+##############################################################################
+
+NS_GEN_FILE="$NS_WDIR/etc/.netcloud/gen_server.conf"
+if [ -f $NS_GEN_FILE -a "X$CTRL_IP" != "X" ]; then
+  GEN_SERV_URL=`grep "^generatorServer" $NS_GEN_FILE | cut -d'=' -f 2 | tr -d '[:space:]'`
+  if [ "XX${GEN_SERV_URL}" != "XX" ]; then
+    MAX_VUSER=0
+    AVG_VUSER=0
+    MAX_VUSER_PERSEC=0
+    AVG_VUSER_PERSEC=0
+    MAX_PAGE_PERMIN=0
+    AVG_PAGE_PERMIN=0
+    START_TIMESTAMP=0
+    DURATION=0
+    END_TIMESTAMP=0
+    TEST_STOPPEDBY="NA"
+    SUMMARY_TOP="$NS_WDIR/logs/TR$TEST_RUN/summary.top"
+    #Failed To Start Test
+    if [ ! -f $SUMMARY_TOP ];then
+      TEST_STATUS="FailedToStart"
+      TEST_STATUS_MSG="Failed to start test"
+    else
+      START_TIME=`cat $SUMMARY_TOP | cut -d '|' '-f3'`
+      START_TIMESTAMP=`date +%s -d "$START_TIME"`
+    fi
+    #Test Run completed
+    if [ -f $NS_WDIR/logs/TR$TEST_RUN/test_run.status ];then 
+      TEST_STATUS="Completed"
+      TEST_STATUS_MSG="Test Run is completed successfully"
+    elif [ -f $NS_WDIR/logs/TR$TEST_RUN/nsu_stop_netstorm.log ]; then
+      #Test Run is stopped
+      TEST_STATUS="Stopped"
+      TEST_STATUS_MSG="Test Run is stopped"
+      TEST_STOPPEDBY=`cat $NS_WDIR/logs/TR$TEST_RUN/nsu_stop_netstorm.log | head -n 1 | awk -F'Command  Owner is <' '{print $2}' | cut -d'>' -f1`
+    else
+      TEST_STATUS="Failed"
+      TEST_STATUS_MSG="Test Run Failed"
+    fi
+
+    COUNT=0
+    MONTH=`echo $START_TIME | cut -d '/' -f 1`
+    YEAR=`echo $START_TIME | cut -d '/' -f 3 | cut -d ' ' -f 1`
+    TESTRUN_USAGE_FILE="$NS_WDIR/logs/data_retention/usage/test_runs/tr_${MONTH}${YEAR}.dat"
+    while [ $COUNT -ne 30 ]
+    do
+      TESTRUN_USAGE=`cat $TESTRUN_USAGE_FILE 2>/dev/null | grep -w "^$TEST_RUN"`
+      if [ "X$TESTRUN_USAGE" != "X" ]; then
+        DURATION=`echo $TESTRUN_USAGE | cut -d '|' -f3`
+        MAX_VUSER=`echo $TESTRUN_USAGE | cut -d '|' -f4`
+        AVG_VUSER=`echo $TESTRUN_USAGE | cut -d '|' -f5`
+        MAX_VUSER_PERSEC=`echo $TESTRUN_USAGE | cut -d '|' -f6`
+        AVG_VUSER_PERSEC=`echo $TESTRUN_USAGE | cut -d '|' -f7`
+        MAX_PAGE_PERMIN=`echo $TESTRUN_USAGE | cut -d '|' -f8`
+        AVG_PAGE_PERMIN=`echo $TESTRUN_USAGE | cut -d '|' -f9`
+        TOTAL_URL_COUNT=`echo $TESTRUN_USAGE | cut -d '|' -f12`
+        TOTAL_PAGE_COUNT=`echo $TESTRUN_USAGE | cut -d '|' -f13`
+        TOTAL_TRANS_COUNT=`echo $TESTRUN_USAGE | cut -d '|' -f14`
+        TOTAL_SESS_COUNT=`echo $TESTRUN_USAGE | cut -d '|' -f15`
+        #TODO: AYUSH Need to add 4 new option
+        break
+      fi
+      #increment the counter
+      COUNT=`expr $COUNT + 1`
+      sleep 5
+    done
+    END_TIMESTAMP=`expr $START_TIMESTAMP + $DURATION`
+
+    debug_log "Sending Generator Release Request to Generator Server ${GEN_SERV_URL}"
+    #Call Rest API to release generator
+    #ALLOCATED_ID|END_TIMESTAMP|TEST_STATUS|TEST_STATUS_MSG|DURATION|TEST_STOPPEDBY|MAX_VUSER|AVG_VUSER|MAX_VUSER_PERSEC|AVG_VUSER_PERSEC|MAX_PAGE_PERMIN|AVG_PAGE_PERMIN
+    nsi_gen_server_api -o releaseGenerator -a "$ALLOCATION_ID|$END_TIMESTAMP|$TEST_STATUS|$TEST_STATUS_MSG|$DURATION|$TEST_STOPPEDBY|$MAX_VUSER|$AVG_VUSER|$MAX_VUSER_PERSEC|$AVG_VUSER_PERSEC|$MAX_PAGE_PERMIN|$AVG_PAGE_PERMIN|$TOTAL_URL_COUNT|$TOTAL_PAGE_COUNT|$TOTAL_TRANS_COUNT|$TOTAL_SESS_COUNT"
+    exit 0
+  fi
+fi
+
+echo "Releasing generator instances" >> $DEBUG_LOG_FILENAME 2>&1
+if [ "X$ALLOCATION_ID" != "XNA" ]; then
+  if [ $GCP_INST -ne 0 -o "X$VENDOR" == "XGCP" ];then
+    echo "Releasing GCP instances" >> $DEBUG_LOG_FILENAME 2>&1
+    nsi_release_gcp_instances $ALLOCATION_ID
+  fi
+
+#if [ $CAV_INST -ne 0 ];then
+#  echo "Releasing CAV instances" >> $DEBUG_LOG_FILENAME 2>&1
+#  nsi_release_cav_instances $ALLOCATION_ID >> $DEBUG_LOG_FILENAME 2>&1
+#fi
+else
+  #nsi_release_gcp_instances NA gen1,gen2,gen3
+  nsi_release_gcp_instances $ALLOCATION_ID $GEN_LIST
+fi

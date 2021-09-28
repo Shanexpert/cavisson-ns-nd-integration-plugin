@@ -1,0 +1,24 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|PostgreSQL Activity|10431|vector|15|0|PostgreSQL Metrics|Tier>Server>DBName|PostgreSQL database activity stats provides metrics related to activity in the database.
+Graph|PostgreSQL Connected Backends|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of backends currently connected to this database.
+Graph|PostgreSQL Active Connections|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of active connections to this database.
+Graph|PostgreSQL Idle Connections|3|scalar|sample|-|-|0|D|-1|-1|NA|DIFF(G1,G2)|Number of idle connections to this database.
+Graph|PostgreSQL Committed Transactions/Sec|4|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of transactions in this database that have been committed per second.
+Graph|PostgreSQL Rollback Transactions/Sec|5|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of transactions in this database that have been rolled back per second.
+Graph|PostgreSQL Disk Read/Sec|6|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of disk blocks read per second.
+Graph|PostgreSQL Cache Hits/Sec|7|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of times disk blocks were found already in the buffer cache per second.
+Graph|PostgreSQL Tuple Returned/Sec|8|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of rows returned by queries per second.
+Graph|PostgreSQL Tuple Fetched/Sec|9|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of rows fetched by queries per second.
+Graph|PostgreSQL Tuple Inserted/Sec|10|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of rows inserted by queries per second.
+Graph|PostgreSQL Tuple Updated/Sec|11|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of rows updated by queries per second.
+Graph|PostgreSQL Tuple Deleted/Sec|12|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of rows deleted by queries per second.
+Graph|PostgreSQL Locks Consumed|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of locks held by open transactions within the database server.
+Graph|PostgreSQL Tuple Write/Sec|14|scalar|rate|-|CumToPS|0|D|-1|-1|NA|SUM(G10,G11,G12)|Sum of rows inserted, updated and deleted per second.
+Graph|PostgreSQL Hit (%)|15|scalar|sample|-|-|0|D|-1|-1|NA|DIV(MUL(G7, 100), SUM(G6,G7))|Disk hits percentage w.r.t total read requests.

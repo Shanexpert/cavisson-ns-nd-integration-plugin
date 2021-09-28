@@ -1,0 +1,15 @@
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP Kubernetes Node Stats|11580|vector|12|0|GCP Metrics|ProjectID>Location>ClusterName>NodeName|It provides metrics related to kubernetes container nodes.
+Graph|GCP Kubernetes Node CPU Allocatable Cores|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of allocatable CPU cores on the node. 
+Graph|GCP Kubernetes Node CPU Allocatable Utilization|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The fraction of the allocatable CPU that is currently in use on the instance.
+Graph|GCP Kubernetes Node CPU Usage Time(Sec)|3|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Cumulative CPU usage on all cores used on the node in seconds.
+Graph|GCP Kubernetes Node Total Cores|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of CPU cores on the node.
+Graph|GCP Kubernetes Node Allocatable Memory(Bytes)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Cumulative memory bytes used by the node.  
+Graph|GCP Kubernetes Node Allocatable Memory Utilization|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The fraction of the allocatable memory that is currently in use on the instance. 
+Graph|GCP Kubernetes Node Total Memory(Bytes)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of bytes of memory allocatable on the node. 
+Graph|GCP Kubernetes Node Memory Used(Bytes)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Cumulative memory bytes used by the node.
+Graph|GCP Kubernetes Node Network Received Bytes/Sec|9|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Cumulative number of bytes received by the node over the network per seconds.
+Graph|GCP Kubernetes Node Network Sent Bytes/Sec|10|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Cumulative number of bytes transmitted by the node over the network per seconds.
+Graph|GCP Kubernetes Node Daemon CPU Core Usage Time(Sec)|11|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Cumulative CPU usage on all cores used by the node level system daemon in seconds. 
+Graph|GCP Kubernetes Node Daemon Memory Used(Bytes)|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memory usage by the system daemon in bytes.

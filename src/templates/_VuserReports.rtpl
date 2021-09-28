@@ -1,0 +1,9 @@
+Name|Description|Creation Date|Modified Date
+_VuserReports|Template for Vuser reports as simple Report|10/15/07 15:51:16|10/15/07 15:51:37
+Report Description|Graph View Type|Graph Type|Granularity|X-Axis Time Format|Time|Time Selection Format|Start Date|Start Time|End Date|End Time|Report Info
+Running Vusers|Simple Graph|Normal|0|Elapsed|Total Run|Elapsed|NA|NA|NA|NA|RptGrpId=1:RptId=1:SSO=NA:SN=NA
+Active Vusers|Simple Graph|Normal|0|Elapsed|Total Run|Elapsed|NA|NA|NA|NA|RptGrpId=1:RptId=2:SSO=NA:SN=NA
+Thinking Vusers|Simple Graph|Normal|0|Elapsed|Total Run|Elapsed|NA|NA|NA|NA|RptGrpId=1:RptId=3:SSO=NA:SN=NA
+Waiting Vusers|Simple Graph|Normal|0|Elapsed|Total Run|Elapsed|NA|NA|NA|NA|RptGrpId=1:RptId=4:SSO=NA:SN=NA
+Idling Vusers|Simple Graph|Normal|0|Elapsed|Total Run|Elapsed|NA|NA|NA|NA|RptGrpId=1:RptId=5:SSO=NA:SN=NA
+Number Of Connections|Simple Graph|Normal|0|Elapsed|Total Run|Elapsed|NA|NA|NA|NA|RptGrpId=1:RptId=6:SSO=NA:SN=NA

@@ -1,0 +1,37 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Apache Nifi System Stats|10860|vector|29|0|Application Metrics|Tier|Apache Nifi System stats.
+Graph|Nifi Total NonHeap Memory (KB)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of kilo bytes allocated to the JVM loaded classes and other meta-data.
+Graph|Nifi Used NonHeap Memory (KB)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of kilo bytes used by the JVM loaded classes and other meta-data.
+Graph|Nifi Free NonHeap Memory (KB)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of kilo bytes free for the JVM loaded classes and other meta-data.
+Graph|Nifi Max NonHeap Memory (KB)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The maximum number of kilo bytes free for the JVM loaded classes and other meta-data
+Graph|Nifi Total Heap Memory (KB)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The TOTAL number of kilo bytes allocated  for Java objects.
+Graph|Nifi Used Heap Memory (KB)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of kilo bytes that are currently used for java objects.
+Graph|Nifi Free Heap Memory (KB)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of kilo bytes that are currently free for java objects.
+Graph|Nifi Max Heap Memory (KB)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The maximum number of kilo bytes free for the JVM loaded classes and other meta-data.
+Graph|Nifi Heap Memory Utilization (Pct)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total Heap Memory utilization in percentage.
+Graph|Nifi Processors Available|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of available processors.
+Graph|Nifi Processor Load Average|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Load average of processor.
+Graph|Nifi Thread Counts|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of threads.
+Graph|Nifi Deamon Thread Counts|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of deamon threads.
+Graph|Nifi Flow Files Total Space (KB)|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of kilo bytes of flow files storage.
+Graph|Nifi Flow Files Used Space (KB)|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of kilo bytes used of flow files storage.
+Graph|Nifi Flow Files Free Space (KB)|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of kilo bytes free of flow files storage.
+Graph|Nifi Flow Files Storage Utilization (Pct)|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total utilization of flow files storage in percentage.
+Graph|Nifi Content Repository Total Space (KB)|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of kilo bytes of content repository storage.
+Graph|Nifi Content Repository Used Space (KB)|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of kilo bytes used of content repository storage.
+Graph|Nifi Content Repository Free Space (KB)|20|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of kilo bytes free of content repository storage.
+Graph|Nifi Content Repository Utilization (Pct)|21|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total utilization of content repository storage in percentage.
+Graph|Nifi Provenence Repository Total Space (KB)|22|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of kilo bytes of provenence repository storage.
+Graph|Nifi Provenence Repository Used Space (KB)|23|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of kilo bytes used of provenence repository storage.
+Graph|Nifi Provenence Repository Free Space (KB)|24|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of kilo bytes free of provenence repository storage.
+Graph|Nifi Provenence Repository Utilization (Pct)|25|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total utilization of provenence repository storage in percentage.
+Graph|Nifi GC Count Per Young Cycle/Sec|26|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of young GC cycles occurred.
+Graph|Nifi GC Time Per Young Cycle (ms)|27|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Collection Time of young GC in milliseconds.
+Graph|Nifi GC Count Per Old Cycle/Sec|28|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of Old GC cycles occurred.
+Graph|Nifi GC Time Per Old Cycle (ms)|29|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Collection Time of young GC in milliseconds.

@@ -1,0 +1,195 @@
+#!/bin/bash
+
+##############################################################################################
+# Purpose :                                                                                  #
+# Use of This tool is to create table for SAAS related Project                               #
+##############################################################################################
+
+if [ "X$NS_WDIR" == "X" ];then
+  echo "NS_WDIR must be set"
+  exit 
+fi
+
+CNTLR_NAME=`echo $NS_WDIR | cut -d '/' -f 4`
+
+init_var()
+{
+  DB_IP="127.0.0.1"
+  DB_PORT="5432"
+  DB_SAAS_MODE=""
+  DB_NAME="access_control"
+  DB_USER="cavisson"
+  DB_PASSWORD=""
+}
+
+read_saas_conf()
+{
+  local db_ip
+  local db_port
+  local db_user
+  local db_password
+
+  init_var
+
+  DB_CONF=`cat $NS_WDIR/etc/saas.conf| grep -w "^DB_CONFIGURATION"`
+  DB_SAAS_MODE=`cat $NS_WDIR/etc/saas.conf| grep -w "^SAAS_MODE" | cut -d ' ' -f 2`
+
+  if [ "X$DB_CONF" != "X" ];then 
+    db_ip=`echo $DB_CONF | cut -d ' ' -f 2`       
+    db_port=`echo $DB_CONF | cut -d ' ' -f 3`
+    db_user=`echo $DB_CONF | cut -d ' ' -f 4`
+    db_password=`echo $DB_CONF | cut -d ' ' -f 5`
+  fi
+  
+  if [ "X$db_ip" != "X" ];then
+    DB_IP="$db_ip" 
+  fi
+  
+  if [ "X$db_port" != "X" ];then
+    DB_PORT="$db_port" 
+  fi
+  
+  if [ "X$db_user" != "X" ];then
+    DB_USER="$db_user" 
+  fi
+    
+  if [ "X$db_password" != "X" ];then
+    DB_PASSWORD="$db_password"
+    export PGPASSWORD="$DB_PASSWORD" 
+  fi
+
+  if [ "X$DB_SAAS_MODE" == "X1" -o "X$CNTLR_NAME" == "Xwork" ];then
+    DB_NAME="access_control"
+  else
+    DB_NAME="access_control_${CNTLR_NAME}"
+  fi
+}
+
+unset_pgpassword_env()
+{
+  if [ "X$DB_PASSWORD" != "X" ];then
+    unset PGPASSWORD
+  fi 
+}
+show_error()
+{
+  echo $Error | grep "ERROR" >/dev/null
+  if [ $? == 0  ]; then
+    echo $Error
+  fi
+}
+
+read_saas_conf
+
+echo "======================================================================================="
+echo  "Going to start creating SAAS Project Tables"
+echo "======================================================================================="
+
+Error=`psql -U "$DB_USER"  -d "$DB_NAME" -h "$DB_IP" -p "$DB_PORT"  <<-EOF
+
+
+CREATE TABLE IF NOT EXISTS account(
+   account_id            INT         PRIMARY KEY,
+   account_name          TEXT        NOT NULL,
+   account_description   TEXT        NOT NULL, 
+   account_domain        TEXT        NOT NULL,
+   sso_enabled           SMALLINT    NOT NULL,
+   sso_url               TEXT        NOT NULL,
+   sso_key               TEXT        NOT NULL,
+   status_flag		 INT	     NOT NULL DEFAULT 1
+);
+
+CREATE TABLE IF NOT EXISTS project(
+   project_id            INT         PRIMARY KEY,
+   account_id            INT         REFERENCES account(account_id),
+   project_name          TEXT        NOT NULL,
+   project_description   TEXT        NOT NULL,
+   project_key           TEXT        NOT NULL,
+   project_type          TEXT        NOT NULL,
+   license               TEXT        NOT NULL,
+   status_flag           INT         NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS project_cluster(
+   cluster_id            SERIAL      PRIMARY KEY,
+   project_id            INT         REFERENCES project(project_id),
+   external_domain       TEXT        NOT NULL,
+   tcp_port              INT         NOT NULL,
+   ws_port               INT         NOT NULL,
+   wss_port              INT         NOT NULL,
+   ui_external_domain    TEXT        NOT NULL,
+   ui_port               INT         NOT NULL,
+   is_master             SMALLINT    NOT NULL,
+   active_flag           SMALLINT    NOT NULL,
+   internal_ip            TEXT        NOT NULL,
+   ui_internal_ip         TEXT        NOT NULL,
+   node_type             TEXT        NOT NULL
+);
+
+/******** This alteration query was added because the size of license column in projeect table was causing issue***********/
+ALTER TABLE IF EXISTS project ALTER COLUMN license TYPE TEXT;
+
+ALTER TABLE IF EXISTS project_cluster 
+ADD COLUMN
+   internal_ip            TEXT        NOT NULL DEFAULT 'NULL',
+ADD COLUMN
+   ui_internal_ip         TEXT        NOT NULL DEFAULT 'NULL',
+ADD COLUMN
+   node_type             TEXT        NOT NULL DEFAULT 'NULL'
+ ; 
+
+CREATE TABLE IF NOT EXISTS METADATA_LICENSE_GROUP(
+   group_id              INT         PRIMARY KEY,
+   group_name            TEXT        NOT NULL,
+   group_description     TEXT        NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS METADATA_LICENSE_ATTRIBUTES(
+   attribute_id          INT         PRIMARY KEY,
+   group_id              INT         REFERENCES METADATA_LICENSE_GROUP(group_id),
+   attribute_name        TEXT        NOT NULL,
+   attribute_type        TEXT        NOT NULL,
+   default_value         TEXT        NOT NULL,
+   attribute_description TEXT        NOT NULL
+);
+
+TRUNCATE METADATA_LICENSE_GROUP CASCADE;
+
+/*************************Entries ACCOUNT ***************************/
+INSERT INTO ACCOUNT(account_id, account_name, account_description, account_domain, sso_enabled, sso_url, sso_key, status_flag) values(1,'cavisson', 'default user', 'cavisson.com', 0, 'NA', 'NA', 1) ON CONFLICT (account_id) DO NOTHING;;
+/*************************end***************************/
+
+/*************************Entries METADATA_LICENSE_GROUP ***************************/
+
+INSERT INTO METADATA_LICENSE_GROUP (group_id , group_name, group_description ) VALUES (1, 'General', 'general group');
+INSERT INTO METADATA_LICENSE_GROUP (group_id , group_name, group_description ) VALUES (2, 'Compute Units', 'Compute Units group');
+INSERT INTO METADATA_LICENSE_GROUP (group_id , group_name, group_description ) VALUES (3, 'UX', 'UX group');
+INSERT INTO METADATA_LICENSE_GROUP (group_id , group_name, group_description ) VALUES (4, 'Logs Stats', 'Logs Stats group');
+INSERT INTO METADATA_LICENSE_GROUP (group_id , group_name, group_description ) VALUES (5, 'Metric Data points', 'Metric Data points group');
+INSERT INTO METADATA_LICENSE_GROUP (group_id , group_name, group_description ) VALUES (6, 'Dashboard', 'Dashboard group');
+INSERT INTO METADATA_LICENSE_GROUP (group_id , group_name, group_description ) VALUES (7, 'Synthetics Monitoring', 'Synthetics Monitoring group');
+INSERT INTO METADATA_LICENSE_GROUP (group_id , group_name, group_description ) VALUES (8, 'Flowpaths', 'Flowpaths group');
+/*********************************end****************************************/
+
+/*************************Entries METADATA_LICENSE_ATTRIBUTES ***************************/
+
+INSERT INTO METADATA_LICENSE_ATTRIBUTES (attribute_id, group_id , attribute_name, attribute_type, default_value, attribute_description) VALUES (1, 1, 'License Type', 'select', 'Licensed@Trial:True', 'License Type attribute');
+INSERT INTO METADATA_LICENSE_ATTRIBUTES (attribute_id, group_id , attribute_name, attribute_type, default_value, attribute_description) VALUES (2, 1, 'Validity Start Date', 'calendar', '0', 'Validity Start Date attribute');
+INSERT INTO METADATA_LICENSE_ATTRIBUTES (attribute_id, group_id , attribute_name, attribute_type, default_value, attribute_description) VALUES (3, 1, 'Validity End Date', 'calendar', '14', 'Validity End Date attribute');
+INSERT INTO METADATA_LICENSE_ATTRIBUTES (attribute_id, group_id , attribute_name, attribute_type, default_value, attribute_description) VALUES (4, 2, 'Number of Agents', 'Number', '100', 'Number of Agents attribute');
+INSERT INTO METADATA_LICENSE_ATTRIBUTES (attribute_id, group_id , attribute_name, attribute_type, default_value, attribute_description) VALUES (5, 2, 'Number of Hosts Monitored', 'Number', '10', 'Number of Hosts Monitored attribute');
+INSERT INTO METADATA_LICENSE_ATTRIBUTES (attribute_id, group_id , attribute_name, attribute_type, default_value, attribute_description) VALUES (6, 2, 'Number of Database Servers', 'Number', '10', 'Number of Database Servers attribute');
+INSERT INTO METADATA_LICENSE_ATTRIBUTES (attribute_id, group_id , attribute_name, attribute_type, default_value, attribute_description) VALUES (7, 3, 'Number of Browser Page Views', 'Number', '100', 'Number of Browser Page Views attribute');
+INSERT INTO METADATA_LICENSE_ATTRIBUTES (attribute_id, group_id , attribute_name, attribute_type, default_value, attribute_description) VALUES (8, 4, 'Log Ingressed', 'Number', '100', 'Log Ingressed attribute');
+INSERT INTO METADATA_LICENSE_ATTRIBUTES (attribute_id, group_id , attribute_name, attribute_type, default_value, attribute_description) VALUES (9, 4, 'Disk capacity utilized For Logs(TB)', 'Number', '1', 'Disk capacity utilized For Logs(TB) attribute');
+INSERT INTO METADATA_LICENSE_ATTRIBUTES (attribute_id, group_id , attribute_name, attribute_type, default_value, attribute_description) VALUES (10, 4, 'Number of Log Queries', 'Number', '100', 'Number of Log Queries attribute');
+INSERT INTO METADATA_LICENSE_ATTRIBUTES (attribute_id, group_id , attribute_name, attribute_type, default_value, attribute_description) VALUES (11, 5, 'Number of Metric sent', 'Number', '10', 'Number of Metric sent attribute');
+INSERT INTO METADATA_LICENSE_ATTRIBUTES (attribute_id, group_id , attribute_name, attribute_type, default_value, attribute_description) VALUES (12, 6, 'Number of Concurrent users', 'Number', '10', 'Number of Concurrent users attribute');
+INSERT INTO METADATA_LICENSE_ATTRIBUTES (attribute_id, group_id , attribute_name, attribute_type, default_value, attribute_description) VALUES (13, 7, 'Page views', 'Number', '10', 'Page views attribute');
+INSERT INTO METADATA_LICENSE_ATTRIBUTES (attribute_id, group_id , attribute_name, attribute_type, default_value, attribute_description) VALUES (14, 8, 'Number of Flowpath Number', 'Number', '10', 'Number of Flowpath Number attribute');
+/*********************************end****************************************/
+
+	EOF`
+
+show_error
+unset_pgpassword_env

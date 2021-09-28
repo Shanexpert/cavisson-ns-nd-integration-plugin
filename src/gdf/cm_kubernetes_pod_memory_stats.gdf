@@ -1,0 +1,8 @@
+Group|Kubernetes Pod Memory|14088|vector|6|0|Kubernetes Metrics|Cluster>Node>NameSpace>Pod|Provides metrics related to kubernetes pod Memory stats.
+
+Graph|Kubernetes Memory Usage(KB)|1|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|The available memory usage in Kilobytes.
+Graph|Kubernetes Working Set(KB)|2|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|The Working set Memory in Kilobytes.
+Graph|Kubernetes RSS(KB)|3|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|The RSS(anonymous and swap cache memory) in Kilobytes.
+Graph|Kubernetes Page Faults|4|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|Number of Page Faults.
+Graph|Kubernetes Major Page Faults|5|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|Number of major Page Faults.
+Graph|Kubernetes Available Memory(KB)|6|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|The available memory in Kilobytes.

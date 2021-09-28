@@ -1,0 +1,5 @@
+# 1.0 - Initial version
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP Service Runtime Allocation|11598|vector|1|0|GCP Metrics|ProjectID>Location>Service>QuotaMetric|It provide metric related to allocation quota.
+Graph|GCP Service Runtime Allocation Quota Usage|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total consumed allocation quota.

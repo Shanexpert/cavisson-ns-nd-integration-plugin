@@ -1,0 +1,77 @@
+#
+#.1.3.6.1.4.1.2552.200.300.1.3.1.1.1
+# policy Server
+# .iso.org.dod.internet.private.enterprises.netegrity.products.siteminder.policyServer.policyServerTable.policyServerEntry
+#
+#PolicyServerEntry  ::=  SEQUENCE {
+#    policyServerIndex  Integer32,
+#    policyServerHostID  IpAddress,
+#    policyServerType  DisplayString,
+#    policyServerStatus  DisplayString,
+#    policyServerLastActivity TimeTicks,
+#    policyServerPort  Integer32,
+#    policyServerProduct  DisplayString,
+#    policyServerPlatform  DisplayString,
+#    policyServerVersion  DisplayString,
+#    policyServerUpdate  DisplayString,
+#    policyServerLabel  DisplayString,
+#    policyServerCrypto  Integer32,
+#    policyServerUTC  DisplayString,
+#    policyServerTimezone  Integer32,
+#    policyServerMaxSockets  Integer32,
+#    policyServerSocketCount  Gauge32,
+#    policyServerAuthAcceptCount  Counter32,
+#    policyServerAuthRejectCount  Counter32,
+#    policyServerAzAcceptCount    Counter32,
+#    policyServerAzRejectCount    Counter32,
+#    policyServerPolicyCacheEnabled  TruthValue,
+#    policyServerL2CacheEnabled  TruthValue
+#  }
+#
+# .1.3.6.1.4.1.2552.200.300.1.3.1.1.1 = INTEGER: 1
+# .1.3.6.1.4.1.2552.200.300.1.3.1.3.1 = IpAddress: 10.211.16.137
+# .1.3.6.1.4.1.2552.200.300.1.3.1.4.1 = STRING: "PolicyServer"
+# .1.3.6.1.4.1.2552.200.300.1.3.1.5.1 = STRING: "Active"
+# .1.3.6.1.4.1.2552.200.300.1.3.1.6.1 = Timeticks: (468) 0:00:04.68
+# .1.3.6.1.4.1.2552.200.300.1.3.1.8.1 = INTEGER: 44442
+# .1.3.6.1.4.1.2552.200.300.1.3.1.9.1 = STRING: "Policy Server"
+# .1.3.6.1.4.1.2552.200.300.1.3.1.10.1 = STRING: "Linux 2.6.18-238.12.1.el5"
+# .1.3.6.1.4.1.2552.200.300.1.3.1.11.1 = STRING: "12.0"
+# .1.3.6.1.4.1.2552.200.300.1.3.1.12.1 = STRING: "03.05"
+# .1.3.6.1.4.1.2552.200.300.1.3.1.13.1 = STRING: "430"
+# .1.3.6.1.4.1.2552.200.300.1.3.1.14.1 = INTEGER: 128
+# .1.3.6.1.4.1.2552.200.300.1.3.1.15.1 = STRING: "1365829537"
+# .1.3.6.1.4.1.2552.200.300.1.3.1.16.1 = INTEGER: 0
+# .1.3.6.1.4.1.2552.200.300.1.3.1.17.1 = INTEGER: 6144
+# .1.3.6.1.4.1.2552.200.300.1.3.1.18.1 = Gauge32: 15
+# .1.3.6.1.4.1.2552.200.300.1.3.1.19.1 = Counter32: 74837
+# .1.3.6.1.4.1.2552.200.300.1.3.1.20.1 = Counter32: 0
+# .1.3.6.1.4.1.2552.200.300.1.3.1.21.1 = Counter32: 74837
+# .1.3.6.1.4.1.2552.200.300.1.3.1.22.1 = Counter32: 0
+# .1.3.6.1.4.1.2552.200.300.1.3.1.23.1 = INTEGER: 1
+# .1.3.6.1.4.1.2552.200.300.1.3.1.24.1 = INTEGER: 0
+#
+#.1.3.6.1.4.1.2552.200.300.1.3.1.1.1|cumulative|Yes|NA|NA|NA|NA|NA|NA|NA|NA|policyServerIndex|A unique identifier for the current Policy Server instance
+#.1.3.6.1.4.1.2552.200.300.1.3.1.3.1|cumulative|Yes|NA|NA|NA|NA|NA|NA|NA|NA|policyServerHostID|IP address of the machine where the Policy Server is installed
+#.1.3.6.1.4.1.2552.200.300.1.3.1.4.1|cumulative|Yes|NA|NA|NA|NA|NA|NA|NA|NA|policyServerType|Type of component.
+#.1.3.6.1.4.1.2552.200.300.1.3.1.5.1|cumulative|Yes|NA|NA|NA|NA|NA|NA|NA|NA|policyServerStatus|Status of the Policy Server. The status can be Active or Inactive.
+#.1.3.6.1.4.1.2552.200.300.1.3.1.6.1|cumulative|Yes|NA|NA|NA|NA|NA|NA|NA|NA|policyServerLastActivity|Time of last server activity in seconds
+#.1.3.6.1.4.1.2552.200.300.1.3.1.8.1|cumulative|Yes|NA|NA|NA|NA|NA|NA|NA|NA|policyServerPort|Policy Server port number.
+#.1.3.6.1.4.1.2552.200.300.1.3.1.9.1|cumulative|Yes|NA|NA|NA|NA|NA|NA|NA|NA|policyServerProduct|Policy Server product name.
+#.1.3.6.1.4.1.2552.200.300.1.3.1.10.1|cumulative|Yes|NA|NA|NA|NA|NA|NA|NA|NA|policyServerPlatform|Operating system of the machine where the Policy Server is installed.
+#.1.3.6.1.4.1.2552.200.300.1.3.1.11.1|cumulative|Yes|NA|NA|NA|NA|NA|NA|NA|NA|policyServerVersion|Version number of the Policy Server.
+#.1.3.6.1.4.1.2552.200.300.1.3.1.12.1|cumulative|Yes|NA|NA|NA|NA|NA|NA|NA|NA|policyServerUpdate|Version number of the most recently applied update.
+#.1.3.6.1.4.1.2552.200.300.1.3.1.13.1|cumulative|Yes|NA|NA|NA|NA|NA|NA|NA|NA|policyServerLabel|Policy Server build number.
+#.1.3.6.1.4.1.2552.200.300.1.3.1.14.1|cumulative|Yes|NA|NA|NA|NA|NA|NA|NA|NA|policyServerCrypto|Length of the encryption key used to encrypt/decrypt data sent between the Web Agent and the Policy Server.
+#.1.3.6.1.4.1.2552.200.300.1.3.1.15.1|cumulative|Yes|NA|NA|NA|NA|NA|NA|NA|NA|policyServerUTC|The startup time of the Web server where the Policy Server is installed. The time is specified in Universal Coordinated Time format.
+#.1.3.6.1.4.1.2552.200.300.1.3.1.16.1|cumulative|Yes|NA|NA|NA|NA|NA|NA|NA|NA|policyServerTime Zone|Time zone for the geographical location where the Policy Server is installed.
+.1.3.6.1.4.1.2552.200.300.1.3.1.17.1|sample|Yes|NA|NA|NA|NA|NA|NA|NA|NA|policyServerMaxSockets|Maximum number of open sockets (which correspond to the number of open connections between the Policy Server and Web Agents) that the Policy Server can support.
+.1.3.6.1.4.1.2552.200.300.1.3.1.18.1|sample|Yes|NA|NA|NA|NA|NA|NA|NA|NA|policyServerSocketCount|Number of open sockets, which corresponds to the number of open connections between the Policy Server and Web Agents.
+.1.3.6.1.4.1.2552.200.300.1.3.1.19.1|cumulative|Yes|NA|NA|NA|NA|NA|NA|NA|NA|policyServerAuth AcceptCount|Number of successful authentications.
+.1.3.6.1.4.1.2552.200.300.1.3.1.20.1|cumulative|Yes|NA|NA|NA|NA|NA|NA|NA|NA|policyServerAuthRejectCount|Number of failed authentication attempts. These attempts failed because of invalid credentials.
+.1.3.6.1.4.1.2552.200.300.1.3.1.21.1|cumulative|Yes|NA|NA|NA|NA|NA|NA|NA|NA|policyServerAzAcceptCount|Number of successful authorizations.
+.1.3.6.1.4.1.2552.200.300.1.3.1.22.1|cumulative|Yes|NA|NA|NA|NA|NA|NA|NA|NA|policyServerAzRejectCount|Number of failed authorization attempts. These attempts failed because of invalid credentials.
+#.1.3.6.1.4.1.2552.200.300.1.3.1.23.1|cumulative|Yes|NA|NA|NA|NA|NA|NA|NA|NA|policyServerPolicy - CacheEnabled|Indicates whether or not policy cache is enabled.
+#.1.3.6.1.4.1.2552.200.300.1.3.1.24.1|cumulative|Yes|NA|NA|NA|NA|NA|NA|NA|NA|policyServerL2Cache - Enabled|Indicates whether or not L2 cache is enabled.
+#
+#

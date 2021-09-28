@@ -1,0 +1,202 @@
+#! /bin/sh
+
+BASE_DIR=""
+
+Usage()
+{
+  echo $*
+  echo "Usage: neu_ns_create_partition_table <Test Run Number> <Partition Name> <all/Particular csv>"
+  echo "Example:"
+  echo "  neu_ns_create_partition_table 1234 201402201000 urc.csv"
+  exit -1
+}
+
+if [ $# -ne 3 ]; then
+  Usage "INVALID ARGUMENTS"
+fi
+
+count=0
+#Checking if test number is numeric
+echo $1 | egrep '^[0-9]+$' >/dev/null 2>&1
+if [ "$?" -eq "1" ]; then
+  Usage "Test run number is not numeric"
+fi
+
+#Checking Test number is valid or not
+if [ -d $PWD/TR$1 ]; then
+  BASE_DIR=$PWD
+elif [ -d $NS_WDIR/logs/TR$1 ]; then
+  BASE_DIR=$NS_WDIR/logs
+else
+  echo "Error: Test run number $1 is not a valid test run number"
+  exit -1
+fi
+
+echo 
+#echo "Running command : neu_drop_partition_table $1 $2 "
+#neu_drop_partition_table $1 $2 $3
+echo 
+echo "Running command : neu_ns_create_partition_table $1 $2 $3"
+
+if [ "$3" == "all" -o "$3" == "ALL" ];then
+  # Case where all the partition tables need to be created.
+  psql test cavisson <<+
+  create table SessionRecord_$1_$2
+  (
+    like SessionRecord_$1 including indexes
+  )
+    INHERITS (SessionRecord_$1);
+
+  create table TransactionRecord_$1_$2
+  (
+    like TransactionRecord_$1 including indexes
+  )
+    INHERITS (TransactionRecord_$1);
+
+  create table TransPageRecord_$1_$2
+  (
+    like TransPageRecord_$1 including indexes
+  )
+    INHERITS (TransPageRecord_$1);
+
+  create table PageRecord_$1_$2
+  (
+    like PageRecord_$1 including indexes
+  )
+    INHERITS (PageRecord_$1);
+
+  create table URLRecord_$1_$2
+  (
+    like URLRecord_$1 including indexes
+  )
+    INHERITS (URLRecord_$1);
+
+  create table PageDumpRecord_$1_$2
+  (
+    like PageDumpRecord_$1 including indexes
+  )
+    INHERITS (PageDumpRecord_$1);
+
+  create table alerthistory_$1_$2
+  (
+    like alerthistory_$1 including indexes
+  )
+  INHERITS (alerthistory_$1);
+
+  create table alertactions_$1_$2
+  (
+    like alertactions_$1 including indexes
+  )
+  INHERITS (alertactions_$1);
+
++
+  if [ -f $NS_WDIR/logs/TR$1/common_files/.oracle_sql_report ];then
+        psql test cavisson <<+
+
+          create table orlStatsSQLIDTable_$1_$2 
+          (
+            like orlStatsSQLIDTable_$1 including indexes
+          )
+          INHERITS (orlStatsSQLIDTable_$1);
+
+
+          create table orlStatsSnapTable_$1_$2
+          (
+            like orlStatsSnapTable_$1 including indexes
+          )
+          INHERITS (orlStatsSnapTable_$1);
+
+          create table orlStatsSQLStmtOrdByElapsedTime_$1_$2
+          (
+            like orlStatsSQLStmtOrdByElapsedTime_$1 including indexes
+          )
+          INHERITS (orlStatsSQLStmtOrdByElapsedTime_$1);
+
+          create table orlStatsSQLStmtOrdByCPUTime_$1_$2
+          (
+            like orlStatsSQLStmtOrdByCPUTime_$1 including indexes
+          )
+          INHERITS (orlStatsSQLStmtOrdByCPUTime_$1);
+
+          create table orlStatsSQLStmtOrdByUsrIOTime_$1_$2
+          (
+            like orlStatsSQLStmtOrdByUsrIOTime_$1 including indexes
+          )
+          INHERITS (orlStatsSQLStmtOrdByUsrIOTime_$1);
+
+          create table orlStatsSQLStmtOrdByGets_$1_$2
+          (
+            like orlStatsSQLStmtOrdByGets_$1 including indexes
+          )
+          INHERITS (orlStatsSQLStmtOrdByGets_$1);
+
+          create table orlStatsSQLStmtOrdByReads_$1_$2
+          (
+            like orlStatsSQLStmtOrdByReads_$1 including indexes
+          )
+          INHERITS (orlStatsSQLStmtOrdByReads_$1);
+
+          create table orlStatsSQLStmtOrdByPhyReadsUnopt_$1_$2
+          (
+            like orlStatsSQLStmtOrdByPhyReadsUnopt_$1 including indexes
+          )
+          INHERITS (orlStatsSQLStmtOrdByPhyReadsUnopt_$1);
+
+          create table orlStatsSQLStmtOrdByExec_$1_$2
+          (
+            like orlStatsSQLStmtOrdByExec_$1 including indexes
+          )
+          INHERITS (orlStatsSQLStmtOrdByExec_$1);
+
+          create table orlStatsSQLStmtOrdByParseCalls_$1_$2
+          (
+            like orlStatsSQLStmtOrdByParseCalls_$1 including indexes
+          )
+          INHERITS (orlStatsSQLStmtOrdByParseCalls_$1);
+
+          create table orlStatsSQLStmtOrdBySharableMemory_$1_$2
+          (
+            like orlStatsSQLStmtOrdBySharableMemory_$1 including indexes
+          )
+          INHERITS (orlStatsSQLStmtOrdBySharableMemory_$1);
+
+          create table orlStatsSQLStmtOrdByVersionCount_$1_$2
+          (
+            like orlStatsSQLStmtOrdBySharableMemory_$1 including indexes
+          )
+          INHERITS (orlStatsSQLStmtOrdBySharableMemory_$1);
+
+          create table orlStatsSQLStmtOrdByClusterWaitTime_$1_$2
+          (
+            like orlStatsSQLStmtOrdByClusterWaitTime_$1 including indexes
+          )
+          INHERITS (orlStatsSQLStmtOrdByClusterWaitTime_$1);
+
++
+  fi
+else
+  # Case to create a particular partition table based on the given partition name.
+  NS_PARTITION_ARRAY=("sessionrecord_" "transactionrecord_" "transpagerecord_" "pagerecord_" "urlrecord_" "pagedumprecord_" "orlStatsSnapTable_" "orlStatsSQLStmtOrdByElapsedTime_" "orlStatsSQLStmtOrdByCPUTime_" "orlStatsSQLStmtOrdByUsrIOTime_" "orlStatsSQLStmtOrdByGets_" "orlStatsSQLStmtOrdByReads_" "orlStatsSQLStmtOrdByPhyReadsUnopt_" "orlStatsSQLStmtOrdByExec_" "orlStatsSQLStmtOrdByParseCalls_" "orlStatsSQLStmtOrdBySharableMemory_" "orlStatsSQLStmtOrdByVersionCount_" "orlStatsSQLStmtOrdByClusterWaitTime_" "alerthistory_" "alertactions_")
+
+  NS_CSV_NAMES=("src.csv" "trc.csv" "tprc.csv" "prc.csv" "urc.csv" "page_dump.csv" "orlStatsSnapTable.csv" "orlStatsSQLStmtOrdByElapsedTime.csv" "orlStatsSQLStmtOrdByCPUTime.csv" "orlStatsSQLStmtOrdByUsrIOTime.csv" "orlStatsSQLStmtOrdByGets.csv" "orlStatsSQLStmtOrdByReads.csv" "orlStatsSQLStmtOrdByPhyReadsUnopt.csv" "orlStatsSQLStmtOrdByExec.csv" "orlStatsSQLStmtOrdByParseCalls.csv" "orlStatsSQLStmtOrdBySharableMemory.csv" "orlStatsSQLStmtOrdByVersionCount.csv" "orlStatsSQLStmtOrdByClusterWaitTime.csv" "alertHistory.csv" "alertAction.csv")  
+
+  while [ $count -le ${#NS_CSV_NAMES[@]} ] ; do
+    if [ "X${NS_CSV_NAMES[$count]}" == "X$3" ] ; then
+      NS_PARTITION_TABLE_NAME=`echo ${NS_PARTITION_ARRAY[$count]}`"$1_$2"
+      NS_PARTITION_MASTER_TABLE_NAME=`echo ${NS_PARTITION_ARRAY[$count]}`"$1"
+      CHECK_TABLE=`psql --user=cavisson -d test -t -c "SELECT table_name from information_schema.tables where  table_name ~ '^$NS_PARTITION_TABLE_NAME$';"` 
+      if [ "X$CHECK_TABLE" == "X" ];then 
+        psql test cavisson <<+
+        create table $NS_PARTITION_TABLE_NAME
+        (
+          like $NS_PARTITION_MASTER_TABLE_NAME including indexes
+        )
+        INHERITS ($NS_PARTITION_MASTER_TABLE_NAME);
++
+      fi
+    fi
+  count=`expr $count + 1`
+  done
+fi 
+
+echo "neu_ns_create_partition_table: ... Done creating partition tables."

@@ -1,0 +1,42 @@
+# General information line
+# Info|msgVersion|numGroups|startIndex|testRun|sizeOfMsgData|interval|testRunStartDate/Time
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+#
+# Group information line
+# Group|groupName|rptGrpId|groupType|numGraphs|numVectors|future1|future2|Group_Description 
+#
+# Graph information line
+# Graph|graphName|rptId|graphType|dataType|graphDataIndex|formula|numVectors|future1|PDF_ID|Percentile_Data_Idx|future2|future3|GRAPH_DESCRIPTION
+#
+# Numeric data is filled as -1 in the infoline
+
+Info|3.1|3|-1|-|-1|-1|-
+
+Group|LDAP Network Throughput|32|scalar|8|0|Test Metrics|NA|LDAP Network & connections information.
+
+Graph|LDAP Send Throughput (Kbps)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|LDAP data send thoughput in kilo bits per second (kbps) in the sampling period.
+Graph|LDAP Total Send Bytes|2|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total number of LDAP bytes send since start of the test.
+Graph|LDAP Receive Throughput (Kbps)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|LDAP data received per second in kilo bits per second (kbps) in the sampling period.
+Graph|LDAP Total Receive Bytes|4|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total LDAP bytes received since start of the test.
+Graph|LDAP Connections Open/Sec|5|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of LDAP  connections opened per second in the sampling period.
+Graph|LDAP Total Connections Open|6|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total number of open LDAP connections since start of the test.
+Graph|LDAP Connections Close/Sec|7|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of closed LDAP connections per second in the sampling period.
+Graph|LDAP Total Connections Close|8|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total number of closed LDAP connections since start of the test.
+
+
+Group|LDAP Hits|33|scalar|6|0|Test Metrics|NA|LDAP information.
+
+Graph|LDAP Request Sent/Sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of LDAP request sent (started) per seconds in the sampling period.
+Graph|LDAP Hits/Sec|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of LDAP request completed (response received from server or some error occurred) per seconds in the sampling period.
+Graph|Success LDAP Responses/Sec|3|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of successful LDAP responses per second in the sampling period.
+Graph|Average LDAP Response Time (ms)|4|scalar|times|-|-|0|-|8|-1|NA|NA|Average LDAP response time from the server in seconds in the sampling period.
+Graph|Total LDAP Hits|5|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total number of LDAP hits made on the web server by virtual users since start of the test.
+Graph|Total LDAP Success|6|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total number of success LDAP hits made on the web server by virtual users since start of the test.
+
+Group|LDAP Failures|34|vector|1|0|Test Metrics|Error|LDAP failure information
+
+Graph|LDAP Failures/Sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of failed LDAP responses for each and every individual error during each second of scenario run.

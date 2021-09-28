@@ -1,0 +1,38 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+
+#ObjectName :com.bea:ServerRuntime=AdminServer,Name=WLDFHarvesterRuntime,Type=WLDFHarvesterRuntime,WLDFRuntime=WLDFRuntime
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Weblogic WLDF Harvester Runtime Stats|14208|vector|13|0|Weblogic Metrics|Tier>Server>Instance|Provides aggregated information about all active Harvester configurations, as well as metadata about harvestable and harvested attributes, types, and instances.	
+
+Graph|Weblogic Current Snapshot Start Time (NS)|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The start time, in nanoseconds, of a snapshot.
+
+Graph|Weblogic Average Sampling Time (NS)|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The average amount of time, in nanoseconds, spent in sampling cycles.
+
+Graph|Weblogic Minimum Sampling Time (NS)|3|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The minimum sampling time, in nanoseconds.
+
+Graph|Weblogic Total Sampling Cycles|4|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The total number of sampling cycles taken thus far.
+
+Graph|Weblogic Maximum Sampling Time (NS)|5|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The maximum sampling time, in nanoseconds.
+
+Graph|Weblogic Total Data Sample Count|6|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The number of configured data samples that have been collected so far in this server session.
+
+Graph|Weblogic Current Snapshot Elapsed Time (NS)|7|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The elapsed time, in nanoseconds, of a snapshot.
+
+Graph|Weblogic Total Implicit Data Sample Count|8|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The number of implicit data samples that have been collected in this server session.
+
+Graph|Weblogic Total Sampling Time Outlier Count|9|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The number of times within this server session that the sampling time differed significantly enough from the average to be considered a statistical outlier.  The Harvester removes these values form the ongoing averages.
+
+Graph|Weblogic Current Implicit Data Sample Count|10|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The number of implicit data samples gathered in the last sample.
+
+Graph|Weblogic Sample Period (NS)|11|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The current global sample period, in nanoseconds.
+
+Graph|Weblogic Total Sampling Time (NS)|12|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The total amount of time, in nanoseconds, spent in sampling cycles.
+
+Graph|Weblogic Current Data Sample Count|13|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Whether or not the sampling time for the most recent data sample differed significantly enough from the average to be considered a statistical outlier.

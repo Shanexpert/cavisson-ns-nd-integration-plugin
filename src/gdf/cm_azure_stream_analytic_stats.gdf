@@ -1,0 +1,40 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Azure Stream Analytics stats|11470|vector|16|0|Azure Metrics|AccountName>Region>ResourceGroup>StreamAnalytics|Azure Stream Analytics, the easy-to-use, real-time analytics service that is designed for mission-critical workloads.
+
+Graph|Azure Stream Analytics Resource Utilization (%)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|SU percentage Utilization
+
+Graph|Azure Stream Analytics Input Events|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Input Events
+
+Graph|Azure Stream Analytics Input Event Bytes|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Input Event Bytes
+
+Graph|Azure Stream Analytics Late Input Events|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Late Input Events
+
+Graph|Azure Stream Analytics Output Events|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Output Events
+
+Graph|Azure Stream Analytics Conversion Errors|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Data Conversion Errors
+
+Graph|Azure Stream Analytics Errors|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Runtime Errors
+
+Graph|Azure Stream Analytics Dropped Or Adjusted Events|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Out of order Events
+
+Graph|Azure Stream Analytics AML Callout Requests|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Function Requests
+
+Graph|Azure Stream Analytics AML Callout Failed Requests|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Failed Function Requests
+
+Graph|Azure Stream Analytics AML CalloutInput Events|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Function Events
+
+Graph|Azure Stream Analytics Deserialization Error|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Input Deserialization Errors
+
+Graph|Azure Stream Analytics Early Input Events|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Early Input Events
+
+Graph|Azure Stream Analytics Output Watermark Delay Second|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Watermark Delay
+
+Graph|Azure Stream Analytics Input Events Sources Backlogged|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Backlogged Input Events
+
+Graph|Azure Stream Analytics Input Events Sources Per Sec|16|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Input Sources Received
+

@@ -1,0 +1,8 @@
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP Compute Engine Overall|11535|vector|4|0|GCP Metrics|ProjectID|GCP compute engine overall monitor.
+
+Graph|GCP Host Count|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of running hosts.
+Graph|GCP Available Zones|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of available zones.
+Graph|GCP Disk Size (GB)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Size of disk in gigabytes.
+Graph|GCP Snapshot Count|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of snapshots.

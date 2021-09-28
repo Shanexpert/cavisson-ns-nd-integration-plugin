@@ -1,0 +1,12 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+# Object Name - kafka.server:type=socket-server-metrics
+info|3.1|1|-|-|-1|-1|-
+Group|Apache Kafka Socket Server Stats|11448|vector|2|0|Apache Kafka Metrics|Tier>Server>Instance|This stats gives information about memory pool statistcs. 
+#G1
+Graph|Apache Kafka Memory Pool Total Depleted Time|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Amount of time when the MemoryPool is full.
+#G2
+Graph|Apache Kafka Memory Pool Average Depleted Percent (%)|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Percentage of time when the memory pool is full.

@@ -1,0 +1,79 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Azure Web App Service Stats|11317|vector|36|0|Azure Metrics|AccountName>Region>ResourceGroup>WebAppService|Microsoft Azure Web Sites is a web-hosting platform that supports multiple technologies, and programming languages (.NET, node.js, PHP, Python). Users with Microsoft Azure subscriptions can create Websites, and deploy content and code into the Web sites.
+
+Graph|Azure Web App Service CPU Time (Sec)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The amount of CPU consumed by the app, in seconds.
+
+Graph|Azure Web App Service Requests Count|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of requests regardless of their resulting HTTP status code.
+
+Graph|Azure Web App Service Data In (Bytes)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The amount of incoming bandwidth consumed by the app, in bytes.
+
+Graph|Azure Web App Service Data Out (Bytes)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The amount of outgoing bandwidth consumed by the app, in bytes.
+
+Graph|Azure Web App Service Http101 Status Count|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of 101 requests served by the app.
+
+Graph|Azure Web App Service Http2xx Status Count|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The count of requests resulting in an HTTP status code ≥ 200 but < 300.
+
+Graph|Azure Web App Service Http3xx Status Count|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The count of requests resulting in an HTTP status code ≥ 300 but < 400.
+
+Graph|Azure Web App Service Http401 Status Count|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The count of requests resulting in HTTP 401 status code.
+
+Graph|Azure Web App Service Http403 Status Count|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The count of requests resulting in HTTP 403 status code.
+
+Graph|Azure Web App Service Http404 Status Count|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The count of requests resulting in HTTP 404 status code.
+
+Graph|Azure Web App Service Http406 Status Count|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The count of requests resulting in HTTP 406 status code.
+
+Graph|Azure Web App Service Http4xx Status Count|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The count of requests resulting in an HTTP status code ≥ 400 but < 500.
+
+Graph|Azure Web App Service Http5xx Status Count|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The count of requests resulting in an HTTP status code ≥ 500 but < 600.
+
+Graph|Azure Web App Service Memory Working Set (Bytes)|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The current amount of memory used by the app, in bytes.
+
+Graph|Azure Web App Service Average Memory Working Set (Bytes)|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average amount of memory used by the app, in bytes.
+
+Graph|Azure Web App Service Average Response Time (Sec)|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average time taken for the app to serve requests, in seconds.
+
+Graph|Azure Web App Service Http Response Time (Sec)|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The time taken for the app to serve requests, in seconds
+
+Graph|Azure Web App Service Total Connections|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of bound sockets existing in the sandbox (w3wp.exe and its child processes). A bound socket is created by calling bind()/connect() APIs and remains until said socket is closed with CloseHandle()/closesocket().
+
+Graph|Azure Web App Service Handle Count|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of handles currently open by the app process.
+
+Graph|Azure Web App Service Thread Count|20|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of threads currently active in the app process.
+
+Graph|Azure Web App Service Private Bytes|21|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Private Bytes is the current size, in bytes, of memory that the app process has allocated that can't be shared with other processes.
+
+Graph|Azure Web App Service IO Read Bytes / Second|22|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The rate at which the app process is reading bytes from I/O operations.
+
+Graph|Azure Web App Service IO Write Bytes / Second|23|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The rate at which the app process is writing bytes to I/O operations.
+
+Graph|Azure Web App Service IO Other Bytes / Second|24|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The rate at which the app process is issuing bytes to I/O operations that don't involve data, such as control operations.
+
+Graph|Azure Web App Service IO Read Operations / Second|25|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The rate at which the app process is issuing read I/O operations.
+
+Graph|Azure Web App Service IO Write Operations / Second|26|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The rate at which the app process is issuing write I/O operations.
+
+Graph|Azure Web App Service IO Other Operations / Second|27|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The rate at which the app process is issuing I/O operations that aren't read or write operations.
+
+Graph|Azure Web App Service Requests In Application Queue Count|28|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of requests in the application request queue.
+
+Graph|Azure Web App Service Current Assemblies Count|29|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The current number of Assemblies loaded across all AppDomains in this application.
+
+Graph|Azure Web App Service Total App Domains|30|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The current number of AppDomains loaded in this application.
+
+Graph|Azure Web App Service Total App Domains Unloaded|31|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of AppDomains unloaded since the start of the application.
+
+Graph|Azure Web App Service Total Gen 0 Garbage Collections|32|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of times the generation 0 objects are garbage collected since the start of the app process. Higher generation GCs include all lower generation GCs.
+
+Graph|Azure Web App Service Total Gen 1 Garbage Collections|33|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of times the generation 1 objects are garbage collected since the start of the app process. Higher generation GCs include all lower generation GCs.
+
+Graph|Azure Web App Service Total Gen 2 Garbage Collections|34|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of times the generation 2 objects are garbage collected since the start of the app process.
+
+Graph|Azure Web App Service Health Check Status|35|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Health check status.
+
+Graph|Azure Web App Service File System Used (Bytes)|36|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Bytes of file system quota consumed by the app.

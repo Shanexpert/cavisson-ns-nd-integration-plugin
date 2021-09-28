@@ -1,0 +1,19 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Oracle Siebel Area Stats|11227|vector|11|0|Application Metrics|Tier>Server>Area>SubArea|Oracle siebel area stats gives the data of group by area and also group by area when grouping by subarea.
+Graph|Request Count(pct)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of server requests that complete within the specified time to the specified file.
+Graph|Exclusive Percentage Time(ms)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of time spent in internal parts of the Siebel Server.
+Graph|Inclusive Response Percentage Time(ms)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average response time of the specified file.
+Graph|Exclusive Response Time(ms)|4|scalar|times|-|-|0|NA|-1|-1|NA|NA|Average response time in millisecond for a request to enter and exit an instrumentation area.
+Graph|Exclusive CPU Time(ms)|5|scalar|times|-|-|0|NA|-1|-1|NA|NA|The average time spent in the function itself in millisecond.
+Graph|Exclusive CPU Time(pct)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Exclusive cpu time in percentage. 
+Graph|Exclusive Memory(Bytes)|7|scalar|times|-|-|0|NA|-1|-1|NA|NA|Average memory usage in bytes by requests that enter only this area.
+Graph|Inclusive Response Time(ms)|8|scalar|times|-|-|0|NA|-1|-1|NA|NA|Average response time for a request to enter and exit an instrumentation area, including calls to other child areas in millisecond. 
+Graph|Inclusive CPU Time(ms)|9|scalar|times|-|-|0|NA|-1|-1|NA|NA|The average time spent in the function itself, as well as the average times of all functions that it calls in millisecond.
+Graph|Inclusive CPU Time(pct)|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Inclusive cpu time in percentage.
+Graph|Inclusive Memory(Bytes)|11|scalar|times|-|-|0|NA|-1|-1|NA|NA|Average memory usage in bytes by requests that enter this area and any child or descendent areas.
+
+

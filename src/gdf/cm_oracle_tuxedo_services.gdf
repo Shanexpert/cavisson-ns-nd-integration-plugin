@@ -1,0 +1,10 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+
+Info|1.0|1|-|-|-1|-1|-
+
+Group|Oracle Tuxedo Service Stats|10825|vector|2|0|Oracle Tuxedo Metrics|Tier>Server>Appserver|shows the service informations for application and administrative service
+
+Graph|Request/Sec|1|scalar|rate|-|CumToPS|0|NA|-1|-1|L|NA|Number of requests completed per second.
+Graph|Status|2|scalar|sample|-|-|0|NA|-1|-1|L|NA|Current status of service (1 = AVAILABLE).

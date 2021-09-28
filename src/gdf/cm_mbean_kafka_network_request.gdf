@@ -1,0 +1,34 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+# Object Name - kafka.network:type=RequestMetrics,name=LocalTimeMs,request=AddOffsetsToTxn
+info|3.1|1|-|-|-1|-1|-
+Group|Apache Kafka Network Request Stats |11445|vector|11|0|Apache Kafka Metrics|Tier>Server>Instance>Name>Request|LocalTimeMs = time the request is processed at the leader,RemoteTimeMs = Time the request waits for the follower,ResponseQueueTimeMs = time the request waits in the response queue,RequestsPerSec = request rate, RequestQueueTimeMs = time the request waits in the request queue, ResponseSendTimeMs = time to send the response,TotalTimeMs = total time in ms to serve the specified request.
+
+#G1
+Graph|Apache Kafka Network Mean Request Time(ms)|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Average time taken for all requests in millisecond.
+#G2
+Graph|Apache Kafka Network Maximum Request Time(ms)|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Maximum time needed for requests in millisecond.
+#G3
+Graph|Apache Kafka Network Request Count|3|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of request processed. 
+#G4
+Graph|Apache Kafka Network Minimum Request Time(ms)|4|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Minimum time needed for requests in millisecond.
+#G5
+Graph|Apache Kafka Network Std Dev Request Time(ms)|5|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Standard deviation time for all requests in millisecond.
+#G6
+Graph|Apache Kafka Network 50th Percentile Response Time (ms)|6|scalar|sample|-|None|0|AS|-1|-1|NA|NA|50th percentile of time taken for request in millisecond.
+#G7       
+Graph|Apache Kafka Network 75th Percentile Response Time (ms)|7|scalar|sample|-|None|0|AS|-1|-1|NA|NA|75th percentile of time taken for request in millisecond.
+#G8
+Graph|Apache Kafka Network 95th Percentile Response Time (ms)|8|scalar|sample|-|None|0|AS|-1|-1|NA|NA|95th percentile of time taken for request in millisecond.
+#G9
+Graph|Apache Kafka Network 98th Percentile Response Time (ms)|9|scalar|sample|-|None|0|AS|-1|-1|NA|NA|98th percentile of time taken for request in millisecond.
+#G10
+Graph|Apache Kafka Network 99th Percentile Response Time (ms)|10|scalar|sample|-|None|0|AS|-1|-1|NA|NA|99th percentile of time taken for request in millisecond.
+#G11
+Graph|Apache Kafka Network 999th Percentile Response Time (ms)|11|scalar|sample|-|None|0|AS|-1|-1|NA|NA|999th percentile of time taken for request in millisecond.
+
+
+

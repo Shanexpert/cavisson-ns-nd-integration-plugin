@@ -1,0 +1,54 @@
+#! /bin/sh
+
+BASE_DIR=""
+
+Usage()
+{
+  echo $*
+  echo "Usage: neu_create_partition_table <Test Run Number> <Partition Name> <tableName>"
+  echo "Example:"
+  echo "  neu_nd_create_partition_table 1234 201402201000 flowpath"
+  exit -1
+}
+
+if [ $# -ne 3 ]; then
+  Usage "INVALID ARGUMENTS"
+fi
+
+TRNUM=$1
+PARTITION_NAME=$2
+CSV_TABLE_NAME=$3
+
+#Checking if test number is numeric
+echo $TRNUM | egrep '^[0-9]+$' >/dev/null 2>&1
+if [ "$?" -eq "1" ]; then
+  Usage "Test run number is not numeric"
+fi
+
+#Checking Test number is valid or not
+if [ -d $PWD/TR$TRNUM ]; then
+  BASE_DIR=$PWD
+elif [ -d $NS_WDIR/logs/TR$TRNUM ]; then
+  BASE_DIR=$NS_WDIR/logs
+else
+  echo "Error: Test run number $1 is not a valid test run number"
+  exit -1
+fi
+
+echo
+echo "Running Command : neu_create_partition_table $1 $2 $3"
+
+MASTER_TABLE_NAME=$CSV_TABLE_NAME"_"$TRNUM
+PARTITION_TABLE_NAME=$MASTER_TABLE_NAME"_"$PARTITION_NAME
+
+CHECK_TABLE=`psql --user=cavisson -d test -t -c "SELECT table_name from information_schema.tables where  table_name ~ '^$PARTITION_TABLE_NAME$';"` 
+if [ "X$CHECK_TABLE" == "X" ];then 
+  psql test cavisson <<+
+  create table $PARTITION_TABLE_NAME
+  (
+    like $MASTER_TABLE_NAME including indexes
+  )
+  INHERITS ($MASTER_TABLE_NAME);
++
+fi
+exit 0

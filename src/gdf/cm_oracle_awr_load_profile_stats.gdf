@@ -1,0 +1,51 @@
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Oracle Load Profile|10131|vector|47|0|Oracle Metrics|Tier>Server>Instance|Oracle monitor Load Profile Stats
+
+Graph|DB Time Per Second (Sec)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of time oracle spent performing database user calls per second. It does not include background processes.
+Graph|DB Time Per Transaction (Sec) |2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of time oracle spent performing database user calls per transaction. It does not include background processes.
+Graph|DB Time Per Exec (Sec)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of time oracle spent performing database user calls per execution. It does not include background processes.
+Graph|DB Time Per Call (Sec)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of time oracle spent performing database user calls. It does not include background processes.
+Graph|DB CPU Per Second (Sec)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of CPU time spent on user calls per second. Same as DB time it does not include background process.The value is in microseconds
+Graph|DB CPU Per Transaction (Sec)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of CPU time spent on user calls per transaction. Same as DB time it does not include background process. The value is in microseconds
+Graph|DB CPU Per Exec (Sec) |7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of CPU time spent on user calls per execution. Same as DB time it does not include background process. The value is in microseconds
+Graph|DB CPU Per Call (Sec)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of CPU time spent per user call. Same as DB time it does not include background process. The value is in microseconds
+Graph|Redo size Per Second (Bytes)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Indicates the amount of DML  activity happening in the database per second.
+Graph|Redo size Per Transaction (Bytes)|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Indicates the amount of DML  activity happening in the database per transaction.
+Graph|Logical reads Per Second (Blocks)|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Represents number of IO's (Physical and logical) that the database is performing per second.
+Graph|Logical reads Per Transaction (Blocks)|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Represents number of IO's (Physical and logical) that the database is performing per transaction.
+Graph|Block changes Per Second|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of block modified during the sample interval measured per second.
+Graph|Block changes Per Transaction|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of block modified per transaction.
+Graph|Physical reads Per Second (Blocks)|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Represents number of IO's (Physical and logical) that the database is performing per second.
+Graph|Physical reads Per Transaction (Blocks)|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Represents number of IO's (Physical and logical) that the database is performing per transaction.
+Graph|Physical writes Per Second (Blocks)|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Represents the number of disk writes per second during the sample period. This test checks the data blocks written disk per second.
+Graph|Physical writes Per Transaction (Blocks)|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Represents the number of disk writes per transaction during the sample period. This test checks the data blocks written disk per transaction.
+Graph|Read IO Requests Per Second|36|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of Read requests per second.
+Graph|Read IO Requests Per Transaction|37|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of Read requests per transaction.
+Graph|Write IO requests Per Second|38|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of Write requests per second.
+Graph|Write IO requests Per Transcation|39|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of Write requests per transaction.
+Graph|Read IO(MB) Per Second|40|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of data Read per second in Megabytes.
+Graph|Read IO(MB) Per Transaction|41|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of data Read per transaction in Megabytes.
+Graph|Write IO(MB) Per Second|42|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of data Written per second in Megabytes.
+Graph|Write IO(MB) Per Transaction|43|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of data Written per transaction in Megabytes.
+Graph|Global Cache Blocks Received Per Second|44|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of blocks received per second from the remote instance over the hardware interconnect.
+Graph|Global Cache Blocks Received Per Transaction|45|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of blocks received per transaction from the remote instance over the hardware interconnect.
+Graph|Global Cache Blocks Serverd Per Second|46|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of blocks sent per second to the remote instances over the hardware interconnect.
+Graph|Global Cache Blocks Serverd Per Transaction|47|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of blocks sent per transaction to the remote instances over the hardware interconnect.
+Graph|User calls Per Second|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Indicates how many user calls have occurred during the snapshot period.usercall represents number of logins, parses, or execute calls per second during the sample period.
+Graph|User calls Per Transaction|20|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Indicates how many user calls have occurred during the snapshot period measured per transaction.
+Graph|Parses Per Second|21|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total of all parses; both hard and soft per second.
+Graph|Parses Per Transaction|22|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total of all parses; both hard and soft per transaction.
+Graph|Hard Parses Per Second|23|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Hard parse occurs when a SQL statement has to be loaded into the shared pool. In this case, the Oracle Server has to allocate memory in the shared pool and parse the statement.
+Graph|Hard Parses Per Transaction|24|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Hard parse per transaction occurs when a SQL statement has to be loaded into the shared pool. In this case, the Oracle Server has to allocate memory in the shared pool and parse the statement.
+Graph|SQL Work Area (MB) processed Per Second|25|scalar|sample|-|-|0|NA|-1|-1|NA|NA| SQL Work Area (MB) processed Per Second
+Graph|SQL Work Area (MB) processed Per Transaction|26|scalar|sample|-|-|0|NA|-1|-1|NA|NA|SQL Work Area (MB) processed Per Transaction
+Graph|Logons Per Second|27|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of logins which occurred in the database per second.
+Graph|Logons Per Transaction|28|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of logins which occurred in the database per transaction.
+Graph|Executes Per Second|29|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of SQL statements which were executed per second.
+Graph|Executes Per Transaction|30|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of SQL statements which were executed per transaction.
+Graph|Rollbacks Per Second|31|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Rollbacks per second.
+Graph|Rollbacks Per Transaction|32|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Rollbacks per transaction.
+Graph|Transactions Per Second|33|scalar|sample|-|-|0|NA|-1|-1|NA|NA|No. of transactions occurred during the snapshot period.
+Graph|Total Executions|34|scalar|sample|-|-|0|NA|-1|-1|NA|NA|No. of executions occurred during the snapshot period.
+Graph|Elapsed time per execution (msecs)|35|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Elapsed time per execution

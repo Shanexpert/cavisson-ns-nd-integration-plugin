@@ -1,0 +1,18 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Endeca Request Stats|10074|vector|9|0|Application Metrics|Tier>Server>Page|Request stats of Endeca server
+
+Graph|Endeca Successful Requests/Minute|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of sccessful requests per minute. All requests with response of HTTP status code of 200 are considered successful.
+Graph|Endeca Failed Requests/Minute|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of failed request per minute.
+Graph|Endeca Total Successful Requests|3|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total number of successful request since start of the test.
+Graph|Endeca Total Failed Requests|4|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total number of request failed since start of the test.
+Graph|Endeca Service Time (Sec)|5|scalar|times|-|-|0|NA|-1|-1|NA|NA|Total time taken from when the server reads the request from the network and finished sending the result. May include queuing time, such as time spent waiting for earlier requests to be completed.
+Graph|Endeca Processing Time (Sec)|6|scalar|times|-|-|0|NA|-1|-1|NA|NA|Total computation time required for the server to handle the request, excluding network and wait time. This value gives an accurate measure of how expensive the request was to compute, given current system state. (That is, if the machine in question was busy with other threads or processes, the time may be longer than on an otherwise unused machine
+Graph|Endeca Send Throughput (Kbps)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average Send throughput of sending data to client in kilobits per second.
+Graph|Endeca Request Queued|8|scalar|times|-|-|0|NA|-1|-1|NA|NA|Average number of requests in the queue.
+Graph|Endeca Idle Threads|9|scalar|times|-|-|0|NA|-1|-1|NA|NA|Average number of threads which are idle.

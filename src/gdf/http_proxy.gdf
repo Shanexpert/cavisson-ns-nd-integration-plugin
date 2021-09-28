@@ -1,0 +1,43 @@
+
+# General information line
+# Info|msgVersion|numGroups|startIndex|testRun|sizeOfMsgData|interval|testRunStartDate/Time
+# 
+# Group information line
+# Group|groupName|rptGrpId|groupType|numGraphs|numVectors|future1|future2|Group_Description 
+#
+# Graph information line
+# Graph|graphName|rptId|graphType|dataType|graphDataIndex|formula|numVectors|graphState|PDF_ID|Percentile_Data_Idx|future2|future3|GRAPH_DESCRIPTION
+# graphState --> (AS for active system, A for active, I for inactive, NA & - is also treated as active)
+# Numeric data is filled as -1 in the infoline
+
+Info|2.1|1|-1|-|-1|-1|-
+
+Group|HTTP Proxy|29|scalar|22|0|Test Metrics|NA|Http Proxy
+
+Graph|HTTP Proxy Inspected Requests/Sec|1|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of HTTP requests offered to proxy per second in the sampling period
+Graph|HTTP Proxy Exceptions Requests/Sec|2|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of HTTP requests which fall under exception to proxy per second in the sampling period
+Graph|HTTP Proxy Requests/Sec|3|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of HTTP requests send via proxy per second in the sampling period
+Graph|Total HTTP Proxy Requests|4|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Number of HTTP requests via proxy
+
+Graph|HTTPS Proxy Inspected Requests/Sec|5|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of HTTPS requests offered to proxy per second in the sampling period
+Graph|HTTPS Proxy Exceptions Requests/Sec|6|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of HTTPS requests which fall under exception to proxy per second in the sampling period
+Graph|HTTPS Proxy Requests/Sec|7|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of HTTPS requests send via proxy per second in the sampling period
+Graph|Total HTTPS Proxy Requests|8|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Number of HTTPS requests via proxy
+
+Graph|Connect Successful/Sec|9|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of successful connect requests per second in the sampling period
+Graph|Connect Failure/Sec|10|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of failed connect requests per second in the sampling period
+
+Graph|Average Successful Connect/Secs|11|scalar|times|-|-|0|AS|-1|-1|NA|NA|Average successful connect requests
+Graph|Average Failure Connect/Secs|12|scalar|times|-|-|0|AS|-1|-1|NA|NA|Average failure connect requests 
+
+Graph|Connect 1xx/Sec|13|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of 1xx failure in connect requesta per second in the sampling period
+Graph|Connect 2xx/Sec|14|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of 2xx failure in connect requesta per second in the sampling period
+Graph|Connect 3xx/Sec|15|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of 3xx failure in connect requesta per second in the sampling period
+Graph|Connect 4xx/Sec|16|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of 4xx failure in connect requesta per second in the sampling period
+Graph|Connect 5xx/Sec|17|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of 5xx failure in connect requesta per second in the sampling period
+Graph|Connect Other/Sec|18|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of Others failure code in connect requests per second in the sampling period
+Graph|Connect ConFail/Sec|19|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of Connection Failure in connect requests per second in the sampling period
+Graph|Connect T.O/Sec|20|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of Time Out in connect requests per second in the sampling period
+
+Graph|Proxy Authentication Success/Secs|21|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of Proxy Authentication successful per second in the sampling period
+Graph|Proxy Authentication Failure/Secs|22|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of Proxy Authentication failure per second in the sampling period

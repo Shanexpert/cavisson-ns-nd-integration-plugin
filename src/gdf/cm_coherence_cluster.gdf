@@ -1,0 +1,10 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Coherence Cluster Stats|10291|vector|2|0|Application Metrics|Tier>Server>ClusterName|Information related to statistics of the cluster.
+Graph|Members Departure Count|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of times this node has observed another node`s departure from the cluster since this management node has joined the cluster or statistics have been reset.
+Graph|Cluster Size|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of cluster nodes.

@@ -1,0 +1,20 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+# This GDF is same as PostgresStats linux monitor GDF. This GDf is created for PostgresStats java monitor. We can't use the linux monitor GDF because for per minute graphs cm_postgres_stats monitor is doing calculation but we create the PostgresStats java monitor through cm_generic_db_monitor in which we have to define the per minute graphs calculation in GDF by using CumToPM formula.  
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|PostgreSQL Stats|10951|vector|7|0|PostgreSQL Metrics|Tier>Server>DBName|PostgreSQL statistics.
+
+Graph|PostgreSQL Total Connections|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of backends currently connected to this database.
+Graph|PostgreSQL Active Connections|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of backends executing query in this database.
+Graph|PostgreSQL Blocks Reads/Min|3|scalar|rate|-|CumToPM|0|NA|-1|-1|NA|NA|Number of disk blocks read per minute.
+Graph|PostgreSQL Blocks Write/Min|4|scalar|rate|-|CumToPM|0|NA|-1|-1|NA|NA|Number of disk blocks write per minute.
+Graph|PostgreSQL Locks Consumed|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of locks held by open transactions within the database server.
+#Graph|PostgreSQL SHR Memory (KB)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The amount of shared memory used by a task in (KB). It simply reflects memory that could be potentially shared with other processes.
+Graph|PostgreSQL Cache Hits/Min|6|scalar|rate|-|CumToPM|0|NA|-1|-1|NA|NA|Number of times disk blocks were found already in the buffer cache, so that a read was not necessary (this only includes hits in the PostgreSQL buffer cache, not the operating system's file system cache).
+Graph|PostgreSQL Commits/Min|7|scalar|rate|-|CumToPM|0|NA|-1|-1|NA|NA|Number of transactions in this database that have been committed.
+#Graph|PostgreSQL Time b/w checkpoints (Min)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Time b/w consecutive checkpoints in minutes 

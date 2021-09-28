@@ -1,0 +1,21 @@
+# General information line
+# Info|msgVersion|numGroups|startIndex|testRun|sizeOfMsgData|interval|testRunStartDate/Time
+#
+# Group information line
+# Group|groupName|rptGrpId|groupType|numGraphs|numVectors|future1|future2|Group_Description
+#
+# Graph information line
+# Graph|graphName|rptId|graphType|dataType|graphDataIndex|formula|numVectors|graphState|PDF_ID|Percentile_Data_Idx|future2|future3|GRAPH_DESCRIPTION
+# graphState --> (AS for active system, A for active, I for inactive, NA & - is also treated as active)
+# Numeric data is filled as -1 in the infoline
+
+Info|2.0|1|-|-|-1|-1|-
+
+Group|Miscellaneous|1001|scalar|5|0|Test Metrices|NA|Miscellaneous Graph
+
+Graph|OverAll Virtual Users|1|scalar|-|-|-|0|AS|-1|-1|NA|NA|Number of Overall Virtual Users.
+Graph|Average Page Response Time (Scatter Graph)|2|scalar|-|-|-|0|AS|-1|-1|NA|NA|Average of the page response time in form of Scatter Graph.
+Graph|Average Page Response Time (Geographic Display)|3|scalar|-|-|-|0|AS|-1|-1|NA|NA|Average of the page response time in form of Geographic Display.
+Graph|Average Per Page Response Time (Bar Graph)|4|scalar|-|-|-|0|AS|-1|-1|NA|NA|Average of the page response time in form of Bar Graph.
+Graph|Page Time Distribution (Frequency Distribution)|5|scalar|-|-|-|0|AS|-1|-1|NA|NA|Page time distribution in form of Frequency distribution.
+

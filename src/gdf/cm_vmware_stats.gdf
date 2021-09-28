@@ -1,0 +1,21 @@
+Info|3.1|1|-|-|-1|-1|-
+Group|VMWare Stats|10280|vector|17|0|System Metrics|Tier>Server|VMWare stats monitor
+Graph|Processor Time (Pct)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Processor time of VM 
+Graph|CPU Stolen Time (Pct)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|CPU stolen time of VM 
+Graph|Effective VM speed (MHz)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Effective VM speed of VM in mega Hz 
+Graph|Host Processor speed (MHz)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Host processor speed of VM in mega Hz 
+Graph|CPU Reservation (MHz)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|CPU reservation of VM 
+Graph|CPU Shares|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|CPU shares of VM 
+Graph|Active memory (MB)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Active memory of VM
+Graph|Ballooned memory (MB)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Ballooned memory of VM
+Graph|Mapped memory (MB)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Mapped memory of VM 
+Graph|Overhead memory (MB)|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Overhead memory of VM 
+Graph|Shared memory (MB)|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Shared memory of VM 
+Graph|Shared memory saved (MB)|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Shared memory saved of VM
+Graph|Swapped memory (MB)|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Swapped memory of VM
+Graph|Target memory size (MB)|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Target memory size of VM 
+Graph|Used memory (MB)|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Used memory
+Graph|Memory Reservation (MB)|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memory reservation of VM 
+Graph|Memory Shares|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memory shares size of VM
+
+

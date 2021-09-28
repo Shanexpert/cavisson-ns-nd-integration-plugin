@@ -1,0 +1,90 @@
+#!/bin/bash
+#*************************************************************************************************************************************************************
+# * File Name      : nsi_ldap_config
+# *
+# * Purpose        : This tool will update and show ldap configuration
+# *
+# * Code Flow      : -  
+# * Author(s)      : Abhay Singh
+# * Date           : 08/08/2017
+# * Copyright      : (c) Cavisson Systems
+# * Usage          : nsi_ldap_config -o operation
+#				     -h -> ldap://127.0.0.1:1389
+#			             -b -> uid=cav_id1,ou=Internal,ou=People,dc=cavisson,dc=com
+#         			     -d -> dc=cavisson,dc=com
+#         			     -p -> cavisson "
+# * Modification History : 
+# *************************************************************************************************************************************************************/
+
+LDAP_CONF_FILE=/home/cavisson/etc/ldap.conf
+
+if [ ! -f $LDAP_CONF_FILE ];then
+  touch $LDAP_CONF_FILE
+fi
+
+#  host "ldap://172.18.152.63:1389"
+#  binddn "uid=rkumarw8,ou=Internal,ou=People,dc=Walgreens,dc=com"
+#  basedn "dc=walgreens,dc=com"
+#  passwd "dsdfdgh"
+
+usage()
+{
+  echo "USAGE: "
+  echo " -o This is a mandatory option for type of operation update/show"
+  echo " -h is for host name"
+  echo " -d is for base dn"
+  echo " -p is for bind password"
+  echo " -b is for bind dn"
+  echo " -h -> ldap://127.0.0.1:1389(host)
+         -b -> uid=cav_id1,ou=Internal,ou=People,dc=cavisson,dc=com(binddn)
+         -d -> dc=cavisson,dc=com(basedn)
+         -p -> cavisson(password) "
+  exit 0
+}
+
+update_ldap_conf_file()
+{
+  if [ "X$HOST" == "X" -a "X$BASE_DN" == "X" -a "X$BIND_DN" == "X" -a "X$BIND_PW" == "X" ]; then
+    usage
+  fi
+  if [ -f $LDAP_CONF_FILE ];then
+    > $LDAP_CONF_FILE
+    echo "HOST=$HOST" >> $LDAP_CONF_FILE
+    echo "BASE_DN=$BASE_DN" >> $LDAP_CONF_FILE
+    echo "BIND_DN=$BIND_DN" >> $LDAP_CONF_FILE
+    echo "BIND_PW=$BIND_PW" >> $LDAP_CONF_FILE
+  fi
+}
+
+show_config()
+{
+  if [ -f $LDAP_CONF_FILE ];then
+    cat $LDAP_CONF_FILE
+  fi
+} 
+
+
+if [ $# -eq 0 ]; then
+  usage
+fi 
+
+while getopts o:d:h:b:p: option;
+  do
+    case $option in
+     o) OPERATION=$OPTARG;;
+     d) BASE_DN=$OPTARG;;
+     b) BIND_DN=$OPTARG;;
+     p) BIND_PW=$OPTARG;;
+     h) HOST=$OPTARG;;
+    esac
+  done
+
+if [ "X$OPERATION" == "Xshow" -o "X$OPERATION" == "XSHOW" ]; then
+  show_config
+fi
+
+if [ "X$OPERATION" == "Xupdate" -o "X$OPERATION" == "XUPDATE" ]; then
+  update_ldap_conf_file
+fi
+
+exit 0 

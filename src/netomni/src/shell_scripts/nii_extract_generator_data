@@ -1,0 +1,172 @@
+#!/bin/bash
+
+################################################################################################
+# Name  : nii_extract_generator_data
+# Purpose: This shell is used to extract scripts and scenarios at generator
+# Output :        
+# Author Name     : Prachi Kumari
+################################################################################################
+
+. $CAV_MON_HOME/bin/ns_check_monitor_func.sh
+
+MY_PID=$$
+LOG_FILE=$NS_WDIR/webapps/netstorm/temp/nii_extract_generator_data.log.$MY_PID
+HOME_DIR=/home/cavisson
+NS_RTA_DIR=workspace/admin/system/cavisson
+
+debug_error_log()
+{
+  echo "`date +"%F %T"`|$*" >>$LOG_FILE
+}
+
+debug_error_log "Starting nii_extract_generator_data ..."
+
+#Issue occured when same scripts directory is exist in generartor then it cannot be override it.
+#UNTAR_GZ_CMD="tar hxzf --no-overwrite-dir"
+#UNTAR_CMD="tar hxf --no-overwrite-dir"
+
+UNTAR_LZ_CMD="tar -I$NS_WDIR/thirdparty/bin/lz4 --overwrite -hxf"
+
+chmod 666 $LOG_FILE
+
+add_pid_in_excp_list $MY_PID
+
+show_error_and_exit()
+{
+  echo "FAILURE"
+  if [ -s $LOG_FILE ];then
+    cat $LOG_FILE 2>/dev/null
+  fi
+  remove_pid_from_excp_list $MY_PID
+  exit 1
+}
+
+Usage()
+{
+  debug_error_log "Usage: $0 -f <tar file name>"
+  show_error_and_exit
+}
+
+extract_scenarios()
+{
+  cd $NS_WDIR
+  debug_error_log "Untaring $SCEN_TAR_FILE"
+  $UNTAR_LZ_CMD $SCEN_TAR_FILE -C $NS_RTA_DIR $1>>$LOG_FILE 2>&1
+  if [ $? -ne 0 ];then
+     rm -f $SCEN_TAR_FILE
+     show_error_and_exit
+  fi
+  rm -f $SCEN_TAR_FILE
+  cd - >/dev/null
+  debug_error_log "Successfuly untar scenarios file $SCEN_TAR_FILE"
+}
+
+extract_abs_data_files()
+{
+  #cd /
+  cd $NS_WDIR
+  debug_error_log "Untaring $ABS_DATA_FILE"
+  $UNTAR_LZ_CMD $ABS_DATA_FILE -C $HOME_DIR 1>>$LOG_FILE 2>&1
+  if [ $? -ne 0 ];then
+     debug_error_log "Failed to untar $ABS_DATA_FILE"
+     rm -f $ABS_DATA_FILE
+     show_error_and_exit
+  fi
+  rm -f $ABS_DATA_FILE
+  cd - >/dev/null
+  debug_error_log "Successfully untar $ABS_DATA_FILE"
+}
+
+extract_scripts()
+{
+  cd $NS_WDIR
+  debug_error_log "Untaring $SCRIPTS_TAR_FILE"
+  $UNTAR_LZ_CMD $SCRIPTS_TAR_FILE -C $NS_RTA_DIR 1>>$LOG_FILE 2>&1
+  if [ $? -ne 0 ];then
+     debug_error_log "Failed to untar $SCRIPTS_TAR_FILE"
+     rm -f $SCRIPTS_TAR_FILE
+     show_error_and_exit
+  fi
+  rm -f $SCRIPTS_TAR_FILE
+
+  debug_error_log "Successfully extracted $SCRIPTS_TAR_FILE"
+}
+
+extract_datafile()
+{
+  cd $HOME_DIR
+  if [ -f $DATA_FILE_NAME ]; then
+    debug_error_log "Untaring $DATA_FILE_NAME"
+    $UNTAR_LZ_CMD $DATA_FILE_NAME 1>>$LOG_FILE 2>&1
+    if [ $? -ne 0 ];then
+      debug_error_log "Failed to untar $DATA_FILE_NAME"
+      rm -f $DATA_FILE_NAME
+      show_error_and_exit
+    fi
+    rm -f $DATA_FILE_NAME
+    debug_error_log "Successfully extracted $DATA_FILE_NAME"
+  fi
+  cd - >/dev/null
+}
+
+extract_controller_specific_file()
+{
+  cd $NS_WDIR
+  if [ -f $CTR_SPEFIC_FILE_NAME ]; then
+    debug_error_log "Untaring $CTR_SPEFIC_FILE_NAME"
+    $UNTAR_LZ_CMD $CTR_SPEFIC_FILE_NAME 1>>$LOG_FILE 2>&1
+    if [ $? -ne 0 ];then
+      debug_error_log "Failed to untar $CTR_SPEFIC_FILE_NAME"
+      rm -f $CTR_SPEFIC_FILE_NAME
+      show_error_and_exit
+    fi
+    rm -f $CTR_SPEFIC_FILE_NAME
+    debug_error_log "Successfully extracted $CTR_SPEFIC_FILE_NAME"
+  fi
+  cd - >/dev/null
+}
+
+
+while getopts f:F:s:d:c:? args  2>/dev/null
+do
+  case $args in
+    f) SCEN_TAR_FILE=$OPTARG;;
+    F) ABS_DATA_FILE=$OPTARG;;
+    s) SCRIPTS_TAR_FILE=$OPTARG;;
+    d) DATA_FILE_NAME=$OPTARG;;
+    c) CTR_SPEFIC_FILE_NAME=$OPTARG;;
+    ?) Usage "Invalid arguments";;
+    *) Usage "Invalid arguments";;
+  esac
+done
+ 
+
+if [ "X$CTR_SPEFIC_FILE_NAME" != "X" ];then
+  extract_controller_specific_file
+fi 
+
+if [ "X$SCRIPTS_TAR_FILE" != "X" ];then
+  extract_scripts
+fi 
+
+if [ "X$DATA_FILE_NAME" != "X" ];then
+  extract_datafile
+fi
+
+if [ "X$SCEN_TAR_FILE" != "X" ];then
+  if [ ! -f $NS_WDIR/${SCEN_TAR_FILE} ];then
+    debug_error_log "Tar file is not present in $NS_WDIR directory, Please restart test again"
+    rm -f $NS_WDIR/$SCEN_TAR_FILE
+    show_error_and_exit
+  fi
+  extract_scenarios
+fi 
+
+if [ "X$ABS_DATA_FILE" != "X" ];then
+  extract_abs_data_files
+fi
+
+echo "SUCCESS"
+rm -f $LOG_FILE
+remove_pid_from_excp_list $MY_PID
+exit 0

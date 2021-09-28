@@ -1,0 +1,155 @@
+#!/bin/sh
+
+#######################################################################################################
+# Name            : nsi_orl_get_sql_stmt_ord_by_elapsed_time 
+#
+# Synopsis        : 
+#
+#
+# Examples        :
+# 
+# History         : 
+#   
+# Version 1.0
+#   Author        : Ambuj 
+#   Date          : 11-June-2014
+#
+#######################################################################################################
+
+
+######################################################################
+#                     Variables and init settings
+#####################################################################
+                                                                                                       
+# Including nsi_db_utils
+. $NS_WDIR/bin/nsi_db_utils
+
+usage()
+{
+  echo
+  echo "$*"
+  echo
+  echo "USAGE:"
+  echo "====="
+  echo
+  echo "$0 --testrun <value> --snapid <value>"
+
+  exit 1
+}
+
+add_select()
+{
+  if [ "X$SELECT" == "X" ]; then
+    SELECT="SELECT $NEWLINE " 
+  else
+    SELECT="$SELECT, $NEWLINE " 
+  fi
+}
+
+chk_args()
+{
+  if [ "X$TRNUM" == "X" ]; then
+    usage "Missing mandatory option --testrun."
+  fi
+
+}
+
+while [ "$1" != "" ];do
+  case $1 in
+    "--testrun")
+        shift
+        chk_args_of_option "--testrun" "$1"
+        TRNUM=$1;;
+    "--limit")
+        shift
+        chk_args_of_option "--limit" "$1"
+        LIMIT=$1;;
+    "--offset")
+        shift
+        chk_args_of_option "--offset" "$1"
+        OFFSET=$1;;
+    "--snapid")
+        shift
+        chk_args_of_option "--snapid" "$1"
+        SNAPID=$1;;
+    --*) usage "Invalid option $1";;
+    *) usage ;;
+  esac
+  shift
+done
+
+handle_time_filters $TRNUM
+
+add_select
+SELECT="$SELECT orlStatsSnapTable_$TRNUM.DBName"
+SELECT="$SELECT, $NEWLINE  orlStatsSnapTable_$TRNUM.DBID"
+SELECT="$SELECT, $NEWLINE  orlStatsSnapTable_$TRNUM.InstanceName"
+SELECT="$SELECT, $NEWLINE  orlStatsSnapTable_$TRNUM.InstNum"
+SELECT="$SELECT, $NEWLINE  (orlStatsSnapTable_$TRNUM.InstanceStartTime + $CAV_EPOCH_TIME)*1000 AS \"Instance Start Time\""
+SELECT="$SELECT, $NEWLINE  orlStatsSnapTable_$TRNUM.InstanceRelease"
+SELECT="$SELECT, $NEWLINE  orlStatsSnapTable_$TRNUM.RAC"
+SELECT="$SELECT, $NEWLINE  orlStatsSnapTable_$TRNUM.HostName"
+SELECT="$SELECT, $NEWLINE  orlStatsSnapTable_$TRNUM.Platform"
+SELECT="$SELECT, $NEWLINE  orlStatsSnapTable_$TRNUM.NumCPU"
+SELECT="$SELECT, $NEWLINE  orlStatsSnapTable_$TRNUM.NumCores"
+SELECT="$SELECT, $NEWLINE  orlStatsSnapTable_$TRNUM.NumSockets"
+SELECT="$SELECT, $NEWLINE  orlStatsSnapTable_$TRNUM.MemoryGB"
+SELECT="$SELECT, $NEWLINE  orlStatsSnapTable_$TRNUM.SnapBeginID"
+SELECT="$SELECT, $NEWLINE  (orlStatsSnapTable_$TRNUM.StartTime + $CAV_EPOCH_TIME)*1000 AS \"StartTime\""
+SELECT="$SELECT, $NEWLINE  orlStatsSnapTable_$TRNUM.SnapBeginSessionNum"
+SELECT="$SELECT, $NEWLINE  orlStatsSnapTable_$TRNUM.SnapBeginCursorsPerSession"
+SELECT="$SELECT, $NEWLINE  orlStatsSnapTable_$TRNUM.SnapBeginInstances"
+SELECT="$SELECT, $NEWLINE  orlStatsSnapTable_$TRNUM.SnapEndID"
+SELECT="$SELECT, $NEWLINE  (orlStatsSnapTable_$TRNUM.EndTime + $CAV_EPOCH_TIME)*1000 AS \"EndTime\""
+SELECT="$SELECT, $NEWLINE  orlStatsSnapTable_$TRNUM.SnapEndSessionNum"
+SELECT="$SELECT, $NEWLINE  orlStatsSnapTable_$TRNUM.SnapEndCursorsPerSession"
+SELECT="$SELECT, $NEWLINE  orlStatsSnapTable_$TRNUM.SnapEndInstances"
+SELECT="$SELECT, $NEWLINE  orlStatsSnapTable_$TRNUM.SnapElapsedTimeMS"
+SELECT="$SELECT, $NEWLINE  orlStatsSnapTable_$TRNUM.SnapDBTimeMS"
+SELECT="$SELECT, $NEWLINE  orlStatsSnapTable_$TRNUM.TotalDBTimeMS"
+SELECT="$SELECT, $NEWLINE  orlStatsSnapTable_$TRNUM.TotalCPUTimeMS"
+SELECT="$SELECT, $NEWLINE  orlStatsSnapTable_$TRNUM.TotalUserIOWaitTimeMS"
+SELECT="$SELECT, $NEWLINE  orlStatsSnapTable_$TRNUM.TotalBufferGets"
+SELECT="$SELECT, $NEWLINE  orlStatsSnapTable_$TRNUM.TotalDiskReads"
+SELECT="$SELECT, $NEWLINE  orlStatsSnapTable_$TRNUM.TotalPhyReadReqs"
+SELECT="$SELECT, $NEWLINE  orlStatsSnapTable_$TRNUM.TotalUnOptReadReq"
+SELECT="$SELECT, $NEWLINE  orlStatsSnapTable_$TRNUM.TotalOptReadReq"
+SELECT="$SELECT, $NEWLINE  orlStatsSnapTable_$TRNUM.TotalExecutions"
+SELECT="$SELECT, $NEWLINE  orlStatsSnapTable_$TRNUM.TotalParseCalls"
+SELECT="$SELECT, $NEWLINE  orlStatsSnapTable_$TRNUM.TotalSharedmem"
+SELECT="$SELECT, $NEWLINE  orlStatsSnapTable_$TRNUM.TotalClusterWaitTimeMS"
+
+FROM="FROM OrlStatsSnapTable_$TRNUM"
+
+if [ "X$SNAPID" != "X" ]; then
+  WHERE="WHERE OrlStatsSnapTable_$TRNUM.SnapBeginID = $SNAPID"
+fi
+
+ORDER="ORDER BY OrlStatsSnapTable_$TRNUM.SnapBeginID"
+
+
+if [ "X$LIMIT" != "X" ]; then
+  LIMIT="LIMIT $LIMIT"
+fi
+
+if [ "X$OFFSET" != "X" ]; then
+  OFFSET="OFFSET $OFFSET"
+fi
+
+set_query_files $TRNUM
+
+if [ "X$GET_COUNT" != "X1" ]; then
+  ns_run_query
+else
+  FROM="FROM $NEWLINE  ($NEWLINE  $SELECT $NEWLINE$FROM $NEWLINE$WHERE $NEWLINE$GROUP $NEWLINE  ) As \"Total\" "
+  SELECT="SELECT $NEWLINE  Count(*) As \"Rows\" "
+  WHERE=""
+  GROUP=""
+  ORDER=""
+  ns_run_query
+fi
+
+show_query_result
+
+exit 0
+

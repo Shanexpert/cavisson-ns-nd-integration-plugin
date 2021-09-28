@@ -1,0 +1,254 @@
+{
+  "templateName": "_NetCloudCompareReports",
+  "description": "For comparing test metrics of different generators",
+  "creationDate": "07/20/13 14:11:18",
+  "modifiedDate": "07/20/13 14:11:18",
+  "owner": "cavisson",
+  "isConverted": true,
+  "reportSetArray": [
+    {
+      "reportSetName": "Network Throughput",
+      "dataType": 0,
+      "chartType": 0,
+      "formulaType": "0",
+      "scaling": 0,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 2,
+          "graphId": 1,
+          "vecName": "NA"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 2,
+          "graphId": 2,
+          "vecName": "NA"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 2,
+          "graphId": 3,
+          "vecName": "NA"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 2,
+          "graphId": 4,
+          "vecName": "NA"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 2,
+          "graphId": 7,
+          "vecName": "NA"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 2,
+          "graphId": 9,
+          "vecName": "NA"
+        }
+      ]
+    },
+    {
+      "reportSetName": "HTTP Requests",
+      "dataType": 0,
+      "chartType": 0,
+      "formulaType": "0",
+      "scaling": 0,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 3,
+          "graphId": 1,
+          "vecName": "NA"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 3,
+          "graphId": 3,
+          "vecName": "NA"
+        }
+      ]
+    },
+    {
+      "reportSetName": "Page Downloads",
+      "dataType": 0,
+      "chartType": 0,
+      "formulaType": "0",
+      "scaling": 0,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 4,
+          "graphId": 9,
+          "vecName": "NA"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 4,
+          "graphId": 10,
+          "vecName": "NA"
+        }
+      ]
+    },
+    {
+      "reportSetName": "Transactions",
+      "dataType": 0,
+      "chartType": 0,
+      "formulaType": "0",
+      "scaling": 0,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 6,
+          "graphId": 7,
+          "vecName": "NA"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 6,
+          "graphId": 8,
+          "vecName": "NA"
+        }
+      ]
+    },
+    {
+      "reportSetName": "HTTP Failures",
+      "dataType": 0,
+      "chartType": 0,
+      "formulaType": "0",
+      "scaling": 0,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 7,
+          "graphId": 1,
+          "vecName": "NA"
+        }
+      ]
+    },
+    {
+      "reportSetName": "Page Failures",
+      "dataType": 0,
+      "chartType": 0,
+      "formulaType": "0",
+      "scaling": 0,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 8,
+          "graphId": 1,
+          "vecName": "NA"
+        }
+      ]
+    },
+    {
+      "reportSetName": "Transaction Time",
+      "dataType": 0,
+      "chartType": 0,
+      "formulaType": "0",
+      "scaling": 0,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 102,
+          "graphId": 1,
+          "vecName": "All"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 102,
+          "graphId": 2,
+          "vecName": "All"
+        }
+      ]
+    },
+    {
+      "reportSetName": "System Stats",
+      "dataType": 0,
+      "chartType": 0,
+      "formulaType": "0",
+      "scaling": 0,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 10108,
+          "graphId": 4,
+          "vecName": "All"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 10108,
+          "graphId": 18,
+          "vecName": "All"
+        }
+      ]
+    },
+    {
+      "reportSetName": "Vusers",
+      "dataType": 0,
+      "chartType": 0,
+      "formulaType": "0",
+      "scaling": 0,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 1,
+          "graphId": 1,
+          "vecName": "NA"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 1,
+          "graphId": 2,
+          "vecName": "NA"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 1,
+          "graphId": 6,
+          "vecName": "NA"
+        }
+      ]
+    },
+    {
+      "reportSetName": "Transaction Failures",
+      "dataType": 0,
+      "chartType": 0,
+      "formulaType": "0",
+      "scaling": 0,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 10,
+          "graphId": 1,
+          "vecName": "NA"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+#!/bin/sh
+
+# Name  : nsi_on_reboot
+# Author: Achint
+# Usage : nsi_on_reboot
+# This script is used in assign the IP addresses on the time of reboot the machine.  
+# On rebooting the machine all assigned IPs are deleted so we have to again assign the previous IPs. This script read the configuration file and depending upon the configuration script assign the IPs on NetStorm or NetOcean.
+# It read the ip entries file and take values from it.
+
+IP_BONDING=$NS_WDIR/sys/ip_bonding
+NSU_IP_BONDING=$NS_WDIR/bin/nsu_ip_bonding
+IP_PROPERTIES="$NS_WDIR/sys/ip_properties"
+
+$NS_WDIR/bin/nsi_on_upgrade_and_reboot
+
+#create bonding, if needed
+is_bonding=0
+CARG=""
+for i in `cat $IP_BONDING`
+do
+	CARG="$CARG $i"
+	is_bonding=1
+done
+
+if [ $is_bonding -eq 1 ];then
+	$NSU_IP_BONDING -a $CARG
+fi
+#Added by Arun on 03/25/08
+#if user has created a shell in $NS_WDIR/sys
+if [ -f $NS_WDIR/sys/site.on_reboot ];then
+  $NS_WDIR/sys/site.on_reboot
+fi
+
+sleep 30
+su cavisson -c $NS_WDIR/bin/nsi_add_ip_all
+
+#changing  permisson as netstorm reads this to calculate jiffy (time stamp)
+chmod 755 /dev/mem
+
+OPTIMIZED_IF=`egrep "^OPTIMIZED_IF" $IP_PROPERTIES | cut -d " " -f2-`
+# If there is no Interfaces defined in the IP_PROPERTIES, keyword may present only, return
+if [ "XX$OPTIMIZED_IF" != "XX" ];then
+  $NS_WDIR/bin/nsu_maximize_eth_perf -a $OPTIMIZED_IF
+fi
+
+#we were getting following message in /var/log/message
+#Jul  5 17:18:21 cavisson-server kernel: [26061.116313] net_ratelimit: 402 callbacks suppressed
+#Jul  5 17:18:21 cavisson-server kernel: [26061.116316] nf_conntrack: table full, dropping packet.
+#Jul  5 17:18:21 cavisson-server kernel: [26061.116336] nf_conntrack: table full, dropping packet.
+#Jul  5 17:18:21 cavisson-server kernel: [26061.116356] nf_conntrack: table full, dropping packet.
+
+#If you notice the above message in syslog, it looks like the conntrack database doesn't have enough entries for your environment. Connection tracking by default handles up to a certain number of simultaneous connections. This number is dependent on you system's maximum memory size.
+#You can easily increase the number of maximal tracked connections, but be aware that each tracked connection eats about 350 bytes of non-swappable kernel memory!
+#To print current limit type:
+# sysctl net.ipv4.netfilter.ip_conntrack_max
+
+REDHAT_FC_RELEASE=`$NS_WDIR/tools/nsi_get_linux_release_ex 2>/dev/null`
+#Supporting this unconditionally as needed in Ubuntu as well as Fc14
+#In ubuntu This is showing : xt_CT: netfilter: NOTRACK target is deprecated, use CT instead or upgrade iptables
+  #Disable connection tracking for FC14 
+  iptables -t raw -A PREROUTING -j NOTRACK 
+  iptables -t raw -I OUTPUT -j NOTRACK
+
+
+#fixes for bug ::15449
+#To overcome warning xt_CT: netfilter: NOTRACK target is deprecated we will use conntract feature of iptable
+#check if conntract is enable or not 
+ #NS_CT=`lsmod | grep conntrack`
+#we will use conntrack in case it is enabled   
+ #if [ "X$NS_CT" != "X" ];then
+ #  iptables -t filter -I INPUT 1 -m conntrack --ctstate UNTRACKED 
+ #fi
+
+#While rebooting ubuntu machine following error was found while running test:
+#df: `/var/lib/lightdm/.gvfs': Permission denied
+#df: `/var/lib/lightdm/.gvfs': Permission denied
+#Therefore stopping lightdm service while rebooting
+#DISTRO=`$NS_WDIR/tools/nsi_get_linux_release_ex -d 2>/dev/null`
+#lightdm is required by ubuntu for launching GUI console, the error is non blocking so we can have this till alternate is found.
+#if [ "X$DISTRO" == "XUbuntu" ];then
+#  service lightdm stop 2>/dev/null
+#fi
+
+#Added on 12/30/2014 as per Bug#9086
+#Restores iptables rules after reboot
+iptables-restore < $NS_WDIR/etc/iptables/rules.v4
+  
+exit 0

@@ -1,0 +1,86 @@
+# General information line
+# Info|msgVersion|numGroups|startIndex|testRun|sizeOfMsgData|interval|testRunStartDate/Time
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+#
+# Group information line
+# Group|groupName|rptGrpId|groupType|numGraphs|numVectors|future1|future2|Group_Description 
+#
+# Graph information line
+# Graph|graphName|rptId|graphType|dataType|graphDataIndex|formula|numVectors|future1|PDF_ID|Percentile_Data_Idx|future2|future3|GRAPH_DESCRIPTION
+#
+# Numeric data is filled as -1 in the infoline
+
+Info|3.1|3|-1|-|-1|-1|-
+
+Group|WebSocket Stats|41|scalar|18|0|Test Metrics|NA|WebSocket Network & connections information.
+
+Graph|WebSocket Connections Initiated/Sec|1|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of WebSocket connections initiated per second.
+Graph|WebSocket Total Connections Initiated|2|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Total number of WebSocket connections initiated.
+Graph|WebSocket Connections Established/Sec|3|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of WebSocket connections established per second in the sampling period.
+Graph|WebSocket Total Connections Established|4|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Total number of WebSocket connections established.
+Graph|WebSocket Connections Closed/Sec|5|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of WebSocket connections closed per second in the sampling period.
+Graph|WebSocket Total Connections Closed|6|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Total number of WebSocket connections closed.
+Graph|WebSocket Connections Failed/Sec|7|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of WebSocket connections failed per second in the sampling period.
+Graph|WebSocket Total Connections Failed|8|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Total number of WebSocket connections failed.
+Graph|WebSocket Message Sent/Sec|9|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of WebSocket message sent per second in the sampling period.
+Graph|WebSocket Total Message Sent|10|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Total number of WebSocket message sent.
+Graph|WebSocket Message Read/Sec|11|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of WebSocket message received per second in the sampling period.
+Graph|WebSocket Total Message Read|12|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Total number of WebSocket message received.
+Graph|WebSocket Message Send Failed/Sec|13|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of WebSocket message send failed per second.
+Graph|WebSocket Total Message Send Failed|14|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Total number of WebSocket message send failed per second in the sampling period.
+Graph|WebSocket Message Read Failed/Sec|15|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of WebSocket message read failed per second in the sampling period.
+Graph|WebSocket Total Message Read Failed|16|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Total number of WebSocket read message failed per second in the sampling period.
+Graph|WebSocket Send Throughput (Kbps)|17|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of WebSocket bytes sent per second in the sampling period.
+Graph|WebSocket Receive Throughput (Kbps)|18|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of WebSocket bytes received per second in the sampling period.
+
+Group|WebSocket Response Codes|42|scalar|41|0|Test Metrics|NA|WS response codes
+
+Graph|WebSocket 100 Continue|1|scalar|sum|-|-|0|A|-1|-1|NA|NA|Continue
+Graph|WebSocket 101 Switching Protocols|2|scalar|sum|-|-|0|A|-1|-1|NA|NA|Switching Protocols
+Graph|WebSocket 200 OK|3|scalar|sum|-|-|0|AS|-1|-1|NA|NA|OK
+Graph|WebSocket 201 Created|4|scalar|sum|-|-|0|A|-1|-1|NA|NA|Created
+Graph|WebSocket 202 Accepted|5|scalar|sum|-|-|0|A|-1|-1|NA|NA|Accepted
+Graph|WebSocket 203 Non-Authoritative Information|6|scalar|sum|-|-|0|A|-1|-1|NA|NA|Non-Authoritative Information
+Graph|WebSocket 204 No Content|7|scalar|sum|-|-|0|A|-1|-1|NA|NA|No Content
+Graph|WebSocket 205 Reset Content|8|scalar|sum|-|-|0|A|-1|-1|NA|NA|Reset Content
+Graph|WebSocket 206 Partial Content|9|scalar|sum|-|-|0|A|-1|-1|NA|NA|Partial Content
+Graph|WebSocket 300 Multiple Choices|10|scalar|sum|-|-|0|A|-1|-1|NA|NA|Multiple Choices
+Graph|WebSocket 301 Moved Permanently|11|scalar|sum|-|-|0|AS|-1|-1|NA|NA|Moved Permanently
+Graph|WebSocket 302 Found|12|scalar|sum|-|-|0|AS|-1|-1|NA|NA|Found
+Graph|WebSocket 303 See Other|13|scalar|sum|-|-|0|A|-1|-1|NA|NA|See Other
+Graph|WebSocket 304 Not Modified|14|scalar|sum|-|-|0|AS|-1|-1|NA|NA|Not Modified
+Graph|WebSocket 305 Use Proxy|15|scalar|sum|-|-|0|AS|-1|-1|NA|NA|Use Proxy
+Graph|WebSocket 306 Switch Proxy|16|scalar|sum|-|-|0|A|-1|-1|NA|NA|The 306 status code was used in a previous version of the specification, but is no longer used and currently the code is reserved
+Graph|WebSocket 307 Temporary Redirect|17|scalar|sum|-|-|0|AS|-1|-1|NA|NA|Temporary Redirect
+Graph|WebSocket 400 Bad Request|18|scalar|sum|-|-|0|AS|-1|-1|NA|NA|Bad Request
+Graph|WebSocket 401 Unauthorized|19|scalar|sum|-|-|0|AS|-1|-1|NA|NA|Unauthorized
+Graph|WebSocket 402 Payment Required|20|scalar|sum|-|-|0|A|-1|-1|NA|NA|Payment Required
+Graph|WebSocket 403 Forbidden|21|scalar|sum|-|-|0|A|-1|-1|NA|NA|Forbidden
+Graph|WebSocket 404 Not Found|22|scalar|sum|-|-|0|AS|-1|-1|NA|NA|Not Found
+Graph|WebSocket 405 Method Not Allowed|23|scalar|sum|-|-|0|AS|-1|-1|NA|NA|Method Not Allowed
+Graph|WebSocket 406 Not Acceptable|24|scalar|sum|-|-|0|AS|-1|-1|NA|NA|Not Acceptable
+Graph|WebSocket 407 Proxy Authentication Required|25|scalar|sum|-|-|0|AS|-1|-1|NA|NA|Proxy Authentication Required
+Graph|WebSocket 408 Request Timeout|26|scalar|sum|-|-|0|AS|-1|-1|NA|NA|Request Timeout
+Graph|WebSocket 409 Conflict|27|scalar|sum|-|-|0|AS|-1|-1|NA|NA|Conflict
+Graph|WebSocket 410 Gone|28|scalar|sum|-|-|0|A|-1|-1|NA|NA|Gone
+Graph|WebSocket 411 Length Required|29|scalar|sum|-|-|0|A|-1|-1|NA|NA|Length Required
+Graph|WebSocket 412 Precondition Failed|30|scalar|sum|-|-|0|A|-1|-1|NA|NA|Precondition Failed
+Graph|WebSocket 413 Request Entity Too Large|31|scalar|sum|-|-|0|A|-1|-1|NA|NA|Request Entity Too Large
+Graph|WebSocket 414 Request-URI Too Long|32|scalar|sum|-|-|0|A|-1|-1|NA|NA|Request-URI Too Long
+Graph|WebSocket 415 Unsupported Media Type|33|scalar|sum|-|-|0|A|-1|-1|NA|NA|Unsupported Media Type
+Graph|WebSocket 416 Requested Range Not Satisfiable|34|scalar|sum|-|-|0|A|-1|-1|NA|NA|Requested Range Not Satisfiable
+Graph|WebSocket 417 Expectation Failed|35|scalar|sum|-|-|0|A|-1|-1|NA|NA|Expectation Failed
+Graph|WebSocket 500 Internal Server Error|36|scalar|sum|-|-|0|AS|-1|-1|NA|NA|Internal Server Error
+Graph|WebSocket 501 Not Implemented|37|scalar|sum|-|-|0|A|-1|-1|NA|NA|Not Implemented
+Graph|WebSocket 502 Bad Gateway|38|scalar|sum|-|-|0|AS|-1|-1|NA|NA|Bad Gateway
+Graph|WebSocket 503 Service Unavailable|39|scalar|sum|-|-|0|AS|-1|-1|NA|NA|Service Unavailable
+Graph|WebSocket 504 Gateway Timeout|40|scalar|sum|-|-|0|AS|-1|-1|NA|NA|Gateway Timeout
+Graph|WebSocket 505 Version Not Supported|41|scalar|sum|-|-|0|AS|-1|-1|NA|NA|WebSocket Version Not Supported
+
+Group|WebSocket Failures|43|vector|1|0|Test Metrics|Error|WebSocket failure information
+ 
+Graph|WebSocket Failures/Sec|1|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of failed WebSocket responses for each and every individual error during each second of scenario run.

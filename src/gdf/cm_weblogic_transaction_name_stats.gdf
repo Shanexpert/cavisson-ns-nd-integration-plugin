@@ -1,0 +1,23 @@
+# --- GDF Version History ---
+#  1.0 - Initial version
+#  2.0 - Change done for match Long_data and Long_long_data to double
+#  3.0 - Changes done for Dynamic data in Execution GUI
+#  3.1 - Use future1 field of group line for Metric group name
+#
+#LAST_MODIFIED_DATE = 11/14/15 20:17:38
+Info|3.1|1|-|-|-1|-1|-
+Group|Weblogic Transaction Stats|10285|vector|10|0|Weblogic Metrics|Tier>Server>Instance|This monitor is used to measure statistics for all transactions in the weblogic server.
+Graph|Transactions/Sec|1|scalar|rate|-|CumToPS|0|A|-1|-1|H|NA|Number of transactions processed per second. This includes all committed, rolled back, and heuristic transaction completions.
+Graph|Seconds Active Total Count|2|scalar|cumulative|-|-|0|A|-1|-1|L|NA|The total number of seconds that transactions were active for all committed transactions.
+Graph|Committed Transactions/Sec|3|scalar|rate|-|CumToPS|0|A|-1|-1|L|NA|Number of transactions committed per second.
+Graph|Timeout RollBack Transactions/Sec|4|scalar|rate|-|CumToPS|0|A|-1|-1|L|NA|Number of transactions per second, that were rolled back due to a timeout expiration.
+Graph|Resource Errors RollBack Transactions/Sec|5|scalar|rate|-|CumToPS|0|A|-1|-1|L|NA|Number of transactions per second, that were rolled back due to a resource error.
+Graph|Application Errors RollBack Transactions/Sec|6|scalar|rate|-|CumToPS|0|A|-1|-1|L|NA|Number of transactions per second, that were rolled back due to an application error.
+Graph|System Errors RollBack Transactions/Sec|7|scalar|rate|-|CumToPS|0|A|-1|-1|L|NA|Number of transactions per second, that were rolled back due to an internal system error.
+Graph|Heuristic Completions/Sec|8|scalar|rate|-|CumToPS|0|A|-1|-1|L|NA|Number of transactions per second, that completed with a heuristic status.
+Graph|Abandoned Transactions/Sec|9|scalar|rate|-|CumToPS|0|A|-1|-1|L|NA|Number of transactions per second, that were abandoned..
+Graph|RollBack Transaction/Sec|10|scalar|rate|-|CumToPS|0|A|-1|-1|M|NA|Number of transactions per second, that were abandoned.
+
+
+
+

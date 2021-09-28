@@ -1,0 +1,5 @@
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP Firebase DB HTTPS Requests Stats|11501|vector|1|0|GCP Metrics|ProjectID>Location>TableName>ReuseSSLSession|GCP Firebase database api stats provides metrics details related to  metrics.
+
+Graph|GCP Firebase DB HTTPS Requests Received/Sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of HTTPS requests received per second.

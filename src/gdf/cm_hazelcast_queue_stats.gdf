@@ -1,0 +1,17 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Hazelcast Queue Stats|10329|vector|9|0|Hazelcast Metrics|Tier>Server>Node>Instance>Queue|Hazelcast Queue Stats.
+Graph|Queue Items|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of owned items in this member.
+Graph|Backup Items|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of backup item in this member.
+Graph|Items Average Age (ms)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average age of the items in this member.
+Graph|Events/Sec|4|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of events received on this member per second.
+Graph|Offers/Sec|5|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of offer/put/add operations per second.
+Graph|Rejected Offers/Sec|6|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of rejected offers per second.
+Graph|Polls/Sec|7|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of poll/take/remove operations per second.
+Graph|Poll Misses/Sec|8|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of null returning poll operations per second.
+Graph|Other Operation/sec|9|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of other operations performed per second.

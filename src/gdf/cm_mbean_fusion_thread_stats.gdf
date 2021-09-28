@@ -1,0 +1,24 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+#
+# General information line
+# Info|msgVersion|numGroups|startIndex|testRun|sizeOfMsgData|interval|testRunStartDate/Time
+#
+# Group information line
+# Group|groupName|rptGrpId|groupType|numGraphs|numVectors
+#
+# Graph information line
+# Graph|graphName|rptId|graphType|dataType|graphDataIndex|formula|numVectors
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Fusion Thread Stats|10802|vector|9|0|Fusion Metrics|Tier>Server>Instance|Fusion Thread Statistics.
+Graph|Threads Blocked|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of threads in blocked state.
+Graph|Threads Total|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of threads.
+Graph|Threads Daemon|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of live daemon threads.
+Graph|Threads Deadlocked|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of deadlocked threads.
+Graph|Threads New|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of threads in new state.
+Graph|Threads Runnable|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of threads in runnable state.
+Graph|Threads Terminated|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of threads in terminated state.
+Graph|Threads Timed Waiting|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of threads in Timed_waiting state.
+Graph|Threads Waiting|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of threads in waiting state.

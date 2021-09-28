@@ -1,0 +1,23 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS Storage Gateway Name ID Stats|11489|vector|15|0|AWS Metrics|AccountName>Region>GatewayName>GatewayId|AWS Storage Gateway connects an on-premises software appliance with cloud-based storage to provide seamless integration with data security features between your on-premises IT environment and the AWS storage infrastructure
+
+Graph|AWS Storage Gateway Cache Free (Bytes)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of bytes being free in the gateway's cache storage
+Graph|AWS Storage Gateway Cache Hit (%)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percent of application reads served from the cache. The sample is taken at the end of the reporting period.
+Graph|AWS Storage Gateway Cache Dirty (%)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percent of the cache that is dirty—that is, it contains content that has not been uploaded to AWS.
+Graph|AWS Storage Gateway Cache Used (%)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total usage of cache in percent.
+Graph|AWS Storage Gateway Cache Used (Bytes)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of bytes being used in the gateway's cache storage. The sample is taken at the end of the reporting period.
+Graph|AWS Storage Gateway Cloud Bytes Download|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of bytes that the gateway recieve from the cloud during the reporting period.
+Graph|AWS Storage Gateway Cloud Bytes Upload|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of bytes that the gateway sent to the cloud during the reporting period.
+Graph|AWS Storage Gateway Cloud Download Latency (ms)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|It displays the total number of milliseconds spent reading data from cloud during the reporting period.
+Graph|AWS Storage Gateway Index Fetch|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of files for which metadata was fetched. The gateway maintains a cached index of file metadata, which is populated from the AWS Cloud on demand.
+Graph|AWS Storage Gateway Queued Write (Bytes)|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of bytes waiting to be written to AWS, sampled at the end of the reporting period for all volumes in the gateway. These bytes are kept in your gateway's working storage.
+Graph|AWS Storage Gateway Time Since Last Recovery Point (Sec)|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The time since the last available recovery point. For more information, see Your Cached Gateway is Unreachable And You Want to Recover Your Data.
+Graph|AWS Storage Gateway Total Cache Size (Bytes)|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total size of the cache in bytes. The sample is taken at the end of the reporting period.
+Graph|AWS Storage Gateway Upload Buffer Free (Bytes)|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of bytes being free in the gateway's upload buffer. The sample is taken at the end of the reporting period.
+Graph|AWS Storage Gateway Upload Buffer Used (%)|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percent use of the gateway's upload buffer. The sample is taken at the end of the reporting period.
+Graph|AWS Storage Gateway Upload Buffer Used (Bytes)|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of bytes being used in the gateway's upload buffer. The sample is taken at the end of the reporting period.

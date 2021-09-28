@@ -1,0 +1,20 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+
+#ObjectName :com.bea:ServerRuntime=AdminServer,Name=AdminServer,Type=JVMRuntime
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Weblogic JVM Runtime Stats|14191|vector|4|0|Weblogic Metrics|Tier>Server>Instance|Provides information about the Java Virtual Machine (JVM) within with the current server instance is running.
+
+Graph|Weblogic Heap Size Max|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The maximum free memory configured for this JVM.
+
+Graph|Weblogic Uptime|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The number of milliseconds that the Virtual Machine has been running.
+
+Graph|Weblogic Heap Free Current|3|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The current amount of memory (in bytes) that is available in the JVM heap.
+
+Graph|Weblogic Heap Size Current|4|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The current size (in bytes) of the JVM heap.

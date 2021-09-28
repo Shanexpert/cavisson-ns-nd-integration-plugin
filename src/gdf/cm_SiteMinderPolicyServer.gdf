@@ -1,0 +1,15 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+#SNMP based monitor for CA Site Minder Policy Server
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Site Minder Policy Server|10141|vector|6|0|Application Metrics|Tier>Server|CA Site Minder Policy Server stats using SNMP MIB
+Graph|policyServerMaxSockets|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum number of open sockets (which correspond to the number of open connections between the Policy Server and Web Agents) that the Policy Server can support.
+Graph|policyServerSocketCount|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of open sockets, which corresponds to the number of open connections between the Policy Server and Web Agents.
+Graph|policyServerAuth AcceptCount|3|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Number of successful authentications.
+Graph|policyServerAuthRejectCount|4|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Number of failed authentication attempts. These attempts failed because of invalid credentials.
+Graph|policyServerAzAcceptCount|5|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Number of successful authorizations.
+Graph|policyServerAzRejectCount|6|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Number of failed authorization attempts. These attempts failed because of invalid credentials.

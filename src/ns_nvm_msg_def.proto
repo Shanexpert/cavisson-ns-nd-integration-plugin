@@ -1,0 +1,188 @@
+//This file contain Message defination that be transfered in between NVM and NJVM
+	//Following ab. being used 
+	//S - string
+	//I - Integer
+	//UI - Unsigned Intger
+	//L - Long
+	//D - Double
+
+//Messages with single field. 
+	message NsMsg1_Int{
+		required int32 field1 = 1; 
+	}
+
+	message NsMsg1_UInt{
+		required uint32 field1 = 1;
+	}
+
+	message NsMsg1_Str{
+		required string field1 = 1;  
+	}  
+
+	message NsMsg1_Double{
+		required double field1 = 1;
+	}
+        
+	message NsMsg1_Long{
+		required uint64 field1 = 1;  
+	}  
+	//TODO : add for other datatypes like long, unsigned long ..
+
+
+//Messages with two fields.
+	message NsMsg2_IS{
+	  required int32 field1 = 1;
+	  required string field2 = 2;
+	}
+
+	message NsMsg2_SI{
+		required string field1 = 1;
+		required int32 field2 = 2;
+	}
+
+	message NsMsg2_II{
+		required int32 field1 = 1;
+		required int32 field2 = 2;
+	} 
+
+	message NsMsg2_SS{
+		required string field1 = 1;
+		required string field2 = 2;
+	}
+ 
+	message NsMsg2_SD{
+		required string field1 = 1;
+		required double field2 = 2;
+	}
+  //Currently being used in ns_paramarr_idx() api
+	message NsMsg2_SUI{
+    required string field1 = 1;
+		required uint32 field2 = 2;
+	}
+
+//Message with three fields.
+	message NsMsg3_III{
+		required int32 field1 = 1;	
+		required int32 field2 = 2;
+		required int32 field3 = 3;
+	}
+
+	message NsMsg3_IIS{
+		required int32 field1 = 1;
+		required int32 field2 = 2;
+		required string field3 = 3;
+	}
+
+	message NsMsg3_ISI{
+		required int32 field1 = 1;
+		required string field2 = 2;
+		required int32 field3 = 3;
+	}
+
+	message NsMsg3_ISS{
+		required int32 field1 = 1;
+		required string field2 = 2;
+		required string field3 = 3;
+	}
+
+	message NsMsg3_SII{
+		required string field1 = 1;
+		required int32 field2 = 2;
+		required int32 field3 = 3;
+	}
+
+	message NsMsg3_SIS{
+		required string field1 = 1;
+		required int32 field2 = 2;
+		required string field3 = 3;
+	}
+
+	message NsMsg3_SSI{
+	  required string field1 = 1;
+		required string field2 = 2;
+		required int32 field3 = 3;
+	}
+
+	message NsMsg3_SSS{
+		required string field1 = 1;
+		required string field2 = 2;
+		required string field3 = 3;
+	}
+
+      // This is being used for ns_add_user_data_point
+       message NsMsg3_IID{
+                required int32 field1 = 1;
+                required int32 field2 = 2;
+                required double field3 = 3;
+        }
+
+//Now some other messages, with more than 3 fields
+
+  //Currently this is being used in ns_set_cookie_val_ex()  and ns_add_cookie_val_ex() apis	
+	message NsMsg4_SSSS{
+		required string field1 = 1;
+		required string field2 = 2;
+		required string field3 = 3;
+		required string field4 = 4;
+	}
+
+  // Currently this is being used in ns_remove_cookie
+
+        message NsMsg4_SSSI{
+                required string field1 = 1;
+                required string field2 = 2;
+                required string field3 = 3;
+                required int32 field4 = 4;
+        }
+
+  //This message will be used in ns_set_form_body() api
+	message NsMsg_FormApi{
+		required string field1 = 1;
+		required string field2 = 2;	
+		required int32 field3 = 3;
+		required int32 field4 = 4;
+		repeated string fieldn = 5; 
+	}
+
+  //This message will be used in ns_start_user
+	message NsMsg_StartUser{
+		required int32 user_id = 1;
+		required int32 sess_idx = 2;
+                required int32 sess_inst = 3;
+		required string script_name = 4;
+		required int32 num_ka_pct = 5;
+		required int32 num_ka_min = 6;
+		required int32 max_ka = 7;
+		required string ua_string = 8;
+                required uint32 group_id = 9;
+                required string runlogic_name = 10;
+                required string package_name = 11;
+	}
+
+   // This message is currently being used by ns_soap_ws_security
+       message NsMsg9_SSISSSSSS{
+                required string field1 = 1;
+                required string field2 = 2;
+                required int32 field3 = 3;
+                required string field4 = 4;
+                required string field5 = 5;
+                required string field6 = 6;
+                required string field7 = 7;
+                required string field8 = 8;
+                required string field9 = 9;
+        } 
+
+
+// This message is currently being used by ns_save_seached_string
+       message NsMsg9_ISISSSIII{
+                required int32 field1 = 1;
+                required string field2 = 2;
+                required int32 field3 = 3;
+                required string field4 = 4;
+                required string field5 = 5;
+                required string field6 = 6;
+                required int32 field7 = 7;
+                required int32 field8 = 8;
+                required int32 field9 = 9;
+        }
+

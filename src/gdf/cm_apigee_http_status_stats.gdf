@@ -1,0 +1,17 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+ 
+#We are taking same group id as cm_apache_svc_time.gdf in future we will delete cm_apache_svc_time.gdf
+Info|3.1|1|-|-|-1|-1|-
+Group|Apigee Service Stats By HTTP Status|10342|vector|8|0|Application Metrics|Tier>Server>Environment>StatusCode|This monitor provides average response time, request per second and errors per second by HTTP response code.
+Graph|Apigee Requests/Sec|1|scalar|rate|-|None|1|NA|-1|-1|NA|NA|Number of requests per second.
+Graph|Apigee Average Response Time (ms)|2|scalar|times|-|None|0|NA|-1|-1|NA|NA|Average response time of requests in milliseconds.
+Graph|Apigee Average Target Response Time (ms)|3|scalar|sample|-|None|0|NA|-1|-1|NA|NA|Average response time of requests in milliseconds.
+Graph|Apigee Errors/Sec|4|scalar|rate|-|None|0|NA|-1|-1|NA|NA|Number of errors per second.
+Graph|Apigee Average Request Processing Latency (ms)|5|scalar|times|-|None|0|NA|-1|-1|NA|NA|Average request processing latency in milliseconds.
+Graph|Apigee Average Response Processing Latency (ms)|6|scalar|times|-|None|0|NA|-1|-1|NA|NA|Average response processing latency in milliseconds.
+Graph|Apigee Average Cache Hits|7|scalar|times|-|None|0|NA|-1|-1|NA|NA|Average of successful API requests that use the Response Cache instead of the response from the target service.
+Graph|Apigee Cache Hits/Sec|8|scalar|rate|-|None|0|NA|-1|-1|NA|NA|Number of successful API requests per second that use the Response Cache instead of the response from the target service.

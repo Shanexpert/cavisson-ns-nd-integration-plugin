@@ -1,0 +1,35 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|ICMP Stats|10633|vector|27|0|Network Metrics|Tier>Server|ICMP Stats
+
+Graph|ICMP Messages Received/Sec|1|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of ICMP messages received
+Graph|ICMP Input Message Failed/Sec|2|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of Input ICMP message failed
+Graph|ICMP Input Csum Errors/Sec|3|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of Input Csum Errors
+Graph|ICMP Input Destination Unreachable/Sec|4|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of Input Destination unreachable
+Graph|ICMP Timeout In Transit/Sec|5|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of Timeout in transit
+Graph|ICMP Input Wrong Parameters/Sec|6|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of Input Wrong parameters
+Graph|ICMP Input Source Quenches/Sec|7|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of Input Source quenches
+Graph|ICMP Input Redirects/Sec|8|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of Input redirects
+Graph|ICMP Input Echo Requests/Sec|9|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of Input echo requests
+Graph|ICMP Input Echo Replies/Sec|10|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of Input echo replies
+Graph|ICMP Input Timestamp Request/Sec|11|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of Input timestamp request
+Graph|ICMP Input Timestamp Reply/Sec|12|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of Input timestamp reply
+Graph|ICMP Input Address Mask Request/Sec|13|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of Input address mask request
+Graph|ICMP Input Address Mask Replies/Sec|14|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of Input address mask replies
+Graph|ICMP Messages Sent/Sec|15|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of ICMP messages sent
+Graph|ICMP Messages Failed/Sec|16|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of ICMP messages failed
+Graph|ICMP Output Destination Unreachable/Sec|17|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of Output Destination unreachable
+Graph|ICMP Time Exceeded/Sec|18|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of Time exceeded
+Graph|ICMP Output Wrong Parameters/Sec|19|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of Output Wrong parameters
+Graph|ICMP Output Source Quench/Sec|20|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of Output source quench
+Graph|ICMP Output Redirect/Sec|21|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of Output redirect
+Graph|ICMP Output Echo Request/Sec|22|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of Output echo request
+Graph|ICMP Output Echo Replies/Sec|23|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of Output echo replies
+Graph|ICMP Output Timestamp Requests/Sec|24|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of Output timestamp requests
+Graph|ICMP Output Timestamp Replies/Sec|25|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of Output timestamp replies
+Graph|ICMP Output Address Mask Requests/Sec|26|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of Output address mask requests
+Graph|ICMP Output Address Mask Replies/Sec|27|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of Output address mask replies
+

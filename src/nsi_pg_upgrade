@@ -1,0 +1,66 @@
+#!/bin/bash
+
+#To change the directory to "/var/lib/pgsql"
+cd /var/lib/pgsql
+
+#To copy "/root/netstorm_libs/dbfunc*.tar.gz" to "/var/lib/pgsql"
+#already copied
+#cp /root/netstorm_libs/dbfunc*.tar.gz .
+#if [ $? -eq 1 ];then
+#	msgout "could not copy dbfunc*.tar.gz "
+#	exit 1
+#fi
+
+tar xvzf dbfunc*.tar.gz >>$CAPTION 2>&1
+if [ $? -ne 0 ];then
+	msgout "untar of dbfunc*.tar.gz unsuccessful" 
+	exit 1
+fi
+
+
+#change the directory  to /root/netstorm_libs/postgresql-7.4.3/src
+cd /root/cavisson_libs/postgresql-7.4.3/src
+if [ $? -ne 0 ];then
+	msgout "/root/cavisson_libs/postgresql-7.4.3/src directory is not available"  
+	exit 1
+fi
+
+#Copy the percentile.c to current  directory ("/root/cavisson_libs/postgresql-7.4.3/src")
+cp /var/lib/pgsql/percentile.c .
+if [ $? -ne 0 ];then
+	msgout " cp /var/lib/pgsql/percentile.c failed" 
+	exit 1
+fi
+
+msgout "percentile compilation ..."
+#Compile percentile.c
+gcc -I  include -fpic -c percentile.c >>$CAPTION 2>&1
+if [ $? -ne 0 ];then
+	msgout "percentile compilation is not successful "
+fi
+
+#To make the library out of it
+gcc -shared -o percentile.so percentile.o >>$CAPTION 2>&1
+if [ $? -ne 0 ]
+then
+	msgout "percetile.so build unsuccessful"
+	exit 1
+fi
+
+#copy percentile.o and percentile.so to "/var/lib/pgsql
+cp percentile.o percentile.so /var/lib/pgsql
+
+cd /var/lib/pgsql
+psql test -f  insert_aggregate.sql
+if [ $? -ne 0 ]; then
+	msgout "insert_aggregate.sql unsuccessful"
+	exit 1
+fi
+
+psql test -f  schema.sql
+if [ $? -ne 0 ]; then
+	msgout "schema.sql unsuccessful"
+	exit 1
+fi
+
+exit 0

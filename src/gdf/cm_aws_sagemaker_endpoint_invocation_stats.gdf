@@ -1,0 +1,20 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS SageMaker Endpoint Invocation Stats|14080|vector|6|0|AWS Metrics|AccountName>Region>EndpointName>VariantName|Amazon SageMaker using Amazon CloudWatch, collects raw data and processes it into readable, near real-time metrics.
+
+Graph|AWS SageMaker Invocation 4XX Errors|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of InvokeEndpoint requests where the model returned a 4xx HTTP response code.
+
+Graph|AWS SageMaker Invocation 5XX Errors|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of InvokeEndpoint requests where the model returned a 5xx HTTP response code.
+
+Graph|AWS SageMaker Invocations|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of InvokeEndpoint requests sent to a model endpoint.
+
+Graph|AWS SageMaker Invocations Per Instance|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of invocations sent to a model normalized by InstanceCount in each ProductionVariant.
+
+Graph|AWS SageMaker Model Latency (ms)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The interval of time taken by a model to respond as viewed from Amazon SageMaker.
+
+Graph|AWS SageMaker Overhead Latency (ms)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The interval of time added to the time taken to respond to a client request by Amazon SageMaker overheads.
+

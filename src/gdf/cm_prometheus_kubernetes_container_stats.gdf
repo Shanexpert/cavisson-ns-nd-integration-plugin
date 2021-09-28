@@ -1,0 +1,56 @@
+#Author : Dharmendra Singh
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Prometheus Kubernetes Container Stats|10624|vector|50|0|Kubernetes Metrics|Tier>Server>Region>Zone>Node>Namespace>Pod>Container|Kubernetes Container Stats captured through Prometheus integration.
+
+Graph|Container Enforcement Period Intervals|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of elapsed enforcement period intervals. This metric is derived from prometheus metric 'container_cpu_cfs_periods_total'.
+Graph|Container Throttled Count/Sec|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of times, task in this container has been throttled per second. This metric is derived from prometheus metric 'container_cpu_cfs_throttled_periods_total'.
+Graph|Container Average Throttled Time (Sec)|3|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average time for which tasks in container have been throttled in seconds. This metric is derived from prometheus metric 'container_cpu_cfs_throttled_seconds_total'.
+Graph|Container System CPU Time/Sec|4|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Time spent by tasks of the container in kernel mode per second. This metric is derived from prometheus metric 'container_cpu_system_seconds_total'.
+Graph|Container User CPU Time/Sec|5|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Time spent by tasks of the container in user mode per second. This metric is derived from prometheus metric 'container_cpu_user_seconds_total'.
+Graph|Container Total CPU Time (Sec)|6|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total CPU time consumed by all tasks in seconds. This metric is derived from prometheus metric 'container_cpu_usage_seconds_total'.
+Graph|Container Available Inodes|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of available Inodes. This metric is derived from prometheus metric 'container_fs_inodes_free'.
+Graph|Container Total Inodes|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of Inodes. This metric is derived from prometheus metric 'container_fs_inodes_total'.
+Graph|Container Current IO Operations|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of I/O operations are currently in progress. This metric is derived from prometheus metric 'container_fs_io_current'.
+Graph|Container Time Spent In IO Operations (Sec)|10|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Time spent doing I/Os in seconds. This metric is derived from prometheus metric 'container_fs_io_time_seconds_total'.
+Graph|Container Weighted IO Time (Sec)|11|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Weighted I/O time in seconds. This metric is derived from prometheus metric 'container_fs_io_time_weighted_seconds_total'.
+Graph|Container Filesystem Limit (MB)|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Space that can be consumed by the container in filesystem in MegaBytes. This metric is derived from prometheus metric 'container_fs_limit_bytes'.
+Graph|Container Disk Reads/Sec|13|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of reads completed from disk per second. This metric is derived from prometheus metric 'container_fs_reads_total'.
+Graph|Container Average Disk Read Time (Sec)|14|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average time in reading data from filesystem in seconds. This metric is derived from prometheus metric 'container_fs_read_seconds_total'.
+Graph|Container Disk Merged Reads/Sec|15|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of reads merged per second. This metric is derived from prometheus metric 'container_fs_reads_merged_total'.
+Graph|Container Sector Reads/Sec|16|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of sector reads completed per second. This metric is derived from prometheus metric 'container_fs_sector_reads_total'.
+Graph|Container Sector Writes/Sec|17|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of sector writes completed per seconds. This metric is derived from prometheus metric 'container_fs_sector_writes_total'.
+Graph|Container Disk Writes/Sec|18|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of writes operation has completed into filesystem. This metric is derived from prometheus metric 'container_fs_writes_total'.
+Graph|Container Average Disk Write Time (Sec)|19|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average time in writing into filesystem in seconds. This metric is derived from prometheus metric 'container_fs_write_seconds_total'.
+Graph|Container Disk Merged Writes/Sec|20|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of writes merged per second. This metric is derived from prometheus metric 'container_fs_writes_merged_total'.
+Graph|Container Filesystem Usage(MB)|21|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Space that are consumed by the container on this filesystem in MegaBytes. This metric is derived from prometheus metric 'container_fs_usage_bytes'.
+Graph|Container Cache Memory Size (MB)|22|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Page cache memory in MegaBytes. This metric is derived from prometheus metric 'container_memory_cache'.
+Graph|Container Memory Hits Limits|23|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of memory usage hits limits. This metric is derived from prometheus metric 'container_memory_failcnt'.
+Graph|Container Memory Allocation Failures/Sec|24|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of memory allocation failures per second. This metric is derived from prometheus metric 'container_memory_failures_total'.
+Graph|Container Resident Set Size (MB)|25|scalar|sample|-|-|0|NA|-1|-1|NA|NA|RSS(anonymous and swap cache memory) in MegaBytes. This metric is derived from prometheus metric 'container_memory_rss'.
+Graph|Container Swaped Memory (MB)|26|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Container swap usage in MegaBytes. This metric is derived from prometheus metric 'container_memory_swap'.
+Graph|Container Used Memory (MB)|27|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total used memory in MegaBytes. This metric is derived from prometheus metric 'container_memory_usage_bytes'.
+Graph|Container Memory Working Set (MB)|28|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current working set in MegaBytes. This metric is derived from prometheus metric 'container_memory_working_set_bytes'.
+Graph|Container Memory Limit(MB)|29|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memory limit for the container in MegaBytes. This metric is derived from prometheus metric 'container_spec_memory_limit_bytes'.
+Graph|Container Memory Swap Limit(MB)|30|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memory swap limit for the container in MegaBytes. This metric is derived from prometheus metric 'container_spec_memory_swap_limit_byte'.
+Graph|Container Network Received Throughput (Mbps)|31|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Network received throughput in Megabits per second. This metric is derived from prometheus metric 'container_network_receive_bytes_total'.
+Graph|Container Network Received Error/Sec|32|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of errors encountered while receiving per second. This metric is derived from prometheus metric 'container_network_receive_errors_total'.
+Graph|Container Network Received Packets Dropped/Sec|33|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of packets received per second. This metric is derived from prometheus metric 'container_network_receive_packets_dropped_total'.
+Graph|Container Network Received Packets/Sec|34|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of bytes received per second. This metric is derived from prometheus metric 'container_network_receive_packets_total'.
+Graph|Container Network Transmitted Throughput (Mbps)|35|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Network transmitted throughput in Megabits per second. This metric is derived from prometheus metric 'container_network_transmit_bytes_total'.
+Graph|Container Network Transmitted Error/Sec|36|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of errors encountered while transmitting per second. This metric is derived from prometheus metric 'container_network_transmit_errors_total'.
+Graph|Container Network Transmitted Packets Dropped/Sec|37|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of packets dropped while transmitting per second. This metric is derived from prometheus metric 'container_network_transmit_packets_dropped_total'.
+Graph|Container Network Transmitted Packets/Sec|38|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of packets transmitted per second. This metric is derived from prometheus metric 'container_network_transmit_packets_total'.
+Graph|Container CPU Period|39|scalar|sample|-|-|0|NA|-1|-1|NA|NA|CPU period of the container. This metric is derived from prometheus metric 'container_spec_cpu_period'.
+Graph|Container CPU Quota|40|scalar|sample|-|-|0|NA|-1|-1|NA|NA|CPU quota of the container. This metric is derived from prometheus metric 'container_spec_cpu_quota'.
+Graph|Container CPU Share|41|scalar|sample|-|-|0|NA|-1|-1|NA|NA|CPU share of the container. This metric is derived from prometheus metric 'container_spec_cpu_shares'.
+Graph|Container Start Time (Sec)|42|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Start time of the container since unix epoch in seconds. This metric is derived from prometheus metric 'container_start_time_seconds'.
+Graph|Container Last Seen (Sec)|43|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Last time in seconds a container was seen by the exporter. This metric is derived from prometheus metric 'container_last_seen'.
+Graph|Container Stopped State|44|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of tasks in stopped state. This metric is derived from prometheus metric 'container_tasks_state'.
+Graph|Container Sleeping State|45|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of tasks in sleeping state. This metric is derived from prometheus metric 'container_tasks_state'.
+Graph|Container IOwaiting State|46|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of tasks in iowaiting state. This metric is derived from prometheus metric 'container_tasks_state'.
+Graph|Container Uninterruptible State|47|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of tasks in uninterruptible state. This metric is derived from prometheus metric 'container_tasks_state'.
+Graph|Container Running State|48|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of tasks in running state. This metric is derived from prometheus metric 'container_tasks_state'.
+Graph|Container CPU Usage (Pct)|49|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Container's cpu percentage utilization in percentage. This metric is derived from prometheus metric 'rate(container_cpu_user_seconds_total[$(INTERVAL)]))/(container_spec_cpu_quota/container_spec_cpu_period)'.
+Graph|Container Used Memory (Pct)|50|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Container's used memory in percentage. This metric is derived from prometheus metric 'container_memory_usage_bytes'.

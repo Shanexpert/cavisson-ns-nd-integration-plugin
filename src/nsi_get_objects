@@ -1,0 +1,41 @@
+#!/bin/sh
+
+if [ $# -ne 2 ];then
+	echo "Usage: nsi_get_objcets TR-NUM obj-type"
+	exit 1
+fi
+
+if [ $2 -eq 3 ];then
+	SELECT="Select SessionName from SessionTable_$1 ORDER BY SessionIndex"
+elif [ $2 -eq 2 ];then
+	SELECT="Select TransactionName from TransactionTable_$1 ORDER BY TransactionIndex"
+elif [ $2 -eq 1 ];then
+	SELECT="Select SessionName, PageName from PageTable_$1, SessionTable_$1 where PageTable_$1.SessionIndex = SessionTable_$1.SessionIndex ORDER BY PageIndex"
+elif [ $2 -eq 0 ];then
+	SELECT="Select SessionName, PageName, UrlName from UrlTable_$1, PageTable_$1, SessionTable_$1 
+		where UrlTable_$1.PageIndex = PageTable_$1.PageIndex 
+		AND PageTable_$1.SessionIndex = SessionTable_$1.SessionIndex
+		ORDER BY UrlIndex"
+else
+	echo "Unknow object type ($2), expected object types : 0-3"
+	exit 1
+fi
+
+OFILE="/tmp/t1.$$"
+EFILE="/tmp/t2.$$"
+psql test cavisson >$OFILE <<+ 2>$EFILE
+$SELECT
++
+
+if [ -s $EFILE ];then
+	cat $EFILE
+	rm -f $EFILE
+	rm -f $OFILE
+	exit 1
+fi
+
+sed '1,2d' $OFILE | grep -v "row)" | grep -v "rows)" | grep -v ^$ | sed 's/ //g' | sed 's/|/:/g'
+
+rm -f $OFILE
+rm -f $EFILE
+exit 0

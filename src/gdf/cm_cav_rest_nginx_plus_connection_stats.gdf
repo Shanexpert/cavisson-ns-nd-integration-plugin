@@ -1,0 +1,7 @@
+info|3.1|1|-|-|-1|-1|-
+
+Group|NGINX Plus Connection Stats|10993|vector|4|0|NGINX Metrics|Tier>Server>Instance|Nginx Plus Connection Stats provides metrics related to accepted, dropped, active and idle connections. 
+Graph|NGINX Client Accepted Connections/Sec|1|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|The total number of accepted client connections per second.
+Graph|NGINX Client Dropped Connections/Sec|2|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|The total number of dropped client connections per second.
+Graph|NGINX Client Active Connections|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of active client connections.
+Graph|NGINX Client Idle Connections|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of idle client connections.

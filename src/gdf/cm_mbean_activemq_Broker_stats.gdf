@@ -1,0 +1,50 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+#ObjectName :org.apache.activemq:type=Broker,brokerName=localhost
+
+Info|3.1|1|-|-|-1|-1|-
+Group|ActiveMQ Broker Stats|11418|vector|19|0|Apache Activemq Metrics|Tier>Server>Instance|Apache ActiveMQ Broker stats provides metrics describing the monitored ActiveMQ broker, especially connected consumers, producers, memory usage, active connections and exchanged messages.
+
+
+Graph|ActiveMQ Broker Memory Percent Usage|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Percent of memory limit used.
+
+Graph|ActiveMQ Broker Uptime (ms)|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Uptime of the broker in milliseconds.
+
+Graph|ActiveMQ Broker Current Connections|3|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Current number of active connections on this Broker.
+
+Graph|ActiveMQ Broker Total Connections|4|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of connections serviced since this Broker was started.
+
+Graph|ActiveMQ Broker Total Enqueue/sec|5|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of messages that have been sent to the broker per second.
+
+Graph|ActiveMQ Broker Total Dequeue/sec|6|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of messages that have been acknowledged on the broker per second.
+
+Graph|ActiveMQ Broker Total Consumers|7|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of message consumers subscribed to destinations on the broker.
+
+Graph|ActiveMQ Broker Total Producers|8|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of message producers active on destinations on the broker.
+
+Graph|ActiveMQ Broker Total Messages|9|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of unacknowledged messages on the broker.
+
+Graph|ActiveMQ Broker Store Limit (MB)|10|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Disk space (in megabytes) used for persistent messages before producers are blocked.
+
+Graph|ActiveMQ Broker Store Percent Usage (%)|11|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Percent of the disk space in used.
+
+Graph|ActiveMQ Broker Temp Limit (MB)|12|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Disk space (in megabytes) used for non-persistent messages and temporary data before producers are blocked.
+
+Graph|ActiveMQ Broker Temp Percent Usage|13|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Percent of temp limit used.
+
+Graph|ActiveMQ Broker Memory Limit (MB)|14|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The memory (in megabytes) used for holding undelivered messages before paging to temporary storage.
+
+Graph|ActiveMQ Broker JobScheduler Store Limit (KB)|15|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Disk limit (in Kilobytes) used for scheduled messages before producers are blocked.
+
+Graph|ActiveMQ Broker JobScheduler Store Percent Usage (%)|16|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Percent of job store limit used.
+
+Graph|ActiveMQ Broker Average Message Size|17|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Average message size on this broker
+
+Graph|ActiveMQ Broker Max Message Size|18|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Max message size on this broker
+
+Graph|ActiveMQ Broker Min Message Size|19|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Min message size on this broker.
+

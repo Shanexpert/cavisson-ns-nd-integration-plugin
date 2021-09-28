@@ -1,0 +1,82 @@
+
+#MIB_NAME=mib2_tcp
+AGENT_IP=127.0.0.1
+VECTOR_NAME=127.0.0.1
+COMMUNITY=netstorm
+BREADCRUMB="-"
+TOPOLOGY=""
+SNMP_INP_DIR=$NS_WDIR/snmp/inp
+
+Usage()
+{
+  echo "$*"
+  echo "Usage:" 
+  echo "nsu_gen_snmp_mon -f <snmp input file without extension> -g <gdf filename without extension (Default input file name)> -m <mprof name without extension (Default input file name)> [ -G <Group Name (Default input file name)> -s <snmp agent server (Default 127.0.0.1)> -v <vector name (default SNMP IP)> -b breadcrumb (default -) -t topology -c <community (Default netstorm)>"
+  exit -1
+}
+
+while getopts f:g:G:m:s:v:c:b:t: c  2>/dev/null
+do
+  case $c in
+    f) MIB_NAME=$OPTARG;;
+    g) GDF_FILE=$OPTARG;;
+    G) GROUP_NAME="$OPTARG";;
+    m) MPROF_FILE="$OPTARG";;
+    s) AGENT_IP=$OPTARG;;
+    v) VECTOR_NAME=$OPTARG;;
+    c) COMMUNITY=$OPTARG;;
+    b) BREADCRUMB=$OPTARG;;
+    t) TOPOLOGY=$OPTARG;;
+    *) Usage "Invalid arguments";;
+  esac
+done
+
+if [ "X$MIB_NAME" == "X" ]; then
+  Usage "-f <input file> missing"
+fi
+
+if [ ! -f $SNMP_INP_DIR/$MIB_NAME.inp ];then
+  echo "Usage: "Input file $MIB_NAME.inp is not present at path $SNMP_INP_DIR""
+  exit -1
+fi
+
+if [ "X$GDF_FILE" = "X" ]; then
+  GDF_FILE=$MIB_NAME
+fi
+
+if [ "X$GROUP_NAME" = "X" ]; then
+  GROUP_NAME=$MIB_NAME
+fi
+
+if [ "X$MPROF_FILE" = "X" ]; then
+  MPROF_FILE=$MIB_NAME
+fi
+
+if [ "X$VECTOR_NAME" = "X" ]; then
+  VECTOR_NAME=$AGENT_IP
+fi
+
+if [ "X$BREADCRUMB" = "X-" ];then
+  echo "Warning: Breadcrumb is not set."
+fi
+if [ "X$TOPOLOGY" = "X" ];then
+  echo "Warning: Topology is not set."
+fi
+
+rm -f  $NS_WDIR/sys/$MIB_NAME.gdf
+rm -f $NS_WDIR/mprof/$MIB_NAME.mprof
+
+#nsi_gen_snmp_mon -f <snmp input file> -g <gdf filename without gdf extension> -m <mprof name> [ -G <Group Name (default is SNMP Group)> -s <snmp agent server (Default 127.0.0.1)> -v <vector name (default SNMPVector)> -D
+if [ "X$TOPOLOGY" != "X" ];then
+  nsi_gen_snmp_mon -f $SNMP_INP_DIR/$MIB_NAME.inp -g $GDF_FILE -m $MPROF_FILE -G $GROUP_NAME -v $VECTOR_NAME -c $COMMUNITY -s $AGENT_IP -b $BREADCRUMB -t $TOPOLOGY 
+else
+  nsi_gen_snmp_mon -f $SNMP_INP_DIR/$MIB_NAME.inp -g $GDF_FILE -m $MPROF_FILE -G $GROUP_NAME -v $VECTOR_NAME -c $COMMUNITY -s $AGENT_IP -b $BREADCRUMB 
+fi
+
+#It will generate following:
+# GDF file <MIB_NAME>.gdf
+# Mprof file <MIB_NAME>.mprof
+
+#Use this mprof in scenario file
+#MONITOR_PROFILE <MIB_NAME>
+

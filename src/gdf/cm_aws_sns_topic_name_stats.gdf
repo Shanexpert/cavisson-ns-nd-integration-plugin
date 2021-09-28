@@ -1,0 +1,16 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+Group|AWS SNS TopicName|11346|vector|9|0|AWS Metrics|AccountName>Region>TopicName|Amazon Simple Notification Service (Amazon SNS) is a web service that coordinates and manages the delivery or sending of messages to subscribing endpoints or clients.
+
+Graph|AWS SNS Number Of Notifications Delivered|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number Of Notifications Delivered.
+Graph|AWS SNS Number Of Messages Published|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number Of Messages Published
+Graph|AWS SNS Number Of Notifications Failed|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number Of Notifications Failed
+Graph|AWS SNS Publish Size|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|AWS Publish Size
+Graph|AWS SNS Number Of Notifications Failed To Redrive To Dlq|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number Of Notifications Failed To Redrive To Dlq
+Graph|AWS SnS Number Of Notifications Filtered Out|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|AWS NumberOfNotificationsFilteredOut
+Graph|AWS SNS Number Of Notifications Filtered Out-Invalid Attributes|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|AWS NumberOfNotificationsFilteredOut-InvalidAttributes
+Graph|AWS SNS Number Of Notifications Filtered Out-No Message Attributes|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|AWS NumberOfNotificationsFilteredOut-NoMessageAttributes
+Graph|AWS SNS Number Of Notifications Redriven To Dlq|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|AWS Number Of Notifications Redriven To Dlq

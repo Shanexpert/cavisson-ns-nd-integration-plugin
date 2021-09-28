@@ -1,0 +1,21 @@
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Maxwell Message Stats|10923|vector|18|0|Maxwell Metrics|Tier>Server>Instance|Maxwell stats related  to messages.
+Graph|Maxwell Inflight Messages Count|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA| Number of messages that are currently in-flight (awaiting acknowledgement from the destination, or ahead of messages which are).
+Graph|Maxwell Age SLO Violation|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Time between an event occurring on the DB and being published to kafka, in milliseconds.
+Graph|Maxwell Row Count|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Count of rows that have been processed from the binlog. Note that not every row results in a message being sent to Kafka.
+Graph|Maxwell Message Failed Count/Sec|4|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Count of messages that failed to send to Kafka.
+Graph|Maxwell Message Failed/15 Minute|5|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Fifteen minute rate of messages failed to send kafka server.
+Graph|Maxwell Message Failed/Minute|6|scalar|rate|-|-|0|NA|-1|-1|NA|NA|One minute rate of messages failed to send kafka server.
+Graph|Maxwell Message Failed/5 Minute|7|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Five minute rate of messages failed to send kafka server..
+Graph|Maxwell Message Failed Mean Rate|8|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Mean rate of messages failed to send kafka server.
+Graph|Maxwell Message Succeeded Count/Sec|9|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Count of messages that were successfully sent to Kafka.
+Graph|Maxwell Message Succeeded/15 Minute|10|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Fifteen minute rate of messages send to kafka server..
+Graph|Maxwell Message Succeeded/Minute|11|scalar|rate|-|-|0|NA|-1|-1|NA|NA|One minute rate of messages send to kafka server.
+Graph|Maxwell Message Succeeded/5 Minute|12|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Five minute rate of messages send to kafka server.
+Graph|Maxwell Message Succeeded Mean Rate|13|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Mean rate of messages send to kafka server.
+Graph|Maxwell Message Row Meter Count/Sec|14|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Measure of the rate at which rows arrive to Maxwell from the binlog connector.
+Graph|Maxwell Message Row Meter/15 Minute|15|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Fifteen minute rate of messages send to kafka server.
+Graph|Maxwell Message Row Meter/Minute|16|scalar|rate|-|-|0|NA|-1|-1|NA|NA|One minute rate of messages send to kafka server.
+Graph|Maxwell Message Row Meter/5 Minute|17|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Five minute rate of messages send to kafka server.
+Graph|Maxwell Message Row Meter Mean Rate|18|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Mean rate of messages send to kafka server.

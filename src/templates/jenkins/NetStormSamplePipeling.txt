@@ -1,0 +1,54 @@
+#Pipeling is supported with jenkins version 2.89.3. and this is sample request for NetStorm Pipeline
+
+pipeline {
+     
+  agent any
+  
+  /*Intializing Netstorm test configuration*/
+  environment {
+                def url = "https://10.10.30.24:4436"
+                def username = "cavisson"
+                def password = "cavisson"
+                def project = "default"
+                def subProject = "default"
+                def scenario = "ns" //testsuite name will be given
+                def baselineTR = "-1" //Base line test run will be given as 1386
+                def report = " "
+                def testMode = "T"
+  }
+
+  stages {
+    stage('Execute Netstorm Test') {
+      steps {
+        script {
+                 echo 'Executing Netstorm test'
+                 
+                 /*
+                 * Refrece variable for netstorm builder
+                 */
+                 def nsBuild = new jenkins.pipeline.NetStormBuilder(url, username, password,
+                               project, subProject, scenario, testMode, baselineTR)
+                 /*
+                 * Starting a Netstorm test
+                 */                                   
+                 report = nsBuild.startTest()  
+                 
+                 echo report
+        }
+      }
+    }
+  }   
+ 
+  post { 
+    success { 
+      echo 'Going to generate report'
+      script {
+               step([$class: 'NetStormResultsPublisher', netstormUri: url, 
+                       username: username, password: password , project:project, subProject:subProject, scenario:scenario])
+               
+               echo " report is generate need to append in list "
+      }                   
+    }
+  }
+}
+

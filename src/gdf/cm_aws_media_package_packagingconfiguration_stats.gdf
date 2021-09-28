@@ -1,0 +1,13 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+	
+Group|AWS Media Package Config Stats|14075|vector|3|0|AWS Metrics|AccountName>Region>PackagingConfiguration|AWS Elemental MediaPackage reliably prepares and protects our video for delivery over the Internet.
+
+Graph|AWS Media Package Egress Requests|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of content requests that AWS Elemental MediaPackage receives.
+
+Graph|AWS Media Package Egress Response Time (ms)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The time that it takes AWS Elemental MediaPackage to process each output request.
+
+Graph|AWS Media Package Egress Bytes|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of bytes that AWS Elemental MediaPackage successfully sends for each request.

@@ -1,0 +1,5 @@
+Info|1.0|1|-|-|-1|-1|-
+
+Group|Cloudfoundry App Stats|10595|vector|2|0|Cloudfoundry Metrics|Tier>Server>App|Cloudfoundry App Stats provide metrics about memory usage.
+Graph|Total Memory Allocated (MB)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total allocated memory in Megabytes.
+Graph|Total Disk Allocated (MB)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total allocated disk in Megabytes.

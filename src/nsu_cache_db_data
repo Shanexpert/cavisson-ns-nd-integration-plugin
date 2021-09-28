@@ -1,0 +1,38 @@
+#!/bin/bash
+#
+# Name: nsu_cache_db_data
+#
+# Author: Manpreet kaur
+#
+# Purpsose: Used to generate test run object data so that it gets cached. This command is called within post processing for standalone and generator. In case of controller this shell would be called from ns_parent if generator TRs are copied in controller logs directory.
+#
+# Usage: nsu_cache_db_data <test number> <logging reader log file>
+#
+# Exit Values:
+#    0 - Success
+#
+# Example:
+# nsu_cache_db_data 1234 /home/cavisson/work/logs/TR1234/nsu_logging_reader.log
+#
+# Modification History:
+
+TEST_RUN=$1
+NSU_LOGGING_READER_LOG_FILE=$2
+
+echo "Start: Generating test run object data so that it gets cached"  >>$NSU_LOGGING_READER_LOG_FILE
+nsi_db_get_user_profile_data --testrun $TEST_RUN --running 1 1>>$NSU_LOGGING_READER_LOG_FILE 2>&1
+
+nsi_db_get_obj_name_ids --testrun $TEST_RUN --object 0 --running 1 1>>$NSU_LOGGING_READER_LOG_FILE 2>&1
+nsi_db_get_obj_name_ids --testrun $TEST_RUN --object 1 --running 1 1>>$NSU_LOGGING_READER_LOG_FILE 2>&1
+nsi_db_get_obj_name_ids --testrun $TEST_RUN --object 2 --running 1 1>>$NSU_LOGGING_READER_LOG_FILE 2>&1
+nsi_db_get_obj_name_ids --testrun $TEST_RUN --object 3 --running 1 1>>$NSU_LOGGING_READER_LOG_FILE 2>&1
+
+nsi_db_get_phase_list --testrun $TEST_RUN --running 1 1>>$NSU_LOGGING_READER_LOG_FILE 2>&1
+
+nsi_db_get_tr_error_codes  --testrun $TEST_RUN --object 0 --running 1 1>>$NSU_LOGGING_READER_LOG_FILE 2>&1
+nsi_db_get_tr_error_codes  --testrun $TEST_RUN --object 1 --running 1 1>>$NSU_LOGGING_READER_LOG_FILE 2>&1
+nsi_db_get_tr_error_codes  --testrun $TEST_RUN --object 2 --running 1 1>>$NSU_LOGGING_READER_LOG_FILE 2>&1
+nsi_db_get_tr_error_codes  --testrun $TEST_RUN --object 3 --running 1 1>>$NSU_LOGGING_READER_LOG_FILE 2>&1
+echo "End: Generating test run object data so that it gets cached"  >>$NSU_LOGGING_READER_LOG_FILE
+
+exit 0

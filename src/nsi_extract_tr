@@ -1,0 +1,48 @@
+#!/bin/bash
+
+#This command is to extract TR into logs directory.
+#Assumptions: 
+# Name of tar file should be in following format TR<tr number>.tar.gz
+# Tar file should be in given controller's logs directory
+
+display_help_and_exit()
+{
+  echo "ERROR: Incorrect usage"
+  echo $1
+  echo "Usage:"
+  echo "nsi_extract_tr <Controller directory> <TR number> <Controller User&Group name>"
+  exit 1
+}
+
+if [ $# -ne 3 ];then
+  display_help_and_exit
+fi
+
+CONTROLLER_DIR=$1
+GEN_TR_NUM=$2
+
+echo $GEN_TR_NUM | egrep -q '^[0-9]+$'
+if [ $? -ne 0 ];then
+  echo "Invalid test TR number given"
+  exit 1
+fi
+
+cd $CONTROLLER_DIR
+tar hxzf TR$GEN_TR_NUM.tar.gz
+if [ $? -ne 0 ];then
+  echo "Unable to untar generator TR$GEN_TR_NUM."
+  exit 1
+fi
+#Change owner of the TR to controller user name and group name
+#e.g. CONTROLLER_USR_AND_GRP_NAME=cavisson:cavisson
+chown -R cavisson. TR$GEN_TR_NUM
+if [ $? -ne 0 ];then
+  echo "Unable to change owner for testrun TR$GEN_TR_NUM."
+  exit 1
+fi
+
+rm -f TR$GEN_TR_NUM.tar.gz
+
+echo "done">$CONTROLLER_DIR/TR$GEN_TR_NUM/ready_reports/status
+
+exit 0

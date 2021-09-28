@@ -1,0 +1,5 @@
+info|3.1|1|-|-|-1|-1|-
+
+Group|NGINX Plus Http Request Stats|10995|vector|2|0|NGINX Metrics|Tier>Server>Instance|Nginx Plus Request Stats provides metrics related to total and current requests.
+Graph|NGINX Client Total Requests|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of client requests.
+Graph|NGINX Client Current Requests|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of current client requests. 

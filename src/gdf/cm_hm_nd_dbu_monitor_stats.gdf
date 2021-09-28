@@ -1,0 +1,28 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Group|DBUpload2 Stats|10658|vector|23|0|Cavisson Metrics|Tier>Server>Instance|Provide ND DBUpload run time stats.
+
+Graph|DBUpload Instances|1|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Number of instances in DB Upload Thread
+Graph|DBUpload Columns Mismatch/Min|2|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Columns mismatch in between csv and tables per minute
+Graph|DBUpload Datatype Mismatch/Min|3|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Data mismatch when datatype doesnt match in table per minute
+Graph|DBUpload Partitions To Be Processed |4|scalar|sample|-|-|0|AS|-1|-1|NA|NA|It gives the count by how much partitions db_upload is behind from current partition {if count is 1 db_upload is behind 1 partition}
+Graph|DBUpload Backlog (pct)|5|scalar|sample|-|-|0|AS|-1|-1|NA|NA| Percentage by which DBUpload is running behind
+Graph|DBUpload DBConnections|6|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Number of DBConnection opened in DB Upload Thread
+Graph|DBUpload Messages Received From NDC/Min|7|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Number of Messages received from NDC
+Graph|DBUpload Messages Sent To NDC/Min|8|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Number of Messages send to NDC
+Graph|DBUpload Current Partition Start Constraint Missing|9|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Start Constraint missing in current partiton or not.
+Graph|DBUpload Previous Partition Start Constraint Missing|10|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Start Constraint missing in Previous partiton or not.
+Graph|DBUpload Previous Partition End Constraint Missing|11|scalar|sample|-|-|0|AS|-1|-1|NA|NA|End Constraint missing in Previous partiton or not.
+Graph|DBUpload Current Partition Start Constraint Time Diff (sec)|12|scalar|sample|-|-|0|AS|-1|-1|NA|NA|This graph tells the diff between when the constraint should be applied and when it is actually applied in sec of Current Partition Start Constraint {Constraints are not applied for metadata}
+Graph|DBUpload Previous Partition Start Constraint Time Diff(sec)|13|scalar|sample|-|-|0|AS|-1|-1|NA|NA|This graph tells the diff between when the constraint should be applied and when it is actually applied in sec of Previous Partition Start Constraint{Constraints are not applied for metadata}
+Graph|DBUpload Previous Partition End Constraint Time Diff(sec)|14|scalar|sample|-|-|0|AS|-1|-1|NA|NA|It tells the diff between when the constraint should be applied and when it is actually applied in sec of Previous Partition End Constraint{Constraints are not applied for metadata}
+Graph|DBUpload Partition Table Analyze Time(ms)|15|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Time taken by Partition for Analyze in ms
+Graph|DBUpload Master Table Analyze Time(ms)|16|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Time taken by master table for Analyze in ms
+Graph|DBUpload Scandir Time (ms)|17|scalar|times|-|-|0|AS|-1|-1|NA|NA|Time Taken in Scandir in ms
+Graph|DBUpload Data Not Uploaded(Bytes)|18|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Number of bytes not uploaded due to irrecoverable error
+Graph|DBUpload Data Uploaded MB/Min|19|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Data uploaded in MB per min
+Graph|DBUpload Upload Time For Small Data (ms)|20|scalar|times|-|-|0|AS|-1|-1|NA|NA|Data upload Time for data < 1MB
+Graph|DBUpload Upload Time For Large Data (ms)|21|scalar|times|-|-|0|AS|-1|-1|NA|NA|Data upload Time for data >= 1MB
+Graph|DBUpload Data Correction Time (ms)|22|scalar|times|-|-|0|AS|-1|-1|NA|NA|Data correction time
+Graph|DBUpload Backlog (MB)|23|scalar|times|-|-|0|AS|-1|-1|NA|NA|MB by which DBUpload is running behind

@@ -1,0 +1,20 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Socket Statistics|10107|vector|12|0|System Metrics|Tier>Server|Socket Statistics
+Graph|Used Sockets|1|scalar|sample|-|-|0|NA|-1|-1|H|NA|Total Number of used sockets or active sockets
+Graph|Tcp InUse|2|scalar|sample|-|-|0|NA|-1|-1|H|NA|Total number of tcp sockets in use.
+Graph|Tcp Orphan Count|3|scalar|sample|-|-|0|NA|-1|-1|L|NA|Number of orphan TCP sockets (not attached to any file descriptor).
+Graph|Tcp Timewait|4|scalar|sample|-|-|0|NA|-1|-1|M|NA|TIME-WAIT - waiting for enough time to pass to be sure the remote TCP received the acknowledgment of its connection termination request. Number of TCP sockets currently in TIME_WAIT state.
+Graph|Tcp Alloc|5|scalar|sample|-|-|0|NA|-1|-1|L|NA|All TCP socket number ( for example, ESTABLISH, CLOSE_WAIT, TIME_WAIT, etc)(only TCP).
+Graph|Tcp Memory|6|scalar|sample|-|-|0|NA|-1|-1|M|NA|Number of pages allocated to TCP.(1page = 4096 bytes)
+Graph|Udp InUse|7|scalar|sample|-|-|0|NA|-1|-1|M|NA|Number of UDP sockets in use.
+Graph|Udp Memory|8|scalar|sample|-|-|0|NA|-1|-1|M|NA|Memory allocated for this socket type (1page = 4096 bytes)
+Graph|Udp-Lite InUse|9|scalar|sample|-|-|0|NA|-1|-1|L|NA|Memory allocated for this socket type (1page = 4096 bytes).
+Graph|Raw InUse|10|scalar|sample|-|-|0|NA|-1|-1|L|NA|Number of raw sockets in use.
+Graph|Frag InUse|11|scalar|sample|-|-|0|NA|-1|-1|L|NA|Number of structures associated with IP fragmentation currently in  use.(Only available by kernels > 2.2).
+Graph|Frag Memory|12|scalar|sample|-|-|0|NA|-1|-1|L|NA|Memory used to reassemble IP fragments.

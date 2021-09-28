@@ -1,0 +1,9 @@
+# --- GDF Version History ---
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|MongoDB Replica Stats|10453|vector|3|0|MongoDB Metrics|Tier>Server>Instance>Replica|MongoDB Replica Stats provides an stats of the database replica.
+Graph|MongoDB Replica Health Status|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Health status conveys if the member is up (i.e. 1) or down (i.e. 0).
+Graph|MongoDB Replica State|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Replica state conveys the state of replica. (0 = STARTUP, 1 = PRIMARY, 2 = SECONDARY, 3 = RECOVERING, 5 = STARTUP2, 6 = UNKNOWN , 7 = ARBITER, 8 = DOWN, 9 = ROLLBACK, 10 = REMOVED).  
+Graph|MongoDB Replica UpTime (hrs)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of hours that this member has been online.

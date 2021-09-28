@@ -1,0 +1,25 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Open Api Rest Server Request Stats|10166|vector|15|0|Application Metrics|Tier>Server>Instance|Request stats for open-api rest server.
+
+Graph|Minimum duration (ms)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Minimum duration time in milliseconds.
+Graph|Maximum duration(ms)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Minimum duration time in milliseconds.
+Graph|Mean duration(ms)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Mean duration time in milliseconds.
+Graph|Std_dev duration(ms)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Standard deviation duration in milliseconds.
+Graph|Median duration(ms)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Median duration time in milliseconds.
+Graph|Duration 75th Percentile (ms)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Duration 75th Percentile in milliseconds.
+Graph|Duration 95th Percentile (ms)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Duration 95th Percentile in milliseconds.
+Graph|Duration 98th Percentile (ms)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Duration 98th Percentile in milliseconds.
+Graph|Duration 99th Percentile (ms)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Duration 99th Percentile in milliseconds.
+Graph|Duration 99.9th Percentile (ms)|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Duration 99.9th Percentile in milliseconds.
+Graph|Request count|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Request count.
+Graph|Mean rate(secs)|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Request mean rate in seconds.
+Graph|Last 1 minute rate |13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Last 1 minute rate in seconds.
+Graph|Last 5 minute rate |14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Last 5 minute rate in seconds.
+Graph|Last 15 minute rate |15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Last 15 minute rate in seconds.

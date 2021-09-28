@@ -1,0 +1,63 @@
+#!/bin/sh
+#This script is for change build version
+#Currently it will change the all version files with new version
+
+#Usage:
+# change_build_num <new build version>
+
+#Example:
+# If we want to change version number to 5, use following command.
+# change_build_num 5
+#It will change version  number to 5 for all builds(Netstorm, GUI, LPS, NETDIAGNOSTICS, HPD, CAVMON)
+
+NEW_BUILD_VERSION=$1
+VERSION_CHANGE_LOG=version_change_log
+>$VERSION_CHANGE_LOG
+
+Usage ()
+{
+  echo "change_build_num <new build version>"
+  exit 1
+}
+
+if [ $# != 1 ];then
+  Usage
+fi
+ 
+update_build_version ()
+{
+  local VERSION_FILE=$1
+  local NEW_VERSION=$2
+  sed -i "s/.*BUILD.*/BUILD $NEW_VERSION/" $VERSION_FILE
+}
+
+echo " Updating version file"
+echo "Updating NETSTORM build version" >>$VERSION_CHANGE_LOG
+update_build_version "etc/version" $NEW_BUILD_VERSION
+echo "Updating GUI build version" >>$VERSION_CHANGE_LOG
+update_build_version "gui/etc/version" $NEW_BUILD_VERSION
+echo "Updating LPS build version" >>$VERSION_CHANGE_LOG
+update_build_version "lps/etc/version" $NEW_BUILD_VERSION
+echo "Updating CAVMON build version" >>$VERSION_CHANGE_LOG
+update_build_version "cavmon/etc/version" $NEW_BUILD_VERSION
+echo "Updating NETDIAGNOSTICS build version" >>$VERSION_CHANGE_LOG
+update_build_version "netdiagnostics/etc/version" $NEW_BUILD_VERSION
+echo "Updating HPD build version" >>$VERSION_CHANGE_LOG
+update_build_version "hpdd/etc/version" $NEW_BUILD_VERSION
+
+echo "Checking version file"
+echo "Netstorm version file" >> $VERSION_CHANGE_LOG
+cat "etc/version" >> $VERSION_CHANGE_LOG
+echo "Gui version file" >> $VERSION_CHANGE_LOG
+cat "gui/etc/version" >> $VERSION_CHANGE_LOG
+echo "Lps version file" >> $VERSION_CHANGE_LOG
+cat "lps/etc/version" >> $VERSION_CHANGE_LOG
+echo "Cavmon version file" >> $VERSION_CHANGE_LOG
+cat "cavmon/etc/version" >> $VERSION_CHANGE_LOG
+echo "Netdiagnostics version file" >> $VERSION_CHANGE_LOG
+cat "netdiagnostics/etc/version" >> $VERSION_CHANGE_LOG
+echo "Hpd version file" >> $VERSION_CHANGE_LOG
+cat "hpdd/etc/version" >> $VERSION_CHANGE_LOG
+echo "Version files updated"
+
+exit 0

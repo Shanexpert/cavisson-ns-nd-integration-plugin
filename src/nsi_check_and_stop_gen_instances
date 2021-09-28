@@ -1,0 +1,68 @@
+#!/bin/bash
+#
+
+PROGRESS_SEC=5
+LEASE_GRACE_SEC=120
+NETSTORM_PID=0
+TEST_NUM=$1
+DEBUG_LOG_FILENAME=$NS_WDIR/logs/TR$TEST_NUM/NetCloud/gen_inst.netstorm.log
+
+CTRL_IP=`egrep ^NSAdminIP $NS_WDIR/logs/TR$TEST_NUM/cav.conf | awk -F " " '{print $2}'`
+HOST=`gethostip -x $CTRL_IP|tr '[:upper:]' '[:lower:]'`
+ALLOCATION_ID="i$HOST-tr$TEST_NUM"
+GEN_LEASE_DURATION=0
+GEN_LEASE_REMAINING=0
+
+debug_log()
+{
+   echo "`date "+%D %H:%M:%S"`|[$REGION]$*" >> $DEBUG_LOG_FILENAME
+}
+
+NS_GEN_FILE="$NS_WDIR/etc/.netcloud/gen_server.conf"
+if [ -f $NS_GEN_FILE -a "X$CTRL_IP" != "X" ]; then
+  GEN_SERV_URL=`grep "^generatorServer" $NS_GEN_FILE | cut -d'=' -f 2 | tr -d '[:space:]'`
+
+  if [ "XX${GEN_SERV_URL}" != "XX" ]; then
+    GEN_LEASE_DURATION=`grep "^leaseDuration" $NS_GEN_FILE | cut -d'=' -f 2 | tr -d '[:space:]'`
+    if [ "XX${GEN_LEASE_DURATION}" == "XX" ]; then
+      GEN_LEASE_DURATION=1800
+    elif [ ${GEN_LEASE_DURATION} -lt 900 ]; then
+      GEN_LEASE_DURATION=900
+    fi
+    GEN_LEASE_REMAINING=$GEN_LEASE_DURATION
+  fi
+fi
+
+check_if_test_is_running_or_not ()
+{
+  #Set Netstorm PID
+  if [ "X$NETSTORM_PID" == "X0" ]; then
+    NETSTORM_PID=`cat $NS_WDIR/logs/TR${TEST_NUM}/.pidfiles/.CavMain.pid` 2>/dev/null
+  fi
+  #Check test pid is running
+  if [ -d "/proc/$NETSTORM_PID" ]; then
+    binary=`ps -p ${NETSTORM_PID} -h -o 'comm'`
+    if [ "X${binary}" == "Xnetstorm" ] || [ "X${binary}" == "Xnetstorm.debug" ]; then
+      return
+    fi
+  fi
+  #Test is not running 
+  debug_log "Releasing generator instances"
+  nsi_release_gen_instances ${TEST_NUM} >> $DEBUG_LOG_FILENAME 2>&1
+  exit
+}
+
+while true
+do
+  check_if_test_is_running_or_not
+  if [ $GEN_LEASE_DURATION -gt 0 ]; then
+    if [ $GEN_LEASE_REMAINING -le $LEASE_GRACE_SEC ];then
+      #Renew Lease
+      debug_log "Renewing generator lease $ALLOCATION_ID"
+      nsi_gen_server_api -o renewGeneratorLease -a $ALLOCATION_ID   
+      GEN_LEASE_REMAINING=$GEN_LEASE_DURATION;
+    fi
+    GEN_LEASE_REMAINING=`expr $GEN_LEASE_REMAINING - $PROGRESS_SEC`
+  fi
+  sleep $PROGRESS_SEC
+done

@@ -1,0 +1,13 @@
+# 1.0 - Initial version
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP PubSub Topic Stats V2|11314|vector|8|0|GCP Metrics|ProjectID>Topic|GCP PubSub Topic Stats provides metrices details related to topic.
+
+Graph|PubSub Topic Byte Cost/Sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Cost of operations per topic per second, measured in bytes. This is used to measure utilization for quotas.
+Graph|PubSub Topic Updates/Sec|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of configuration changes per topic per second, grouped by operation type and result.
+Graph|PubSub Topic Publish Message Operations/Sec|3|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of publish message operations per second, grouped by result.
+Graph|PubSub Topic Publish Message Send Request/Sec|4|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average of publish requests per second, grouped by result.
+Graph|PubSub Topic Publish Average Message Size 5th Percentile (Bytes)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|5th percentile of publish message size in bytes.
+Graph|PubSub Topic Publish Average Message Size 50th Percentile (Bytes)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|50th percentile of publish message size in bytes.
+Graph|PubSub Topic Publish Average Message Size 95th Percentile (Bytes)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|95th percentile of publish message size in bytes.
+Graph|PubSub Topic Publish Average Message Size 99th Percentile (Bytes)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|99th percentile of publish message size in bytes.

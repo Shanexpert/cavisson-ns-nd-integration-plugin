@@ -1,0 +1,58 @@
+# Name      : nsu_merge_page
+# Author    : Achint/Vikas
+# Purpsose  : To merge the page in script (script.c, script.h, script.capture, script.detail) files.
+#
+# Usage     :  nsu_merge_page <scriptName> <Page_name> <workspace_name> <profile_name>
+#   e.g.  nsu_merge_page tours login 
+#
+# Modification History:
+#   02/02/06: Achint/Vikas - Initial Version
+#   21/06/11: Saloni Tyagi - Integration for C type Script
+#
+#!/bin/sh
+#Check and get login user name
+USER_NAME=`whoami 2>/dev/null`
+if [ $? != 0 ];then
+  echo "Error: Unable to get the real user name"
+  exit 1
+fi
+
+#Check and get script type and call appropriate class
+
+SCRIPT_NAME_WITH_PATH=$2
+WORK_PROFILE=$4
+PROJ_SUBPROJ=`dirname $SCRIPT_NAME_WITH_PATH | cut -d '/' '-f1-2'`
+NS_TA_DIR=`nsi_get_work_space_path.sh $WORK_PROFILE $PROJ_SUBPROJ/"scripts"` 
+if [ ! -d $NS_TA_DIR/$SCRIPT_NAME ]; then
+  echo "Error in getting script directory $SCRIPT_NAME_WITH_PATH"
+  echo "Script may not be present"
+  exit -1
+fi
+
+SCRIPT_TYPE=`nsu_script_tool -o GetScriptType -s $SCRIPT_NAME_WITH_PATH -w $WORK_PROFILE`
+if [ $? != 0 ]; then
+echo "Error in getting script type of script $SCRIPT_NAME_WITH_PATH"
+  echo "Script may not be present"
+fi
+
+if [ "X$SCRIPT_TYPE" == "XLegacy" -o "X$SCRIPT_TYPE" == "XLEGACY" ];then
+  if [ -d /home/cavisson/monitors ];then
+    java -cp $NS_WDIR/webapps/netstorm/WEB-INF/lib/netstorm_bean.jar:/home/cavisson/monitors/lib/java-getopt-1.0.9.jar -DNS_WDIR=$NS_WDIR pac1.Bean.MergePage $* -u $USER_NAME
+  else
+    java -cp $NS_WDIR/webapps/netstorm/WEB-INF/lib/netstorm_bean.jar:/opt/cavisson/monitors/lib/java-getopt-1.0.9.jar -DNS_WDIR=$NS_WDIR pac1.Bean.MergePage $* -u $USER_NAME
+  fi
+  exit $?
+fi
+
+if [ "X$SCRIPT_TYPE" == "XC" ] || [ "X$SCRIPT_TYPE" == "XJAVA" ];then
+  if [ -d /home/cavisson/monitors ];then
+    java -cp $NS_WDIR/webapps/netstorm/WEB-INF/lib/netstorm_bean.jar:/home/cavisson/monitors/lib/java-getopt-1.0.9.jar -DNS_WDIR=$NS_WDIR pac1.Bean.MergePageForCType $*
+  else  
+    java -cp $NS_WDIR/webapps/netstorm/WEB-INF/lib/netstorm_bean.jar:/opt/cavisson/monitors/lib/java-getopt-1.0.9.jar -DNS_WDIR=$NS_WDIR pac1.Bean.MergePageForCType $*
+  fi
+  exit $?
+
+fi
+
+echo "Invalid script type $SCRIPT_TYPE"
+exit -1

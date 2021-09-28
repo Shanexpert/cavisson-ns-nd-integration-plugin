@@ -1,0 +1,128 @@
+#!/bin/sh
+
+if [ "X$NS_WDIR" == "X" ];then
+  echo "Error: NS_WDIR must be set"
+  exit -1
+fi 
+
+TIME_STAMP=`date +%y-%m-%d_%H:%M:%S`
+
+LOG_SIZE=1048576 # 1 MB
+LOG_PATH="$NS_WDIR/ndc/logs/ndi_runtime_changes.log"
+DEBUG_MODE=1
+
+logger()
+{
+  file_size=`ls -l $LOG_PATH 2>/dev/null| awk '{print $5}'`
+  if [  "X$file_size" != "X" ]  && [ $file_size -ge $LOG_SIZE ];then
+    mv $LOG_PATH ${LOG_PATH}.prev
+  fi
+  echo $TIME_STAMP $* >>$LOG_PATH
+}
+
+usage()
+{
+  echo "USAGE:"
+  echo "====="
+  echo
+  echo "$0 -I <NDC IP> -P <NDC PORT> -l <RTC LEVEL> -t <TIMEOUT VALUE> -T <TIER> -S <SERVER> -i <INSTANCE> -s <SETTINGS> -e <EXCLUDE TIERS> -E <EXCLUDE SERVERS> -G <EXCLUDE_GROUP>-R <EXCLUDE INSTANCES> -M <MULTIPLE INSTANCES>"
+  echo
+  echo "Where"
+  echo "NDC IP              NDC IP address, which is mandatory argument."
+  echo "NDC PORT            NDC PORT no, which is mandatory argument."
+  echo "TIER                TIER NAME"
+  echo "SERVER              SERVER NAME"
+  echo "INSTANCE            INSTANCE NAME"
+  echo "SETTINGS            settings to be applied, which is mandatory argument."
+  echo "RTC LEVEL           value = 0 , RTC on Tier/Server/Instance level"
+  echo "RTC LEVEL           value = 1 , RTC on Group"
+  echo "RTC LEVEL           value = 2 , RTC on multiple Groups,Tier,Server,Instance"
+  echo "TIMEOUT VALUE       NDC timeout value to wait wait response from agent"
+  echo "EXCLUDE TIERS       EXCLUDE TIER LIST"
+  echo "EXCLUDE GROUP       EXCLUDE GROUP LIST"
+  echo "EXCLUDE SERVERS     EXCLUDE SERVERS LIST"
+  echo "EXCLUDE INSTANCES   EXCLUDE INSTANCES LIST"
+  echo "MULTIPLE INSTANCES  INSTANCES_LIST"
+  echo "Example"
+  echo "ndi_runtime_change_ex -P 7892 -I 127.0.0.1 -l 1 -s instrProfile=Weblogic.xml;bciInstrSessionPct=80; -T T1 -S S1 -i I1 -e T4,T5 -E T3:S2,T6:S8 -G G1,G2 -R T3:S2:I7,T4:S8:I3 -t 60"
+  echo "ndi_runtime_change_ex -P 7892 -I 127.0.0.1 -l 1 -s \"instrProfile=Weblogic.xml;bciInstrSessionPct=80;\" -M \"TierGroup=G1;TierGroup=G2;Tier=T4;Tier=T7;Server=T2:S1;Instance=T3:S2:I8;Instance=T5:S2:I8;Instance=T3:S2:I1;\" -e \"T4,T5\" -E \"T3:S2,T6:S8\" -R \"T3:S2:I7,T4:S8:I3\" -t 60"
+  exit -1
+}
+
+
+make_message()
+{
+  MSG="nd_control_req:action=modify;rtclevel=$RTC_LEVEL"
+
+  if [ "X$NDC_TIMEOUT" != "X" ]; then
+    MSG="$MSG;NDC_Timeout=$NDC_TIMEOUT"
+  fi
+
+  if [ "X$EXCLUDE_GROUP" != "X" ]; then
+    MSG="$MSG;ExcludeGroup=$EXCLUDE_GROUP"
+  fi
+
+  if [ "X$EXCLUDE_TIER" != "X" ]; then
+    MSG="$MSG;ExcludeTier=$EXCLUDE_TIER"
+  fi
+
+  if [ "X$EXCLUDE_SERVER" != "X" ]; then
+    MSG="$MSG;ExcludeServer=$EXCLUDE_SERVER"
+  fi
+
+  if [ "X$EXCLUDE_INSTANCE" != "X" ]; then
+    MSG="$MSG;ExcludeInstance=$EXCLUDE_INSTANCE"
+  fi
+
+  if [ "X$RTC_LEVEL" = "X0" -o "X$RTC_LEVEL" = "X1" ]; then
+     if [ "X$TIER" == "X" -o "X$SERVER" == "X" -o "X$INSTANCE" == "X" ]; then
+       usage 
+     else 
+       MSG="$MSG $TIER $SERVER $INSTANCE $SETTINGS"
+     fi
+  else
+     if [ "X$MULTIPLE" == "X" ]; then
+       usage 
+     else 
+       MSG="$MSG $MULTIPLE Settings=$SETTINGS"
+     fi
+  fi
+}
+
+RTC_LEVEL=0
+
+#At least Test Run is required 
+while getopts I:P:l:t:T:S:i:e:E:R:s:M:G:? c 
+do 
+  case $c in 
+    I) NDC_IP=$OPTARG;; 
+    P) NDC_PORT=$OPTARG;; 
+    l) RTC_LEVEL=$OPTARG;; 
+    t) NDC_TIMEOUT=$OPTARG;; 
+    T) TIER=$OPTARG;; 
+    S) SERVER=$OPTARG;; 
+    i) INSTANCE=$OPTARG;; 
+    s) SETTINGS=$OPTARG;; 
+    e) EXCLUDE_TIER=$OPTARG;; 
+    E) EXCLUDE_SERVER=$OPTARG;; 
+    R) EXCLUDE_INSTANCE=$OPTARG;; 
+    G) EXCLUDE_GROUP=$OPTARG;; 
+    M) MULTIPLE=$OPTARG;; 
+    ?) usage;; 
+    *) usage;; 
+  esac 
+done 
+
+if [ "X$NDC_IP" == "X" -o "X$NDC_PORT" == "X" -o "X$SETTINGS" == "X" ]; then
+  usage  
+fi
+
+make_message
+logger "INPUT ARGUMENT:" $NDC_IP $NDC_PORT "$MSG"
+
+COMM_OUTPUT=`ndi_send_msg_ex $NDC_IP $NDC_PORT "$MSG
+" $DEBUG_MODE 2>&1`
+echo $COMM_OUTPUT
+logger "OUTPUT : $COMM_OUTPUT"
+
+exit 0

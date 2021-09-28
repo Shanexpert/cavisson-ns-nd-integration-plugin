@@ -1,0 +1,66 @@
+#!/bin/bash
+
+if [ "XX" = "XX$NS_WDIR" ]
+then
+  NS_WDIR=/home/cavisson/work
+fi
+
+. $NS_WDIR/etc/netstorm.env
+
+RprLogFile=$NS_WDIR/webapps/netstorm/logs/start_rpr.log
+#LogFile=$NS_WDIR/webapps/netstorm/logs/start_monitor.log
+
+> $RprLogFile
+#> $LogFile
+
+export RPR_CONTROLLER_NAME=`basename $NS_WDIR`
+
+Usage()
+{
+  error_msg=$1
+  echo "Usage: $0 [-f conf_files_name(comma seperated)] [-n script_name] [-t recording_timeout] [-d]"
+  echo "$error_msg"
+}
+
+if [ $# -lt 1 ]
+then
+  Usage "Error: Please provide mandatory arguments."
+  exit -1
+fi
+
+args=""
+while getopts f:n:t:d: c
+do
+        case $c in
+        f) RPR_CONF_FILES="$OPTARG";;
+        n) args="$args -n $OPTARG" ;;
+        t) args="$args -t $OPTARG";;
+        d) args="$args -d $OPTARG";;
+        ?) echo "Usage: $0 [-f conf_files_name(comma seperated)] [-n script_name] [-t recording_timeout] [-d]"
+           exit -1 ;;
+        esac
+done
+
+if [ "XX$RPR_CONF_FILES" == "XX" ]; then
+  Usage "Error: Please provide recording configuration file."
+  exit -1 
+else
+  args="$args -f $RPR_CONF_FILES"
+fi
+
+#echo "Args = $args"
+
+nohup nsu_rpr $args 1>> $RprLogFile 2>&1 &
+
+sleep 3
+
+RecordingTCPStarted=`grep "Ready to Record" $RprLogFile | wc -l`
+if [ $RecordingTCPStarted -eq 0 ]; then
+  #echo "Script Capture start failed."
+  cat $RprLogFile
+  exit -1
+fi
+
+echo "SUCCESS"
+#echo "Script Capture started successfuly."
+exit 0

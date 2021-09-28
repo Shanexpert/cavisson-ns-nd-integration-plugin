@@ -1,0 +1,42 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+# Command to get data for this gdf on windows server :
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# wmic path Win32_PerfFormattedData_PerfProc_Process.Name='_Total' get ElapsedTime,HandleCount,IODataBytesPersec,IODataOperationsPersec,IOOtherBytesPersec,IOOtherOperationsPersec,IOReadBytesPersec,IOReadOperationsPersec,IOWriteBytesPersec,IOWriteOperationsPersec,PageFaultsPersec,PageFileBytes,PageFileBytesPeak,PercentPrivilegedTime,PercentProcessorTime,PercentUserTime,PoolNonpagedBytes,PoolPagedBytes,PriorityBase,PrivateBytes,ThreadCount,VirtualBytes,VirtualBytesPeak,WorkingSet,WorkingSetPeak /every:10
+#
+# Entry in mprof to get data :
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# CUSTOM_MONITOR 192.168.1.52 cm_win_process_stats.gdf Win_Mon_Process 2 wmic path Win32_PerfFormattedData_PerfProc_Process.Name='_Total' get ElapsedTime,HandleCount,IODataBytesPersec,IODataOperationsPersec,IOOtherBytesPersec,IOOtherOperationsPersec,IOReadBytesPersec,IOReadOperationsPersec,IOWriteBytesPersec,IOWriteOperationsPersec,PageFaultsPersec,PageFileBytes,PageFileBytesPeak,PercentPrivilegedTime,PercentProcessorTime,PercentUserTime,PoolNonpagedBytes,PoolPagedBytes,PriorityBase,PrivateBytes,ThreadCount,VirtualBytes,VirtualBytesPeak,WorkingSet,WorkingSetPeak /every:10
+#
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Windows Process Stats|10038|vector|25|0|Application Metrics|Tier>Server>Instance|Windows Process stats. A process, in the simplest terms, is an executing program. One or more threads run in the context of the process. A thread is the basic unit to which the operating system allocates processor time. A thread can execute any part of the process code, including parts currently being executed by another thread.
+
+Graph|Process Elapsed Time (Sec)|1|scalar|cumulative|-|-|0|NA|-1|-1|H|NA|Total elapsed time, in seconds, that this process has been running.
+Graph|Process Handle Count|2|scalar|sample|-|-|0|NA|-1|-1|L|NA|Total number of handles currently open by process. This number is equal to the sum of currently opened handles by each thread of that process.
+Graph|Process IO Bytes/Sec|3|scalar|rate|-|-|0|NA|-1|-1|L|NA|Rate at which process is reading and writing bytes in I/O operations. I/O operations include file, network and device I/Os.
+Graph|Process IO Operations/Sec|4|scalar|rate|-|-|0|NA|-1|-1|L|NA|Rate at which process is issuing read and write I/O operations. I/O operations include file, network and device I/Os.
+Graph|Process IO Other Bytes/Sec|5|scalar|rate|-|-|0|NA|-1|-1|L|NA|Rate at which process is issuing bytes to I/O operations that do not involve data such as control operations. I/O operations include file, network and device I/Os.
+Graph|Process IO Other Operations/Sec|6|scalar|rate|-|-|0|NA|-1|-1|L|NA|Rate at which process is issuing I/O operations that are neither read nor write operations (for example, a control function). I/O operations include file, network and device I/Os.
+Graph|Process IO Read Bytes/Sec|7|scalar|rate|-|-|0|NA|-1|-1|L|NA|Rate at which process is reading bytes from I/O operations. I/O operations include file, network and device I/Os.
+Graph|Process IO Read Operations/Sec|8|scalar|rate|-|-|0|NA|-1|-1|L|NA|Rate at which process is issuing read I/O operations. I/O operations include file, network and device I/Os.
+Graph|Process IO Write Bytes/Sec|9|scalar|rate|-|-|0|NA|-1|-1|L|NA|Rate at which process is writing bytes to I/O operations. I/O operations include file, network and device I/Os.
+Graph|Process IO Write Operations/Sec|10|scalar|rate|-|-|0|NA|-1|-1|L|NA|Rate at which process is issuing write I/O operations. I/O operations include file, network and device I/Os.
+Graph|Process Page Faults/Sec|11|scalar|rate|-|-|0|NA|-1|-1|H|NA|The rate at which page faults by the threads executing in this process are occurring.
+Graph|Process Page File Size (MB)|12|scalar|sample|-|-|0|NA|-1|-1|L|NA|Page File Size is the current amount of virtual memory, in Megabytes, that this process has reserved for use in the paging file(s). Paging files are used to store pages of memory used by the process that are not contained in other files.
+Graph|Process Page File Peak Size (MB)|13|scalar|sample|-|-|0|NA|-1|-1|L|NA|Page File Peak Size is the maximum amount of virtual memory, in Megabytes, that this process has reserved for use in the paging file(s). Paging files are used to store pages of memory used by the process that are not contained in other files.
+Graph|Process Privileged Time (Pct)|14|scalar|sample|-|-|0|NA|-1|-1|L|NA|Privileged time is the percentage of elapsed time that the process threads spent executing code in privileged mode.
+Graph|Process Processor Time (Pct)|15|scalar|sample|-|-|0|NA|-1|-1|H|NA|Processor Time is the percentage of elapsed time that all of process threads used the processor to execution instructions.
+Graph|Process User Time (Pct)|16|scalar|sample|-|-|0|NA|-1|-1|M|NA|User Time is the percentage of elapsed time that the process threads spent executing code in user mode. Applications, environment subsystems, and integral subsystems execute in user mode.
+Graph|Process Pool Nonpaged Size (MB)|17|scalar|sample|-|-|0|NA|-1|-1|L|NA|Pool Nonpaged size an area of system memory (physical memory used by the operating system) for objects that cannot be written to disk, but must remain in physical memory as long as they are allocated. It is shown in Megabytes.
+Graph|Process Pool Paged Size (MB)|18|scalar|sample|-|-|0|NA|-1|-1|L|NA|Pool Paged size is an area of system memory (physical memory used by the operating system) for objects that can be written to disk when they are not being used. It is shown in Megabytes.
+Graph|Process Base Priority|19|scalar|sample|-|-|0|NA|-1|-1|L|L|Current base priority of this process. Threads within a process can raise and lower their own base priority relative to the process' base priority.
+Graph|Process Private Size (MB)|20|scalar|sample|-|-|0|NA|-1|-1|L|NA|Private Size is the current size of memory that this process has allocated that cannot be shared with other processes. It is shown in Megabytes.
+Graph|Process Thread Count|21|scalar|sample|-|-|0|NA|-1|-1|M|NA|Number of threads currently active in this process. An instruction is the basic unit of execution in a processor, and a thread is the object that executes instructions. Every running process has at least one thread.
+Graph|Process Virtual Size (MB)|22|scalar|sample|-|-|0|NA|-1|-1|M|NA|Virtual Size is the current size of the virtual address space that the process is using. It is shown in Megabytes.
+Graph|Process Virtual Peak Size (MB)|23|scalar|sample|-|-|0|NA|-1|-1|L|NA|Virtual Peak Size is the maximum size of virtual address space the process has used at any one time. It is shown in Megabytes.
+Graph|Working Set Size (MB)|24|scalar|sample|-|-|0|NA|-1|-1|L|NA|Working Set is the current size of the Working Set of this process. The Working Set is the set of memory pages touched recently by the threads in the process. It is shown in Megabytes.
+Graph|Working Set Peak Size (MB)|25|scalar|sample|-|-|0|NA|-1|-1|L|NA|Working Set is the size of the working set that is use for this process only and neither shared nor sharable by other processes. It is shown in Megabytes.

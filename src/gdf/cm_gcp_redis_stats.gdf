@@ -1,0 +1,21 @@
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP Redis Stats|14029|vector|18|0|GCP Metrics|ProjectID>Region>InsatanceID>NodeID>Role|It provides metrics related to memory store for redis.
+Graph|GCP Redis Blocked Clients|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of blocked clients. 
+Graph|GCP Redis Connected Clients|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of client connections.
+Graph|GCP Redis Evicted Keys|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of evicted keys due to max memory limit. 
+Graph|GCP Redis Expired Keys|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of key expiration events.
+Graph|GCP Redis Key Space Hits|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of successful lookup of keys in the main dictionary. 
+Graph|GCP Redis Maximum Memory (GB)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum amount of memory redis can consume in gigabytes.
+Graph|GCP Redis Memory Usage Ratio|7|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Memory usage as a ratio of maximum memory.
+Graph|GCP Redis Key Space Misses|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of failed lookup of keys in the main dictionary.
+Graph|GCP Redis Persisting RDB|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Flag indicating a RDB save is on-going.
+Graph|GCP Redis Pubsub Channels|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Global number of pub/sub channels with client subscriptions.
+Graph|GCP Redis Pubsub Patterns|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Global number of pub/sub pattern with client subscriptions.
+Graph|GCP Redis Rejected Connections|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of connections rejected because of maxclients limit.
+Graph|GCP Redis Replication (Master) Offset Byte|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of bytes that master has produced and sent to replicas.
+Graph|GCP Redis System Memory Usage Ratio|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memory usage as a ratio of maximum system memory.
+Graph|GCP Redis System Memory Overload (us)|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The amount of time in microseconds the instance is in system memory overload mode.
+Graph|GCP Redis Total Connections Received|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of connections accepted by the server.
+Graph|GCP Redis Used Memory Bytes|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of bytes allocated by redis.
+Graph|GCP Redis Uptime(min)|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Uptime of server in minutes.

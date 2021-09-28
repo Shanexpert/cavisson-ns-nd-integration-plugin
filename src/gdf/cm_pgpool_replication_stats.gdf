@@ -1,0 +1,10 @@
+# --- GDF Version History ---
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Pgpool Replication Stats|10883|vector|3|0|Pgpool Metrics|Tier>Server>Application|showing statistics about replication to that sender's connected standby server.
+
+Graph|Pgpool Application State|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|This graph shows the current state of application. Possible values are:[startup(0): This WAL sender is starting up. catchup(1): This WAL sender's connected standby is catching up with the primary. streaming(2): This WAL sender is streaming changes after its connected standby server has caught up with the primary. backup(3): This WAL sender is sending a backup. stopping(4): This WAL sender is stopping].
+Graph|Pgpool Application Sync Priority|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Priority of this standby server for being chosen as the synchronous standby in a priority-based synchronous replication. This has no effect in a quorum-based synchronous replication.
+Graph|Pgpool Application Sync State|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Synchronous state of this standby server. Possible values are: [async(0): This standby server is asynchronous. potential(1): This standby server is now asynchronous, but can potentially become synchronous if one of current synchronous ones fails. sync(2): This standby server is synchronous.  quorum(3): This standby server is considered as a candidate for quorum standbys].

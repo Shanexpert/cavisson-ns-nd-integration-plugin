@@ -1,0 +1,9 @@
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP Firebase Hosting Stats|11504|vector|5|0|GCP Metrics|ProjectID>SiteName>DomainName|GCP Firebase hosting stats provides metrics details related to firebase hosting metrics.
+
+Graph|GCP GCPFirebase DB Sent Monthly Data (MB)|1|scalar|sample|-|-|0|D|-1|-1|NA|DIV(G1,1048576)|The total outgoing megabytes sent aggregated and reset monthly.
+Graph|GCP GCPFirebase DB Sent Monthly Data Limit (MB)|2|scalar|sample|-|-|0|D|-1|-1|NA|DIV(G2,1048576)|The monthly network limit for the Firebase database in megabytes.
+Graph|GCP GCPFirebase DB Total Billed Data MB/Sec|3|scalar|rate|-|-|0|D|-1|-1|NA|DIV(G3,1048576)|The outgoing bandwidth used by the database, including encryption and protocol overhead in megabytes per second.
+Graph|GCP GCPFirebase DB Stored Data Limit (MB)|4|scalar|sample|-|-|0|D|-1|-1|NA|DIV(G4,1048576)|The storage limit for the Firebase database in megabytes.
+Graph|GCP GCPFirebase DB Stored Size (MB)|5|scalar|sample|-|-|0|D|-1|-1|NA|DIV(G5,1048576)|The size of the Firebase database storage in megabytes.

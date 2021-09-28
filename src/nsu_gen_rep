@@ -1,0 +1,579 @@
+#!/bin/bash
+#
+# Name     : nsu_gen_rep
+# Author   : Anil/Neeraj
+# Purpose  : To generate Ready Reports for a Test Run
+#
+# Ouput    : 
+#
+# Arguments:  Arg1 - Test Run Number
+#
+# Modification History:
+#   06/11/06: Neeraj - Added file generation for Analyze GUI for graphs
+#                      
+# Pendind Tasks:
+#  - Replace SessionIndex, TransactionIndex by Names
+#  - Remove last line (empty) from reports
+#  - Optimize using psql and grep/sed
+#
+
+. $NS_WDIR/bin/nsi_db_utils
+
+if [ $# -ne 1 ]; then
+   echo "usage:  ./nsu_gen_rep [test number]"
+   exit 1
+fi
+
+ARGS=$*
+
+TEST_RUN=$1
+REPORT_FILE_NAME=/tmp/t1.$TEST_RUN
+
+query_selector $TEST_RUN nsu_gen_rep_old_tr "$ARGS"
+
+if [ "XX" = "XX$NS_WDIR" ]
+then
+  NS_WDIR=/home/cavisson/work
+fi
+
+URL_REPORT=1
+PAGE_REPORT=2
+TX_REPORT=4
+SESS_REPORT=8
+
+FMT="990.990"
+#if REPORT_MASK is not set, set it all all reports
+if [ "XX$REPORT_MASK" = "XX" ];then
+	export REPORT_MASK=255
+fi
+
+#if WAN_ENV is not set, set it to 1
+if [ "XX$WAN_ENV" = "XX" ];then
+	export WAN_ENV=1
+fi
+
+#To exclude failed records. URLs are always excluded, aggrgates are excluded
+#based on config
+if [ -f $NS_WDIR/logs/TR$1/exclude_failed_aggregate ];then
+	EXCLUDE=1
+else
+	EXCLUDE=0
+fi
+
+if [ $EXCLUDE -eq 1 ];then
+    VALUE="CASE WHEN Status != 0 THEN NULL ELSE (RespTime) END"
+else
+    VALUE="RespTime"
+fi
+
+function detail_report()
+{
+echo "`date +"%F %X"` Method called detail_report()"
+OFILE=$NS_WDIR/logs/TR$1/detail.report
+echo "Detailed Report for Test Run # $1" >$OFILE
+echo "(All times is seconds)" >>$OFILE
+echo >>$OFILE
+ans=$(($REPORT_MASK & $SESS_REPORT))
+
+if [ $ans -ne 0 ]; then
+    echo "Per Session Report. Session names can be found at the bottom" >>$OFILE
+    echo >>$OFILE
+
+    psql test cavisson >>$OFILE <<+
+SELECT SessionName AS "Script Name    ", count(*) AS "Total", count(nullif(Status, 0)) AS "Failed", 
+	count(*)-count(nullif(Status, 0)) AS "Success", 
+	CASE WHEN count(*) > 0 THEN (count(nullif(Status, 0))*100/count(*)) ELSE 0 END AS "FailPct",
+	to_char(min($VALUE)/1000.0, '$FMT') AS "Min", 
+	to_char(round(avg($VALUE))/1000.0, '$FMT') AS "Avg", 
+	to_char(max($VALUE)/1000.0, '$FMT') AS "Max",
+        to_char(median_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "Median",
+        to_char(eighty_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "80%",
+        to_char(ninety_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "90%",
+        to_char(ninety_five_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "95%",
+        to_char(ninety_nine_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "99%"
+FROM SessionRecord_$1, SessionTable_$1
+WHERE EndTime <> 0 AND 
+	SessionRecord_$1.SessionIndex = SessionTable_$1.SessionIndex
+GROUP BY SessionName
+ORDER BY SessionName;
+
+select 'All' AS "SessCav!@#$%    ", count(*) AS "Total", count(nullif(Status, 0)) AS "Failed", 
+	count(*)-count(nullif(Status, 0)) AS "Success", 
+	CASE WHEN count(*) > 0 THEN (count(nullif(Status, 0))*100/count(*)) ELSE 0 END AS "FailPct",
+	to_char(min($VALUE)/1000.0, '$FMT') AS "Min", 
+	to_char(round(avg($VALUE))/1000.0, '$FMT') AS "Avg", 
+	to_char(max($VALUE)/1000.0, '$FMT') AS "Max",
+        to_char(median_percentile($VALUE)/1000.0, '$FMT') AS "Median",
+        to_char(eighty_percentile($VALUE)/1000.0, '$FMT') AS "80%",
+        to_char(ninety_percentile($VALUE)/1000.0, '$FMT') AS "90%",
+        to_char(ninety_five_percentile($VALUE)/1000.0, '$FMT') AS "95%",
+        to_char(ninety_nine_percentile($VALUE)/1000.0, '$FMT') AS "99%"
+From SessionRecord_$1
+Where EndTime <> 0;
++
+fi
+
+ans=$(($REPORT_MASK & $TX_REPORT))
+if [ $ans -ne 0 ]; then
+    echo "Per Transaction Report. Transaction names can be found at the bottom" >>$OFILE
+    echo >>$OFILE
+
+    psql test cavisson >>$OFILE <<+
+        select TransactionIndex, 
+	count(*) AS "Total", 
+	count(nullif(Status, 0)) AS "Failed", 
+	count(*)-count(nullif(Status, 0)) AS "Success", 
+	CASE WHEN count(*) > 0 THEN (count(nullif(Status, 0))*100/count(*)) ELSE 0 END AS "FailPct",
+	to_char(min($VALUE)/1000.0, '$FMT') AS "Min", 
+	to_char(round(avg($VALUE))/1000.0, '$FMT') AS "Avg", 
+	to_char(max($VALUE)/1000.0, '$FMT') AS "Max",
+        to_char(median_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "Median",
+        to_char(eighty_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "80%",
+        to_char(ninety_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "90%",
+        to_char(ninety_five_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "95%",
+        to_char(ninety_nine_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "99%"
+From TransactionRecord_$1
+Where EndTime <> 0
+Group By TransactionIndex
+Order By TransactionIndex;
+
+select 'All' AS "TransactCav!@#$%", count(*) AS "Total", count(nullif(Status, 0)) AS "Failed", 
+	count(*)-count(nullif(Status, 0)) AS "Success", 
+	CASE WHEN count(*) > 0 THEN (count(nullif(Status, 0))*100/count(*)) ELSE 0 END AS "FailPct",
+	to_char(min($VALUE)/1000.0, '$FMT') AS "Min", 
+	to_char(round(avg($VALUE))/1000.0, '$FMT') AS "Avg", 
+	to_char(max($VALUE)/1000.0, '$FMT') AS "Max",
+        to_char(median_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "Median",
+        to_char(eighty_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "80%",
+        to_char(ninety_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "90%",
+        to_char(ninety_five_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "95%",
+        to_char(ninety_nine_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "99%"
+From TransactionRecord_$1
+Where EndTime <> 0;
++
+fi
+
+ans=$(($REPORT_MASK & $PAGE_REPORT))
+if [ $ans -ne 0 ]; then
+    echo "Per Page Report. Page names can be found at the bottom" >>$OFILE
+    echo >>$OFILE
+    psql test cavisson >>$OFILE <<+
+select PageIndex AS "Page Index      ", count(*) AS "Total", count(nullif(Status, 0)) AS "Failed", 
+	count(*)-count(nullif(Status, 0)) AS "Success", 
+	CASE WHEN count(*) > 0 THEN (count(nullif(Status, 0))*100/count(*)) ELSE 0 END AS "FailPct",
+	to_char(min($VALUE)/1000.0, '$FMT') AS "Min", 
+	to_char(round(avg($VALUE))/1000.0, '$FMT') AS "Avg", 
+	to_char(max($VALUE)/1000.0, '$FMT') AS "Max",
+        to_char(median_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "Median",
+        to_char(eighty_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "80%",
+        to_char(ninety_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "90%",
+        to_char(ninety_five_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "95%",
+        to_char(ninety_nine_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "99%"
+From PageRecord_$1
+Where EndTime <> 0
+Group By PageIndex
+Order By PageIndex;
+
+select 'All' AS "PCav!@#$%       ", count(*) AS "Total", count(nullif(Status, 0)) AS "Failed", 
+	count(*)-count(nullif(Status, 0)) AS "Success", 
+	CASE WHEN count(*) > 0 THEN (count(nullif(Status, 0))*100/count(*)) ELSE 0 END AS "FailPct",
+	to_char(min($VALUE)/1000.0, '$FMT') AS "Min", 
+	to_char(round(avg($VALUE))/1000.0, '$FMT') AS "Avg", 
+	to_char(max($VALUE)/1000.0, '$FMT') AS "Max",
+        to_char(median_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "Median",
+        to_char(eighty_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "80%",
+        to_char(ninety_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "90%",
+        to_char(ninety_five_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "95%",
+        to_char(ninety_nine_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "99%"
+From PageRecord_$1
+Where EndTime <> 0;
++
+fi
+
+VALUE="CASE WHEN Status != 0 THEN NULL ELSE (RespTime) END"
+ans=$(($REPORT_MASK & $URL_REPORT))
+if [ $ans -ne 0 ]; then
+    echo "Per URL Report. URL names can be found at the bottom" >>$OFILE
+    echo >>$OFILE
+    psql test cavisson >>$OFILE <<+
+select UrlIndex AS "URL Index       ", count(*) AS "Total", count(nullif(Status, 0)) AS "Failed", 
+	count(*)-count(nullif(Status, 0)) AS "Success", 
+	CASE WHEN count(*) > 0 THEN (count(nullif(Status, 0))*100/count(*)) ELSE 0 END AS "FailPct",
+	to_char(min($VALUE)/1000.0, '$FMT') AS "Min", 
+	to_char(round(avg($VALUE))/1000.0, '$FMT') AS "Avg", 
+	to_char(max($VALUE)/1000.0, '$FMT') AS "Max",
+        to_char(median_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "Median",
+        to_char(eighty_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "80%",
+        to_char(ninety_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "90%",
+        to_char(ninety_five_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "95%",
+        to_char(ninety_nine_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "99%"
+From URLRecord_$1
+Where EndTime <> 0
+Group By UrlIndex
+Order By UrlIndex;
+
+select 'All' AS "Cav!@#$%        ", count(*) AS "Total", count(nullif(Status, 0)) AS "Failed", 
+	count(*)-count(nullif(Status, 0)) AS "Success", 
+	CASE WHEN count(*) > 0 THEN (count(nullif(Status, 0))*100/count(*)) ELSE 0 END AS "FailPct",
+	to_char(min($VALUE)/1000.0, '$FMT') AS "Min", 
+	to_char(round(avg($VALUE))/1000.0, '$FMT') AS "Avg", 
+	to_char(max($VALUE)/1000.0, '$FMT') AS "Max",
+        to_char(median_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "Median",
+        to_char(eighty_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "80%",
+        to_char(ninety_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "90%",
+        to_char(ninety_five_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "95%",
+        to_char(ninety_nine_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "99%"
+From URLRecord_$1
+Where EndTime <> 0;
++
+fi
+
+echo "Name Listing of Sessions, Transactions, Pages and URLs" >>$OFILE
+echo >>$OFILE
+ans=$(($REPORT_MASK & $SESS_REPORT))
+if [ $ans -ne 0 ]; then
+    psql test cavisson >>$OFILE <<+
+select SessionIndex AS "Session Index   ", SessionName from SessionTable_$1;
++
+fi
+
+ans=$(($REPORT_MASK & $TX_REPORT))
+if [ $ans -ne 0 ]; then
+    psql test cavisson >>$OFILE <<+
+select TransactionIndex, TransactionName from TransactionTable_$1;
++
+fi
+
+ans=$(($REPORT_MASK & $PAGE_REPORT))
+if [ $ans -ne 0 ]; then
+    psql test cavisson >>$OFILE <<+
+select PageIndex AS "Page Index      ", PageName from PageTable_$1;
++
+fi
+
+ans=$(($REPORT_MASK & $URL_REPORT))
+if [ $ans -ne 0 ]; then
+    psql test cavisson >>$OFILE <<+
+select URLIndex AS "URL Index       ", URLName from URLTable_$1;
++
+fi
+
+grep -v 'Cav!@#$%' $OFILE | grep -v 'row)' | grep -v 'rows)' >$REPORT_FILE_NAME
+mv $REPORT_FILE_NAME $OFILE
+echo "`date +"%F %X"` Exiting method detail_report()"
+}
+
+function fail_report()
+{
+echo "`date +"%F %X"` Method called fail_report()"
+OFILE=$NS_WDIR/logs/TR$1/fail.report
+echo "Detailed Failed Report for Test Run # $1" >$OFILE
+echo >>$OFILE
+echo "Session names, Transaction name, Page names, and Url names can be found at the bottom" >>$OFILE
+echo >>$OFILE
+psql test cavisson >>$OFILE <<+
+select SessionIndex AS "Session", TransactionIndex AS "Trans", PageIndex, URLIndex, Status, HttpResponseCode AS HttpCode
+from URLRecord_$1
+Where Status != 0
+Order By SessionInstance, ChildIndex, PageIndex, UrlIndex
++
+
+echo "Name Listing of Sessions, Transactions, Pages and URLs" >>$OFILE
+echo >>$OFILE
+psql test cavisson >>$OFILE <<+
+select SessionIndex, SessionName from SessionTable_$1;
+select TransactionIndex, TransactionName from TransactionTable_$1;
+select PageIndex, PageName from PageTable_$1;
+select URLIndex, URLName from URLTable_$1;
++
+
+echo "Status Codes for Url, Page Transaction" >> $OFILE
+echo "---------------------------" >> $OFILE
+# We need to print only System error, so print Page Errors
+$NS_WDIR/bin/nsu_get_errors 2 1 | grep -v Undef >>$OFILE
+
+echo "" >>$OFILE
+echo "Status Codes for Session" >> $OFILE
+echo "---------------------------" >> $OFILE
+$NS_WDIR/bin/nsu_get_errors 3 1 >>$OFILE
+
+#Remove last line (row or rows)
+grep -v 'row)' $OFILE | grep -v 'rows)' >$REPORT_FILE_NAME
+mv $REPORT_FILE_NAME $OFILE
+echo "`date +"%F %X"` Exiting method fail_report()"
+}
+
+function user_report()
+{
+echo "`date +"%F %X"` Method called user_report()"
+if [ $WAN_ENV -eq 1 ]; then
+
+#ans=$(($REPORT_MASK & $SESS_REPORT))
+#if [ $ans -ne 0 ]; then
+#    OFILE=$NS_WDIR/logs/TR$1/users_sess.report
+#    echo "Detailed User Report for Test Run # $1" >$OFILE
+#    echo "(All times is seconds)" >>$OFILE
+#    echo >>$OFILE
+#    echo "Session Averages Per User" >> $OFILE
+#    if [ $EXCLUDE -eq 1 ];then
+#    	VALUE="CASE WHEN SessionRecord_$1.Status != 0 THEN NULL ELSE (SessionRecord_$1.EndTime-SessionRecord_$1.StartTime) END"
+#    else
+#    	VALUE="SessionRecord_$1.EndTime-SessionRecord_$1.StartTime"
+#    fi
+#
+#    psql test cavisson >>$OFILE <<+
+#SELECT Location AS "Location", Access AS "Access", 
+#	count(*) AS "Total", 
+#	count(nullif(Status, 0)) AS "Failed", 
+#	count(*)-count(nullif(Status, 0)) AS "Success", 
+#	CASE WHEN count(*) > 0 THEN (count(nullif(Status, 0))*100/count(*)) ELSE 0 END AS "FailPct",
+#	to_char(min($VALUE)/1000.0, '$FMT') AS "Min", 
+#	to_char(round(avg($VALUE))/1000.0, '$FMT') AS "Avg", 
+#	to_char(max($VALUE)/1000.0, '$FMT') AS "Max",
+#        to_char(median_percentile($VALUE)/1000.0, '$FMT') AS "Median",
+#        to_char(eighty_percentile($VALUE)/1000.0, '$FMT') AS "80%",
+#        to_char(ninety_percentile($VALUE)/1000.0, '$FMT') AS "90%",
+#        to_char(ninety_five_percentile($VALUE)/1000.0, '$FMT') AS "95%",
+#        to_char(ninety_nine_percentile($VALUE)/1000.0, '$FMT') AS "99%"
+#FROM SessionRecord_$1
+#WHERE SessionRecord_$1.EndTime <> 0
+#GROUP BY Location, Access
+#ORDER BY Location;
+#+
+#fi
+#grep -v 'row)' $OFILE | grep -v 'rows)' >$REPORT_FILE_NAME
+#mv $REPORT_FILE_NAME $OFILE
+ans=$(($REPORT_MASK & $TX_REPORT))
+if [ $ans -ne 0 ]; then
+    OFILE=$NS_WDIR/logs/TR$1/users_tx.report
+    echo "Detailed User Transaction Report for Test Run # $1" >$OFILE
+    echo "(All times is seconds)" >>$OFILE
+    echo >>$OFILE
+    echo "Tx Averages Per User" >>$OFILE
+    if [ $EXCLUDE -eq 1 ];then
+    	VALUE="CASE WHEN TransactionRecord_$1.Status != 0 THEN NULL ELSE (TransactionRecord_$1.RespTime) END"
+    else
+    	VALUE="TransactionRecord_$1.RespTime"
+    fi
+    psql test cavisson >>$OFILE <<+
+SELECT DISTINCT Location AS "Location", Access AS "Access", 
+	count(*) AS "Total", 
+	count(nullif(TransactionRecord_$1.Status, 0)) AS "Failed", 
+	count(*)-count(nullif(TransactionRecord_$1.Status, 0)) AS "Success",
+	CASE WHEN count(*) > 0 THEN (count(nullif(TransactionRecord_$1.Status, 0))*100/count(*)) ELSE 0 END AS "FailPct",
+	to_char(min($VALUE)/1000.0, '$FMT') AS "Min", 
+	to_char(round(avg($VALUE))/1000.0, '$FMT') AS "Avg", 
+	to_char(max($VALUE)/1000.0, '$FMT') AS "Max",
+        to_char(median_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "Median",
+        to_char(eighty_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "80%",
+        to_char(ninety_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "90%",
+        to_char(ninety_five_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "95%",
+        to_char(ninety_nine_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "99%"
+FROM TransactionRecord_$1, SessionRecord_$1
+WHERE TransactionRecord_$1.SessionIndex = SessionRecord_$1.SessionIndex 
+      AND TransactionRecord_$1.SessionInstance = SessionRecord_$1.SessionInstance
+      AND TransactionRecord_$1.ChildIndex = SessionRecord_$1.ChildIndex 
+      AND TransactionRecord_$1.EndTime <> 0
+GROUP BY Location, Access
+ORDER BY Location;
++
+fi
+
+#Remove last line (row or rows)
+grep -v 'row)' $OFILE | grep -v 'rows)' >$REPORT_FILE_NAME
+mv $REPORT_FILE_NAME $OFILE
+
+ans=$(($REPORT_MASK & $PAGE_REPORT))
+if [ $ans -ne 0 ]; then
+    OFILE=$NS_WDIR/logs/TR$1/users_pg.report
+    echo "Summary Page Report for Test Run # $1" >$OFILE
+    echo "(All times is seconds)" >>$OFILE
+    echo >>$OFILE
+    echo "Page Averages Per User" >>$OFILE
+    if [ $EXCLUDE -eq 1 ];then
+    	VALUE="CASE WHEN PageRecord_$1.Status != 0 THEN NULL ELSE (PageRecord_$1.RespTime) END"
+    else
+    	VALUE="PageRecord_$1.RespTime"
+    fi
+    psql test cavisson >>$OFILE <<+
+    SELECT Location AS "Location", Access AS "Access", 
+	count(*) AS "Total", count(nullif(PageRecord_$1.Status, 0)) AS "Failed", 
+	count(*)-count(nullif(PageRecord_$1.Status, 0)) AS "Success", 
+	CASE WHEN count(*) > 0 THEN (count(nullif(PageRecord_$1.Status, 0))*100/count(*)) ELSE 0 END AS "FailPct",
+	to_char(min($VALUE)/1000.0, '$FMT') AS "Min", 
+	to_char(round(avg($VALUE))/1000.0, '$FMT') AS "Avg", 
+	to_char(max($VALUE)/1000.0, '$FMT') AS "Max",
+        to_char(median_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "Median",
+        to_char(eighty_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "80%",
+        to_char(ninety_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "90%",
+        to_char(ninety_five_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "95%",
+        to_char(ninety_nine_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "99%"
+    FROM PageRecord_$1, SessionRecord_$1
+    WHERE PageRecord_$1.SessionIndex = SessionRecord_$1.SessionIndex AND 
+	PageRecord_$1.SessionInstance = SessionRecord_$1.SessionInstance AND 
+	PageRecord_$1.ChildIndex = SessionRecord_$1.ChildIndex AND 
+	PageRecord_$1.EndTime <> 0
+    GROUP BY Location, Access
+    ORDER BY Location;
++
+#Remove last line (row or rows)
+grep -v 'row)' $OFILE | grep -v 'rows)' >$REPORT_FILE_NAME
+mv $REPORT_FILE_NAME $OFILE
+
+    OFILE=$NS_WDIR/logs/TR$1/users_pg_detail.report
+    echo "Detailed User Page Report for Test Run # $1" >$OFILE
+    echo "(All times is seconds)" >>$OFILE
+    echo >>$OFILE
+    echo "Page Averages Per User" >>$OFILE
+    if [ $EXCLUDE -eq 1 ];then
+    	VALUE="CASE WHEN PageRecord_$1.Status != 0 THEN NULL ELSE (PageRecord_$1.RespTime) END"
+    else
+    	VALUE="PageRecord_$1.RespTime"
+    fi
+
+    psql test cavisson >>$OFILE <<+
+    SELECT SessionName As "Script Name", PageName As "Page Name", Location As "Location Name", Access As "Access Name", 
+	count(*) AS "Total", 
+	count(nullif(PageRecord_$1.Status, 0)) AS "Fail", 
+	count(*)-count(nullif(PageRecord_$1.Status, 0)) AS "Success",
+	CASE WHEN count(*) > 0 THEN (count(nullif(PageRecord_$1.Status, 0))*100/count(*)) ELSE 0 END AS "FailPct",
+	to_char(min($VALUE)/1000.0, '$FMT') AS "Min", 
+	to_char(round(avg($VALUE))/1000.0, '$FMT') AS "Avg", 
+	to_char(max($VALUE)/1000.0, '$FMT') AS "Max",
+        to_char(median_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "Median",
+        to_char(eighty_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "80%",
+        to_char(ninety_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "90%",
+        to_char(ninety_five_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "95%",
+        to_char(ninety_nine_percentile(Cast(($VALUE) As Integer))/1000.0, '$FMT') AS "99%"
+    FROM PageRecord_$1, SessionTable_$1, PageTable_$1, SessionRecord_$1
+    WHERE pageRecord_$1.SessionIndex = SessionTable_$1.SessionIndex AND 
+	PageRecord_$1.PageIndex = PageTable_$1.PageIndex AND 
+	PageRecord_$1.EndTime <> 0 AND 
+	PageRecord_$1.SessionInstance = SessionRecord_$1.SessionInstance AND 
+	PageRecord_$1.ChildIndex = SessionRecord_$1.ChildIndex
+    GROUP BY SessionName , PageName , PageRecord_$1.PageIndex, Location, Access
+    ORDER BY SessionName , PageName , PageRecord_$1.PageIndex, Location, Access
++
+
+#Remove last line (row or rows)
+grep -v 'row)' $OFILE | grep -v 'rows)' >$REPORT_FILE_NAME
+mv $REPORT_FILE_NAME $OFILE
+
+fi
+
+fi  #End of WAN_ENV
+echo "`date +"%F %X"` Exiting method user_report()"
+}
+
+#29/08/17: Gaurav - Added few more fields in pagedetail.report and dumped average of it in secs, bug 32975
+#Handled DNSDuration(when DNS not used) & ConnectDuration(on UDP connection) found negative, bug 32952
+function page_detail_report()
+{
+echo "`date +"%F %X"` Method called page_detail_report()"
+OFILE=$NS_WDIR/logs/TR$1/pagedetail.report
+echo "Detailed Page Report for Test Run # $1 (Percentage may not add to 100% because of truncation)" > $OFILE
+echo >>$OFILE
+echo "Page Time Pct." >> $OFILE
+psql test cavisson >>$OFILE <<+
+SELECT PageIndex, 
+       (CASE WHEN SUM(EndTime - StartTime) > 0 THEN ROUND(AVG(EndTime - StartTime) / 1000.0, 3) ELSE 0 END) AS "TotalTime",
+       (CASE WHEN SUM(EndTime - StartTime) > 0 AND SUM(DNSDuration + ConnectDuration) > 0 THEN ROUND((SUM(DNSDuration + ConnectDuration) * 100) / SUM(EndTime - StartTime), 1) ELSE 0 END) AS "ConnectTimePct",
+       (CASE WHEN SUM(EndTime - StartTime) > 0 AND SUM(DNSDuration + ConnectDuration) > 0 THEN ROUND(AVG(DNSDuration + ConnectDuration) / 1000.0, 3) ELSE 0 END) AS "ConnectTime",
+       (CASE WHEN SUM(EndTime - StartTime) > 0 THEN ROUND((SUM(SSLHandshakeDuration + WriteCompleteDuration) * 100) / SUM(EndTime - StartTime), 1) ELSE 0 END) AS "RequestSentTimePct",
+       (CASE WHEN SUM(EndTime - StartTime) > 0 THEN ROUND(AVG(SSLHandshakeDuration + WriteCompleteDuration) / 1000.0, 3) ELSE 0 END) AS "RequestSentTime",
+       (CASE WHEN SUM(EndTime - StartTime) > 0 THEN ROUND((SUM(FirstByteRcdDuration) * 100) / SUM(EndTime - StartTime), 1) ELSE 0 END) AS "FirstByteTimePct",
+       (CASE WHEN SUM(EndTime - StartTime) > 0 THEN ROUND(AVG(FirstByteRcdDuration) / 1000.0, 3) ELSE 0 END) AS "FirstByteTime",
+       (CASE WHEN SUM(EndTime - StartTime) > 0 THEN ROUND((SUM(RequestCompleteDuration + RenderingDuration) * 100) / SUM(EndTime - StartTime), 1) ELSE 0 END) AS "DownloadTimePct",
+       (CASE WHEN SUM(EndTime - StartTime) > 0 THEN ROUND(AVG(RequestCompleteDuration + RenderingDuration) / 1000.0, 3) ELSE 0 END) AS "DownloadTime"
+FROM UrlRecord_$1
+WHERE EndTime <> 0
+      AND ConnectDuration <> 0
+      AND WriteCompleteDuration <> 0
+      AND FirstByteRcdDuration <> 0
+GROUP By PageIndex
+ORDER By PageIndex;
++
+
+#Remove last line (row or rows)
+grep -v 'row)' $OFILE | grep -v 'rows)' >$REPORT_FILE_NAME
+mv $REPORT_FILE_NAME $OFILE
+echo "`date +"%F %X"` Exiting method page_detail_report()"
+
+}
+
+#Generates file used by Analyze GUI for graphs
+function LocWithAccessAndRespTimeReport()
+{
+  echo "`date +"%F %X"` Method called LocWithAccessAndRespTimeReport()"
+  IFILE=$1
+  OFILE=$NS_WDIR/logs/TR$2/locWithAccessAndRespTime.dat
+  TempFile=/tmp/TempFile.$$
+
+  sed '1,6d' $IFILE | sed '$d' > $TempFile
+
+  cat $TempFile | awk -F\| '{ printf "%s %s %s\n", $1, $2, $8}' > $OFILE
+  cp $OFILE $TempFile
+  # This is done to remove extra spaces in Script and Page Names and other fields
+  cat $TempFile | awk '{ printf "%s %s %s\n", $1, $2, $3}' > $OFILE
+  rm $TempFile
+  echo "`date +"%F %X"` Exiting method LocWithAccessAndRespTimeReport()"
+}
+
+#Generates file used by Analyze GUI for graphs
+function PagesRespTimeReport()
+{
+  echo "`date +"%F %X"` Method called PagesRespTimeReport()"
+  IFILE=$1
+  OFILE=$NS_WDIR/logs/TR$2/pagesRespTime.dat
+  TempFile=/tmp/TempFile.$$
+
+  sed '1,6d' $IFILE | sed '$d' > $TempFile
+
+  cat $TempFile | awk -F\| '{ printf "%s:%s %s %s %s\n", $1, $2, $3, $4, $10}' > $OFILE
+  cp $OFILE $TempFile
+  # This is done to remove extra spaces in Script and Page Names and other fields
+  cat $TempFile | awk '{ printf "%s%s%s %s %s %s\n", $1, $2, $3, $4, $5, $6}' > $OFILE
+  rm $TempFile
+  echo "`date +"%F %X"` Exiting method PagesRespTimeReport()"
+}
+
+
+#Bug fixed - 3714
+# Here we doing this because in on-line mode before updation of database nsu_post_proc is called,
+# That's why user_report function is not able to give correct output because database is not updated.
+wait_for_database_update()
+{
+  PID=`ps -ef |grep logging_reader | grep $1 | awk -F' ' '{print $2}' `
+ 
+  while true 
+  do 
+    kill -s 0 $PID >/dev/null 2>&1
+    if [ $? != 0 ];then
+      break
+    fi
+    echo "Logging reader is writing in database.Please wait..."
+    sleep 2
+  done
+}
+
+wait_for_database_update $1
+
+SYS_CONFIG=`nsi_show_config`
+
+if [ "X$SYS_CONFIG" != "XNDE" ]; then
+#  detail_report $1 --Commented as this is taking lot of time bug#5761
+  fail_report $1 
+  user_report $1
+  page_detail_report $1
+fi
+
+#Added in 3.7.7 release to generate tansaction errors count data file
+mkdir -p $NS_WDIR/logs/TR$1/ready_reports
+nsi_get_tx_status_count "--testrun" $1 > $NS_WDIR/logs/TR$1/ready_reports/trans_errors.dat
+
+if [ "X$SYS_CONFIG" != "XNDE" ]; then
+  LocWithAccessAndRespTimeReport $NS_WDIR/logs/TR$1/users_pg.report $1
+  PagesRespTimeReport $NS_WDIR/logs/TR$1/users_pg_detail.report $1
+fi
+
+exit 0

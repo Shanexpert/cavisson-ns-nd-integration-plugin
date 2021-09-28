@@ -1,0 +1,8 @@
+# --- GDF Version History ---
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS API Gateway Count Stats|11265|vector|1|0|AWS Metrics|AccountName>Region|Amazon API Gateway is an AWS service for creating, publishing, maintaining, monitoring, and securing REST, HTTP, and WebSocket APIs at any scale. 
+
+Graph|AWS API Gateway Count|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number call to API methods.

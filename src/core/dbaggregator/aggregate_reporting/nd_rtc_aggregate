@@ -1,0 +1,62 @@
+#This shell send a signal to aggregate parent to apply rtc
+#aprofname and action is dumped in a file with the help of this shell
+aprof_name=$1
+action=$2
+
+#check for valid option
+if [ "$action" == "start" -o "$action" == "stop" -o "$action" == "restart" -o "$action" == "status" ];then
+  echo ""
+else
+ echo "Invalid Action: FORMAT <start> <stop> <restart>"
+ exit
+fi
+
+#set docroot prefix
+Controller_name=`echo $HPD_ROOT |cut -d'/' -f3`
+if [ "$Controller_name" == "www" ];then
+  docroot_prefix=/home/netstorm/work/
+else
+  docroot_prefix=/home/netstorm/$Controller_name/
+fi
+
+#now write aprof and action in a file
+echo "$aprof_name $action" > $docroot_prefix/.tmp/nv_aggregate.rtc
+
+#send signal to parentid..
+ppid=`cat $docroot_prefix/.tmp/.aggregator_pid`
+if [ "X$ppid" == "X" ];then
+  echo "Aggregator parent pid is NULL"
+  exit
+fi
+
+#check pid is in numeric format or not
+#validate the pid,,only numeric value is allowed
+case $ppid in
+    ''|*[!0-9]*) echo "PID should be numeric"; exit;;
+    *);;
+esac
+`kill -34 $ppid`
+
+
+#In case of status action we need to check the status from status file and need to print that. 
+status_file=$docroot_prefix/.tmp/.${aprof_name}.$ppid.status
+#echo "status_file=$status_file}" >&2
+for((i = 0; i < 30; i++))
+do 
+   #check file if present then print the status and exit. 
+   if [ -f $status_file ];then
+     cat $status_file 
+     #remove the status_file
+     rm $status_file
+     exit 
+   fi;
+   sleep 1 
+done;
+#If status file not found then set error. 
+#TODO: currently it will set as not running.
+echo "Unable to get parser status"
+#remove the status_file
+rm $status_file
+
+
+

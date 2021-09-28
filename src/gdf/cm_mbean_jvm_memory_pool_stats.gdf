@@ -1,0 +1,34 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+#
+# Note: Please Use the Group Name and Graph Name having no special character like {%, !, ^, &, + } etc..
+
+# General information line
+# Info|msgVersion|numGroups|startIndex|testRun|sizeOfMsgData|interval|testRunStartDate/Time
+#
+# Group information line
+# Group|groupName|rptGrpId|groupType|numGraphs|numVectors
+#
+# Graph information line
+# Graph|graphName|rptId|graphType|dataType|graphDataIndex|formula|numVectors
+
+# ---  Mbean Reference Link :https://docs.oracle.com/javase/7/docs/api/java/lang/management/MemoryPoolMXBean.html --- #
+# This Mbean is applicable to all JVM #
+
+
+Group|JVM Memory Pool Stats|11029|vector|6|0|JVM Metrics|Tier>Server>Instance>Name|This stats provides information about memory statistics.
+
+Graph|JVM Collection Usage Used (Bytes)|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Memory usage of this memory pool after the Java virtual machine most recently expended effort in recycling unused objects in bytes.
+
+Graph|JVM Peak Usage Used (Bytes)|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Peak memory usage of this memory pool since the Java virtual machine was started in bytes.
+
+Graph|JVM Usage Used (Bytes)|3|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The memory usage of this memory pool in bytes.
+
+Graph|JVM Collection Usage Committed (Bytes)|4|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Amount of collection usage committed memory in bytes.
+
+Graph|JVM Peak Usage Committed (Bytes)|5|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Amount of Peak usage committed memory in bytes.
+
+Graph|JVM Usage Used Committed (Bytes)|6|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Amount of Usage used committed memory in bytes.

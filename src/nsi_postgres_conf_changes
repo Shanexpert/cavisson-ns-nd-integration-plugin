@@ -1,0 +1,26 @@
+#!/bin/bash
+
+#Get DISTRO and RELEASE
+DISTRO=$(./nsi_get_linux_release_ex -d)
+RELEASE=$(./nsi_get_linux_release_ex -r)
+
+if [[ $DISTRO == "Ubuntu" &&  $RELEASE -eq 1604 ]];then
+  POSTGRESQL_VERSION=9.5
+else
+  POSTGRESQL_VERSION=9.1
+fi
+
+export POSTGRESQL_VERSION
+
+. /root/netstorm_libs/nsi_install_utils
+
+#Get Postgres conf location based on distro
+if [[ $DISTRO == "Fedora" ]];then
+  POSTGRESQLCONF=/var/lib/pgsql/data/postgresql.conf
+elif [[ $DISTRO == "Ubuntu" ]];then
+  POSTGRESQLCONF=/etc/postgresql/$POSTGRESQL_VERSION/main/postgresql.conf
+fi
+
+tune_postgres
+
+exit 0

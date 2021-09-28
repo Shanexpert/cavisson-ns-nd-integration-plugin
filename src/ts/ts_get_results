@@ -1,0 +1,73 @@
+#!/bin/bash
+
+. $NS_WDIR/bin/ts_ip_lib
+
+ts_debug_log "ts_get_results - starts"
+
+if [ "XX" = "XX$NS_WDIR" ]
+then
+  NS_WDIR=/home/cavisson/work
+fi
+
+if [ "XX" != "XX$1" ]
+then
+  TSR_NUM=$1
+fi
+
+if [ "XX" != "XX$2" ]
+then
+  TEST_RUN_NUM=$2
+fi
+
+GUI_DATA_FILE=$NS_WDIR/logs/TR$TEST_RUN_NUM/gui.data
+
+if [ ! -f $GUI_DATA_FILE ];then
+  echo "gui.data file is not present for TestRun=$TEST_RUN_NUM" 
+  exit 1
+fi
+
+get_graph_values()
+{
+  GROUP_NAME=$1
+  GRAPH_NAME=$2
+  FIELD=$3
+
+  line=`egrep "^$GROUP_NAME" $GUI_DATA_FILE`
+  if [ "XX$line" = "XX" ]
+  then
+    echo "Group Name '$GROUP_NAME' not found in gui.data file"
+    return
+  fi
+  value=`echo $line | cut -d '=' -f$FIELD | cut -d ',' -f1 `
+  if [ "XX$value" = "XX" ]
+  then
+    echo "Graph value for '$GROUP_NAME - $GRAPH_NAME' not found in gui.data file"
+    return
+  fi
+  echo $value
+}
+
+NSAdminIP=`get_NS_admin_ip`
+NOAdminIP=`get_NO_admin_ip`
+
+URLHits=`get_graph_values "URL Hits:" "URL Hits/Second" 2`
+URLFail=`get_graph_values "URL Failures:" "Failed URL Responses (All Errors)/Second" 2` 
+TCPTx=`get_graph_values "Network Throughput:" "TCP Send Throughput (Kbps)" 2`
+TCPRx=`get_graph_values "Network Throughput:" "TCP Receive Throughput (Kbps)" 3`
+EthTx=`get_graph_values "Network Throughput:" "Ethernet Send Throughput (Kbps)" 4`
+EthRx=`get_graph_values "Network Throughput:" "Ethernet Receive Throughput (Kbps)" 5`
+TCPConOpen=`get_graph_values "Network Throughput:" "TCP Connections Open/Sec" 8`
+TCPConClose=`get_graph_values "Network Throughput:" "TCP Connections Close/Sec" 9`
+CPU_BUSY_NS=`get_graph_values "Server System Stats - $NSAdminIP:" "System CPU Busy (%)" 2`
+CPU_BUSY_NO=`get_graph_values "Server System Stats - $NOAdminIP:" "System CPU Busy (%)" 2`
+
+export testresult_data_file=$NS_WDIR/logs/tsr/$LOG_CYCLE_DIR_NAME/$TSR_NUM/testresults.data
+if [ ! -f $testresult_data_file ];then 
+  echo "TestCaseName|TestRun|URLHits|URLFail|TCP_TX|TCP_RX|ETH_TX|ETH_RX|OPEN/SEC|CLOSE/SEC|CPU_BUSY_NS|CPU_BUSY_NO" > $testresult_data_file 
+fi
+
+TEST_CASE_NAME=`basename $TEST_CASE_DIR`
+echo "$TEST_CASE_NAME|$TEST_RUN_NUM|$URLHits|$URLFail|$TCPTx|$TCPRx|$EthTx|$EthRx|$TCPConOpen|$TCPConClose|$CPU_BUSY_NO|$CPU_BUSY_NS" >> $testresult_data_file
+
+ts_debug_log "ts_get_results - ends"
+exit 0

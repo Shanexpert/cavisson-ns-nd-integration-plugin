@@ -1,0 +1,83 @@
+#!/bin/bash
+
+usage()
+{
+  echo 
+  echo "ERROR: $*"
+  echo 
+  echo "Usage:"
+  echo "$0 --service <service_name> --action <start/stop/show/logpath>"
+  echo 
+  echo "Where"
+  echo "  --service is one of the following service names"
+  echo "     ndc"
+  echo "     ndp"
+  echo "     nddbu"
+  echo "     nsdbu"
+  echo "     lps"
+  echo "     logging_reader"
+  echo "     tomcat"
+  echo "     postgresql"
+  echo "     netstorm"
+  echo "     cmon"             
+  echo "     netchannel"             
+  echo 
+  echo "  --action is one of the following actions"
+  echo "     start
+  echo "     stop
+  echo "     restart
+  echo "     show
+  echo "     logpath"
+  echo 
+  exit 1
+}
+
+chk_args_of_option()
+{
+  if [ "X$2" == "X" ];then
+    usage "Option $1 required a value."
+    exit -1
+  fi
+}
+
+
+chk_args()
+{
+  #debug_logs "Method debug_logs called."
+  if [ "X$SERVICE" = "X" ]; then
+    usage "Mandatory argument service is missing"
+
+  elif [ "X$SERVICE" != "Xndc" -a "X$SERVICE" != "Xnddbu" -a "X$SERVICE" != "Xnsdbu" -a "X$SERVICE" != "Xlps" -a "X$SERVICE" != "Xlogging_reader" -a "X$SERVICE" != "Xtomcat" -a "X$SERVICE" != "Xpostgresql" -a "X$SERVICE" != "Xnetstorm" -a "X$SERVICE" != "Xcmon" -a "X$SERVICE" != "Xnch" ];then
+    usage "Invalid service $SERVICE"
+  fi
+
+  if [ "X$ACTION" == "X" ]; then
+    usage "Mandatory argument action is missing"
+  elif [ "X$ACTION" != "Xstart" -a "X$ACTION" != "Xstop" -a "X$ACTION" != "Xshow" -a "X$ACTION" != "Xstatus" -a "X$ACTION" != "Xforcestop" ];then
+    usage "Invalid action $ACTION"
+  fi
+}
+
+
+while [ "$1" != "" ];do
+ # debug_logs "ARGS=$1"
+  case $1 in
+    "--service")
+        shift
+        chk_args_of_option "--service" "$1"
+        SERVICE=$1;;
+    "--action")
+        shift
+        chk_args_of_option "--action" "$1"
+        ACTION=$1;;
+    --*) usage "Invalid options";;
+    *) usage ;;
+  esac
+  shift
+done
+
+chk_args
+
+service $SERVICE $ACTION
+
+exit $?

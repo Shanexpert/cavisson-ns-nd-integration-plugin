@@ -1,0 +1,220 @@
+#
+# Name     : nsu_alias_ip_addr
+# Author   : Sanjay Gupta
+# Purpsose : Allow users to assign alias IP address to netstorm machine.
+#
+# Usage    : nsu_alias_ip_addr <class-name> <no-of-addresses> [start-address] [end-address]
+#   eg. nsu_alias_ip_addr C 254 192.168.0.1 192.168.0.254 eth0 1
+#       nsu_alias_ip_addr A 10000
+#
+# Modification History:
+#   01/28/06:Sanjay - Initial Version
+#
+#!/bin/sh
+
+# Check, is Environment variable properly set, if not then set it
+if [ "XX" = "XX$NS_WDIR" ];then
+  NS_WDIR=/home/cavisson/work
+fi
+
+# Check for No. of arguments
+#if [ $# -ne 2 -a $# -ne 6 ];then
+if [ $# -ne 6 ];then
+  echo "Error: Invalid number of arguments."
+  exit 1
+fi
+
+# Check for Class Name is according to no. of arguments
+if [ $# -eq 2 -a $1 != "A" -o  $# -eq 4 -a  $1 != "B" -a $1 != "C" ];then
+  echo  "Error: Invalid number of arguments or Invalid class name."
+  exit 1
+fi
+
+# Initialize variables with command line arguments
+CLASS=$1
+NADDR=$2
+if [ $CLASS != "A" ];then
+  SADDR=$3
+  EADDR=$4
+fi
+
+# Check for no. of addresses according to Class
+if [ $CLASS == "A" -a $NADDR -gt 16646166 -o $CLASS == "B" -a $NADDR -gt 65024 -o $CLASS == "C" -a $NADDR -gt 254 ];then
+  echo "Error: Invalid number Of addresses."
+  exit 1
+fi
+
+checkIPPattern()
+{
+  # Check the IP address pattern, whether it contain four octet(must be integer value) seperated with dot(.)
+
+  echo $SADDR | grep '^\([0-9]\{1,3\}\.\)\{3\}[0-9]\{1,3\}$'>>/dev/null
+  if [ $? -ne 0 ];then
+    echo "Error: start-address is in invalid format."
+    exit 1
+  fi
+
+  echo $EADDR | grep '^\([0-9]\{1,3\}\.\)\{3\}[0-9]\{1,3\}$'>>/dev/null
+  if [ $? -ne 0 ];then
+    echo "Error: end-address is in invalid format."
+    exit 1
+  fi
+}
+
+initializeOctet()
+{
+  # Initialize variables with each octet of start-address
+  XSPART=`echo $SADDR | cut -f1 -d '.'`
+  YSPART=`echo $SADDR | cut -f2 -d '.'`
+  ZSPART=`echo $SADDR | cut -f3 -d '.'`
+  WSPART=`echo $SADDR | cut -f4 -d '.'`
+
+  # Initialize variables with each octet of end-address
+  XEPART=`echo $EADDR | cut -f1 -d '.'`
+  YEPART=`echo $EADDR | cut -f2 -d '.'`
+  ZEPART=`echo $EADDR | cut -f3 -d '.'`
+  WEPART=`echo $EADDR | cut -f4 -d '.'`
+}
+
+valClassB()
+{
+  # Validate start-addresse and end-address of Class B
+  # - First octet of each address must be 172
+  # - Second octet of each address must be between 16 and 31, and must be same
+  # - Third octet of each address must be between 0 and 255(Including 0 and 255),and third octet of start-address mustbe less than or equal to third octet of end-address
+  # - Fourth octet of each address must be between 0 and 255, and if third octet of start-address and end-address are same then fourth octet of start-address must be less than or equal to fourth octet of end-address
+
+  if [ ! \( $XSPART -eq 172 -a $XEPART -eq 172 \) ];then
+    echo "Error: Invalid IP address."
+    exit 1
+  fi
+
+  if [ ! \( $YSPART -ge 16 -a $YSPART -le 31 -a $YEPART -ge 16 -a $YEPART -le 31 -a $YSPART -eq $YEPART \) ];then
+    echo "Error: Invalid IP address."
+    exit 1
+  fi
+
+  if [ ! \( $ZSPART -ge 0 -a $ZSPART -le 255 -a $ZEPART -ge 0 -a $ZEPART -le 255 -a $ZSPART -le $ZEPART \) ];then
+    echo "Error: Invalid IP address."
+    exit 1
+  fi
+
+  if [ ! \( $WSPART -ge 1 -a $WSPART -le 254 -a $WEPART -ge 1 -a $WEPART -le 254 \) ];then
+    echo "Error: Invalid IP address."
+    exit 1
+  fi
+
+  if [  $ZSPART -eq $ZEPART -a ! \( $WSPART -le $WEPART \) ];then
+    echo "Error: Invalid IP address."
+    exit 1
+  fi
+}
+
+valClassC()
+{
+  # Validate start-addresse and end-address of Class C
+  # - First octet of each address must be 192
+  # - Second octet of each address must be 168
+  # - Third octet of each address must be between 0 and 255(Including 0 and 255), and must be same
+  # - Fourth octet of each address must be between 0 and 255, and fourth octet of start-address must be less than or equal to fourth octet of end-address
+
+  if [ ! \( $XSPART -eq 192 -a $XEPART -eq 192 \) ];then
+    echo "Error: Invalid IP address."
+    exit 1
+  fi
+
+  if [ ! \( $YSPART -eq 168 -a $YEPART -eq 168 \) ];then
+    echo "Error: Invalid IP address."
+    exit 1
+  fi
+
+  if [ ! \( $ZSPART -ge 0 -a $ZSPART -le 255 -a $ZEPART -ge 0 -a $ZEPART -le 255 -a $ZSPART -eq $ZEPART \) ];then
+    echo "Error: Invalid IP address."
+    exit 1
+  fi
+
+  if [ ! \( $WSPART -ge 1 -a $WSPART -le 254 -a $WEPART -ge 1 -a $WEPART -le 254 -a $WSPART -le $WEPART \) ];then
+    echo "Error: Invalid IP address."
+    exit 1
+  fi
+}
+
+if [ $CLASS != "A" ];then
+  checkIPPattern
+else
+  SADDR=10.0.0.1
+  EADDR=10.255.255.254
+fi
+
+initializeOctet
+
+if [ $CLASS == "B" ];then
+  valClassB
+fi
+
+if [ $CLASS == "C" ];then
+  valClassC
+fi
+
+START_EXT=$6
+echo "start EXT is $START_EXT"
+ 
+INTERFACE=$5
+echo "Interface is $INTERFACE"
+ 
+EXT=$START_EXT
+echo "start EXT is $EXT"
+
+#COUNT variable is used to count how many ip addresses are written in file
+COUNT=0
+
+#TEMPWEPART variable is used for class B type address, when 3rd octet of start-address will be less than 3rd octet of end-address, to store the value of 4th octet of end-address given by command line. for this situation below every iteration for 4th loop will iterate upto 254 except last iteration ( when 3rd octet of start-address will be equal to the 3rd octet of end-address)
+TEMPWEPART=$WEPART
+if [ $CLASS == "B" -a $ZSPART -lt $ZEPART ];then
+  WEPART=254
+fi
+  
+echo "#!/bin/sh" >/tmp/set_ip
+echo "#!/bin/sh" >/tmp/del_ip
+rm -f /tmp/ip_file
+for x in `seq $XSPART $XEPART`
+do
+  for y in `seq $YSPART $YEPART`
+  do
+    for z in `seq $ZSPART $ZEPART`
+    do
+      if [ $CLASS == "B" -a $z -eq $ZEPART ];then
+      WEPART=$TEMPWEPART
+      fi
+
+      # For Class B type address, when 3rd octet of start-address will be less than 3rd octet of end-address. In this situation every iteration for 4th loop will start by 1 except 1st iteration
+      if [ $COUNT -gt 0 ];then
+        WSPART=1
+      fi
+
+      for w in `seq $WSPART $WEPART`
+      do
+        echo "ifconfig $INTERFACE:$EXT $x.$y.$z.$w" >>/tmp/set_ip
+        echo "ifconfig $INTERFACE:$EXT down" >>/tmp/del_ip
+        echo "$x.$y.$z.$w" >>/tmp/ip_file
+        EXT=`expr $EXT + 1`
+        COUNT=`expr $COUNT + 1`
+
+        #When number of addresses written to file is equal to given number of ip addresses then normaly exit, because now no need to write more addresses in file
+        if [ $COUNT -eq $NADDR ];then
+          echo "File successfully written"
+          chmod +x /tmp/set_ip
+          chmod +x /tmp/del_ip
+          exit 0
+        fi
+      done
+    done
+  done
+done
+
+chmod +x /tmp/set_ip
+chmod +x /tmp/del_ip
+
+#When number of addresses written to file is less than given number of ip addresses then it display message about how many ip addresses have been written to file
+echo "Only $COUNT IP address(es) has been written"
+exit 0

@@ -1,0 +1,12 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|VMWare ESXi Host CPU Stats|10249|vector|5|0|VMWare Metrics|Tier>Server>Instance|VMWare ESXi Host CPU Stats
+
+Graph|CPU Usage (Percentage)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|CPU usage as a percentage over the collected interval.
+Graph|CPU Usage in MHz|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|CPU usage in MHz over the collected interval. For hosts this can be represented on a per Virtual Machine basis as a stacked graph.
+Graph|CPU Utilization (Percentage)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|CPU utilization as a percentage during the interval (CPU usage and CPU utilization may be different due to power management technologies or hyper-threading).
+Graph|CPU Core utilization (average)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|CPU utilization of the corresponding core (if hyper-threading is enabled) as a percentage during the interval.
+Graph|Total CPU capacity in MHz|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total CPU capacity reserved by and available for virtual machines.

@@ -1,0 +1,525 @@
+#!/bin/bash
+
+#######################################################################################################
+# Name   : nsi_db_get_tx_sess_data
+# Purpose: To get pages response data part of transaction or session
+# Syntax : See usage
+# Modified version:
+#   Author: Nikita Pandey
+#   Date: 15 April 2012
+# Examples:
+# Tx - No Filter
+#    /home/cavisson/work/bin/nsi_db_get_tx_sess_data  --testrun 21060 --object 2 --status -2 --object_name FN01_Kitchen --trans FN01_Kitchen 
+# Tx - Phase filter
+#    /home/cavisson/work/bin/nsi_db_get_tx_sess_data  --testrun 21060 --object 2 --status -2 --phaseidx 2 --object_name FN01_Kitchen --trans FN01_Kitchen 
+# Tx - start and end time filter
+#    /home/cavisson/work/bin/nsi_db_get_tx_sess_data  --testrun 21060 --object 2 --status -2 --starttime 0 --endtime 3189000 --object_name FN01_Kitchen --trans FN01_Kitchen
+#
+#
+#
+#
+# This is a sample query for transaction 'FN01_BedBath' when multiple filters are used
+# In this following filters are used:
+#   Location = Houston, StartTime >= 10 Min, EndTime <= 20 Min, PhaseIndex = 2, RespTime >= 70, Status >= 0
+#SELECT PageName AS "Page Name",inq.* 
+#FROM 
+#(
+#    SELECT PageRecord_21060.PageIndex, count(*) AS "Total", round(avg(PageRecord_21060.RespTime)) AS "Avg Page Response Time"
+#    FROM PageRecord_21060, TransactionTable_21060, SessionRecord_21060, TransactionRecord_21060
+#    WHERE 
+#        TransactionTable_21060.TransactionName = 'FN01_BedBath' 
+#        AND SessionRecord_21060.Location = 'Houston'
+#        AND PageRecord_21060.StartTime >= 600000 AND PageRecord_21060.EndTime <= 1200000
+#        AND PageRecord_21060.PhaseIndex = 2
+#        AND TransactionRecord_21060.RespTime >= 70
+#        AND TransactionRecord_21060.Status >= 0
+#        AND PageRecord_21060.TransactionIndex = TransactionTable_21060.TransactionIndex
+#        AND PageRecord_21060.SessionInstance = SessionRecord_21060.SessionInstance 
+#        AND PageRecord_21060.ChildIndex = SessionRecord_21060.ChildIndex 
+#        AND TransactionRecord_21060.TransactionIndex = TransactionTable_21060.TransactionIndex 
+#        AND TransactionRecord_21060.SessionInstance = SessionRecord_21060.SessionInstance 
+#        AND TransactionRecord_21060.ChildIndex = SessionRecord_21060.ChildIndex
+#    GROUP BY PageRecord_21060.pageIndex 
+#)  inq, PageTable_21060
+#WHERE inq.PageIndex = PageTable_21060.PageIndex
+#ORDER BY PageName
+# Result >>
+#Page Name | pageindex | Total | Avg Page Response Time
+#-----------+-----------+-------+------------------------
+# bed_bath  |        41 |     3 |                     77
+#
+# Table Used
+# Always -> 
+#----------------------------------------------------------
+#  TransactionRecord  | PageRecord        | SessionRecord |
+#---------------------------------------------------------
+#  ChildIndex         | ChildIndex        | ChildIndex    |
+#  --                 | SessionIndex      | SessionIndex  |
+#  TransactionIndex   | TransactionIndex  | --            |
+#  --                 | PageIndex         | --            |
+#  --                 | --                | Location      |
+#  --                 | --                | Browser       |
+#  --                 | --                | Access        |
+#                     |                   |               |
+#                     |                   |               |
+#---------------------------------------------------------
+#
+#---------------------------------------------------------
+#  TransactionTable   | PageTable         | SessionTable  |
+#---------------------------------------------------------
+#  TransactionIndex   | PageIndex         | SessionIndex  |
+#  TransactionName    | PageName          | SessionName   |
+#                     |                   |               |
+#                     |                   |               |
+#----------------------------------------------------------
+#
+#--------------------------------------------
+#Column            | TPRC |  PRC | SRC | TRC |
+#--------------------------------------------
+#TestIndex         | Y    |  Y   | Y   | Y   |
+#ChildIndex        | Y    |  Y   | Y   | Y   |
+#TransactionIndex  | Y    |  Y   | N   | Y   |
+#TxInstance        | Y    |  Y   | N   | N   |
+#PageIndex         | Y    |  Y   | N   | N   |
+#PageInstance      | Y    |  Y   | N   | N   |
+#Sessionindex      | Y    |  Y   | Y   | Y   |
+#SessionInstance   | Y    |  Y   | Y   | Y   |
+#UserIndex         | N    |  N   | N   | N   |
+#--------------------------------------------
+# Where TPRC = TransPageRecord               |
+#       PRC  = PageRecord                    |
+#       SRC  = SessionRecord                 |
+#       TRC  = TransactionRecord             |
+#       Y    = Column exists                 |
+#       N    = Column does not exist         |
+#--------------------------------------------
+
+# Filter              Join TransactionTable or
+#                    SessionTablePageRecord with
+# ----------------------------------
+# Loc/Acc/Brow        SessionRecord
+# Response Time       Transaction Record
+# Status              Transaction Record
+# StartTime/EndTime   PageRecord
+# Phase               PageRecord
+# ScriptName          SessionRecord and SessionTable
+# TransactionName     PageRecord and TransactionTable
+#
+# Case of user TransPageRecord Table
+#
+########################################################################################################
+#
+#
+######################################################################
+#                     Variables and init settings
+#####################################################################
+
+# Including nsi_db_utils
+. $NS_WDIR/bin/nsi_db_utils
+
+# Set default values of variables
+TRNUM=""
+OBJECT=""
+LOCATION="All"
+ACCESS="All"
+BROWSER="All"
+SCRIPT=""
+LOC_FLAG=0
+
+DEBUG=0 # 0 --> off
+        # 1 --> on
+
+SELECT=""
+
+usage()
+{
+  echo "$*"
+  echo "$0 --testrun <value> --object <value> --object_name <value> --location <value> --access <value> --browser<value> --phaseidx<value> --trans<value> --script<value> --status<value> --starttime<value> --resptimeqmode<value>"
+  echo ""
+  echo "WHERE"
+  show_test_run_usage
+  show_object_run_usage 
+  show_location_run_usage 
+  show_access_run_usage 
+  show_browser_run_usage 
+  show_phaseidx_run_usage 
+  show_trans_run_usage
+  show_script_run_usage 
+  show_status_run_usage 
+  show_starttime_run_usage 
+  show_resptimeqmode_run_usage 
+  exit 1
+}
+
+chk_args()
+{
+  if [ "X$TRNUM" == "X" ]; then
+    usage "Test run argument is missing"
+  fi
+  if [ "X$OBJECT" == "X" ]; then
+    usage "Object argument is missing"
+  fi
+  if [ $OBJECT -eq 2 -a "X$TRANS" == "X" ]; then
+    usage "trans argument is missing"
+  fi
+  if [ $OBJECT -eq 3 -a "X$SCRIPT" == "X" ]; then
+    usage "script argument is missing"
+  fi
+}
+
+########################################################################
+#                            calling functions
+########################################################################
+#args: TR-NUM Parent-obj-type obj-name loc-selection acc-selection run-time-flag
+
+ARGS=$*
+#echo "ARGS=$ARGS"
+if [ "X$1" == "X" ];then
+  usage
+fi
+
+while [ "$1" != "" ];do
+  debug_logs "ARGS=$1"
+  case $1 in
+    "--testrun")
+        shift
+        TRNUM=$1;;
+    "--object")
+        shift
+        OBJECT=$1;;
+    "--location")
+        shift
+        LOCATION=$1;;
+    "--access")
+        shift
+        ACCESS=$1;;
+    "--browser")
+        shift
+        BROWSER=$1;;
+    "--status")
+        shift
+        STATUS=$1;;
+    "--script")
+        shift
+        SCRIPT=$1;;
+    "--trans")
+        shift
+        TRANS=$1;;
+    "--starttime")
+        shift
+        STARTTIME=$1;;
+    "--endtime")
+        shift
+        ENDTIME=$1;;
+    "--abs_starttime")
+        shift
+        ABS_STARTTIME=$1;;
+    "--abs_endtime")
+        shift
+        ABS_ENDTIME=$1;;
+    "--responsetime")
+        shift
+        RESPONSETIME=$1;;
+    "--resptimeqmode")
+        shift
+        RESPTIMEQMODE=$1;;
+    "--responsetime2")
+        shift
+        RESPONSETIME2=$1;;
+    "--phaseidx")
+        shift
+        PHASEIDX=$1;;
+    "--debug_level")
+        shift
+        set_debug_level $1;;
+    "--generatorid")
+        shift
+        GENERATORID=$1;;
+
+    --*) usage "Invalid options";;
+    *) usage ;;
+  esac
+  shift
+done
+
+debug_logs "TRNUM = $TRNUM, OBJECT = $OBJECT, PAGEIDX = $PAGEIDX, RUNPHASE=$RUNPHASE, ACCESS = $ACCESS, LOCATION = $LOCATION, STATUS = $STATUS, SCRIPT = $SCRIPT, STARTTIME = $STARTTIME, ENDTIME = $ENDTIME"
+
+
+#Cheking mantatory arguments
+chk_args
+
+#checking the version and build for setting timestamp in MS
+set_testrun_version_and_build $TRNUM
+if [ \( $VERSION -lt 414 \) -o \( $VERSION -eq 414 -a $BUILD -le 20 \) ]; then
+  $0_old_tr $ALL_ARG
+  exit 0
+fi
+
+set_query_files $TRNUM
+
+handle_time_filters_in_ms $TRNUM
+
+JOIN_SESSION_RECORD=0
+FROM_SESSION_RECORD=0
+#Arguments for this methods are:
+# For OBJECT 2 "TransactionIndex" "TransactionTable" "TransactionRecord" "TransactionName" "SessionTable"
+# For OBJECT 3 "SessionIndex"     "SessionTable"     "SessionRecord"     "SessionName"     "TransactionTable"
+#                   $1                 $2                 $3                  $4                $5
+set_where_for_filter()
+{
+#Note -> Do not delete spaces before AND or add after AND etc as it is used for indentation
+
+  # First set for all cases
+
+  INQ_FROM="  FROM PageRecord_$TRNUM, $2_$TRNUM"
+
+  if [ $OBJECT -eq 2 ]; then
+    INQ_WHERE="WHERE $2_$TRNUM.$4 = ""'"$TRANS"'"
+    if [ "$3" = "TransPageRecord" ]; then
+      INQ_WHERE="  $INQ_WHERE
+    AND TransPageRecord_$TRNUM.$1 = $2_$TRNUM.$1"
+    INQ_WHERE="  $INQ_WHERE
+    AND TransPageRecord_$TRNUM.PageInstance = PageRecord_$TRNUM.PageInstance"
+    else 
+      INQ_WHERE="  $INQ_WHERE
+    AND PageRecord_$TRNUM.$1 = $2_$TRNUM.$1"
+    fi
+    INQ_FROM="$INQ_FROM, $3_$TRNUM"
+    TRANSPAGERECORD_TABLE_FLAG=1
+    INQ_WHERE="  $INQ_WHERE
+    AND $3_$TRNUM.SessionInstance = PageRecord_$TRNUM.SessionInstance"
+    INQ_WHERE="  $INQ_WHERE
+    AND $3_$TRNUM.ChildIndex = PageRecord_$TRNUM.ChildIndex"
+  else
+
+    INQ_WHERE="  WHERE PageRecord_$TRNUM.$1 = $2_$TRNUM.$1"
+    INQ_WHERE="$INQ_WHERE
+    AND $2_$TRNUM.$4 = ""'"$SCRIPT"'"
+  fi
+
+
+  # Add for Start/End Time and phaseidx filter
+  if [ "X$PHASEIDX" != "X" ];then
+    INQ_WHERE="$INQ_WHERE
+    AND PageRecord_$TRNUM.PhaseIndex = $PHASEIDX "
+  fi
+
+  # Add for  Location, Access and  Browser filter
+  if [ "X$LOCATION" != "XAll" -o "X$ACCESS" != "XAll"  -o "X$BROWSER" != "XAll" ];then
+
+    FROM_SESSION_RECORD=1
+    JOIN_SESSION_RECORD=1
+
+    if [ "X$LOCATION" != "XAll" ];then
+      INQ_WHERE="$INQ_WHERE 
+    AND SessionRecord_$TRNUM.Location = ""'"$LOCATION"'"
+    fi
+
+    if [ "X$ACCESS" != "XAll" ];then
+      INQ_WHERE="$INQ_WHERE 
+    AND SessionRecord_$TRNUM.Access = ""'"$ACCESS"'"
+    fi
+
+    if [ "X$BROWSER" != "XAll" ];then
+      INQ_WHERE="$INQ_WHERE 
+    AND SessionRecord_$TRNUM.Browser = ""'"$BROWSER"'"
+    fi
+  fi
+
+
+  if [ "X$RESPTIMEQMODE" != "X" ];then
+
+    if [ $RESPTIMEQMODE -eq 1 ];then
+      INQ_WHERE="$INQ_WHERE 
+    AND $3_$TRNUM.RespTime <= $RESPONSETIME"
+
+    elif [ $RESPTIMEQMODE -eq 2 ];then
+      INQ_WHERE="$INQ_WHERE 
+    AND $3_$TRNUM.RespTime >= $RESPONSETIME"
+
+    elif [ $RESPTIMEQMODE -eq 3 ];then
+      INQ_WHERE="$INQ_WHERE 
+    AND $3_$TRNUM.RespTime >= $RESPONSETIME 
+    AND $3_$TRNUM.RespTime <= $RESPONSETIME2"
+    fi
+  fi
+
+  if [ "X$STATUS" != "X" ];then
+    NOF=`echo $STATUS |awk -F ',' '{print NF}'`
+    if [ $NOF -gt 1 ];then
+      INQ_WHERE="$INQ_WHERE
+    AND $3_$TRNUM.Status in ($STATUS)"
+    else
+      if [ $STATUS -eq -1 ];then
+        INQ_WHERE="$INQ_WHERE
+    AND $3_$TRNUM.Status >0"
+      elif [ $STATUS -ne -2 ];then
+        INQ_WHERE="$INQ_WHERE
+    AND $3_$TRNUM.Status = $STATUS"
+      fi
+      if [ $OBJECT -eq 3 ];then 
+        FROM_SESSION_RECORD=1
+        JOIN_SESSION_RECORD=1
+      fi
+    fi
+  fi
+
+  #Add Script selection
+  if [ $OBJECT -eq 2 -a "X$SCRIPT" != "X" ];then
+    INQ_FROM="$INQ_FROM, SessionTable_$TRNUM"
+    if [ "X$LOCATION" == "XAll" -a "X$ACCESS" == "XAll" -a "X$BROWSER" == "XAll" ];then
+      FROM_SESSION_RECORD=1
+    fi
+    INQ_WHERE="$INQ_WHERE $NEWLINE    AND SessionTable_$TRNUM.SessionName = ""'"$SCRIPT"'"
+    INQ_WHERE="$INQ_WHERE $NEWLINE    AND SessionTable_$TRNUM.SessionIndex = SessionRecord_$TRNUM.SessionIndex"
+    JOIN_SESSION_RECORD=1
+  fi
+
+
+  #Add Transaction selection from Session drill down (currently not supported from GUI)
+  if [ $OBJECT -eq 3 -a "X$TRANS" != "X" ];then
+    INQ_FROM="$INQ_FROM, TransactionTable_$TRNUM, TransactionRecord_$TRNUM"
+    TRANSACTIONRECORD_TABLE_FLAG=1
+    INQ_WHERE="$INQ_WHERE $NEWLINE    AND TransactionTable_$TRNUM.TransactionName = ""'"$TRANS"'"
+    INQ_WHERE="$INQ_WHERE $NEWLINE    AND TransactionTable_$TRNUM.TransactionIndex = TransactionRecord_$TRNUM.TransactionIndex"
+  fi
+
+  if [ $FROM_SESSION_RECORD -eq 1 ]; then 
+    INQ_FROM="$INQ_FROM, SessionRecord_$TRNUM"
+    SESSIONRECORD_TABLE_FLAG=1
+  fi
+  if [ $JOIN_SESSION_RECORD -eq 1 ];then
+    INQ_WHERE="$INQ_WHERE $NEWLINE    AND SessionRecord_$TRNUM.ChildIndex = PageRecord_$TRNUM.ChildIndex"
+    INQ_WHERE="$INQ_WHERE $NEWLINE    AND SessionRecord_$TRNUM.SessionInstance = PageRecord_$TRNUM.SessionInstance"
+  fi
+  
+  if [ "X$STARTTIME" != "X" ];then
+    INQ_WHERE="$INQ_WHERE 
+    AND PageRecord_$TRNUM.EndTime >= $STARTTIME"
+
+    if [ "X$SESSIONRECORD_TABLE_FLAG" == "X1" ]; then
+      INQ_WHERE="$INQ_WHERE 
+      AND SessionRecord_$TRNUM.EndTime >= $STARTTIME"
+    fi
+    if [ "X$TRANSACTIONRECORD_TABLE_FLAG" == "X1" ]; then
+      INQ_WHERE="$INQ_WHERE 
+      AND TransactionRecord_$TRNUM.EndTime >= $STARTTIME"
+    fi
+    if [ "X$TRANSPAGERECORD_TABLE_FLAG" == "X1" ]; then
+      INQ_WHERE="$INQ_WHERE 
+      AND TransPageRecord_$TRNUM.EndTime >= $STARTTIME"
+    fi
+  fi
+
+  if [ "X$ENDTIME" != "X" ];then
+    INQ_WHERE="$INQ_WHERE 
+    AND PageRecord_$TRNUM.EndTime <= $ENDTIME"
+
+    if [ "X$SESSIONRECORD_TABLE_FLAG" == "X1" ]; then
+      INQ_WHERE="$INQ_WHERE 
+      AND SessionRecord_$TRNUM.EndTime <= $ENDTIME"
+    fi
+    if [ "X$TRANSACTIONRECORD_TABLE_FLAG" == "X1" ]; then
+      INQ_WHERE="$INQ_WHERE 
+      AND TransactionRecord_$TRNUM.EndTime <= $ENDTIME"
+    fi
+    if [ "X$TRANSPAGERECORD_TABLE_FLAG" == "X1" ]; then
+      INQ_WHERE="$INQ_WHERE 
+      AND TransPageRecord_$TRNUM.EndTime <= $ENDTIME"
+    fi
+  fi
+
+  if [ "X$ABS_STARTTIME" != "X" ];then
+    INQ_WHERE="$INQ_WHERE 
+    AND PageRecord_$TRNUM.EndTime >= $ABS_STARTTIME"
+
+    if [ "X$SESSIONRECORD_TABLE_FLAG" == "X1" ]; then
+      INQ_WHERE="$INQ_WHERE 
+      AND SessionRecord_$TRNUM.EndTime >= $ABS_STARTTIME"
+    fi
+    if [ "X$TRANSACTIONRECORD_TABLE_FLAG" == "X1" ]; then
+      INQ_WHERE="$INQ_WHERE 
+      AND TransactionRecord_$TRNUM.EndTime >= $ABS_STARTTIME"
+    fi
+    if [ "X$TRANSPAGERECORD_TABLE_FLAG" == "X1" ]; then
+      INQ_WHERE="$INQ_WHERE 
+      AND TransPageRecord_$TRNUM.EndTime >= $ABS_STARTTIME"
+    fi
+  fi
+
+  if [ "X$ABS_ENDTIME" != "X" ];then
+    INQ_WHERE="$INQ_WHERE 
+    AND PageRecord_$TRNUM.EndTime <= $ABS_ENDTIME"
+
+    if [ "X$SESSIONRECORD_TABLE_FLAG" == "X1" ]; then
+      INQ_WHERE="$INQ_WHERE 
+      AND SessionRecord_$TRNUM.EndTime <= $ABS_ENDTIME"
+    fi
+    if [ "X$TRANSACTIONRECORD_TABLE_FLAG" == "X1" ]; then
+      INQ_WHERE="$INQ_WHERE 
+      AND TransactionRecord_$TRNUM.EndTime <= $ABS_ENDTIME"
+    fi
+    if [ "X$TRANSPAGERECORD_TABLE_FLAG" == "X1" ]; then
+      INQ_WHERE="$INQ_WHERE 
+      AND TransPageRecord_$TRNUM.EndTime <= $ABS_ENDTIME"
+    fi
+  fi
+
+}
+
+SELECT="SELECT PageName AS \"Page Name\", inq.*"  
+
+INNER_QUERY="  SELECT PageRecord_$TRNUM.PageIndex, count(*) AS \"Total\", round(avg(PageRecord_$TRNUM.RespTime)) AS \"Avg Page Response Time\""
+
+if [ $OBJECT -eq 2 ];then
+  PARTITION_NAME=""
+  PARTITION_NAME=`head -1 $NS_WDIR/logs/TR$TRNUM/.curPartition 2>/dev/null | cut -d '=' -f '2'`
+  if [ -s $NS_WDIR/logs/TR$TRNUM/common_files/reports/csv/tprc.csv.format ];then
+    
+    # set TPRC_FLAG to use TransPageRecord table when --generatorid is passed as filter
+    TPRC_FLAG=1
+
+    set_where_for_filter "TransactionIndex" "TransactionTable" "TransPageRecord" "TransactionName" "SessionTable"
+  else
+    set_where_for_filter "TransactionIndex" "TransactionTable" "TransactionRecord" "TransactionName" "SessionTable"
+  fi
+elif [ $OBJECT -eq 3 ];then
+  set_where_for_filter "SessionIndex" "SessionTable" "SessionRecord" "SessionName" "TransactionTable"
+else
+  echo "Invalid object_name-type (valid values 2 or 3)"
+  exit 1
+fi
+
+if [ "X$GENERATORID" != "X" ]; then
+  INQ_FROM="$INQ_FROM, GeneratorTable_$TRNUM"
+  if [ $OBJECT -eq 2 ]; then
+    #if TPRC_FLAG is enabled, then use TransPageRecord
+    if [ $TPRC_FLAG -eq 1 ]; then
+      INQ_WHERE="$INQ_WHERE $NEWLINE    AND TransPageRecord_$TRNUM.GeneratorId = GeneratorTable_$TRNUM.GeneratorId"
+    else
+    # when tprc.csv is not present, then we use TransactionRecord table
+      INQ_WHERE="$INQ_WHERE $NEWLINE    AND TransactionRecord_$TRNUM.GeneratorId = GeneratorTable_$TRNUM.GeneratorId"
+    fi
+
+  elif [ $OBJECT -eq 3 ]; then
+    INQ_WHERE="$INQ_WHERE $NEWLINE    AND SessionRecord_$TRNUM.GeneratorId = GeneratorTable_$TRNUM.GeneratorId"
+  fi
+  INQ_WHERE="$INQ_WHERE $NEWLINE    AND GeneratorTable_$TRNUM.GeneratorId = $GENERATORID"
+fi
+
+debug_logs "INQ_WHERE = $INQ_WHERE"
+
+INQ_GROUPBY="  GROUP BY PageRecord_$TRNUM.pageIndex
+) inq, PageTable_$TRNUM"
+
+WHERE="WHERE inq.PageIndex = PageTable_$TRNUM.PageIndex"
+ORDER="ORDER BY PageName"
+
+FROM="FROM
+("
+
+ns_run_query
+show_query_result
+
+exit 0
+

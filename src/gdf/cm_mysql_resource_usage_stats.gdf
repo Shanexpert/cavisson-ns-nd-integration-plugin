@@ -1,0 +1,22 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+ 
+Info|3.1|1|-|-|-1|-1|-
+Group|MySQL Resource Usage Stats|10351|vector|14|0|MySQL Metrics|Tier>Server>Instance|MySQL Resource Usage Stats monitors metrics related to resource consumption of MySQL.
+Graph|MySQL Connections Used (Pct)|1|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|Percentage of used connections from total connections.
+Graph|MySQL Total Active Threads|2|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|Number of threads that are not sleeping.
+Graph|MySQL Total Cached Threads|3|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|Number of threads in the thread cache.
+Graph|MySQL Total Connected Threads|4|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|Number of currently open connections.
+Graph|MySQL Open Tables|5|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|Number of tables that are open.
+Graph|MySQL Key Cache Used (Pct)|6|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|Percentage of used key cache.
+Graph|MySQL Query Cache Used (Pct)|7|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|Percentage of used query cache.
+Graph|MySQL InnoDB Buffer Pool Used (Pct)|8|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|Percentage of used InnoDB Buffer Pool.
+Graph|MySQL Opened Files|9|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|Number of files that have been opened.
+Graph|MySQL Slow Queries/Sec|10|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|The number of queries per second that have taken more than long_query_time seconds.
+Graph|MySQL Max Used Connections|11|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|The maximum number of connections that have been in use simultaneously since the server started.
+Graph|MySQL InnoDB Buffer Pool Pages|12|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|The total size of the InnoDB buffer pool, in pages.
+Graph|MySQL Idle Connection Count|13|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|Number of idle connections.
+Graph|MySQL Unique Connections|14|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|The number of Unique Connections out of total connections with DB.

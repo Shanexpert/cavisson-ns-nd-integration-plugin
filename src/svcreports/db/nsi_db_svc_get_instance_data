@@ -1,0 +1,281 @@
+#!/bin/bash
+
+##############################################################################################
+# Name    : nsi_db_svc_get_instance_data
+#
+# Author  :  Manmeet
+#
+# Purpose : This shell script is for getting the data for the service instances,
+#           Which is called by DDR GUI from the query selection page.
+#
+##############################################################################################
+
+# Including nsi_db_utils
+. $NS_WDIR/bin/nsi_db_utils
+. $NS_WDIR/bin/nsi_db_svc_utils
+
+
+# Intializing default variables
+STATUS=""	
+STARTTIME=""
+ENDTIME=""
+LIMIT=""
+OFFSET=""
+GET_COUNT=0
+
+
+usage()
+{
+  echo "$*"
+  echo "USAGE:"
+  echo "====="
+  echo
+  echo "$0 --testrun <value> --svcindex <value> --status <value> --starttime <value> --endtime <value> --resptime <value> ----resptimeqmode <mode> --responsetime <time in ms> --responsetime2 <time in ms>"
+  echo
+  echo "Where"
+  echo "  --testrun is test run number, which is mandatory argument."
+  echo "  --svcindex is transaction component index, which is mandatory argument."
+  echo "  --svcsignatureid is signature id, which is optional argument."
+  echo "  --svccpsignatureid is critical path signature id, which is optional argument."
+  echo "  --status is selecting particular staus (status is 0 for Success only, 1 the Failure code, -1 for all"
+  echo "  --starttime and -endtime is for selecting result that comes under the given range, optional"
+  echo "  --resptimeqmode is the selection of responsetime(1-lessthen, 2-greaterthen, 3-equal), which is mandatory argument."
+  echo "  --responsetime is for giving perticular responsetime for different response time mode, which is optional argument."
+  echo "  --responsetime2 is required in case --resptimeqmode 3. In this case the range is between --responsetime and --responsetime2."
+  echo "  --get_count returns the number of rows of the query if it were called without this argumnent."  
+  echo "  --limit for selecting fix number of result optional"
+  echo "  --offset to set offset in case of limit optional"
+
+  exit 1
+}
+
+chk_args()
+{
+  if [ "X$TRNUM" == "X" ]; then
+    usage "Missing mandatory option --testrun."
+  fi
+
+  if [ "X$SVCINDEX" == "X" ]; then
+    usage "Missing mandatory option --svcindex"
+  fi
+}
+
+ARGS=$*
+if [ "X$1" == "X" ];then
+  usage
+fi
+
+chk_args_of_option()
+{
+  if [ "X$2" == "X" ];then
+    usage "Option $1 requires a value."
+  fi
+}
+
+GET_COUNT=0
+
+while [ "$1" != "" ];do
+  case $1 in
+    "--testrun")
+        shift
+        chk_args_of_option "--testrun" "$1"
+        TRNUM=$1;;
+    "--svcindex")
+        shift
+        chk_args_of_option "--svcindex" "$1"
+        SVCINDEX=$1;;
+    "--svcparentindex")
+        shift
+        chk_args_of_option "--svcparentindex" "$1"
+        SVCPARENTINDEX=$1;;
+    "--svcsignatureid")
+        shift
+        chk_args_of_option "--svcsignatureid" "$1"
+        SVCSIGNATUREID=$1;;
+    "--svccpsignatureid")
+        shift
+        chk_args_of_option "--svccpsignatureid" "$1"
+        SVCCPSIGNATUREID=$1;;
+    "--status")
+        shift
+        chk_args_of_option "--status" "$1"
+        STATUS=$1;;
+    "--starttime")
+        shift
+        chk_args_of_option "--starttime" "$1"
+        STARTTIME=$1;;
+    "--endtime")
+        shift
+        chk_args_of_option "--endtime" "$1"
+        ENDTIME=$1;;
+    "--responsetime")
+        shift
+        chk_args_of_option "--responsetime" "$1"
+        RESPONSETIME=$1;;
+    "--resptimeqmode")
+        shift
+        chk_args_of_option "--resptimeqmode" "$1"
+        RESPTIMEQMODE=$1;;
+    "--responsetime2")
+        shift
+        chk_args_of_option "--responsetime2" "$1"
+        RESPONSETIME2=$1;;
+    "--svcinstance")
+        shift
+        chk_args_of_option "--svcinstance" "$1"
+        SVCINSTANCE=$1;;
+    "--instancename")
+        shift
+        chk_args_of_option "--instancename" "$1"
+        INSTANCENAME=$1;;
+    "--instanceid")
+        shift
+        chk_args_of_option "--instanceid" "$1"
+        INSTANCEID=$1;;
+    "--get_count")
+        shift
+        chk_args_of_option "--get_count" "$1"
+        GET_COUNT=$1;;
+    "--limit")
+        shift
+        chk_args_of_option "--limit" "$1"
+        LIMIT=$1;;
+    "--offset")
+        shift
+        chk_args_of_option "--offset" "$1"
+        OFFSET=$1;;
+    --*) usage "Invalid option $1";;
+    *) usage ;;
+  esac
+  shift
+done
+
+#if [ "$GET_COUNT" == "1" ];then
+#  echo "Rows"
+#  echo "8"
+#else
+#  if [ "X$SVCINDEX" == "X" ];then
+#    echo "SvcInstance|StartTime|RespTime|Status"
+#    echo "0|45678|271|0"
+#    echo "0|56789|265|0"
+#    echo "0|67890|299|0"
+#    echo "0|78901|230|0"
+#    echo "0|89012|270|0"
+#    echo "0|90123|265|0"
+#    echo "0|100123|256|0"
+#    echo "0|101234|278|0"
+#  fi
+#fi
+
+if [ "X$STATUS" = "X-2" ];then
+  STATUS=""
+fi
+
+# If parent index is provided then pick the data from svccomprecord table else from svcrecord
+if [ "X$SVCPARENTINDEX" == "X" ];then
+  SELECT="SELECT $NEWLINE  svcrecord_$TRNUM.svcinstance as \"SvcInstance\""
+  SELECT="$SELECT, $NEWLINE  svcrecord_$TRNUM.svcstarttime as \"StartTime\""
+  SELECT="$SELECT, $NEWLINE  svcrecord_$TRNUM.svcelapsedtime as \"TotalTime\""
+  SELECT="$SELECT, $NEWLINE  svcrecord_$TRNUM.svcqueuewaittime as \"QueueWaitTime\""
+  SELECT="$SELECT, $NEWLINE  svcrecord_$TRNUM.svcselftime as \"AppSelfTime\""
+  SELECT="$SELECT, $NEWLINE  svcrecord_$TRNUM.svcsortime as \"SORRespTime\""
+  SELECT="$SELECT, $NEWLINE  svcrecord_$TRNUM.svcstatusindex as \"StatusIndex\""
+else
+  SELECT="SELECT $NEWLINE  svccomprecord_$TRNUM.svcinstance as \"SvcInstance\""
+  SELECT="$SELECT, $NEWLINE  svccomprecord_$TRNUM.svcstarttime as \"StartTime\""
+  SELECT="$SELECT, $NEWLINE  svccomprecord_$TRNUM.svcqueuewaittime as \"QueueWaitTime\""
+  SELECT="$SELECT, $NEWLINE  svccomprecord_$TRNUM.svcsorresptime as \"SORRespTime\""
+  SELECT="$SELECT, $NEWLINE  svccomprecord_$TRNUM.svcstatusindex as \"StatusIndex\""
+fi
+
+SELECT="$SELECT, $NEWLINE  svcerrorcode_$TRNUM.svcstatus as \"Status\""
+  
+FROM="FROM $NEWLINE  svcerrorcode_$TRNUM"
+
+if [ "X$SVCPARENTINDEX" != "X" ];then
+  FROM="$FROM, $NEWLINE  svccomprecord_$TRNUM"
+else
+  FROM="$FROM, $NEWLINE  svcrecord_$TRNUM"
+fi
+
+if [ "X$SVCPARENTINDEX" != "X" ];then
+  if [ "X$SVCINDEX" != "X-2" ];then
+    WHERE="WHERE $NEWLINE  svccomprecord_$TRNUM.svcindex = $SVCINDEX"
+    WHERE="$WHERE $NEWLINE  AND svccomprecord_$TRNUM.svcstatusindex = svcerrorcode_$TRNUM.svcstatusindex"
+  else
+    WHERE="WHERE $NEWLINE  svccomprecord_$TRNUM.svcstatusindex = svcerrorcode_$TRNUM.svcstatusindex"
+  fi
+
+  if [ "X$SVCPARENTINDEX" != "X-2" ];then
+    WHERE="$WHERE $NEWLINE  AND svccomprecord_$TRNUM.svcparentindex = $SVCPARENTINDEX"
+  fi
+
+else
+  if [ "X$SVCINDEX" != "X-2" ];then
+    WHERE="WHERE $NEWLINE  svcrecord_$TRNUM.svcindex = $SVCINDEX"
+    WHERE="$WHERE $NEWLINE  AND svcrecord_$TRNUM.svcstatusindex = svcerrorcode_$TRNUM.svcstatusindex"
+  else
+    WHERE="WHERE $NEWLINE  svcrecord_$TRNUM.svcstatusindex = svcerrorcode_$TRNUM.svcstatusindex"
+  fi
+fi
+
+if [ "X$SVCSIGNATUREID" != "X" -a "X$SVCSIGNATUREID" != "X-2" ];then
+  if [ "X$SVCPARENTINDEX" != "X" ];then
+    WHERE="$WHERE $NEWLINE  AND svccomprecord_$TRNUM.svcsignatureindex = $SVCSIGNATUREID"
+  else
+    WHERE="$WHERE $NEWLINE  AND svcrecord_$TRNUM.svcsignatureindex = $SVCSIGNATUREID"
+  fi
+fi
+
+if [ "X$SVCCPSIGNATUREID" != "X" ];then
+    WHERE="$WHERE $NEWLINE  AND svcrecord_$TRNUM.svccpsignatureindex = $SVCCPSIGNATUREID"
+fi
+ 
+if [ "X$SVCINSTANCE" != "X" ]; then
+    WHERE="$WHERE $NEWLINE  AND svccomprecord_$TRNUM.svcparentinstance = $SVCINSTANCE"
+fi
+
+ORDER="ORDER BY \"SORRespTime\" DESC"
+
+
+if [ "X$SVCPARENTINDEX" == "X" ];then
+  OBJ_RECORD_TABLE=svcrecord_$TRNUM
+else
+  OBJ_RECORD_TABLE=svccomprecord_$TRNUM
+fi
+
+if [ "X$RESPONSETIME" != "X" -a  "X$SVCPARENTINDEX" != "X" ];then
+  FROM="$FROM, $NEWLINE  svcrecord_$TRNUM"
+  WHERE="$WHERE $NEWLINE  AND svccomprecord_$TRNUM.svcparentinstance = svcrecord_$TRNUM.svcinstance"
+fi
+
+apply_filters
+
+if [ "X$LIMIT" != "X" ];then
+  LIMIT="LIMIT $LIMIT"
+fi
+
+if [ "X$OFFSET" != "X" ];then
+  OFFSET="OFFSET $OFFSET"
+fi
+
+
+chk_args
+set_query_files $TRNUM
+
+if [ $GET_COUNT -eq 0 ];then
+  ns_run_query
+else
+  FROM="FROM $NEWLINE  ($NEWLINE  $SELECT $NEWLINE$FROM $NEWLINE$WHERE $NEWLINE$GROUP $NEWLINE  ) As \"Total\" "
+  SELECT="SELECT $NEWLINE  Count(*) As \"Rows\" "
+  WHERE=""
+  GROUP=""
+  ORDER=""
+  ns_run_query
+fi
+
+show_query_result
+
+
+exit 0
+

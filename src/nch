@@ -1,0 +1,37 @@
+#! /bin/sh
+#
+# chkconfig: 2345 98 02
+# description: nc server
+# nc   Start up nc
+### BEGIN INIT INFO
+# Required-Start:       
+# Required-Stop:        
+# Should-Start:         
+# Should-Stop:          
+# Default-Start:        2 3 4 5
+# Default-Stop:         0 1 6
+# Short-Description:    hpd
+### END INIT INFO
+
+nch_service()
+{
+export NS_CONTROLLER_NAME=work
+export NCH_CONTROLLER_NAME=$NS_CONTROLLER_NAME
+export NS_WDIR=/home/cavisson/$NS_CONTROLLER_NAME
+export NCH_ROOT=$NS_WDIR/nc
+if [ $NS_CONTROLLER_NAME == "work" ];then
+  export NCH_CMD=nch
+else
+  export NCH_CMD=nch_$NS_CONTROLLER_NAME
+fi
+. $NS_WDIR/netchannel/bin/nch_start $1
+}
+
+USERID=`id -u`
+if [ $USERID -ne 0 ];then
+  nch_service $1
+else
+  export -f nch_service
+  su cavisson -c "nch_service $1"
+fi
+

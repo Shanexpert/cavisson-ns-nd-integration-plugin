@@ -1,0 +1,40 @@
+# Entry in mprof to get data :
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Info|3.1|1|-|-|-1|-1|-
+Group|WCF Services Stats|10508|vector|35|0|Application Metrics|Tier>Server>Instance|Application WCF Services Stats.
+Graph|Calls|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of calls to this service.
+Graph|Call Duration|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average duration of calls to this service.
+Graph|Calls Failed|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of calls with unhandled exceptions in this service.
+Graph|Calls Failed Per Second|4|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of calls that have unhandled exceptions, and are received by this service in a second.
+Graph|Calls Faulted|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of calls to this service that have returned faults. 
+Graph|Calls Faulted Per Second|6|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of calls that have returned faults to this service in a second.
+Graph|Calls Outstanding|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of in-progress calls to this service.
+Graph|Calls Per Second|8|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of calls to this service in a second.
+Graph|Instances|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of instance contexts that the service currently contains.
+Graph|Instances Created Per Second|10|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Total number of service instances created in a second.
+Graph|Percent of Max Concurrent Calls|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of concurrent calls as a percent of maximum concurrent calls.
+Graph|Percent of Max Concurrent Instances|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of concurrent instances as a percentage of maximum concurrent instances.
+Graph|Percent of Max Concurrent Sessions|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of concurrent sessions as a percentage of maximum concurrent sessions.
+Graph|Queued Messages Dropped|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of messages that are dropped by the queued transport at this service.
+Graph|Queued Messages Dropped Per Second|15|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of messages that are dropped by the queued transport at this service in a second.
+Graph|Queued Messages Rejected|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of messages that are rejected by the queued transport at this service.
+Graph|Queued Messages Rejected Per Second|17|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of messages that are rejected by the queued transport at this service in a second.
+Graph|Queued Poison Messages|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of messages that are marked poisoned by the queued transport at this service.
+Graph|Queued Poison Messages Per Second|19|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of messages that are marked poisoned by the queued transport at this service in a second.
+Graph|Reliable Messaging Sessions Dropped|20|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of reliable messaging messages that have been dropped in this service.
+Graph|Reliable Messaging Sessions Dropped Per Second|21|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Total number of reliable messaging messages that have been dropped in this service in a second.
+Graph|Reliable Messaging Sessions Faulted|22|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of reliable messaging sessions that are faulted in this service.
+Graph|Reliable Messaging Sessions Faulted Per Second|23|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of reliable messaging sessions that are faulted in this service in a second.
+Graph|Security Calls Not Authorized|24|scalar|sample|-|-|0|NA|-1|-1|NA|NA|It indicates that the incoming message is from a valid user and protected properly, but the user is not authorized to do specific tasks.
+Graph|Security Calls Not Authorized Per Second|25|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of incoming messages in one second, which are from a valid user and protected properly, but the user is not authorized to do specific tasks.
+Graph|Security Validation and Authentication Failures|26|scalar|sample|-|-|0|NA|-1|-1|NA|NA|This counter is incremented whenever a message is rejected due to a security problem not covered by the Security Calls Not Authorized counter.
+Graph|Security Validation and Authentication Failures Per Second|27|scalar|rate|-|-|0|NA|-1|-1|NA|NA|This counter is incremented whenever a message is rejected due to a security problem not covered by the Security Calls Not Authorized counter. 
+Graph|Transacted Operations Aborted|28|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of transactional operations that have been aborted in this service.
+Graph|Transacted Operations Aborted Per Second|29|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of transactional operations that have been aborted in this service in a second.
+Graph|Transacted Operations Committed|30|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of transactional operations that have been committed in this service.
+Graph|Transacted Operations Committed Per Second|31|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of transactional operations that have been committed in this service in a second.
+Graph|Transacted Operations In Doubt|32|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of transactional operations with an in-doubt outcome in this service.
+Graph|Transacted Operations In Doubt Per Second|33|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of transactional operations with an in-doubt outcome in this service in a second.
+Graph|Transactions Flowed|34|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of transactions flowed to operations in this service.
+Graph|Transactions Flowed Per Second|35|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of transactions flowed to operations in this service in a second.
+

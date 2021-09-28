@@ -1,0 +1,26 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Tomcat Global Request Processor|14132|vector|6|0|Application Metrics|Tier>Server>Instance>name|This stats provide information about aggregated performance metrics spanning all the Global Request Processors deployed to the Apache Tomcat.
+
+#G1
+Graph|Tomcat Request Count|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The number of requests processed by the servlet during the collection interval.
+
+#G2
+Graph|Tomcat Max Time|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The maximum processing time of a request.
+
+#G3
+Graph|Tomcat Bytes Received|3|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The bytes received by the Tomcat Global Request Process monitor type.
+
+#G4
+Graph|Tomcat Bytes Sent|4|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The amount of bytes sent by the Tomcat Global Request Processor monitor type.
+
+#G5
+Graph|Tomcat Processing Time|5|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Time required to complete a Tomcat Global Request processor request during the collection interval.
+
+#G6
+Graph|Tomcat Error Count|6|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The number of Tomcat Global Request Processor requests that encountered errors or exceptions during the collection interval. 

@@ -1,0 +1,22 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Azure Blob Storage Account Stats|14012|vector|7|0|Application Metrics|AccountName>Region>ResourceGroup>BlobStorageAccounts|This is related the Blob storage Account.
+
+Graph|Azure Blob Storage Used Capacity (Bytes)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The amount of storage used by the storage account's Blob service in bytes.
+
+Graph|Azure Blob Storage Transactions|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of requests made to a storage service or the specified API operation. This number includes successful and failed requests as well as requests which produced errors. Use ResponseType dimension for the number of different type of response.
+
+Graph|Azure Blob Storage Ingress (Bytes)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The amount of ingress data in bytes. This number includes ingress from an external client into Azure Storage as well as ingress within Azure.
+
+Graph|Azure Blob Storage Egress (Bytes)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The amount of egress data in bytes. This number includes egress from an external client into Azure Storage as well as egress within Azure. As a result this number does not reflect billable egress.
+
+Graph|Azure Blob Storage Success Server Latency (ms)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average latency used by Azure Storage to process a successful request in milliseconds. This value does not include the network latency specified in AverageE2ELatency.
+
+Graph|Azure Blob Storage Success E2 Elatency (ms)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average end-to-end latency of successful requests made to a storage service or the specified API operation in milliseconds. This value includes the required processing time within Azure Storage to read the request send the response and receive acknowledgment of the response.
+
+Graph|Azure Blob Storage Availability(%)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of availability for the storage service or the specified API operation. Availability is calculated by taking the TotalBillableRequests value and dividing it by the number of applicable requests including those that produced unexpected errors. All unexpected errors result in reduced availability for the storage service or the specified API operation.
+

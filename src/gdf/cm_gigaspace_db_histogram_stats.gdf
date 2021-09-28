@@ -1,0 +1,18 @@
+#LAST_MAX_ASSIGNED_GRAPH_ID = 2
+#LAST_MODIFIED_DATE = 06/0ct/2015
+
+Info|3.1|1|-|-|-1|-1|-
+Group|GigaSpace histogram Stats|10276|vector|11|0|Application Metrics|Tier>Server>Instance>Histograms|GigaSpace Histogram statistics
+Graph|Total Count|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total count
+Graph|Max(sec)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum value in second
+Graph|Mean(sec)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Mean value in second
+Graph|Min(sec)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Minimum value in second
+Graph|50th Percentile(sec)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|50th Percentile in second
+Graph|75th Percentile(sec)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|75th Percentile in second
+Graph|95th Percentile(sec)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|95th Percentile in second
+Graph|98th Percentile(sec)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|98th Percentile in second
+Graph|99th Percentile(sec)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|99th Percentile in second
+Graph|99.9th Percentile(sec)|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|99.9th Percentile in second
+Graph|StdDev|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|stdDev in second
+
+

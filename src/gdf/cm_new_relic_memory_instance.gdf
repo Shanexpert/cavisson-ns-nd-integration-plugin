@@ -1,0 +1,7 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Memory Stats|11619|vector|2|0|New Relic Metrics|AccountName>ApplicationName>InstanceName>Memory|Memory stats provides memory related data for different instances running in new relic applications.
+Graph|Used Memory By Host(MB)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Used memory by host in megabytes.
+Graph|Total Used Memory (MB)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total used memory in megabytes.

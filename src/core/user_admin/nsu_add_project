@@ -1,0 +1,190 @@
+#!/bin/sh
+
+#----------------------------------------------------------------------
+# Name    :    nsu_add_project
+# Author  :    Archana
+# Note    :    This command only can run by root
+#              From GUI, admin user will run this command using Bean which runs as root
+# Purpose :    This command will add project/sub-project in scenarios testcases testsuits and scripts directories
+# Usage   :    nsu_add_project -p <project/subproject>  -w <workspace>/<profile>
+# where   :
+#  -p <project/subproject>: Project and sub-project name
+# Modification History:
+#   02/10/09:  Archana - Initial Version
+#   01/04/13:  Ankur N - Added testsuites and testcases addition
+#   13/05/13:  Shakti Jha - Added checkprofile
+#----------------------------------------------------------------------
+
+. $NS_WDIR/bin/ns_user_admin_lib
+
+#To check uid call check_root_uid
+#check_root_uid "nsu_add_project"
+
+PROJECT=""
+SUB_PROJECT=""
+
+WORK_SPACE="admin"
+PROFILE="default"
+    
+#relative test assets dir
+NS_RTA_DIR=
+
+
+check_cavisson_user()
+{
+  USERID=`whoami 2>/dev/null`
+  if [ $? != 0 ];then
+    echo "Error: Unable to get the real user name"
+    exit 1
+  else
+    if [ "XX$USERID" != "XXcavisson" ];then
+      err_msgout "Error: command must be run as 'cavisson' only. Currently being run as '$USERID'"
+      exit 1
+    fi
+  fi
+}
+
+#This method to check format of project and subproject, it should be "project/subproject"
+check_format_of_proj_subproj()
+{
+    PROJECT=`echo $PROJ_SUB_PROJ | egrep "/" | cut -d'/' -f1`
+    SUB_PROJECT=`echo $PROJ_SUB_PROJ | egrep "/" | cut -d'/' -f2`
+    if [ "$PROJECT" == "" -o "$SUB_PROJECT" == "" ];then
+      err_msgout "-p <Project/Subproject> is not given in proper format."
+      exit -1
+    fi
+}
+
+#This method to check format of workspace and profile, it should be "workspace/profile"
+check_format_of_workspace_profile()
+{
+    WORK_SPACE=`echo $WORK_PROFILE | egrep "/" | cut -d'/' -f1`
+    PROFILE=`echo $WORK_PROFILE | egrep "/" | cut -d'/' -f2`
+    if [ "$WORK_SPACE" == "" ];then
+      WORK_SPACE=admin
+      err_msgout "-w <workspace/profilet> is not given in proper format. so default workspace will be used"
+    fi
+
+    if [ "$PROFILE" == "" ];then
+      PROFILE=default
+      err_msgout "-w <workspace/profilet> is not given in proper format. so default profile will be used"
+    fi
+}
+
+
+
+#'All' and 'default' project can not be add.
+check_if_All_default_project()
+{
+  if [ "XX$PROJECT" == "XXAll" -o "XX$SUB_PROJECT" == "XXAll" -o "XX$PROJECT" == "XXdefault" -o "XX$SUB_PROJECT" == "XXdefault" ];then
+    err_msgout "Error: 'default and All' is a reserved project name. It cannot be added."
+    exit -1
+  fi
+}
+
+# This method is to check if specified <project/sub-project> is already exist 
+# in scenarios or scripts directory then give error and not add this project/sub-project
+# Otherwise add this project/sub-project in scenarios and scripts directory
+# Since this nsu_add_project command running by root, So changing owner/group to cavisson/cavisson"
+# And change mod as 775
+check_and_add_proj_subproj()
+{
+  #aboslute test assets dir 
+  NS_TA_DIR=$NS_WDIR/$NS_RTA_DIR
+  #return if proj/sub_proj already exists
+    if [ -d "${NS_TA_DIR}/${PROJ_SUB_PROJ}" ];then 
+    echo "This '$PROJ_SUB_PROJ' already exists in $NS_WDIR/$NS_RTA_DIR directory"
+    return 1
+  fi
+
+  SCENARIO_PATH=$NS_TA_DIR/$PROJ_SUB_PROJ/scenarios
+  SCRIPT_PATH=$NS_TA_DIR/$PROJ_SUB_PROJ/scripts
+  TESTCASE_PATH=$NS_TA_DIR/$PROJ_SUB_PROJ/testcases
+  TESTSUITE_PATH=$NS_TA_DIR/$PROJ_SUB_PROJ/testsuites
+  PROFILE_PATH=$NS_TA_DIR/$PROJ_SUB_PROJ/replay_profiles
+  CHECKPROFILE_PATH=$NS_TA_DIR/$PROJ_SUB_PROJ/checkprofile
+  SCENARIO_PROFILE_PATH=$NS_TA_DIR/$PROJ_SUB_PROJ/scenario_profiles
+  REPLAY_ACC_LOG_PATH=$NS_TA_DIR/$PROJ_SUB_PROJ/ReplayAccessLogs
+  SERVICES_PATH=$NS_TA_DIR/$PROJ_SUB_PROJ/services
+
+  mkdir -p $SCRIPT_PATH
+  mkdir -p $SCENARIO_PATH
+  mkdir -p $TESTSUITE_PATH
+  mkdir -p $TESTCASE_PATH
+  mkdir -p $PROFILE_PATH
+  mkdir -p $CHECKPROFILE_PATH
+  mkdir -p $SCENARIO_PROFILE_PATH
+  mkdir -p $REPLAY_ACC_LOG_PATH
+  mkdir -p $SERVICES_PATH
+ 
+  cd $NS_TA_DIR 
+  chown cavisson.cavisson $PROJECT 
+  chmod 775 $PROJECT
+  chown cavisson.cavisson $PROJECT/$SUB_PROJECT 
+  chmod 775 $PROJECT/$SUB_PROJECT
+
+  echo "Project '$PROJ_SUB_PROJ' has been successfully added."
+}
+
+display_help_and_exit() 
+{   
+  err_msgout "$1"
+  err_msgout "Usage: nsu_add_project -p <Project/Subproject> -w <workspace_name>/<profile_name>"
+  err_msgout "Where:"
+  err_msgout "  -p is used to add project/sub-project in scenarios, scripts, testcases,  testsuites and profiles directories for specified <workspace>/<profile>"
+  err_msgout "  -w is used to specifiy <workspace_name>/<profile_name>, where project/sub-project will be aded, the deault <workspace>/<profile> will be used if not specified"
+  exit 1
+}
+
+PFLAG=0
+WFLAG=0
+check_mandatory_options()
+{
+   if [ $PFLAG -eq 0 ];then
+     err_msgout "nsu_add_project: -p option is mandatory"
+     display_help_and_exit
+   fi
+}
+
+check_option()
+{
+  OPTION_FLAG=$1
+  if [ $OPTION_FLAG -gt 0 ] ;then
+    err_msgout "nsu_add_project: $2 option cannot be specified more than once."
+    display_help_and_exit
+  fi
+}
+
+#check cavisson user
+check_cavisson_user
+
+while getopts p:w:? c
+do
+  case $c in
+    p) check_option $PFLAG "-p"
+       PFLAG=`expr $PFLAG + 1`
+       PROJ_SUB_PROJ="$OPTARG"
+       check_format_of_proj_subproj $PROJ_SUB_PROJ
+       check_if_All_default_project ;;
+    w) 
+       WFLAG=`expr $WFLAG + 1`
+       WORK_PROFILE="$OPTARG"
+       check_format_of_workspace_profile $WORK_PROFILE
+       ;;
+
+    ?) display_help_and_exit ;;
+    *) display_help_and_exit ;;
+  esac
+done
+check_mandatory_options
+
+NS_RTA_DIR=workspace/$WORK_SPACE/$PROFILE/cavisson
+#NS_TA_DIR=`nsi_get_work_space_path.sh $WORK_PROFILE $PROJ_SUB_PROJ`
+if [ ${WFLAG} == 0 ];then
+  echo "As -w option is not specified, so default workspace and profile will be used"
+fi
+
+check_and_add_proj_subproj
+
+#msgout "----------------------------------------------------------------------"
+exit 0

@@ -1,0 +1,19 @@
+# --- GDF Version History ---
+#  1.0 - Initial version
+#  2.0 - Change done for match Long_data and Long_long_data to double
+#  3.0 - Changes done for Dynamic data in Execution GUI
+#  3.1 - Use future1 field of group line for Metric group name
+#
+# Command to get data for this gdf on windows server :
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# wmic path Win32_PerfFormattedData_MSSQLSERVER_SQLServerPlanCache.Name='_Total' get CacheHitRatio /every:10
+#
+# Entry in mprof to get data :
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# CUSTOM_MONITOR 192.168.1.52 cm_win_sql_server_plan_cache.gdf Win_SQLServer_PlanCache 2 wmic path Win32_PerfFormattedData_MSSQLSERVER_SQLServerPlanCache.Name='_Total' get CacheHitRatio /every:10
+#
+
+Info|3.1|1|-|-|-1|-1|-
+Group|SQL Server Plan Cache Stats|10064|vector|1|0|Application Metrics|Tier>Server>Cache|SQL Server Plan Cache Stats provide cache hit ratio.
+
+Graph|Plan Cache Hit Ratio|1|scalar|sample|-|-|0|NA|-1|-1|M|NA|Ratio between cache hits and lookups.

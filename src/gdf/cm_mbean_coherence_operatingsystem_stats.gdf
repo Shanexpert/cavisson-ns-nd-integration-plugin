@@ -1,0 +1,37 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+
+#ObjectName :Coherence:type=PartitionAssignment,service=*,responsibility=DistributionCoordinator
+
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Coherence Operating System Stats|14170|vector|12|0|Coherence Metrics|Tier>Server>Instance>service|This stats gives information related to Operating System metrics.
+
+Graph|Coherence Open File Descriptor Count|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|This is a number that uniquely identifies an open files in a computer's Operating system.
+
+Graph|Coherence Max File Descriptor Count|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|This is maximum number files that uniquely identifies an max files in a computer's Operating system.
+
+Graph|Coherence Committed Virtual Memory Size|3|scalar|sample|-|None|0|AS|-1|-1|NA|NA|This is the ammount of virtual memory reserved for a process.
+
+Graph|Coherence Total SwapSpace Size|4|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Displays the amount of total swap space available to the operating system.
+
+Graph|Coherence Free SwapSpace Size|5|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Displays the amount of free  swap space available to the operating system.
+
+Graph|Coherence Process Cpu Time|6|scalar|sample|-|None|0|AS|-1|-1|NA|NA|CPU time is the amount of time for which a central processing unit was used for processing instructions of a computer program.
+
+Graph|Coherence Free Physical Memory Size|7|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Displays the amount of free physical memory size.
+
+Graph|Coherence Total Physical Memory Size|8|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Displays the amount of total physical memory size.
+
+Graph|Coherence System Cpu Load|9|scalar|sample|-|None|0|AS|-1|-1|NA|NA|This is the number of processes which are being executed by CPU or waiting to be executed by CPU.
+
+Graph|Coherence Process Cpu Load|10|scalar|sample|-|None|0|AS|-1|-1|NA|NA|This is the number of processes which are being executed by CPU or waiting to be executed by CPU.
+
+Graph|Coherence Available Processors|11|scalar|sample|-|None|0|AS|-1|-1|NA|NA|This is the number of available processors.
+
+Graph|Coherence System Load Average|12|scalar|sample|-|None|0|AS|-1|-1|NA|NA|System load/CPU Load – is a measurement of CPU over or under-utilization in a Linux system; the number of processes which are being executed by the CPU or in waiting state. Load average – is the average system load calculated over a given period of time of 1, 5 and 15 minutes.

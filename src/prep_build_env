@@ -1,0 +1,29 @@
+#!/bin/sh
+if [ `id -u` -ne 0 ];then
+	echo "Need to run this cmd as root"
+	exit 1
+fi
+echo "1" >/etc/build_num
+chmod 666 /etc/build_num
+NUM=`uname -r | grep -c 2.4`
+if [ $NUM = 1 ]
+then
+    if [ ! -f /usr/lib/libgsl.a ];then
+        if [ -f /usr/local/lib/libgsl.a ];then
+	    cp /usr/local/lib/libgsl.a /usr/lib
+	else
+	    echo "Need to install libgsl using gsl rpm"
+	    exit 1
+	fi
+    fi
+    if [ ! -f /usr/lib/libgslcblas.a ];then
+        if [ -f /usr/local/lib/libgslcblas.a ];then
+	    cp /usr/local/lib/libgslcblas.a /usr/lib
+	else
+	    echo "Need to install libgslcblas using gsl rpm"
+	    exit 1
+	fi
+    fi
+fi
+echo "done"
+exit 0

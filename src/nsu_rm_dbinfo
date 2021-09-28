@@ -1,0 +1,40 @@
+#!/bin/bash
+
+if [ $# -ne 1 ]; then
+   echo "usage:  ./nsu_rm_dbinfo [test number]"
+   exit 1
+fi
+
+remove_tr()
+{
+TestRunNumber=$1
+
+  db_tbl_mgr -t $TestRunNumber -m "NS" -d
+  db_tbl_mgr -t $TestRunNumber -m "ND" -d
+  nsu_drop_index $TestRunNumber
+  ndu_drop_index $TestRunNumber
+  nsu_svc_drop_index $TestRunNumber
+  nsu_drop_table $TestRunNumber
+  ndu_drop_table $TestRunNumber
+  nsu_svc_drop_table $TestRunNumber
+}
+
+# Remove given test run
+if [ $1 -ne -1 ]; then
+  remove_tr $1
+else
+# Remove all test runs
+  TFILE="/tmp/t1.$$"
+  ls -1d $NS_WDIR/logs/TR* | cut -d "/" -f 6 | cut -c 3- >>$TFILE
+  for trnum in `cat $TFILE` 
+  do
+    psql -q test cavisson >$OFILE <<+
+  select table_name From information_schema.tables where table_name like '%$trnum%';
++
+
+    remove_tr $trnum
+  done
+  rm -f $TFILE
+fi
+
+exit 0

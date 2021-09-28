@@ -1,0 +1,13 @@
+# --- GDF Version History ---
+#  1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Redis Cache Stats|10306|vector|6|0|Redis Metrics|Tier>Server>Instance|Redis server cache stats monitor measure health of redis server cache.It provides metrics related to cache keyspace hits, keyspace miss, keyspace pending expiration etc.
+
+Graph|Redis Key Space Missess/sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of attempts to find keys in redis database which do not exist.
+Graph|Redis Key Space Hits/sec|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of attempts to find keys in redis database which do exist.
+Graph|Redis Total Key Spaces|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of key in all database.
+Graph|Redis Cache Hit Rate (Pct)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Cache hit ratio is the percentage of successful reads out of all read operations in redis database.
+Graph|Redis Rejected Connections/Sec|5|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of connection disconnected per seconds as Redis instance is currently at its maximum number of connections.
+Graph|Redis Key Pending Expiration|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of key expiration events pending in all database.
+

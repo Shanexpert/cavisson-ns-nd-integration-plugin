@@ -1,0 +1,24 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Apache Nifi Processor Stats|10859|vector|16|0|Application Metrics|Tier>Processor>FlowName|Apache Nifi Processor stats.
+Graph|Nifi Active Threads|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of active threads.
+Graph|Nifi Input Flow Files|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of flowfiles that this processor has pulled from its queues.
+Graph|Nifi Input Flow Files Size (KB)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total Size of all flowfiles that this processor has pulled from its queues in kilo bytes.
+Graph|Nifi Out Flow Files|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of flowfiles that this processor has transferred to downstream queues.
+Graph|Nifi Out Flow Files Size (KB)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total Size of all flowfiles that this processor has transferred to downstream queues in kilo bytes.
+Graph|Nifi Bytes Read |6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of bytes read from Content Repository by this Processors.
+Graph|Nifi Bytes Written|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of bytes written to Content Repository by this Processors.
+Graph|Nifi Completed Tasks|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of tasks that this processor has completed.
+Graph|Nifi Terminated Threads|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of terminated threads.
+Graph|Nifi Task Duration (ms)|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Time taken to complete task by this processor in milliSeconds(Originally getting data in nano seconds).
+Graph|Nifi Processor Status|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Status of processor. Status is 1 = Stopped, 2 = Running, 3 = Disabled and 4 = Invalid.
+Graph|Nifi Event Driven Mode Supported|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Event driven is the mode in which processor will be triggered to run by an event. Mode 0 = false, 1 = true.
+Graph|Nifi Parallel Processing Supported|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Status of support parallel processing. 0 = false, 1 = true.
+Graph|Nifi Batching Processing Supported|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Status of support batch processing. 0 = false, 1 = true.
+Graph|Nifi State Persistance Supported|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Whether this processor persists state or not. Persist state means if nifi is restarted, duplicates will not be pulled from the target system. Persist state 0 = false, 1 = true.  
+Graph|Nifi Validation Status|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Validation status of records of an incoming flow file against a given schema. Validation status 1 = valid, 2 = invalid, 3 = validating.

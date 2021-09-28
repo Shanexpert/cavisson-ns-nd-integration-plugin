@@ -1,0 +1,35 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+
+#ObjectName :com.bea:ServerRuntime=AdminServer,Name=*,Type=WLDFWlstoreArchiveRuntime,WLDFRuntime=WLDFRuntime
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Weblogic WLDFWl store Archive Runtime Stats|14207|vector|11|0|Weblogic Metrics|Tier>Server>Instance>Name|This interface is used to collect statistical information about the data archives maintained by WLDF.
+
+Graph|Weblogic Record Retrieval Time (ms)|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The time, in milliseconds, spent retrieving records from the archive since the server was started.
+
+Graph|Weblogic Retired Record Count|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of records retired from the archive since the server was started.
+
+Graph|Weblogic Deletion Time (ms)|3|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The time, in milliseconds, spent deleting records from the archive since the server was started.
+
+Graph|Weblogic Insertion Time (ms)|4|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The time, in milliseconds, spent inserting records into the archive since the server was started.
+
+Graph|Weblogic Record Seek Time (ms)|5|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The time, in milliseconds, spent locating the first record during a query operation since the server was started.
+
+Graph|Weblogic Last Data Retirement Start Time (ms)|6|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The time, in milliseconds, of last data deletion start time.
+
+Graph|Weblogic Last Data Retirement Time (ms)|7|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The time, in milliseconds, at which last data is deleted.
+
+Graph|Weblogic Data Retirement Total Time (ms)|8|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The time, in milliseconds, spent in delteing the old records as per specified age.
+
+Graph|Weblogic Record Count|9|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of records that is archived.
+
+Graph|Weblogic Retrieved Record Count|10|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of records retrieved from the archive since the server was started.
+
+Graph|Weblogic Record Seek Count|11|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of seek operations performed on the archive since the server was started.
+

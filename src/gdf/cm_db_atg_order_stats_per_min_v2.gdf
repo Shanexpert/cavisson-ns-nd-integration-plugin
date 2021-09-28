@@ -1,0 +1,101 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Mosaic Order Extended Stats V2|10856|vector|74|0|Application Metrics|Tier>Server|Order extended stats V2 taken by Mosaic system.
+
+Graph|Orders/Min|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of orders per minute.
+Graph|Total Orders|2|scalar|sum|-|-|0|NA|-1|-1|NA|NA|Total number of orders today.
+Graph|Completed Orders/Min|3|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of orders completed per minute.
+Graph|Total Completed Orders|4|scalar|sum|-|-|0|NA|-1|-1|NA|NA|Total number of order completed today.
+Graph|Orders Revenue($)/Min|5|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Revenue generated per minute($).
+Graph|Total Revenue($)|6|scalar|sum|-|-|0|NA|-1|-1|NA|NA|Total Revenue generated for the day($).
+Graph|Target Revenue($)|7|scalar|sum|-|-|0|NA|-1|-1|NA|NA|Target Revenue($).
+Graph|Last Year Revenue($)|8|scalar|sum|-|-|0|NA|-1|-1|NA|NA|Last Year Revenue($).
+Graph|Webstore Orders/Min|9|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of orders from Webstore per minute.
+Graph|Total Webstore Orders|10|scalar|sum|-|-|0|NA|-1|-1|NA|NA|Total number of orders from Webstore today.
+Graph|CSC Orders/Min|11|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of orders from CSC/CC per minute.
+Graph|Total CSC Orders|12|scalar|sum|-|-|0|NA|-1|-1|NA|NA|Total number of orders from CSC/CC today.
+Graph|Kiosk Orders/Min|13|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of orders from Kiosk per minute.
+Graph|Total Kiosk Orders|14|scalar|sum|-|-|0|NA|-1|-1|NA|NA|Total number of orders from Kiosk today.
+Graph|Mobile Orders/Min|15|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of orders from Mobile per minute.
+Graph|Total Mobile Orders|16|scalar|sum|-|-|0|NA|-1|-1|NA|NA|Total number of orders from Mobile today.
+
+#Newly added graphs for tablet, iphone and android
+Graph|Tablet Orders/Min|45|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of orders from Tablet per minute.
+Graph|Total Tablet Orders|46|scalar|sum|-|-|0|NA|-1|-1|NA|NA|Total number of orders from Tablet today.
+Graph|Iphone Orders/Min|47|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of orders from Iphone per minute.
+Graph|Total Iphone Orders|48|scalar|sum|-|-|0|NA|-1|-1|NA|NA|Total number of orders from Iphone today.
+Graph|Android Orders/Min|49|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of orders from Android per minute.
+Graph|Total Android Orders|50|scalar|sum|-|-|0|NA|-1|-1|NA|NA|Total number of orders from Android today.
+
+Graph|Webstore Revenue($)/Min|17|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Webstore Revenue per minute($).
+Graph|Total Webstore Revenue($)|18|scalar|sum|-|-|0|NA|-1|-1|NA|NA|Total webstore revenue($).
+Graph|CSC/CC Revenue($)/Min|19|scalar|rate|-|-|0|NA|-1|-1|NA|NA|CSC/CC revenue generated per minute($).
+Graph|Total CSC/CC Revenue($)|20|scalar|sum|-|-|0|NA|-1|-1|NA|NA|Total CSC/CC revenue($).
+Graph|Kiosk Revenue($)/Min|21|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Kiosk revenue generated per minute($).
+Graph|Total Kiosk Revenue($)|22|scalar|sum|-|-|0|NA|-1|-1|NA|NA|Total Kiosk revenue($).
+Graph|Mobile Revenue($)/Min|23|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Mobile revenue generated per minute($).
+Graph|Total Mobile Revenue($)|24|scalar|sum|-|-|0|NA|-1|-1|NA|NA|Total Mobile Revenue($).
+
+#Newly added graphs for tablet, iphone and android
+Graph|Tablet Revenue($)/Min|51|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Tablet revenue generated per minute($).
+Graph|Total Tablet Revenue($)|52|scalar|sum|-|-|0|NA|-1|-1|NA|NA|Total Tablet revenue($).
+Graph|Iphone Revenue($)/Min|53|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Iphone revenue generated per minute($).
+Graph|Total Iphone Revenue($)|54|scalar|sum|-|-|0|NA|-1|-1|NA|NA|Total Iphone revenue($).
+Graph|Android Revenue($)/Min|55|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Android revenue generated per minute($).
+Graph|Total Android Revenue($)|56|scalar|sum|-|-|0|NA|-1|-1|NA|NA|Total Android Revenue($).
+
+Graph|Webstore Completed Orders/Min|25|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of orders completed from Webstore per minute.
+Graph|Total Webstore Completed Orders|26|scalar|sum|-|-|0|NA|-1|-1|NA|NA|Total number of order completed from Webstore today.
+Graph|CSC/CC Completed Orders/Min|27|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of orders completed from CSC/CC per minute.
+Graph|Total CSC/CC Completed Orders|28|scalar|sum|-|-|0|NA|-1|-1|NA|NA|Total number of orders completed from CSC/CC today.
+Graph|Kiosk Completed Orders/Min|29|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of orders completed from Kiosk per minute.
+Graph|Total Kiosk Completed Orders|30|scalar|sum|-|-|0|NA|-1|-1|NA|NA|Total number of order completed from Kiosk today.
+Graph|Mobile Completed Orders/Min|31|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of orders completed from Mobile per minute.
+Graph|Total Mobile Completed Orders|32|scalar|sum|-|-|0|NA|-1|-1|NA|NA|Total number of order completed from Mobile today.
+
+#Newly added graphs for tablet, iphone and android
+Graph|Tablet Completed Orders/Min|57|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of orders completed from Tablet per minute.
+Graph|Total Tablet Completed Orders|58|scalar|sum|-|-|0|NA|-1|-1|NA|NA|Total number of orders completed from Tablet today.
+Graph|Iphone Completed Orders/Min|59|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of orders completed from Iphone per minute.
+Graph|Total Iphone Completed Orders|60|scalar|sum|-|-|0|NA|-1|-1|NA|NA|Total number of order completed from Iphone today.
+Graph|Android Completed Orders/Min|61|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of orders completed from Android per minute.
+Graph|Total Android Completed Orders|62|scalar|sum|-|-|0|NA|-1|-1|NA|NA|Total number of order completed from Android today.
+
+Graph|Incomplete Orders/Min|33|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of orders in incomplete state .
+Graph|Submission Pending Orders/Min|34|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of orders in pending submission state.
+Graph|Fraud Check Pending Orders/Min|35|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of orders in fraud check pending state.
+Graph|Processing Orders/Min|36|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of orders in processing state.
+Graph|Processing Pending Orders/Min|37|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of orders in pending state.
+Graph|Failed Orders/Min|38|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of orders in failed state.
+Graph|Blocked Orders/Min|39|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of orders in blocked state.
+Graph|Cancelled Orders/Min|40|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of orders in cancelled state.
+Graph|Rejected Orders/Min|41|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of orders in rejected state.
+Graph|In Fulfilment Orders/Min|42|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of orders in in_fulfilment state.
+Graph|Failed Approval Orders/Min|43|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of orders in failed approval state.
+Graph|Pending Tax Calculation Orders/Min|63|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of orders in pending tax calculation state.
+Graph|Submitted Orders/Min|65|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of orders in submitted state.
+Graph|Other State Orders/Min|44|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Order with states other than specified states.
+
+#Newly added graphs for cart size
+Graph|Average Cart Size|67|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average cart size of orders.
+
+#Newly added graphs for time taken by queries
+Graph|Time taken by revenue query(sec)|64|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Time taken by revenue of all states query in sec.
+Graph|Time taken by all state order query(sec)|66|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Time taken by all states order query in sec.All states as Incompletes order, Failed order etc.
+#Newly added graphs for time taken by cart size query
+Graph|Time taken by cart size query(sec)|68|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Time taken by cart size query in sec.
+
+#Newly added graphs for endless_aisle
+Graph|EndlessAisle Orders/Min|69|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of orders from EndlessAisle per minute.
+Graph|Total EndlessAisle Orders|70|scalar|sum|-|-|0|NA|-1|-1|NA|NA|Total number of orders from EndlessAisle today.
+Graph|EndlessAisle Revenue($)/Min|71|scalar|rate|-|-|0|NA|-1|-1|NA|NA|EndlessAisle revenue generated per minute($).
+Graph|Total EndlessAisle Revenue($)|72|scalar|sum|-|-|0|NA|-1|-1|NA|NA|Total EndlessAisle Revenue($).
+Graph|EndlessAisle Completed Orders/Min|73|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of orders completed from EndlessAisle per minute.
+Graph|Total EndlessAisle Completed Orders|74|scalar|sum|-|-|0|NA|-1|-1|NA|NA|Total number of order completed from EndlessAisle today.
+

@@ -1,0 +1,6 @@
+# 1.0 - Initial version
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP Router BGP|11588|vector|2|0|GCP Metrics|ProjectID>Region>RouterId>BGPPeerName|It provide metrics related to BGP(Border Gateway Protocol) status and routes.
+Graph|GCP Router BGP Received Routes|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current number of routes received on a bgp session.
+Graph|GCP Router BGP Session Status|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|It Indicate for successful bgp session establishment(0 - failed, other than 0 - success ).

@@ -1,0 +1,64 @@
+#!/bin/sh
+
+if [ $# -ne 1 ];then
+    echo "Usage: nsu_set_max_modem <num_modems>"
+    exit -1
+fi
+
+MAXMODEM=$1
+
+USERID=`id -u`
+if [ $USERID -ne 0 ];then
+    echo "You must be root to execute this command"
+    exit -1
+fi
+
+echo "This command would reboot the system"
+echo "Do you want to continue (Y/N) ? "
+read msg
+if [ $msg != 'Y' -a $msg != 'y' ];then
+	echo "exiting without making any change"
+  	exit 1
+fi
+
+###Update /boot/grub/grub.conf
+CURMODEM=`grep cavmodems= /boot/grub/grub.conf | awk '{print $5}' | awk -F= '{print $2}'`
+
+if [ "X$CURMODEM" = "X" ];then
+    echo "/etc/grub.conf seems to be in older format"
+    echo "Contact Cavisson Systems Inc"
+    exit -1
+fi
+echo "Cur modem: $CURMODEM"
+echo "Target modem : $MAXMODEM"
+
+sed "s/cavmodems=$CURMODEM/cavmodems=$MAXMODEM/g" /boot/grub/grub.conf >/tmp/grub.out
+mv /tmp/grub.out /boot/grub/grub.conf
+
+###Update /etc/grub.conf
+CURMODEM=`grep cavmodems= /etc/grub.conf | awk '{print $5}' | awk -F= '{print $2}'`
+
+if [ "X$CURMODEM" = "X" ];then
+    echo "/etc/grub.conf seems to be in older format"
+    echo "Contact Cavisson Systems Inc"
+    exit -1
+fi
+echo "Cur modem: $CURMODEM"
+echo "Target modem : $MAXMODEM"
+
+sed "s/cavmodems=$CURMODEM/cavmodems=$MAXMODEM/g" /etc/grub.conf >/etc/grub.out
+mv /etc/grub.out /etc/grub.conf
+
+##Update bashrc
+CURMODEM=`grep NS_MAX_MODEM= /home/cavisson/.bashrc | awk '{print $2}' | awk -F= '{print $2}'`
+
+if [ "X$CURMODEM" = "X" ];then
+    echo "netsttom .bashrc seems to be in older format"
+    echo "Contact Cavisson Systems Inc"
+    exit -1
+fi
+echo "Cur modem: $CURMODEM"
+sed "s/NS_MAX_MODEM=$CURMODEM/NS_MAX_MODEM=$MAXMODEM/g" /home/cavisson/.bashrc >/home/cavisson/.bashrc.out
+mv /home/cavisson/.bashrc.out /home/cavisson/.bashrc
+
+reboot

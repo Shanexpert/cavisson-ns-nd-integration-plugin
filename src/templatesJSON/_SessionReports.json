@@ -1,0 +1,106 @@
+{
+  "templateName": "_SessionReports",
+  "description": "Template for Session reports as simple Report",
+  "creationDate": "10/15/07 15:42:51",
+  "modifiedDate": "10/15/07 15:42:51",
+  "owner": "cavisson",
+  "isConverted": true,
+  "reportSetArray": [
+    {
+      "reportSetName": "Sessions Started/Minute",
+      "dataType": 0,
+      "chartType": 0,
+      "formulaType": "0",
+      "scaling": 0,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 5,
+          "graphId": 4,
+          "vecName": "NA"
+        }
+      ]
+    },
+    {
+      "reportSetName": "Sessions/Minute",
+      "dataType": 0,
+      "chartType": 0,
+      "formulaType": "0",
+      "scaling": 0,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 5,
+          "graphId": 1,
+          "vecName": "NA"
+        }
+      ]
+    },
+    {
+      "reportSetName": "Successful Sessions/Minute",
+      "dataType": 0,
+      "chartType": 0,
+      "formulaType": "0",
+      "scaling": 0,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 5,
+          "graphId": 2,
+          "vecName": "NA"
+        }
+      ]
+    },
+    {
+      "reportSetName": "Average Session Response Time (Seconds)",
+      "dataType": 0,
+      "chartType": 0,
+      "formulaType": "0",
+      "scaling": 0,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 5,
+          "graphId": 3,
+          "vecName": "NA"
+        }
+      ]
+    },
+    {
+      "reportSetName": "Failed Sessions (All Errors)/Minute",
+      "dataType": 0,
+      "chartType": 0,
+      "formulaType": "0",
+      "scaling": 0,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 9,
+          "graphId": 1,
+          "vecName": "NA"
+        }
+      ]
+    },
+    {
+      "reportSetName": "Failed Sessions/Minute",
+      "dataType": 0,
+      "chartType": 0,
+      "formulaType": "0",
+      "scaling": 0,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 9,
+          "graphId": 2,
+          "vecName": "All"
+        }
+      ]
+    }
+  ]
+}

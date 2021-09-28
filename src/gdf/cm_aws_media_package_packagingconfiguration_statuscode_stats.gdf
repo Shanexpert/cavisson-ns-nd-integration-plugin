@@ -1,0 +1,12 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS Media Package Config StatusCode Stats|14076|vector|1|0|AWS Metrics|AccountName>Region>PackagingConfiguration>StatusCodeRange|MediaPackage is a just-in-time video packaging and origination service that runs in the AWS Cloud.
+
+Graph|AWS Media Package Egress Requests|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of content requests that AWS Elemental MediaPackage receives.
+
+
+

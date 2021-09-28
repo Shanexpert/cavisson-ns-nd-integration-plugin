@@ -1,0 +1,72 @@
+#!/bin/bash
+
+#args: TestRun UrlIndex Location Access [RunPhaseFlag]
+
+if [ $# -lt 4 ];then
+  echo "Usage: nsi_get_5u1 TestRun UrlIndex Location Access [RunPhaseFlag]"
+  echo "TestRun is the test run number"
+  echo "UrlIndex is the index of the URL"
+  echo "Location: Location name or All for all locations"
+  echo "Access: Access name or All for all accesses"
+  echo "RunPhaseFlag: 1 for Run phase only, otherwise 0 for complete test run"
+  exit 1
+fi
+
+TRNUM=$1
+
+if [ "XX" == "XX$NS_WDIR" ]
+then
+  NS_WDIR=/home/cavisson/work
+fi
+
+. $NS_WDIR/bin/nsi_db_utils
+set_query_files $TRNUM
+
+RPO=0
+
+if [ $# -eq 4 ];then
+	RPO=0
+else
+	RPO=$5
+fi
+
+query_selector $TRNUM nsi_get_5u1_old_tr $*
+
+NEED_SESS_REC=1
+if [ $3 = "All" -a $4 = "All" ];then
+	NEED_SESS_REC=0
+fi
+
+SELECT="SELECT  round(avg(DNSDuration)) AS \"DNS Lookup\",
+	round(avg(ConnectDuration)) AS \"Connection Time\",
+	round(avg(SSLHandShakeDuration)) AS \"SSL Handshake\",
+	round(avg(WriteCompleteDuration)) AS \"Request Send Time\",
+	round(avg(FirstByteRcdDuration)) AS \"First Byte Received Time\",
+	round(avg(RequestCompletedDuration)) AS \"Content Download Time\""
+FROM="FROM UrlRecord_$1"
+WHERE="WHERE UrlRecord_$1.Status = 0 AND UrlRecord_$1.UrlIndex = $2"
+
+if [ $RPO -eq 1 ];then
+	WHERE="$WHERE AND isRunPhase = true"
+	NEED_SESS_REC=1
+fi
+
+if [ $NEED_SESS_REC -eq 1 ];then
+        WHERE="$WHERE AND UrlRecord_$1.SessionInstance = SessionRecord_$1.SessionInstance
+        AND UrlRecord_$1.ChildIndex = SessionRecord_$1.ChildIndex" 
+        FROM="$FROM,  SessionRecord_$1"
+fi
+
+#Add Location/Access
+if [ $3 != "All" ];then
+    WHERE="$WHERE AND Location = ""'"$3"'"
+fi
+
+if [ $4 != "All" ];then
+    WHERE="$WHERE AND Access = ""'"$4"'"
+fi
+
+log_query
+run_nd_query
+show_ns_query_result
+exit 0

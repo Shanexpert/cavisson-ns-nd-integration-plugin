@@ -1,0 +1,8 @@
+Info|1.0|1|-|-|-1|-1|-
+
+Group|Docker Container Stats|10311|vector|4|0|Docker Container Metrics|Tier>Server>Container|Docker Container Stats
+
+Graph|Total Containers|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of containers.
+Graph|Running Containers|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of running containers.
+Graph|Paused Containers|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of paused containers.
+Graph|Stopped Containers|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of stopped containers.

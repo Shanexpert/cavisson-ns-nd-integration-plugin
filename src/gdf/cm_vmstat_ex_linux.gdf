@@ -1,0 +1,48 @@
+# --- GDF Version History ---
+#  1.0 - Initial version
+#  2.0 - Change done for match Long_data and Long_long_data to double
+#  3.0 - Changes done for Dynamic data in Execution GUI
+#  3.1 - Use future1 field of group line for Metric group name
+#
+#
+# Note: Please Use the Group Name and Graph Name having no special character like {%, !, ^, &, + } etc..
+
+# General information line
+# Info|msgVersion|numGroups|startIndex|testRun|sizeOfMsgData|interval|testRunStartDate/Time
+#
+# Group information line
+# Group|groupName|rptGrpId|groupType|numGraphs|numVectors
+#
+# Graph information line
+# Graph|graphName|rptId|graphType|dataType|graphDataIndex|formula|numVectors
+#
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|SysStats Linux|10079|vector|19|0|System Metrics|Tier>Server|Virtual Memory Stat
+
+Graph|Processes Waiting For Run Time|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of Processes Waiting For Run Time at Report Generation Instant
+Graph|Processes Waiting For UnInterruptible Sleep|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of Processes Waiting For UnInterruptible Sleep at Report Generation Instant
+
+Graph|Used Virtual Memory (MB)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Used Virtual Memory (MB)
+Graph|Available Memory (MB) |4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Available system memory (MB) for application use including memory being used by kernel as cache.
+Graph|Free Memory (MB)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Free Memory (MB)
+Graph|Used Buffer Memory (MB)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Used Buffer Memory (MB)
+Graph|Used Cache Memory (MB)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Used Cache Memory (MB)
+
+Graph|Memory Swapped In From Disk/Sec (MB)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memory Swapped In From Disk/Sec (MB)
+Graph|Memory Swapped To Disk/Sec (MB)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memory Swapped To Disk/Sec (MB)
+
+Graph|Disk Blocks Read/Sec|10|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Disk Blocks Read/Sec
+Graph|Disk Blocks Written/Sec|11|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Disk Blocks Written/Sec
+
+Graph|Interrupts/Sec|12|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Interrupts/Sec
+Graph|Context Switches/Sec|13|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Context Switches/Sec
+
+Graph|User CPU Busy (Pct)|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|User CPU Busy (Pct)
+Graph|System CPU Busy (Pct)|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|System CPU Busy (Pct)
+Graph|Idle CPU (Pct)|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Idle CPU (Pct)
+Graph|CPU Utilization (Pct)|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|CPU utilization (Pct) (100 - Idle CPU (Pct))
+Graph|IOWait CPU (Pct)|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|IOWait CPU (Pct)
+Graph|CPU Queue (%)|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|CPU Queue(%) (Processes waiting for runtime / (no. of cores on machine * 100))
+

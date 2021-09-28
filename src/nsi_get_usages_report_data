@@ -1,0 +1,131 @@
+#!/bin/bash
+TR_FILE_PATH="$NS_WDIR/logs/data_retention/usage/test_runs/"
+START_TIME=""
+END_TIME=""
+MAX_DATE_STAMP=""
+MAX_TIME_STAMP=""
+CURRENT_DATE=""
+CURRENT_TR=""
+MINI_DATE_STAMP="" 
+MINI_TIME_STAMP=""
+is_present=""
+f_flag=""
+
+check_if_file_present()
+{
+  is_present=`ls $TR_FILE_PATH|grep "tr_$CURRENT_TR" |wc -l`
+}
+
+show_current_data()                                                 #Funtion to print data present in file of current time period.
+{
+  CURRENT_DATE=$(date +"%m/%y")
+  CURRENT_TR=`echo $CURRENT_DATE|tr -d '/'`
+  check_if_file_present
+  if [ "$is_present" -eq "0" ]; then  
+    echo "File is not present "
+    exit 0;
+  fi
+  file_name="$TR_FILE_PATH/tr_$CURRENT_TR.dat"
+  cat $file_name|tail -n+2
+}
+
+print_start_file()
+{
+  file_name="$TR_FILE_PATH/tr_${MINI_TIME_STAMP}.dat"
+  if [ -f "$file_name" ]; then
+    i=0
+    while read line
+    do
+      if [ $i != 0 ]; then
+        date_now=`echo $line |cut -d '|' -f 2|cut -d ' ' -f1|tr -d '/'`
+        if [ "$date_now" -ge "$MINI_DATE_STAMP" ] && [ "$date_now" -le "$MAX_DATE_STAMP" ] ; then  
+           echo $line 
+        fi
+
+        if [ "$date_now" -gt "$MAX_DATE_STAMP" ] ; then
+           exit 0
+        fi
+
+      fi
+    i=$i+1
+    done < "$file_name"
+  fi
+}
+
+print_last_file()
+{
+  file_name="$TR_FILE_PATH/tr_${MAX_TIME_STAMP}.dat"
+  if [ -f "$file_name" ]; then
+    i=0
+    while read line
+    do
+      if [ $i != 0 ]; then
+        date_now=`echo $line |cut -d '|' -f 2|cut -d ' ' -f1|tr -d '/'`
+        if [ "$MINI_DATE_STAMP" -gt "$date_now" ] ; then
+           echo "No data is present for given time stamp"
+           exit 0
+
+        elif [ "$date_now" -le "$MAX_DATE_STAMP" ] ; then
+           echo $line
+        fi
+      fi
+    i=$i+1
+    done < "$file_name"
+  fi
+}
+
+show_n_files()
+{
+  print_start_file  
+  month=`echo $START_TIME|cut -d '/' -f 1` 
+  year=`echo $START_TIME|cut -d '/' -f 3`
+  month=`expr $month + 1` 
+  temp=${month}${year}
+  while [ $temp -lt $MAX_TIME_STAMP ]
+  do 
+     if [ "${month}" -lt "10" ]; then
+       dummy_file_name="$TR_FILE_PATH/tr_0$temp.dat"
+     else
+       dummy_file_name="$TR_FILE_PATH/tr_$temp.dat"
+     fi
+     if [ -f "$dummy_file_name" ]; then
+       cat $dummy_file_name |tail -n+2
+     fi
+     if [ $month -gt 12 ]; then
+        month=0
+        year=`expr $year + 1`
+     fi
+     month=`expr $month + 1` 
+     temp=${month}${year}
+   done  
+   if [ $temp -eq $MAX_TIME_STAMP ]; then
+     print_last_file
+   fi
+}
+
+while getopts s:e:? arg
+do
+  case $arg in
+    s) START_TIME=$OPTARG
+       ;;
+    e) END_TIME=$OPTARG
+       ;;
+    *) display_msg ;;
+    ?) display_msg ;;
+  esac
+done
+
+#If no file is given then take current date as start time 
+if [ "X$START_TIME" = "X" ]; then
+  START_TIME=$CURRENT_TIME
+  show_current_data        
+else
+  MAX_DATE_STAMP=`echo $END_TIME |tr -d '/'`
+  MAX_TIME_STAMP=`echo $END_TIME|cut -d '/' -f 1,3|tr -d '/'`
+  MINI_DATE_STAMP=`echo $START_TIME |tr -d '/'` 
+  MINI_TIME_STAMP=`echo $START_TIME|cut -d '/' -f 1,3|tr -d '/'`
+
+  show_n_files  
+
+fi
+

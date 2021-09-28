@@ -1,0 +1,12 @@
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Azkaban Flow Stats|10451|vector|2|0|Azkaban Metrics|Tier>Server>Project>Flow|Azkaban flow stats metrics shows flow elapsed time and status.
+
+Graph|Azkaban Flow Elapsed Time (Sec)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total time taken by this flow to execute in seconds. 
+Graph|Azkaban Flow Status|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Status of flow. Status is 1 = KILLED, 2 = FAILED, 3 = RUNNING and 4 = SUCCEEDED. 
+

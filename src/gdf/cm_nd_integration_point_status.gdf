@@ -1,0 +1,9 @@
+# --- GDF Version History ---
+# # 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|ND Integration Point Status|10270|vector|2|0|Application Metrics|IntegrationPoint|ND integration point status.
+
+Graph|Accessible|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Available.
+Graph|Response Time(msecs)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Response time (msecs).

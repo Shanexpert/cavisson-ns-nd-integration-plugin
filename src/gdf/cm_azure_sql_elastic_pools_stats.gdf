@@ -1,0 +1,46 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Azure Sql ElasticPools Stats|11300|vector|19|0|Azure Metrics|AccountName>Region>ResourceGroup>SqlServersElasticPools|The databases in an elastic pool are on a single server and share a set number of resources at a set price. 
+
+Graph|Azure Sql ElasticPools CPU(%)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average compute utilization in(%)age of the limit of the pool.
+
+Graph|Azure Sql ElasticPools Data Space Allocated (Bytes)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Data space allocated in Bytes.
+
+Graph|Azure Sql ElasticPools Data Space Allocated(%)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Data space allocated(%).
+
+Graph|Azure Sql ElasticPools DTU Consumption(%)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average eDTU utilization in(%)age of eDTU limit for the pool.
+
+Graph|Azure Sql ElasticPools EDTU Limit|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current max elastic pool DTU setting for this elastic pool.
+
+Graph|Azure Sql ElasticPools EDTU Used|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average eDTUs used by the pool.
+
+Graph|Azure Sql ElasticPools In Memory Oltp Storage(%)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|In-Memory OLTP storage(%).
+
+Graph|Azure Sql ElasticPools Log Write(%)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average write resource utilization in(%)age of the limit of the pool.
+
+Graph|Azure Sql ElasticPools Physical Data Read(%)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average I,O utilization in(%)age based on the limit of the pool.
+
+Graph|Azure Sql ElasticPools Sessions(%)|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum concurrent sessions in(%)age based on the limit of the pool.
+
+Graph|Azure Sql ElasticPools Storage Limit (Bytes)|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current max elastic pool storage limit setting for this elastic pool in megabytes during this interval.
+
+Graph|Azure Sql ElasticPools Storage(%)|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current max elastic pool storage limit setting for this elastic pool.
+
+Graph|Azure Sql ElasticPools Storage Used (Bytes)|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average storage used by the pool in this interval in bytes.
+
+Graph|Azure Sql ElasticPools Workers(%)|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum concurrent workers (requests) in(%)age based on the limit of the pool.
+
+Graph|Azure Sql ElasticPools Process Core(%)|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|CPU usage as a(%)age of the SQL DB process. Applies to elastic pools.
+
+Graph|Azure Sql ElasticPools Process Memory(%)|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memory usage as a(%)age of the SQL DB process. Applies to elastic pools.
+
+Graph|Azure Sql ElasticPools Tempdb Data Size(KB)|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Tempdb Data File Size Kilobytes.
+
+Graph|Azure Sql ElasticPools Tempdb Log Size(KB)|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Tempdb Log File Size Kilobytes.
+
+Graph|Azure Sql ElasticPools Tempdb Log Used(%)|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Tempdb(%) Log Used.
+

@@ -1,0 +1,45 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+#
+# General information line
+# Info|msgVersion|numGroups|startIndex|testRun|sizeOfMsgData|interval|testRunStartDate/Time
+#
+# Group information line
+# Group|groupName|rptGrpId|groupType|numGraphs|numVectors
+#
+# Graph information line
+# Graph|graphName|rptId|graphType|dataType|graphDataIndex|formula|numVectors
+
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Spring Boot Extended Actuator Stats|10742|vector|26|0|Spring Boot Metrics|Tier>Server>Instance|Spring Boot Actuator Statistics.
+Graph|Actuator System Load Average|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average system load over a period of time in one minute.
+Graph|Actuator System CPU Time (Sec)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Time spent (in seconds) by tasks of the Spring boot in kernel mode.
+Graph|Actuator User CPU Time (Sec)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Time spent (in seconds) by tasks of the Spring boot in user mode.
+Graph|Actuator JVM Memory Committed (MB)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of memory in Megabytes that is committed for the JVM to use.
+Graph|Actuator JVM GC Memory Allocated (MB)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of memory in Megabytes allocated for the JVM.
+Graph|Actuator JVM Maximum Memory (MB)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum amount of memory in Megabytes that can be used for memory management.
+Graph|Actuator JVM Memory Used (MB)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of used memory in Megabytes.
+Graph|Actuator JVM GC Promoted Memory (MB)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of memory (live objects) moved from young space to survivor in Megabytes.
+Graph|Actuator JVM Buffer Memory Used (MB)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|An estimate of the memory in Megabytes that the JVM is using for this buffer pool.
+Graph|Actuator JVM GC Maximum Data Size (MB)|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum size of object in Megabytes can be persist in JVM.
+Graph|Actuator JVM GC Live Data Size (MB)|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Size of live object in Megabytes persists in JVM.
+Graph|Actuator JVM GC Pause (ms)|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average GC pause time in milliseconds.
+Graph|Actuator JVM Live Threads|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of live threads in JVM.
+Graph|Actuator JVM Total Buffer Capacity (MB)|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|An estimate of the total capacity of the buffers in this pool in Megabytes. A buffer is a chunk of memory typically used to interface Java to the OS I/O subsystems, for example as a place where the OS writes data as it receives it from a socket or disk, and from which Java can read directly.
+Graph|Actuator JVM Buffer Count|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|An estimate of the total count of the buffers in this pool.
+Graph|Actuator Tomcat Global Request/Sec|16|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of request tomcat received per second.
+Graph|Actuator Tomcat Created Sessions/Sec|17|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of created sessions per second in tomcat container.
+Graph|Actuator Tomcat Expired Sessions/Sec|18|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of expired sessions per second in tomcat container.
+Graph|Actuator Tomcat Rejected Sessions/Sec|19|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of rejected sessions per second in tomcat container.
+Graph|Actuator Tomcat Sessions Active Current|20|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Active sessions running in tomcat container.
+Graph|Actuator Tomcat Cache Hits/Sec|21|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of cache hits per second in tomcat container.
+Graph|Actuator Tomcat Cache Access/Sec|22|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of times that the tomcat cache was accessed per second in tomcat container.
+Graph|Actuator Tomcat Global Errors|23|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of request error occurred in tomcat container..
+Graph|Actuator Tomcat Busy Threads|24|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of busy threads on the tomcat container.
+Graph|Actuator Tomcat Current Threads|25|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of current threads on the tomcat container.
+Graph|Actuator Tomcat Average Response Time (Sec)|26|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Tomcat average response time in seconds. 
+

@@ -1,0 +1,39 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+#We are taking same group id as cm_apache_svc_time_ex.gdf in future we will delete cm_apache_svc_time_ex.gdf
+Info|3.1|1|-1|-|-1|-1|-
+
+Group|Access Log V3|10714|vector|28|0|Application Metrics|Tier>Server>Instance>Page|Request stats using access Log. It also provides percentage 
+
+Graph|Number of requests/second|1|scalar|times|-|-|0|AS|-1|-1|NA|NA|Number of requests per second
+Graph|Average service time (ms)|2|scalar|times|-|-|0|AS|-1|-1|NA|NA|Average Service Time in milliseconds
+Graph|Receive throughput (Kb/sec)|3|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Receive Throughput in kilo bits/Sec
+Graph|Number of requests 1xx/sec|4|scalar|times|-|-|0|AS|-1|-1|NA|NA|Number of requests per second with HTTP status code of 1xx series
+Graph|Average service time 1xx (ms)|5|scalar|times|-|-|0|AS|-1|-1|NA|NA|Average Service Time in milliseconds with HTTP status code of 1xx series
+Graph|Receive throughput 1xx (Kb/sec)|6|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Receive Throughput in kilo bits/Sec with HTTP status code of 1xx series
+Graph|1xx Request (Pct)|7|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Percentage of 1xx requests.
+Graph|Number of requests 2xx/sec|8|scalar|times|-|-|0|AS|-1|-1|NA|NA|Number of requests per second with HTTP status code of 2xx series
+Graph|Average service time 2xx (ms)|9|scalar|times|-|-|0|AS|-1|-1|NA|NA|Average Service Time in milliseconds with HTTP status code of 2xx series
+Graph|Receive throughput 2xx (Kb/sec)|10|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Receive Throughput in kilo bits/Sec with HTTP status code of 2xx series
+Graph|2xx Request (Pct)|11|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Percentage of 2xx requests.
+Graph|Number of requests 3xx/sec|12|scalar|times|-|-|0|AS|-1|-1|NA|NA|Number of requests per second with HTTP status code of 3xx series
+Graph|Average service time 3xx (ms)|13|scalar|times|-|-|0|AS|-1|-1|NA|NA|Average Service Time in milliseconds with HTTP status code of 3xx series
+Graph|Receive throughput 3xx (Kb/sec)|14|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Receive Throughput in kilo bits/Sec with HTTP status code of 3xx series
+Graph|3xx Request (Pct)|15|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Percentage of 3xx requests.
+Graph|Number of requests 4xx/sec|16|scalar|times|-|-|0|AS|-1|-1|NA|NA|Number of requests per second with HTTP status code of 4xx series
+Graph|Average service time 4xx (ms)|17|scalar|times|-|-|0|AS|-1|-1|NA|NA|Average Service Time in milliseconds with HTTP status code of 4xx series
+Graph|Receive throughput 4xx (Kb/sec)|18|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Receive Throughput in kilo bits/Sec with HTTP status code of 4xx series
+Graph|4xx Request (Pct)|19|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Percentage of 4xx requests.
+Graph|Number of requests 5xx/Sec|20|scalar|times|-|-|0|AS|-1|-1|NA|NA|Number of requests per second with HTTP status code of 5xx series
+Graph|Average service time 5xx (ms)|21|scalar|times|-|-|0|AS|-1|-1|NA|NA|Average Service Time in milliseconds with HTTP status code of 5xx series
+Graph|Receive throughput 5xx (Kb/sec)|22|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Receive Throughput in kilo bits/Sec with HTTP status code of 5xx series
+Graph|5xx Request (Pct)|23|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Percentage of 5xx requests.
+Graph|Number of requests others/sec|24|scalar|times|-|-|0|AS|-1|-1|NA|NA|Number of requests per second with other HTTP status code
+Graph|Average service time others (ms)|25|scalar|times|-|-|0|AS|-1|-1|NA|NA|Average Service Time in milliseconds with other HTTP status code
+Graph|Receive throughput others (Kb/sec)|26|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Receive Throughput in kilo bits/Sec with other HTTP status code
+Graph|Others Request (Pct)|27|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Percentage of other requests.
+Graph|Requests greater than threshold response time (pct)|28|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Percentage of requests which have response time greater than threshold.

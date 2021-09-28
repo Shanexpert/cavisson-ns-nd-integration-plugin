@@ -1,0 +1,21 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# General information line
+# Info|msgVersion|numGroups|startIndex|testRun|sizeOfMsgData|interval|testRunStartDate/Time
+#
+# Group information line
+# Group|groupName|rptGrpId|groupType|numGraphs|numVectors
+# Graph information line
+# Graph|graphName|rptId|graphType|dataType|graphDataIndex|formula|numVectors
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Tibco Connection Stats|10736|vector|4|0|Application Metrics|Tier>Server>Instance>Connection|Tibco Connection Statistics.
+Graph|Session|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current number of sessions.
+Graph|Consumer|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current number of consumers.
+Graph|Producer|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current number of producers.
+Graph|Connection UpTime (Minute)|4|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Connection Up-Time in minute.
+
+
+
+

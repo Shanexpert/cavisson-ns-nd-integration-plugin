@@ -1,0 +1,13 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Burrow Max Lag Stats|10830|vector|7|0|Kafka Metrics|Tier>Server>Cluster>Group>Topic>Partition|Burrow Max Lag Stats monitors metrics related to consumer topic partition maximum lag stats.
+Graph|Burrow Start Max Offset|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The first max offset (oldest) in the interval that burrow is storing for this partition.
+Graph|Burrow End Max Offset|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The last max offset (youngest) in the interval.
+Graph|Burrow Start Max Lag|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The first offset (oldest) max lag in the interval.
+Graph|Burrow End Max Lag|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The last offset (youngest) max lag in the interval.
+Graph|Burrow Current Max Lag|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The current max lag for this partition.
+Graph|Burrow Max lag Status|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The status of the max lag partition. 1 (OK) means partition is in a good state, 2 (WARN) means partition is in a warning state. For example, the offsets are moving but lag is increasing, 3 (STOP) means partition has stopped. For example, the offsets have not been committed in a long period of time, 4 (STALL) means partition has stalled. For example, the offsets are being committed, but they are not changing and the lag is non-zero.
+Graph|Burrow Complete (Pct)|7|scalar|sample|-|-|0|D|-1|-1|NA|MUL(G7,100)|Burrow complete value between 0 and 1 showing the percentage of information Burrow has on this partition.

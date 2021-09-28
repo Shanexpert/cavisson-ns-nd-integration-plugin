@@ -1,0 +1,47 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+#
+# General information line
+# Info|msgVersion|numGroups|startIndex|testRun|sizeOfMsgData|interval|testRunStartDate/Time
+#
+# Group information line
+# Group|groupName|rptGrpId|groupType|numGraphs|numVectors
+#
+# Graph information line
+# Graph|graphName|rptId|graphType|dataType|graphDataIndex|formula|numVectors
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Apache Server Status|10085|vector|27|0|Application Metrics|Tier>Server>Instance|Apache Server Status
+Graph|Reporting interval(secs)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Interval between two samples
+#Graph|Server url|2|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total accesses
+#Graph|Server version|3|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total accesses
+Graph|Total accesses|2|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total client requests
+Graph|Total Traffic(GB)|3|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total traffic
+Graph|CPU Usage cu|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|User cpu time. Time spent on the processor running your program's code (or code in libraries)
+Graph|CPU Usage cs|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|System cpu time. Time spent running code in the operating system kernel on behalf of your program.
+Graph|CPU load (PCT)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|CPU load percentage since Apache was started
+Graph|Number of Requests/sec|7|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of requests per second
+Graph|Requests (MB/sec)|8|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Bytes per second
+Graph|Data sent per request (Kb)|9|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Bytes per request
+Graph|Number of Request in process|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total requests currently being processed
+Graph|Total connections|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Sum of Busy threads, Writing async connections, Keep-alive async connections and Closing asyn-connections
+Graph|Busy workers|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of workers serving requests
+Graph|Idle Workers|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of idle workers
+Graph|Writing async connections|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of writing async connections
+Graph|Keep-alive async connectuons|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of Keep-alive async connections
+Graph|Closing asyn-connections|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of Closing asyn-connections
+Graph|Waiting_for_connection|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of workers in operating mode waiting for connection
+Graph|Starting_up|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of workers in operating mode starting up
+Graph|Reading_request|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of workers in operating mode reading request
+Graph|Sending_reply|20|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of workers in operating mode sending reply
+Graph|Keepalive_read|21|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of workers in operating mode keepalive read
+Graph|Dns_lookup|22|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of workers in operating mode dns lookup
+Graph|Closing_connection|23|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of workers in operating mode closing connection
+Graph|Logging|24|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of workers in operating mode logging
+Graph|Gracefully_finishing|25|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of workers in operating mode gracefully finishing
+Graph|Idle_cleanup_of_worker|26|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of workers in operating mode idle cleanup of worker
+Graph|Open_slot_with_no_current_process|27|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of workers in operating mode open slot with no_current_process

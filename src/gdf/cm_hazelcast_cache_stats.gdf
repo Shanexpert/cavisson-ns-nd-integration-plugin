@@ -1,0 +1,20 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Hazelcast Cache Stats|10332|vector|11|0|Hazelcast Metrics|Tier>Server>Node>Instance>CacheManager>Cache|Hazelcast Cache Stats.
+Graph|Hits/Sec|1|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of hit operations per second.
+Graph|Cache Hit (Pct)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percentage of cache hits operations.
+Graph|Misses/Sec|3|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of miss operations per second.
+Graph|Cache Miss (Pct)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percentage of cache miss operations.
+Graph|Puts/Sec|5|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of put operations per second.
+Graph|Average Put Time (ms)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average time of put operations in milliseconds.
+Graph|Gets/Sec|7|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of get operations per second.
+Graph|Average Get Time (ms)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average time of get operations in milliseconds.
+Graph|Removals/Sec|9|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of remove operations per second.
+Graph|Average Remove Time (ms)|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average time of remove operations in milliseconds.
+Graph|Evictions/Sec|11|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of eviction operations per second.
+

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:soap-enc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:cwmp="urn:dslforum-org:cwmp-1-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soapenv:Header>
+    <cwmp:ID soap:mustUnderstand="1" xsi:type="xsd:string">{TR069ACSReqIDSP}</cwmp:ID>
+  </soapenv:Header>
+  <soapenv:Body soap:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+    <cwmp:GetParameterValuesResponse>
+      <ParameterList xsi:type="soap-enc-Array" soap-enc:arrayType="cwmp:ParameterValueStruct[{TR060NumGPVDP}]">
+        {TR069GPVStructDP}
+      </ParameterList>
+    </cwmp:GetParameterValuesResponse>
+  </soapenv:Body>
+</soapenv:Envelope>

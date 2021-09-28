@@ -1,0 +1,9 @@
+# --- GDF Version History ---
+# 1.0 - Initial version, release:4.1.10 B?
+
+Info|1.0|1|-|-|-1|-1|
+
+Group|DB Disk Space|10649|vector|2|0|Generic DB metrics|Tier>Server>Instance>Schema|Provides database disk usage and free space stats.
+
+Graph|DB Used Space (MB)|1|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|Database used space in Megabytes.
+Graph|DB Free Space (MB)|2|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|Database free space in Megabytes.

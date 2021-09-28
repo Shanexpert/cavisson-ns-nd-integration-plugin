@@ -1,0 +1,32 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS SageMaker Labeling Job Stats|14085|vector|12|0|AWS Metrics|AccountName>Region>LabelingJobName|Amazon SageMaker Filters dataset object count metrics for a labeling job.
+
+Graph|AWS SageMaker Labeling Job Active Workers|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of workers on a private work team performing a labeling job.
+
+Graph|AWS SageMaker Labeling Job Dataset Objects Auto Annotated|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of dataset objects auto-annotated in a labeling job.
+
+Graph|AWS SageMaker Labeling Job Dataset Objects Human Annotated|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of dataset objects annotated by a human in a labeling job.
+
+Graph|AWS SageMaker Labeling Job Dataset Objects Failed Labeled|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of dataset objects that failed labeling in a labeling job.
+
+Graph|AWS SageMaker Labeling Job Failed|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of labeling jobs that failed.
+
+Graph|AWS SageMaker Labeling Job Succeeded|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of labeling jobs that succeeded.
+
+Graph|AWS SageMaker Labeling Job Stopped|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of labeling jobs that were stopped.
+
+Graph|AWS SageMaker Labeling Job Tasks Accepted|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of tasks accepted by workers.
+
+Graph|AWS SageMaker Labeling Job Tasks Returned|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of tasks returned by workers.
+
+Graph|AWS SageMaker Labeling Job Tasks Submitted|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of tasks submitted,completed by a private work team.
+
+Graph|AWS SageMaker Labeling Job Time Spent (Sec)|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Time spent on a task completed by a private work team in seconds.
+
+Graph|AWS SageMaker Labeling Job Dataset Objects Successfully Labeled|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of dataset objects labeled successfully in a labeling job.
+

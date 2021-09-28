@@ -1,0 +1,35 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS MediaConnect SourceARN Stats|11276|vector|26|0|AWS Metrics|AccountName>Region>SourceARN|AWS Elemental MediaConnect is a service that makes it easy for broadcasters and other premium video providers to reliably ingest live video into the AWS Cloud and distribute it to multiple destinations inside or outside the AWS Cloud.
+
+Graph|AWS MediaConnect Source Bits/Sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The average number of Source Bit Rate.
+Graph|AWS MediaConnect Source TS Byte Error|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of TS Byte Error.
+Graph|AWS MediaConnect Source Continuity Counter|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of Source Continuity Counter.
+Graph|AWS MediaConnect Source Transport Error|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of Source Transport Error.
+Graph|AWS MediaConnect Source PCR Error|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of Source PCR Error.
+Graph|AWS MediaConnect Source PCR Accuracy Error|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of Source PCR Accuracy Error.
+Graph|AWS MediaConnect Source TS Sync Loss|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of times that a source TS sync loss error occurred.
+Graph|AWS MediaConnect Source PTS Error|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of Source PTS error.
+Graph|AWS MediaConnect Source Round Trip Time (ms)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of Source Round Trip Time.
+Graph|AWS MediaConnect Source ARQ Request|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of Source ARQ Requests.
+Graph|AWS MediaConnect Source Connected|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of Source Connectecd.
+Graph|AWS MediaConnect Source Dropped Packet|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of Source Dropped Packets.
+Graph|AWS MediaConnect Source Not Recovered Packet|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of Source Not recovered Packets.
+Graph|AWS MediaConnect Source Recovered Packet|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of Source recovered packets.
+Graph|AWS MediaConnect Source Total Packet|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of Source total packets.
+Graph|AWS MediaConnect Source Disconnection|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of Source disconnections.
+Graph|AWS MediaConnect Source CRC Error|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of Source CRC Error.
+Graph|AWS MediaConnect Source CAT Error|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of Source CAT Error.
+Graph|AWS MediaConnect Source Overflow Packet|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of Source Overflow Packets.
+Graph|AWS MediaConnect Source FEC Packet|20|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of Source FEC Packets.
+Graph|AWS MediaConnect Source PAT Error|21|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of Source PAT Error.
+Graph|AWS MediaConnect Source PMT Error|22|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of Source PMT Error.
+Graph|AWS MediaConnect Source PID Error|23|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of Source PID Error
+Graph|AWS MediaConnect Source FEC Recovered|24|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of Source FEC Recovered.
+Graph|AWS MediaConnect Source ARQ Recovered|25|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of ARQ Recovered.
+Graph|AWS MediaConnect Source Packet Loss (%)|26|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of Source Packet Loss Percent.
+

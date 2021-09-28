@@ -1,0 +1,9 @@
+# --- GDF Version History ---
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS EBS Snapshot Zone Stats|11238|vector|2|0|AWS Metrics|AccountName>Region>SnapshotID>AvailabilityZone|Amazon Elastic Block Store (Amazon EBS) provides block level storage volumes for use with EC2 instances.
+
+Graph|AWS EBS Snapshot Credits Balance|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of volume create credits available. This metric is reported per snapshot per Availability Zone.
+Graph|AWS EBS Snapshot Credits Bucket Size|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The maximum number of volume create credits that can be accumulated. This metric is reported per snapshot per Availability Zone.

@@ -1,0 +1,13 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Azure Search Stats|11305|vector|3|0|Azure Metrics|AccountName>Region>ResourceGroup>AzureSearch|Microsoft Azure Search is a component of the Microsoft Azure Cloud Platform providing indexing and querying capabilities for data uploaded to Microsoft servers.
+
+Graph|Azure Search Services Search Latency(Sec)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average search latency for the search service
+
+Graph|Azure Search Services Search Queries /Sec|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Search queries per second for the search service.
+
+Graph|Azure Search Services Throttled Search Queries(Pct)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percentage of search queries that were throttled for the search service.

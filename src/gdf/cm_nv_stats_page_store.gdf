@@ -1,0 +1,19 @@
+# --- GDF Version History ---
+# # 1.0 - Initial version
+#
+Info|3.1|1|-|-|-1|-1|-
+#
+Group|PageStats By Stores|10267|vector|12|0|UX Metrics|Country>State>City>JCPStore>Terminals|NetVision PageStats By Stores
+#
+Graph|Requests/Min|1|scalar|rate|-|CumToPM|0|A|-1|-1|NA|NA|Number of requests recieved per minute
+Graph|OnLoad(Sec)|2|scalar|times|-|-|0|A|-1|-1|NA|NA| Onload time occurs when the processing of the page is complete and all the resources on the page (images, CSS, etc.) have finished downloading. This is also the same time that DOM complete occurs and the JavaScript window.onload event fires.
+Graph|Conversion Rate(%)|3|scalar|sample|-|-|0|A|-1|-1|NA|NA|Store and Terminal wise Conversion Rate.
+Graph|Order Total|4|scalar|sum|-|-|0|A|-1|-1|NA|NA|Store and Terminal wise Order Total.
+Graph|Order Count|5|scalar|sum|-|-|0|A|-1|-1|NA|NA|Store and Terminal wise Order Count.
+Graph|Bandwidth(Kbps)|6|scalar|sample|-|-|0|A|-1|-1|NA|NA|Bandwidth use of a page in Kbps.
+Graph|Average Received througput(kbps)|7|scalar|sample|-|-|0|A|-1|-1|NA|NA|Average Received througput in kbps(kilo bit per second)
+Graph|Max Received througput(kbps)|8|scalar|sample|-|-|0|A|-1|-1|NA|NA|Max Received througput in kbps(kilo bit per second)
+Graph|Average Transmit througput(kbps)|9|scalar|sample|-|-|0|A|-1|-1|NA|NA|Average Transmit througput in kbps(kilo bit per second)
+Graph|Max Transmit througput(kbps)|10|scalar|sample|-|-|0|A|-1|-1|NA|NA|Max Transmit througput in kbps(kilo bit per second)
+Graph|Active Registers|11|scalar|sample|-|-|0|A|-1|-1|NA|NA|Total Active Registers
+Graph|Available Register|12|scalar|sample|-|-|0|A|-1|-1|NA|NA|Total Avilable Registers

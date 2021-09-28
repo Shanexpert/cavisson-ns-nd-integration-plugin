@@ -1,0 +1,5 @@
+# 1.0 - Initial version
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP Service Runtime QuotaUsage|11600|vector|1|0|GCP Metrics|ProjectID>Location>QuotaMetric>Method|It provide metric related to quota usage.
+Graph|GCP Service Runtime Rate Quota Usage/Sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Total consumed rate quota per seconds.

@@ -1,0 +1,4 @@
+Info|3.1|1|-|-|-1|-1|-
+Group|Windows CRM Locator Service|14276|vector|2|0|CRM Metrics|Tier>Server|Windows CRM Locator Service Stats.
+Graph|Locator Service Failed Cache Flush Requests|1|scalar|sample|-|-|0|NA|-1|-1|H|NA|Number of LocatorService cache flush requests that were unsuccessful for any reason.A high count may indicate a problem with the LocatorService cache, or a problem with the connection to CONFIG_DB.
+Graph|Locator Service Total Cache Flush Requests|2|scalar|sample|-|-|0|NA|-1|-1|H|NA|Total number of successful LocatorService cache flush requests that have been received.A high count may indicate that the caching algorithm is not optimized, or that the data is changing too frequently.

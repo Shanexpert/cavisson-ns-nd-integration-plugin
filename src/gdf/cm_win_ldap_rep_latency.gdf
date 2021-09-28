@@ -1,0 +1,7 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Windows LDAP Replication Stats|10937|vector|2|0|LDAP Metrics|Tier>Server|Windows LDAP Replication latency on each domain controller.
+Graph|LDAP Latency Time (Sec)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of time taken for a transaction to occur in the domain controller and to be replicated to other domain controller in the forest.
+Graph|LDAP Last Replication Occured(Sec)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Last Time in seconds, when replication was performed.

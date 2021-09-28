@@ -1,0 +1,23 @@
+Info|3.1|1|-|-|-1|-1|-
+Group|Consul Agent Stats|10615|vector|20|0|Application Metrics|Tier>Server>Agent|Consul Agent Stats provides metrics related to the leader server.
+Graph|Consul Raft Replication Append Entries Time (ms)|1|scalar|times|-|-|0|NA|-1|-1|NA|NA|Time taken to replicate log entries to followers. This is a general indicator of the load pressure on the Consul servers, as well as the performance of the communication among the servers in milliseconds.	
+Graph|Consul Raft Commit Time (ms)|2|scalar|times|-|-|0|NA|-1|-1|NA|NA|Time taken to commit a new entry to the Raft log on the leader in milliseconds.
+Graph|Consul Raft Leader Dispatch Log Time (ms)|3|scalar|times|-|-|0|NA|-1|-1|NA|NA|Time taken for the leader to write log entries to disk in milliseconds.
+Graph|Consul Serf Queue Event Time (ms)|4|scalar|times|-|-|0|NA|-1|-1|NA|NA|Time taken in backlog of events in the queue in milliseconds.
+Graph|Consul Raft Applies|5|scalar|times|-|-|0|NA|-1|-1|NA|NA|Counts the number of Raft transactions occurring over the interval, which is a general indicator of the write load on the Consul servers.
+Graph|Consul RPC Average Requests|6|scalar|times|-|-|0|NA|-1|-1|NA|NA|Increments when a server receives a Consul-related RPC request.
+Graph|Consul RPC Average Queries|7|scalar|times|-|-|0|NA|-1|-1|NA|NA|Increments when a server receives a (potentially blocking) RPC query.
+Graph|Consul Raft Leader Last Contact Time (ms)|8|scalar|times|-|-|0|NA|-1|-1|NA|NA|Measures the time since the leader was last able to contact the follower nodes when checking its leader lease. It can be used as a measure for how stable the Raft timing is and how close the leader is to timing out its lease.
+Graph|Consul FSM Coordinate Batch Update Time (ms)|9|scalar|times|-|-|0|NA|-1|-1|NA|NA|Measures the time taken to apply the given batch coordinate update to the FSM.
+Graph|Consul TTL Active Sessions|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Tracks the active number of sessions being tracked.
+Graph|Consul Runtime Heap Objects|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Measures the number of runtime objects allocated on the heap and is a general memory pressure indicator. 
+Graph|Consul Runtime Allocated Bytes|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Measures the number of runtime bytes allocated by the Consul process.
+Graph|Consul Autopilot Health Status|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Tracks the overall health status of the local server cluster. Servers are considered healthy by Autopilot, will be set to 1, else if considered unhealthy will be set 0.
+Graph|Consul Runtime Go Routines|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Tracks the number of running goroutines and is a general load pressure indicator.
+Graph|Consul Autopilot Failure Tolerance|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Tracks the number of voting servers that the cluster can lose while continuing to function.
+Graph|Consul Runtime Sys (MB)|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total size of the virtual address space reserved by the Go runtime in megabytes.
+Graph|Consul Runtime Malloc Count/Sec|17|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of heap objects allocated per second. 
+Graph|Consul Runtime Total GC Pause (sec)|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Cumulative seconds in GC stop-the-world pauses since Consul started.
+Graph|Consul Runtime Total GC Runs|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of completed GC cycles.
+Graph|Consul Runtime Free Count/Sec|20|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of heap objects freed per second.
+

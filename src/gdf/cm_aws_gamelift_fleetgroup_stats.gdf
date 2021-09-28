@@ -1,0 +1,32 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS GameLift FleetGroup Stats|12|vector|14048|0|AWS Metrics|AccountName>Region>MetricGroup|Amazon GameLift is a managed service for deploying, operating, and scaling dedicated game servers for session-based multiplayer games.
+
+Graph|AWS GameLift Current Player Sessions|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Player sessions with either ACTIVE status player is connected to an active game session or RESERVED status.
+
+Graph|AWS GameLift Server Process Activations|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Server processes that successfully transitioned from ACTIVATING to ACTIVE status since the last report.
+
+Graph|AWS GameLift Active Server Processes|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Server processes with ACTIVE status which means they are running and able to host game sessions.
+
+Graph|AWS GameLift Active Instances|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Instances with ACTIVE status which means they are running active server processes.
+
+Graph|AWS GameLift Idle Instances|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Active instances that are currently hosting zero game sessions.
+
+Graph|AWS GameLift Idle Instances (%)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percentage of all active instances that are idle(%).
+
+Graph|AWS GameLift Activating Game Sessions|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Game sessions with ACTIVATING status which means they are in the process of starting up.
+
+Graph|AWS GameLift Active Game Sessions|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Game sessions with ACTIVE status which means they are able to host players and are hosting zero or more players.
+
+Graph|AWS GameLift Available Game Sessions|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Game session slots on active healthy server processes that are not currently being used.
+
+Graph|AWS GameLift Available Game Sessions (%)|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percentage of game session slots on all active server processes healthy or unhealthy that are not currently being used(%).
+
+Graph|AWS GameLift Healthy Server Processes|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Active server processes that are reporting healthy.
+
+Graph|AWS GameLift Healthy Server Processes (%)|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percentage of all active server processes that are reporting healthy(%).
+

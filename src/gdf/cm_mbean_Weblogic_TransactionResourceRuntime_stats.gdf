@@ -1,0 +1,29 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+
+#ObjectName :com.bea:ServerRuntime=AdminServer,Name=WSATGatewayRM_AdminServer_admin_domain,Type=TransactionResourceRuntime,JTARuntime=JTARuntime
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Weblogic Transaction Resource Runtime Stats|14188|vector|8|0|Weblogic Metrics|Tier>Server>Instance>Name|This stats represents runtime statistics for a transactional resource.
+
+
+Graph|Weblogic Transaction Heuristic Hazard Total Count|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The number of transactions for which this resource has reported a heuristic hazard decision.
+
+Graph|Weblogic Transaction Heuristic Roll back Total Count|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The number of transactions for which this resource has returned a heuristic rollback decision.
+
+Graph|Weblogic Transaction Heuristic Mixed Total Count|3|scalar|sample|-|None|0|AS|-1|-1|NA|NA|>The number of transactions for which this resource has reported a heuristic mixed decision.
+
+Graph|Weblogic Transaction Committed Total Count|4|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The total number of transactions committed since the server was started.
+
+Graph|Weblogic Transaction Rolled Back Total Count|5|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The number of transactions that were rolled back since the server was started.
+
+Graph|Weblogic Transaction Total Count|6|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The total number of transactions processed. This total includes all committed, rolled back, and heuristic transaction completions since the server was started.
+
+Graph|Weblogic Transaction Heuristic Commit Total Count|7|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The number of transactions for which this resource has returned a heuristic commit decision.
+
+Graph|Weblogic Transaction Heuristics Total Count|8|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The number of transactions that completed with a heuristic status since the server was started.

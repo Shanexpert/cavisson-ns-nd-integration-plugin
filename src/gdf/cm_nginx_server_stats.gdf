@@ -1,0 +1,13 @@
+Info|3.1|1|-|-|-1|-1|-
+Group|NGINX Resource Stats|10481|vector|10|0|NGINX Metrics|Tier>Server>Instance|NGINX Resource Stats provides metrics related to connections and user's requests and responses.
+Graph|Nginx Client Active Connections|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of active (accepted) connections from clients, which includes all connections with the status Idle / Waiting, Reading, and Writing.
+Graph|Nginx Client Requests/Sec|2|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of requests from clients since the nginx master process started per second.
+Graph|Nginx Client Accepted Connections/Sec|3|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of accepted connections from clients since the nginx master process started per second.
+Graph|Nginx Client Handled Connections/Sec|4|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of handled connections from clients since the nginx master process started per second.
+Graph|Nginx Client Requests/Connection|5|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of requests from clients since the nginx master process started per connection.
+Graph|Nginx Client Idle Connections|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of connections when no data is currently being received by or sent to the client. 
+Graph|Nginx Client Request Reading|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of (accepted) connections from clients where nginx is reading the request.
+Graph|Nginx Client Request Writing|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of connections from clients where nginx is writing a response back to the client. 
+Graph|Nginx Client Waiting Connections|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of connections from clients that are in the Waiting state.
+Graph|Nginx Client Dropped Connections/Sec|10|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of dropped connections per second,Nginx ended the connection prior to successfully completing the request.
+

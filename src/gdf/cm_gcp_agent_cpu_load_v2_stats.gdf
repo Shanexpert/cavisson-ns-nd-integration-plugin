@@ -1,0 +1,6 @@
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP CPU Load Stats V2|11427|vector|3|0|GCP Metrics|ProjectID>Instance>Zone|CPU load stats provide metrics related to cpu load over 1, 5, 15 minute.
+Graph|Load Average Over 1 Minute|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average load of system during each minute.
+Graph|Load Average Over 5 Minutes|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average load of system during 5 minute.
+Graph|Load Average Over 15 Minutes|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average load of system during 15 minute.

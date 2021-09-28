@@ -1,0 +1,49 @@
+#!/bin/sh
+#----------------------------------------------------------------------
+# Name    :    nsu_show_cert
+# Author  :    Ankur Nath Mishra
+# Purpose :    This is a tool to display details of digital ceritificates and key
+#	Name of file
+#	Issuer
+#	Common Name
+#	Division
+#	Organization
+#	Locality
+#	State
+#	Country
+#	Email address
+#	Expiration date
+#	Key Size
+#Modification History:
+#   04/11/2012:  Ankur Nath Mishra - Initial Version
+#----------------------------------------------------------------------
+CERT_DIR=$NS_WDIR/cert
+CERT_FILE=cert_list.dat
+if [ ! -f $CERT_DIR/$CERT_FILE ];then
+  echo "cert_list.dat file not found"
+  exit -1
+fi
+usage()
+{
+  echo "Error: usage: Provide 1 file name only"
+  echo "Sample: nsu_show_cert <file name>"
+}
+show_all_certs()
+{
+  echo "FILE|TYPE|ISSUER|CN|DIV|ORG|LOC|STATE|COUNTRY|EMAIL|EXP|KEYSIZE"
+  cat $CERT_DIR/$CERT_FILE | grep -v '^#'
+}
+if [ "$#" == 0 ];then
+  show_all_certs
+  exit 0
+fi
+if [ "$#" == 1 ];then
+  FILE=$1
+  echo "FILE|TYPE|ISSUER|CN|DIV|ORG|LOC|STATE|COUNTRY|EMAIL|EXP|KEYSIZE"
+  awk -F "|" '{if ($1 == "'$FILE'" ) print}' $CERT_DIR/$CERT_FILE
+  else
+  usage
+  exit -1
+fi
+
+exit 0

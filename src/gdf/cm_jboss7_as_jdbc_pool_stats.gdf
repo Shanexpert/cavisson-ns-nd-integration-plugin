@@ -1,0 +1,19 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|JBoss7 Jdbc Connection Pool|10447|vector|12|0|Application Metrics|Tier>Server>Instance>JdbcPool|JBoss7 AS Jdbc Connection Pool Stats shows metrics for jdbc pool active connections, created connections etc.
+
+Graph|JBoss7 Average Blocking Time (ms)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average time spent blocking for a connection in milliseconds.
+Graph|JBoss7 Maximum Waiting Time (ms)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The maximum wait time for a connection in milliseconds.
+Graph|JBoss7 Active Connections|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Gets the number of active connections.
+Graph|JBoss7 Created Connections|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The Connection Created Count retrieves the Number of Connection created.
+Graph|JBoss7 Maximum Creation Time For Connection (ms)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The maximum time to create a connection in milliseconds.
+Graph|JBoss7 Total Creation Time (ms)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total time spent creating connections in milliseconds.
+Graph|JBoss7 Maximum Available Connections|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum Number of Connections Available in the Pool.
+Graph|JBoss7 Maximum Used Connections|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The maximum number of connections used.
+Graph|JBoss7 Timed Out Connections|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The running count of requests for a connection from this data source that had to wait before getting a connection and eventually failed to get a connection. Waiting connection requests can fail for a variety of reasons, including waiting for longer than the ConnectionReserveTimeoutSeconds.
+Graph|JBoss7 Total Blocking Time (ms)|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The Blocking Time attribute indicates the total time to block while waiting for a connection before throwing an exception in milliseconds. 
+Graph|JBoss7 Average connection Creation Time (ms)|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average time spent creating a connection in milliseconds. 
+Graph|JBoss7 Destroyed Connections|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The Connection Destroyed Count retrieves the destroyed count.

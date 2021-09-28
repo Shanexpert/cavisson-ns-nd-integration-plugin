@@ -1,0 +1,10 @@
+# --- GDF Version History ---
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS ECS Cluster Stats|11260|vector|3|0|AWS Metrics|AccountName>Region>ClusterName|Amazon Elastic Container Service (Amazon ECS) is a highly scalable, fast, container management service that makes it easy to run, stop, and manage Docker containers on a cluster.
+
+Graph|AWS ECS Memory reservation (%)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average percentage of memory that are reserved by running tasks .
+Graph|AWS ECS GPU Reservation (%)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average percentage of GPU units that are used in the task
+Graph|AWS ECS CPU reservation (%)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average percentage of memory that is reserved by running tasks in the cluster.

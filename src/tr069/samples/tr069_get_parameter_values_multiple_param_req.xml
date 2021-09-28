@@ -1,0 +1,16 @@
+<soapenv:Envelope
+  xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+  soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+  xmlns:cwmp="urn:dslforum-org:cwmp-1-0">
+    <soapenv:Header>
+      <cwmp:ID soapenv:mustUnderstand="1">1234</cwmp:ID>
+    </soapenv:Header>
+    <soapenv:Body>
+      <cwmp:GetParameterValues>
+	<ParameterNames soap:arrayType="xsd:string[2]">
+	  <string>InternetGatewayDevice.ManagementServer.ConnectionRequestUsername</string>
+	  <string>InternetGatewayDevice.ManagementServer.PeriodicInformEnable</string>
+	</ParameterNames>
+      </cwmp:GetParameterValues>
+    </soapenv:Body>
+</soapenv:Envelope>

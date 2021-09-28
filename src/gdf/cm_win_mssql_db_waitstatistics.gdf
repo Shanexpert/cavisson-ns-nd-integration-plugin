@@ -1,0 +1,18 @@
+# --- GDF Version History ---
+#  1.0 - Initial version
+# Command to get data for this gdf on windows server :
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# wmic path Win32_PerfFormattedData_MSSQLSTOREDB_MSSQLSTOREDBWaitStatistics
+
+Info|3.1|1|-|-|-1|-1|-
+Group|MS SQL DB Wait Stats|10301|vector|9|0|MSSQL Metrics|Tier>Server>Instance|MS SQL DB Wait Stats reports information about wait status.
+Graph|MS SQL DB Lock Waits|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of processes waiting on a lock.
+Graph|MS SQL DB Log Buffer Waits|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of processes waiting for log buffer to be available.
+Graph|MS SQL DB Log Write Waits|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of processes waiting for log buffer to be written.
+Graph|MS SQL DB Memory Grant Queue Waits|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of processes waiting for memory grant to become available.
+Graph|MS SQL DB Non Page Latch Waits|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of non-page latches.
+Graph|MS SQL DB Page IO Latch Waits|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of IO latches page.
+Graph|MS SQL DB Page Latch Waits|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of page latches, not including IO latches.
+Graph|MS SQL DB Thread Safe Memory Objects Waits|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of processes waiting on thread-safe memory allocators.
+Graph|MS SQL DB Transaction Owner Ship Waits|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of processes synchronizing access to transaction.
+

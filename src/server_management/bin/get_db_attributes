@@ -1,0 +1,79 @@
+#!/bin/bash
+config_file=$NS_WDIR/server_management/conf/NCP.conf
+
+default_db_attr()
+{
+ psql -X  -A -U postgres -d demo -t -c "select distinct ubuntu_version from allocation order by ubuntu_version "|sed ':a;N;$!ba;s/\n/|/g'
+ psql -X  -A -U postgres -d demo -t -c "select distinct machine_type from allocation order by machine_type "|sed ':a;N;$!ba;s/\n/|/g'
+ psql -X  -A -U postgres -d demo -t -c "select distinct status from allocation order by status "|sed ':a;N;$!ba;s/\n/|/g'
+ psql -X  -A -U postgres -d demo -t -c "select distinct channel from allocation order by channel "|sed ':a;N;$!ba;s/\n/|/g'
+ psql -X  -A -U  postgres -d demo -t -c "select distinct team from allocation order by team "|sed ':a;N;$!ba;s/\n/|/g'
+ psql -X  -A -U  postgres -d demo -t -c "select distinct owner from allocation order by owner"|sed ':a;N;$!ba;s/\n/|/g'
+ psql -X  -A -U postgres -d demo -t -c "select distinct allocation from allocation order by allocation "|sed ':a;N;$!ba;s/\n/|/g'
+ psql -X  -A -U postgres -d demo -t -c "select distinct server_type from allocation order by server_type"|sed ':a;N;$!ba;s/\n/|/g'
+ psql -X  -A -U postgres -d demo -t -c "select distinct build_version from allocation order by build_version"|sed ':a;N;$!ba;s/\n/|/g'
+ psql -X  -A -U postgres -d demo -t -c "select distinct server_name from allocation order by server_name"|sed ':a;N;$!ba;s/\n/|/g'
+ psql -X  -A -U postgres -d demo -t -c "select distinct server_ip from allocation order by server_ip"|sed ':a;N;$!ba;s/\n/|/g'
+ psql -X  -A -U postgres -d demo -t -c "select vendor from vendor order by vendor"|sed ':a;N;$!ba;s/\n/|/g'
+ psql -X  -A -U postgres -d demo -t -c "select distinct location from location order by location"|sed ':a;N;$!ba;s/\n/|/g'
+ psql -X  -A -U postgres -d demo -t -c "select distinct team from clients order by team"|sed ':a;N;$!ba;s/\n/|/g'
+ psql -X  -A -U postgres -d demo -t -c "select distinct channel from clients order by channel"|sed ':a;N;$!ba;s/\n/|/g'
+ psql -X  -A -U postgres -d demo -t -c "select distinct owner from clients order by owner"|sed ':a;N;$!ba;s/\n/|/g'
+ psql -X  -A -U postgres -d demo -t -c "select distinct zone from servers order by zone"|sed ':a;N;$!ba;s/\n/|/g'
+ awk '/\[securityGroups\]/{flag=1;next}/\[*\]/{flag=0}flag' $config_file|awk -F '=' '! /^#/ && ! /^$/{gsub("\\s+", "");sub(/#.*/,""); print $1}'|sed ':a;N;$!ba;s/\n/|/g'
+}
+
+projects_for_team()
+{
+ psql -X  -A -U postgres -d demo -t -c "select channel from clients where team='$team' "
+}
+
+controllers_for_project()
+{
+ psql -X  -A -U postgres -d demo -t -c "select server_name, blade_name from allocation where team='$team' and channel='$channel' and machine_type='Controller'" | tr '|' '.'
+}
+map_data_for_project()
+{
+  if [[ "x$team" == "x" ]] && [[ "x$channel" == "x" ]]; then
+    psql -X  -A -U postgres -d demo -t << EOF
+      SELECT
+        location,
+        count(*) FILTER (WHERE servers.server_type='VP') AS VP,
+        count(*) FILTER (WHERE servers.server_type='VM') AS VM,
+        count(*) FILTER (WHERE servers.server_type='CC') AS CC
+      FROM
+        servers
+      GROUP BY
+        location
+EOF
+  else
+    psql -X  -A -U postgres -d demo -t << EOF
+      SELECT
+        location,
+        count(*) FILTER (WHERE servers.server_type='VP') AS VP,
+        count(*) FILTER (WHERE servers.server_type='VM') AS VM,
+        count(*) FILTER (WHERE servers.server_type='CC') AS CC
+      FROM
+        servers JOIN allocation using(server_name)
+      WHERE
+        team='$team' AND channel='$channel' AND machine_type='Generator'
+      GROUP BY
+        location
+EOF
+  fi
+}
+
+if [ "x$1" == "x" ]; then
+ default_db_attr
+elif [ "x$1" == "xprojects" ]; then
+ team=$2
+ projects_for_team
+elif [ "x$1" == "xcontrollers" ]; then
+ team=$2
+ channel=$3
+ controllers_for_project
+elif [[ "x$1" == "xmaps" ]]; then
+  team=$2
+  channel=$3
+  map_data_for_project
+fi

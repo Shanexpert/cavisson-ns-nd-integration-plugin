@@ -1,0 +1,49 @@
+TABLE_NAME NDStoreTerminalwiseaggrtable
+CREATE_TABLE_SQL NDStoreTerminalwiseaggrtable
+--start
+create table NDStoreTerminalwiseaggrtable_$TRNO (
+        timestamp bigint,
+        tierid smallint,
+        serverid int,
+        appid int,
+        BtId int,
+        storeid int,
+        terminalid int,
+        TotalCount int, 
+        Responsetime_min int,
+        Responsetime_max int,
+        Responsetime_avg int,
+        Normalcount int,
+        SlowCount int,
+        VerySlowCount int,
+        FailureCount int,
+        PercentageFailure int,
+        ff1 int,  
+        ff2 int,
+        ff3 int,
+        ff4 int,
+        ffs1 text,
+        ffs2 text,
+        ffs3 text,
+        ffs4 text
+        );
+create index ndSTtimestamp_$TRNO ON NDStoreTerminalwiseaggrtable_$TRNO (timestamp);
+create index ndSTBtId_$TRNO ON NDStoreTerminalwiseaggrtable_$TRNO (BtId);
+create index ndSTtierid_$TRNO ON NDStoreTerminalwiseaggrtable_$TRNO (tierid);
+create index ndSTserverid_$TRNO ON NDStoreTerminalwiseaggrtable_$TRNO (serverid);
+create index ndSTappid_$TRNO ON NDStoreTerminalwiseaggrtable_$TRNO (appid);
+--end
+DATA_COLLECTION_SQL
+--start
+select flowpathbegintimestamp, c.flowpathinstance, urlindex , btcategory, responsetime, d.serverid, d.tierid, d.appid, d.storeid, d.terminalid from (select flowpathbegintimestamp, flowpathinstance as flowpathinstance, urlindex , btcategory, responsetime from flowpath_$TRNO ) c ,(select a.flowpathinstance, a.httpheadervalue as storeid, b.httpheadervalue as terminalid , a.timestamp, a.tierid as tierid, a.serverid as serverid, a.appid  as appid from ndcustomdata_$TRNO a INNER JOIN ndcustomdata_$TRNO b on a.flowpathinstance = b.flowpathinstance where a.nameid = (select headerid from ndhttpheadermetadata_$TRNO where lower(headernameorvalue) like lower('%storeid%') limit 1) and b.nameid = (select headerid from ndhttpheadermetadata_$TRNO where lower(headernameorvalue) like lower('%terminalid%') limit 1) ) d where d.timestamp >= $STARTTIME and d.timestamp < $ENDTIME and c.flowpathbegintimestamp >= $STARTTIME and c.flowpathbegintimestamp < $ENDTIME and c.flowpathinstance = d.flowpathinstance;
+--end
+PROGRESS_INTERVAL 600
+G_MAX_SESSION_DURATION 600
+PRIMARY_KEY_COLUMN 1
+CALLBACK_FILE ndstoreterminalwiseaggregateparser.c
+PROCESS_OLD_DATA 0
+TEST_STATE 0
+RECORD_TIMESTAMP_SQL
+--start
+select min(flowpathbegintimestamp), max(flowpathbegintimestamp) from flowpath_$TRNO as a , ndcustomdata_$TRNO as b where a.flowpathinstance = b.flowpathinstance and timestamp >= $STARTTIME and timestamp < $ENDTIME and flowpathbegintimestamp >= $STARTTIME and flowpathbegintimestamp < $ENDTIME
+--end

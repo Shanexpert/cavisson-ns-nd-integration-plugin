@@ -1,0 +1,40 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS IoT Jobs Stats|14054|vector|16|0|AWS Metrics|AccountName>Region>JobId|It indicates how the jobs are to be run. Every job requires some resource to finish execution, and the job definition is responsible for keeping track of the resources.
+
+Graph|AWS Iot Canceled Job Executions|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of job executions whose status has changed to canceled within a time period that is determined by CloudWatch
+
+Graph|AWS Iot Total Canceled Job Executions|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of job executions whose status is canceled for the given job
+
+Graph|AWS Iot Client Error|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of client errors generated while executing the job
+
+Graph|AWS Iot Server Error|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of server errors generated while executing the job
+
+Graph|AWS Iot Failed Job Executions|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of job executions whose status has changed to failed within a time period that is determined by CloudWatch
+
+Graph|AWS Iot Total Failed Job Executions|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of job executions whose status is failed for the given job
+
+Graph|AWS Iot InProgress Job Executions|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of job executions whose status has changed to IN_PROGRESS within a time period that is determined by CloudWatch
+
+Graph|AWS Iot Total InProgress Job Executions|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of job executions whose status is IN_PROGRESS for the given job
+
+Graph|AWS Iot Rejected Job Executions|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of job executions whose status has changed to rejected within a time period that is determined by CloudWatch
+
+Graph|AWS Iot Total Rejected Job Executions|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of job executions whose status is rejected for the given job
+
+Graph|AWS Iot Queued Job Executions|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of job executions whose status has changed to queued within a time period that is determined by CloudWatch
+
+Graph|AWS Iot Total Queued Job Executions|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of job executions whose status is queued for the given job
+
+Graph|AWS Iot Removed Job Executions|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of job executions whose status has changed to removed within a time period that is determined by CloudWatch
+
+Graph|AWS Iot Total Removed Job Executions|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of job executions whose status is removed for the given job
+
+Graph|AWS Iot Succeded Job Executions|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of job executions whose status has changed to success within a time period that is determined by CloudWatch
+
+Graph|AWS Iot Total Succeded Job Executions|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of job executions whose status is success for the given job
+

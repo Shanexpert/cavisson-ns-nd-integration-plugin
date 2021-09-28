@@ -1,0 +1,7 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Optimizer TLOG File Producer Message Count Stats|10529|vector|1|0|Spark Metrics|Tier>Server>Instance>Message Type|Optimizer message count stats.
+
+Graph|Messages/Min|1|scalar|rate|-|CumToPM|0|NA|-1|-1|NA|NA|Number of messages which are responce by Optimizer server.

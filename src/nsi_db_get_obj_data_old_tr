@@ -1,0 +1,1141 @@
+#!/bin/bash
+
+#######################################################################################################
+# Name   : nsi_db_get_obj_data 
+# Example:
+# Initial version : --
+#   Author: -- 
+#   Date: --
+# Modified version: 
+#   Author: Nikita Pandey 
+#   Date: 15 April 2012
+#   Modification Details:
+#     (1) Change input style. 
+#           Synatx Before change input style--
+#             nsi_get_3x <TR-NUM> <select-fields> <obj-type> <group-by> <[limit]> <[offset]>
+#           Synatx After change input style--
+#            nsi_db_get_obj_data --testrun <value> --field <value> --object <value> --group <value>  
+#                        [--limit <limit>] [--offset <value>] [--script <value>] [--starttime <value>] [--endtime <value>]
+#                         [--responsetime <value>] [--resptimeqmode <value>] [--status <value>]
+#           Note: here bracket [] show agrument is optional, and bracket <> show argument value  
+#     (2) Example
+#         nsi_db_get_obj_data --testrun 3776 --fields 4095 --object 3 --group 0  --limit 10 --offset 0 --location Chicago --access T1
+
+#########################################################################################################
+
+
+######################################################################
+#                     Variables and init settings
+#####################################################################
+
+# Including nsi_db_utils
+. $NS_WDIR/bin/nsi_db_utils
+
+
+# Set default values of variables
+TRNUM=""
+FIELD=""
+OBJECT=""
+GROUPBY=""
+STATUS=-2
+SCRIPT=""
+PAGE=""
+TRANS=""
+URL=""
+LOCATION="ALL"
+ACCESS="ALL"
+BROWSER="ALL"
+ORDERBY=""
+RESPTIMEQMODE=0
+SESS_REC_FLAG=0
+PG_FLAG=0
+SESS_FLAG=0
+ST_FLAG=0
+BRO_FLAG=0
+ACC_FLAG=0
+LOC_FLAG=0
+# generator flag added
+GENERATOR_FLAG=0
+
+SESS_TAB_FLAG=0
+SET_PAGE_CALL=0
+SET_SESS_CALL=0
+SET_D_CALL=0
+GET_COUNT=0
+acc_flag=0
+loc_flag=0
+DEBUG=0 # 0 --> off
+        # 1 --> on
+SELECT="SELECT"
+ORDER=""
+SET_SES_CHILD=0
+WHERE=""
+URLIDX=-1
+PAGEIDX=-1
+TRANSIDX=-1
+SCRIPTIDX=-1
+########################################################################
+#                       Functions's Definitions
+#######################################################################
+
+usage()
+{
+ echo "$*"
+  echo "Usage:"
+  echo "$0 --testrun <value> --fields <value> --object <value> [--group <name(s)>] [--order <name(s)>][--limit <limit>] [--offset <value>] [--location <name>] [--access<name>] [--status<value>] [--script <name>][--scriptidx <value>][--page <name>] [--pageidx <value>] [--trans <name>][--transidx <value>] [--url <name>] [--urlidx <value> ] [--get_count <value(0/1)>] [--starttime <value> --endtime <value] [--resptimeqmode<value> --responsetime<value>] --phaseidx <value> --browser <value>"
+  echo ""
+  echo "Where"
+  echo "  --testrun is test run number, which is mandatory argument."
+  echo "  --fields is the field selection(all, tried, success ....), which is mandatory argument."
+  echo "  --object is object selection(0-URL, 1-Page, 2-Transaction, 3-Session), which is mandatory argument."
+  echo "  --group is for group by option, which is optional argument."
+  echo "  --limit is for limit (This is the number of results returned by query statment (e.g. 10 it will show first 10 records)), which is optional argument"
+  echo "  --offset is for offset (This is used to skip rows as specified by offset (e.g suppose you wanted to show results 11-20 then you can use offset 10)), which is optional argument"
+  echo "  --location is for particular location selection, which is optional argument"
+  echo "  --access is for particular access selection, which is optional argument"
+  echo "  --browser is for particular browser selection, which is optional argument"
+  echo "  --phaseidx is for particular phase index selection, which is optional argument"
+  echo "  --status is selecting particular staus (status is 0 for Success only, positive for the Failure code, -1 for all failures -2 for All (Success and all failures)), which is optional argument"
+  echo "  --script is for selecting particular script result, which is optional argument"
+  echo "  --scriptidx is for selecting particular script index, which is optional argument"
+  echo "  --starttime and -endtime is for selecting result that comes under the given range, which is optional argument."
+  echo "  --resptimeqmode is the selection of responsetime(1-lessthen, 2-greaterthen, 3-equal), which is optional argument."
+  echo "  --responsetime is for giving perticular responsetime for different response time mode, which is optional argument."
+
+  echo "  --urlidx is for selecting particular url index, which is optional argument"
+  echo "  --url is for selecting particular url, which is optional argument"
+  echo "  --page is for selecting particular page, which is optional argument"
+  echo "  --pageidx is for selecting particular page index, which is optional argument"
+  echo "  --trans is for selecting particular transaction, which is optional argument"
+  echo "  --transidx is for selecting particular transaction index, which is optional argument"
+  echo "  --order is for order by option, which is optional argument."
+  echo "  --get_count is for getting count of total rows of query executed (0-do not count 1-getting count ,which is optional argument" 
+  exit 1
+}
+
+chk_args()
+{
+  #debug_logs "Method debug_logs called."
+  if [ "X$TRNUM" == "X" ]; then
+    usage "Test run argument is missing"
+  fi
+  if [ "X$FIELD" == "X" ]; then
+    usage "field selection is missing"
+  fi
+  if [ "X$OBJECT" == "X" ]; then
+    usage "object type is missing"
+  fi
+}
+
+set_whr()
+{
+  if [ "X$WHERE" != "X" ];then
+    WHERE="$WHERE $NEWLINE  AND"
+  else
+    WHERE="WHERE"
+  fi
+}
+
+#here we make a comman function that check the value of where
+set_where()
+{
+  if [ "X$INQ_WHERE" != "X" ];then
+    INQ_WHERE="$INQ_WHERE $NEWLINE    AND"
+  else
+    INQ_WHERE="  WHERE"
+  fi
+}
+
+setd()
+{
+  if [ $SET_D_CALL -eq 0 ];then
+    case $OBJECT in
+      0)INNER_QUERY="$INNER_QUERY, $NEWLINE    count(distinct $OBJ.PageIndex) As \"Page Count\""
+        INNER_QUERY="$INNER_QUERY, $NEWLINE    count(distinct $OBJ.SessionIndex) As \"Session Count\"";;
+      1)INNER_QUERY="$INNER_QUERY, $NEWLINE    count(distinct $OBJ.SessionIndex) As \"Session Count\"";;
+      2)INNER_QUERY="$INNER_QUERY, $NEWLINE    count(distinct $OBJ.SessionIndex) As \"Session Count\"";;
+    esac
+  fi
+  debug_logs "object = $OBJECT******"
+  SET_D_CALL=1
+}
+
+set_transaction()
+{
+  INNER_QUERY="$INNER_QUERY, $NEWLINE    TransactionName As \"Transaction Name\""
+  if [ $SESS_FLAG -eq 0 ];then
+  INNER_QUERY="$INNER_QUERY, $NEWLINE    count(distinct $OBJ.SessionIndex) As \"Session Count\""
+  fi
+  if [ "X$INC_TRT_FLAG" = "X" ];then
+    INQ_FROM="$INQ_FROM ,TransactionTable_$TRNUM"
+    INC_TRT_FLAG=1
+  fi
+  if [ "X$TRANSPAGERECORD_TABLE_FLAG" = "X" ];then
+    INQ_FROM="$INQ_FROM ,TransPageRecord_$TRNUM"
+    TRANSPAGERECORD_TABLE_FLAG=1
+  fi 
+  set_where
+  INQ_WHERE="$INQ_WHERE $OBJ.ChildIndex = TransPageRecord_$TRNUM.ChildIndex"
+  set_where
+  INQ_WHERE="$INQ_WHERE $OBJ.SessionInstance = TransPageRecord_$TRNUM.SessionInstance"
+  set_where
+  INQ_WHERE="$INQ_WHERE $OBJ.TxInstance = TransPageRecord_$TRNUM.TxInstance"
+  set_where
+  INQ_WHERE="$INQ_WHERE TransPageRecord_$TRNUM.TransactionIndex = TransactionTable_$TRNUM.TransactionIndex"
+  #echo "set_where on set_page where = $INQ_WHERE"
+  INQ_GROUPBY="$INQ_GROUPBY, TransactionName"
+}
+
+set_page()
+{
+  INNER_QUERY="$INNER_QUERY, $NEWLINE    PageName As \"Page Name\""
+  INNER_QUERY="$INNER_QUERY, $NEWLINE    PageTable_$TRNUM.PageIndex As \"pageindex\""
+  if [ $SESS_FLAG -eq 0 ];then
+  INNER_QUERY="$INNER_QUERY, $NEWLINE    count(distinct $OBJ.SessionIndex) As \"Session Count\""
+  fi
+  INQ_FROM="$INQ_FROM ,PageTable_$TRNUM"
+  set_where
+  INQ_WHERE="$INQ_WHERE $OBJ.PageIndex = PageTable_$TRNUM.PageIndex"
+  #echo "set_where on set_page where = $INQ_WHERE"
+  INQ_GROUPBY="$INQ_GROUPBY, PageName"
+  INQ_GROUPBY="$INQ_GROUPBY, PageTable_$TRNUM.PageIndex"
+  SET_PAGE_CALL=1
+}
+
+set_sess()
+{
+   if [ $SESS_TAB_FLAG -eq 0 ];then
+   INQ_FROM="$INQ_FROM,SessionTable_$TRNUM"
+   SESS_TAB_FLAG=1
+   fi
+   set_where
+   INNER_QUERY="$INNER_QUERY,$NEWLINE    SessionName As \"Script Name\""
+   INQ_WHERE="$INQ_WHERE $OBJ.Sessionindex = SessionTable_$TRNUM.SessionIndex"
+   INQ_GROUPBY="$INQ_GROUPBY,SessionName"
+
+SET_SESS_CALL=1
+}
+
+
+set_ses_child()
+{
+
+  if [ $SET_SES_CHILD -eq 1 ];then
+   return
+  fi
+  if [ $OBJECT -ne 3 ];then
+    set_where
+    INQ_WHERE="$INQ_WHERE $OBJ.SessionInstance = SessionRecord_$TRNUM.SessionInstance"
+    set_where
+    INQ_WHERE="$INQ_WHERE $OBJ.ChildIndex = SessionRecord_$TRNUM.ChildIndex "
+    SESS_REC_TAB=1
+    SET_SES_CHILD=1
+  fi
+}
+
+
+ADD_ERROR_CODE_TABLE=0
+# We are facing issue in order by status
+# In csv file we are logging only status code not name so query will work on status code and  GUI converts  those code into Status Name
+# When user doing order by Status then query perform order by on status code and gui convert those code, so we are not getting data accordingly
+# Now we keeping both status name and goup by in query-
+# group by-statuscode
+# order by-Status name
+set_orderby_status()
+{
+  SELECT="$SELECT, ErrorCodes_$TRNUM.ErrorName  As \"Status Name\" "
+  #INQ_GROUPBY="$INQ_GROUPBY ,Status Name"
+  ADD_ERROR_CODE_TABLE=1
+  set_whr
+  WHERE="$WHERE (\"Status\" = ErrorCodes_$TRNUM.ErrorCode AND ErrorCodes_$TRNUM.ObjectType = 2)" 
+}
+
+
+set_o()
+{
+  if [ "XX$ORDER" != "XX" ];then
+    ORDER="$ORDER,"
+  else
+    ORDER="ORDER BY"
+  fi
+}
+
+set_order()
+{
+
+    if [ "X$ORDERBY" == "X" ];then
+      case $OBJECT in
+       0)ORDER="ORDER BY URLTable_$TRNUM.UrlName";;
+       1)ORDER="ORDER BY PageTable_$TRNUM.PageName";;
+       2)ORDER="ORDER BY TransactionTable_$TRNUM.TransactionName";;
+       3)ORDER="ORDER BY SessionTable_$TRNUM.SessionName";;
+      esac
+   else
+     NOOBY=`echo $ORDERBY | awk -F ',' '{print NF}'`
+     for (( i=1 ; i<=$NOOBY ; i++ )) ; do
+        OB=`echo $ORDERBY | awk -v j=$i -F ',' '{print $j}'`
+        set_o
+        case $OB in
+          url)ORDER="$ORDER \"URL Name\"";;
+          page)ORDER="$ORDER \"Page Name\"";;
+          transaction)ORDER="$ORDER \"Transaction Name\"";;
+          session)ORDER="$ORDER \"Script Name\"";;
+          access)ORDER="$ORDER \"Access\"";;
+          location)ORDER="$ORDER \"Location\"";;
+          status)ORDER="$ORDER \"Status Name\""
+	  set_orderby_status;;
+          browser)ORDER="$ORDER \"Browser\"";;
+          generator)ORDER="$ORDER GeneratorName" 
+          order_generator=1;;
+        esac
+     done
+   fi
+}
+
+set_location()
+{
+  if [ $PG_FLAG -eq 0 -a $SESS_FLAG -eq 0 ];then
+    setd
+  fi
+  INNER_QUERY="$INNER_QUERY,$NEWLINE    Location As \"Location\""
+  if [ $SESS_REC_FLAG -eq 0 ];then
+    INQ_FROM="$INQ_FROM, SessionRecord_$TRNUM"
+    SESSIONRECORD_TABLE_FLAG=1
+    SESS_REC_FLAG=1
+  fi
+  set_ses_child
+}
+
+
+set_access()
+{
+  if [ $PG_FLAG -eq 0 -a $SESS_FLAG -eq 0 ];then
+    setd
+  fi
+  INNER_QUERY="$INNER_QUERY, $NEWLINE    Access As \"Access\""
+  if [ $SESS_REC_FLAG -eq 0 ];then
+    INQ_FROM="$INQ_FROM, SessionRecord_$TRNUM"
+    SESSIONRECORD_TABLE_FLAG=1
+    SESS_REC_FLAG=1
+  fi
+ set_ses_child
+}
+
+
+set_browser()
+{
+  if [ $PG_FLAG -eq 0 -a $SESS_FLAG -eq 0 ];then
+    setd
+  fi
+  INNER_QUERY="$INNER_QUERY,$NEWLINE    Browser As \"Browser\""
+  if [ $SESS_REC_FLAG -eq 0 ];then
+    INQ_FROM="$INQ_FROM, SessionRecord_$TRNUM"
+    SESSIONRECORD_TABLE_FLAG=1
+    SESS_REC_FLAG=1
+  fi
+  set_ses_child
+}
+
+set_status()
+{
+  if [ $PG_FLAG -eq 0 -a $SESS_FLAG -eq 0 ];then
+       setd
+  fi
+  INNER_QUERY="$INNER_QUERY,$NEWLINE    $OBJ.Status As \"Status\""
+}
+
+set_generator()
+{
+  INQ_FROM="$INQ_FROM, GeneratorTable_$TRNUM"
+  INC_GENERATOR_TABLE=1
+
+  INNER_QUERY="$INNER_QUERY,$NEWLINE    $OBJ.GeneratorId As \"GeneratorId\""
+  INNER_QUERY="$INNER_QUERY,$NEWLINE    GeneratorName"
+
+  set_where
+  INQ_WHERE="$INQ_WHERE  $OBJ.GeneratorId = GeneratorTable_$TRNUM.GeneratorId"
+  
+}
+
+set_sel_seg()
+{
+  if [ "X$GROUPBY" == "X" ];then
+    case $OBJECT in
+      0)INNER_QUERY="$INNER_QUERY,$NEWLINE    count(distinct $OBJ.PageIndex) As \"Page Count\""
+        INNER_QUERY="$INNER_QUERY,$NEWLINE    count(distinct $OBJ.SessionIndex) As \"Session Count\"";;
+      1)INNER_QUERY="$INNER_QUERY,$NEWLINE    count(distinct $OBJ.SessionIndex) As \"Session Count\"";;
+      2)INNER_QUERY="$INNER_QUERY,$NEWLINE    count(distinct $OBJ.SessionIndex) As \"Session Count\"";;
+    esac
+  else
+   for x in ${arr[@]}
+    do
+     case $x in
+       page)set_page;;
+       session)set_sess;;
+       transaction)set_transaction;;
+       location)INQ_GROUPBY="$INQ_GROUPBY,Location"
+                set_location;;
+       access)INQ_GROUPBY="$INQ_GROUPBY,Access"
+              set_access;;
+       browser)INQ_GROUPBY="$INQ_GROUPBY,Browser"
+              set_browser;;
+       status)INQ_GROUPBY="$INQ_GROUPBY,\"Status\""
+              set_status;;
+       generator)INQ_GROUPBY="$INQ_GROUPBY,\"GeneratorId\""
+                 INQ_GROUPBY="$INQ_GROUPBY,GeneratorName"
+                 if [ "X$order_generator" != "X1" ]; then
+                   set_o
+                   ORDER="$ORDER GeneratorName"
+                 fi
+              set_generator;;
+     esac
+    done
+ fi
+
+}
+
+add_obj_name()
+{
+  #debug_logs "Method add_obj_name called."
+  if [ $OBJECT -eq 0 ];then
+    OBJ="URlRecord_$TRNUM"
+    SELECT="$SELECT URLName As \"URL Name\""
+    set_order
+    SELECT="$SELECT, inner_query.*"
+    FROM="FROM $NEWLINE("
+    INNER_QUERY="  SELECT $NEWLINE    $OBJ.UrlIndex"
+    INQ_FROM="  FROM $OBJ"
+    URLRECORD_TABLE_FLAG=1
+    INQ_GROUPBY="  GROUP BY $OBJ.UrlIndex"
+    INQ_ORDERBY=") inner_query, URLTable_$TRNUM"
+    set_whr
+    WHERE="$WHERE inner_query.URLIndex = URLTable_$TRNUM.URLIndex"
+  elif [ $OBJECT -eq 1 ];then
+    OBJ="PageRecord_$TRNUM"
+    SELECT="$SELECT PageName As \"Page Name\""
+    set_order
+    SELECT="$SELECT, inner_query.*"
+    FROM="FROM $NEWLINE("
+    INNER_QUERY="  SELECT $NEWLINE    $OBJ.PageIndex"
+    INQ_FROM="  FROM $OBJ"
+    PAGERECORD_TABLE_FLAG=1
+    INQ_GROUPBY="GROUP BY $OBJ.PageIndex"
+    INQ_ORDERBY=") inner_query, PageTable_$TRNUM"
+    set_whr
+    WHERE="$WHERE inner_query.PageIndex = PageTable_$TRNUM.PageIndex"
+  elif [ $OBJECT -eq 2 ];then
+    OBJ="TransPageRecord_$TRNUM"
+    TRANSPAGERECORD_TABLE_FLAG=1
+    SELECT="$SELECT TransactionName AS \"Transaction Name\""
+    set_order
+    SELECT="$SELECT, inner_query.*"
+    FROM="FROM $NEWLINE("
+    INNER_QUERY="  SELECT $NEWLINE    $OBJ.TransactionIndex"
+    INQ_FROM="  FROM $OBJ"
+    INQ_FROM="$INQ_FROM, $NEWLINE    ( SELECT INQ1.TransactionIndex, count(nullif(INQ1.Status, 0)), count(*) as Tried" 
+    if [ "X$GENERATOR_FLAG" = "X1" ]; then
+      INQ_FROM="$INQ_FROM, $NEWLINE          INQ1.GeneratorId" 
+    fi
+
+    INQ_FROM="$INQ_FROM $NEWLINE      FROM "
+
+    INQ_FROM="$INQ_FROM $NEWLINE      ( SELECT $OBJ.TransactionIndex, $OBJ.Status" 
+    if [ "X$GENERATOR_FLAG" = "X1" ]; then
+      INQ_FROM="$INQ_FROM, $NEWLINE               GeneratorTable_$TRNUM.GeneratorId" 
+    fi
+    INQ_FROM="$INQ_FROM $NEWLINE        FROM $OBJ"  
+    if [ "X$GENERATOR_FLAG" = "X1" -o "X$GENERATORID" != "X" ]; then
+      INQ_FROM="$INQ_FROM, $NEWLINE             GeneratorTable_$TRNUM" 
+      INQ_FROM="$INQ_FROM $NEWLINE        WHERE GeneratorTable_$TRNUM.GeneratorId = $OBJ.GeneratorId" 
+   
+      if [ "X$GENERATORID" != "X" ]; then
+        INQ_FROM="$INQ_FROM $NEWLINE              AND GeneratorTable_$TRNUM.GeneratorId = $GENERATORID"
+      fi
+    fi
+
+    INQ_FROM="$INQ_FROM $NEWLINE        GROUP BY $OBJ.SessionInstance, $OBJ.TransactionIndex, "
+    INQ_FROM="$INQ_FROM $NEWLINE                 $OBJ.Status, $OBJ.ChildIndex, $OBJ.TxInstance" 
+    if [ "X$GENERATOR_FLAG" = "X1" ]; then
+      INQ_FROM="$INQ_FROM, $NEWLINE                 GeneratorTable_$TRNUM.GeneratorId" 
+    fi
+    INQ_FROM="$INQ_FROM $NEWLINE      ) AS INQ1"
+
+    INQ_FROM="$INQ_FROM $NEWLINE      GROUP BY INQ1.TransactionIndex"
+    if [ "X$GENERATOR_FLAG" = "X1" ]; then
+      INQ_FROM="$INQ_FROM, $NEWLINE                INQ1.GeneratorId" 
+    fi
+
+    INQ_FROM="$INQ_FROM $NEWLINE    ) AS INQ"
+
+
+    INQ_WHERE="$NEWLINE   WHERE$NEWLINE     INQ.TransactionIndex = $OBJ.TransactionIndex"
+    if [ "X$GENERATOR_FLAG" = "X1" ]; then
+      INQ_WHERE="$INQ_WHERE $NEWLINE     AND INQ.GeneratorId = $OBJ.GeneratorId" 
+    fi
+ 
+    INQ_GROUPBY="   GROUP BY $NEWLINE     $OBJ.TransactionIndex, INQ.Tried"
+    INQ_GROUPBY="$INQ_GROUPBY, $NEWLINE     INQ.count"
+    INQ_ORDERBY=") AS inner_query, TransactionTable_$TRNUM"
+    set_whr
+    WHERE="$WHERE inner_query.TransactionIndex = TransactionTable_$TRNUM.TransactionIndex"
+  elif [ $OBJECT -eq 3 ];then
+    OBJ="SessionRecord_$TRNUM"
+    SELECT="$SELECT SessionName As \"Script Name\""
+    set_order
+    SELECT="$SELECT, inner_query.*"
+    FROM="FROM $NEWLINE("
+    INNER_QUERY="  SELECT $NEWLINE    $OBJ.SessionIndex" 
+    INQ_FROM="  FROM $OBJ"
+    SESSIONRECORD_TABLE_FLAG=1
+    INQ_GROUPBY="GROUP BY $OBJ.SessionIndex"
+    INQ_ORDERBY=") inner_query, SessionTable_$TRNUM"
+    set_whr
+    WHERE="$WHERE inner_query.SessionIndex = SessionTable_$TRNUM.SessionIndex" 
+    SESS_REC_FLAG=1
+    SESS_TAB_FLAG=1
+  else
+    echo "Invalid object-type (valid values 0-3)"
+    exit 1
+  fi
+}
+
+
+# Add Location selection
+location_selection()
+{
+  if [ "X$LOCATION" != "XALL" -a "X$LOCATION" != "X" ];then
+    if [ $SESS_REC_FLAG -eq 0 ];then
+      INQ_FROM="$INQ_FROM, SessionRecord_$TRNUM"
+      SESSIONRECORD_TABLE_FLAG=1
+      SESS_REC_FLAG=1
+    fi
+    set_where
+    INQ_WHERE="$INQ_WHERE  LOCATION = ""'"$LOCATION"'"
+    set_ses_child
+  fi
+}
+
+
+#Add Access selection
+access_selection()
+{
+  if [ "X$ACCESS" != "XALL" -a "X$ACCESS" != "X" ];then
+  if [ $SESS_REC_FLAG -eq 0 ];then
+    INQ_FROM="$INQ_FROM, SessionRecord_$TRNUM"
+    SESSIONRECORD_TABLE_FLAG=1
+    SESS_REC_FLAG=1
+  fi
+  set_where
+  INQ_WHERE="$INQ_WHERE ACCESS = ""'"$ACCESS"'"
+  set_ses_child
+  fi
+}
+
+#Add Browser 
+browser_selection()
+{
+  if [ "X$BROWSER" != "XALL" -a "X$BROWSER" != "X" ];then
+     if [ $SESS_REC_FLAG -eq 0 ];then
+       INQ_FROM="$INQ_FROM, SessionRecord_$TRNUM"
+       SESSIONRECORD_TABLE_FLAG=1
+       SESS_REC_FLAG=1
+     fi
+     set_where
+     INQ_WHERE="$INQ_WHERE  BROWSER = ""'"$BROWSER"'"
+     set_ses_child
+  fi
+}
+
+#Calculating Scale value
+calculate_percentile_scale()
+{
+  ns_run_query "SELECT $NEWLINE  MAX($OBJ.RespTime) $NEWLINE$INQ_FROM $NEWLINE$INQ_WHERE"
+
+  MAX_RESP_TIME=`head -2 $QUERY_OUT_FILE| tail -1`
+
+  if [ "X$MAX_RESP_TIME" = "X" ];then
+    SCALE=1
+  else
+    MAX_RESP_TIME=`expr $MAX_RESP_TIME - 1`
+    #120000 is the number of indexes in percentile_add function in percentile.c file.
+    #Any change here should reflect in that file also. Look for PERC_ARRAY_SIZE macro definition in that file.
+    SCALE=`expr $MAX_RESP_TIME / 120000 + 1`
+  fi
+}
+
+add_select_elements()
+{
+VALUE="$OBJ.RespTime" 
+
+SCALED_VALUE="$VALUE / $1" 
+
+  if [ $OBJECT -eq 2 ]; then
+    if [ $(($FIELD & 1)) -ne 0 ];then
+      if [ $ST_FLAG -eq 0 ]; then
+        # when --group status is not provided
+        INNER_QUERY="$INNER_QUERY, $NEWLINE    INQ.Tried AS \"Tried\""
+      else
+        # when --group status is provided
+        INNER_QUERY="$INNER_QUERY, $NEWLINE    INQ.Tried AS \"Count\""
+      fi
+    fi
+   
+    # Only when --group status is not provided
+    if [ $ST_FLAG -eq 0 ]; then
+      if [ $(($FIELD & 4)) -ne 0 ];then
+            INNER_QUERY="$INNER_QUERY, $NEWLINE    INQ.Tried - INQ.count AS \"Success\""
+      fi
+      if [ $(($FIELD & 2)) -ne 0 ];then
+        INNER_QUERY="$INNER_QUERY, $NEWLINE    INQ.count AS \"Fail\""
+      fi
+    fi
+  else
+    if [ $(($FIELD & 1)) -ne 0 ];then
+      INNER_QUERY="$INNER_QUERY, $NEWLINE    count(*) AS \"Tried\""
+    fi
+    if [ $(($FIELD & 4)) -ne 0 ];then
+          INNER_QUERY="$INNER_QUERY, $NEWLINE    count(*)-count(nullif($OBJ.Status, 0)) AS \"Success\""
+    fi
+    if [ $(($FIELD & 2)) -ne 0 ];then
+      INNER_QUERY="$INNER_QUERY, $NEWLINE    count(nullif($OBJ.Status, 0)) AS \"Fail\""
+    fi
+  fi
+
+  # Only when --group status is not provided
+  if [ $ST_FLAG -eq 0 ]; then
+    if [ $(($FIELD & 8)) -ne 0 ];then
+          INNER_QUERY="$INNER_QUERY, $NEWLINE    CASE WHEN count(*) > 0 THEN (count(nullif($OBJ.Status, 0))*100/count(*)) ELSE 0 END AS \"%Fail\""
+    fi
+  fi
+
+  if [ $(($FIELD & 16)) -ne 0 ];then
+    INNER_QUERY="$INNER_QUERY, $NEWLINE    min($VALUE) AS \"Min\""
+  fi
+  if [ $(($FIELD & 32)) -ne 0 ];then
+    INNER_QUERY="$INNER_QUERY, $NEWLINE    round(avg($VALUE)) AS \"Average\""
+  fi
+  if [ $(($FIELD & 64)) -ne 0 ];then
+    INNER_QUERY="$INNER_QUERY, $NEWLINE    max($VALUE) AS \"Max\""
+  fi
+  if [ $(($FIELD & 128)) -ne 0 ];then
+    INNER_QUERY="$INNER_QUERY, $NEWLINE    median_percentile($SCALED_VALUE) * $1 AS \"Median\""
+  fi
+  if [ $(($FIELD & 256)) -ne 0 ];then
+    INNER_QUERY="$INNER_QUERY, $NEWLINE    eighty_percentile($SCALED_VALUE) * $1 AS \"80%\""
+  fi
+  if [ $(($FIELD & 4096)) -ne 0 ];then
+    INNER_QUERY="$INNER_QUERY, $NEWLINE    eighty_five_percentile($SCALED_VALUE) * $1 AS \"85%\""
+  fi
+  if [ $(($FIELD & 512)) -ne 0 ];then
+    INNER_QUERY="$INNER_QUERY, $NEWLINE    ninety_percentile($SCALED_VALUE) * $1 AS \"90%\""
+  fi
+  if [ $(($FIELD & 1024)) -ne 0 ];then
+    INNER_QUERY="$INNER_QUERY, $NEWLINE    ninety_five_percentile($SCALED_VALUE) * $1 AS \"95%\""
+  fi
+  if [ $(($FIELD & 2048)) -ne 0 ];then
+    INNER_QUERY="$INNER_QUERY, $NEWLINE    ninety_nine_percentile($SCALED_VALUE) * $1 AS \"99%\""
+  fi
+}
+
+chk_args_of_option()
+{
+  if [ "X$2" == "X" ];then
+    echo "Option $1 required a value."
+    usage
+    exit -1
+  fi
+}
+
+#netstorm.report.percentile.scaling=0/1
+init_percentile_scaling()
+{
+  # Here adding tail -1, if netstorm.report.Percentile.scaling define more then once in webapps/sys/config.ini file then
+  # we are picking the last one
+  percentile_scaling=`grep "^netstorm.report.Percentile.scaling" $NS_WDIR/webapps/sys/config.ini | tail -1 |  awk -F'=' '{print $2}'|dos2unix | tr -d ' ' | awk '/^[0-1]+$/'`
+  
+  #Doing this as if there is no keyword in config.ini file then
+  #percentile_scaling becomes blank and gives error in if conditions
+  if [ "X$percentile_scaling" == "X" ]; then
+    percentile_scaling=1
+  fi
+}
+
+
+########################################################################
+#                            calling functions
+########################################################################
+
+# nsi_get_3x -testrun <testrun no> -fields <fields> -object <object_type> (Mandatory Arguments)   --limit <limit> -offset <offset>
+
+#args: TR-NUM select-fields obj-type group-by
+#select-fields is anded fields with
+#       1: Tries
+#       2: Fail
+#       4: success
+#       8: Fail Pct
+#       16: min
+#       32: avg
+#       64: max
+#       128: median
+#       256: 80%
+#       512: 90%
+#       1024: 95%
+#       2048: 99%
+#obj-type can be 0: URL, 1:Page: 2: Tx 3:Sess
+#group-by: is ANDED field (0 allowed)
+#       1: By Location
+#       2: By Access
+
+if [ "X$1" == "X" ];then
+  usage
+fi
+
+while [ "$1" != "" ];do
+ # debug_logs "ARGS=$1"
+  case $1 in
+    "--testrun")
+        shift
+				chk_args_of_option "--testrun" "$1"
+        TRNUM=$1;;
+    "--fields")
+        shift
+				chk_args_of_option "--fields" "$1"
+        FIELD=$1;;
+    "--object")
+        shift
+      	chk_args_of_option "--object" "$1"
+        OBJECT=$1;;
+    "--group")
+        shift
+				chk_args_of_option "--group" "$1"
+        GROUPBY=$1;;
+    "--limit")
+        shift
+      	chk_args_of_option "--limit" "$1"
+        LIMIT=$1;;
+    "--offset")
+        shift
+      	chk_args_of_option "--offset" "$1"
+        OFFSET=$1;;
+    "--status")
+        shift
+      	chk_args_of_option "--status" "$1"
+        STATUS=$1;;
+    "--script")
+        shift
+      	chk_args_of_option "--script" "$1"
+        SCRIPT=$1;;
+    "--page")
+        shift
+        chk_args_of_option "--page" "$1"
+        PAGE=$1;;
+    "--trans")
+        shift
+        chk_args_of_option "--trans" "$1"
+        TRANS=$1;;
+    "--url")
+        shift
+        chk_args_of_option "--url" "$1"
+        URL=$1;;
+    "--starttime")
+        shift
+      	chk_args_of_option "--starttime" "$1"
+        STARTTIME=$1;;
+    "--endtime")
+        shift
+      	chk_args_of_option "--endtime" "$1"
+        ENDTIME=$1;;
+    "--abs_starttime")
+        shift
+      	chk_args_of_option "--abs_starttime" "$1"
+        ABS_STARTTIME=$1;;
+    "--abs_endtime")
+        shift
+      	chk_args_of_option "--abs_endtime" "$1"
+        ABS_ENDTIME=$1;;
+    "--location")
+        shift
+      	chk_args_of_option "--location" "$1"
+        LOCATION=$1;;
+    "--access")
+        shift
+	      chk_args_of_option "--access" "$1"
+        ACCESS=$1;;
+    "--browser")
+        shift
+        chk_args_of_option "--browser" "$1"
+        BROWSER=$1;;
+    "--get_count")
+        shift
+        chk_args_of_option "--get_count" "$1"
+        GET_COUNT=$1;;
+    "--order")
+        shift
+        chk_args_of_option "--order" "$1"
+        ORDERBY=$1;;
+    "--responsetime")
+        shift
+      	chk_args_of_option "--responsetime" "$1"
+        RESPONSETIME=$1;;
+    "--resptimeqmode")
+        shift
+      	chk_args_of_option "--resptimeqmode" "$1"
+        RESPTIMEQMODE=$1;;
+    "--responsetime2")
+        shift
+      	chk_args_of_option "--responsetime2" "$1"
+        RESPONSETIME2=$1;;
+    "--urlidx")
+        shift
+        chk_args_of_option "--urlidx" "$1"
+        URLIDX=$1;;
+    "--pageidx")
+        shift
+        chk_args_of_option "--pageidx" "$1"
+        PAGEIDX=$1;;
+    "--transidx")
+        shift
+        chk_args_of_option "--translidx" "$1"
+        TRANSIDX=$1;;
+    "--scriptidx")
+        shift
+        chk_args_of_option "--scriptidx" "$1"
+        SCRIPTIDX=$1;;
+    "--phaseidx")
+        shift
+      	chk_args_of_option "--phaseidx" "$1"
+        PHASEIDX=$1;;
+    "--generatorid")
+        shift
+        chk_args_of_option "--generatorid" "$1"
+        GENERATORID=$1;;
+    --*) usage "Invalid options";;
+    *) usage ;;    
+  esac
+  shift
+done
+
+#debug_logs "TRNUM = $TRNUM, FIELD = $FIELD, OBJECT = $OBJECT, RUNPHASE=$RUNPHASE, LIMIT = $LIMIT, OFFSET = $OFFSET, GROUPBY = $GROUPBY"
+
+#Cheking Mandatory Arguments
+chk_args
+
+# Setting query files
+set_query_files $TRNUM
+
+handle_time_filters $TRNUM
+
+# Check if limit argument is given or not. It will limit number of rows to max this number
+if [ "X$LIMIT" != "X" ];then
+  LIMIT="LIMIT $LIMIT"
+fi
+
+# Check if Offset argument is given or not. This is used to skip rows as specified by offset.
+# For example, if offset is 1, then first row is skipped. If offset is 100, then first 100 rows are skipped
+if [ "X$OFFSET" != "X" ];then
+  OFFSET="OFFSET $OFFSET"
+fi
+
+# set the value of scale as 1 so that if percentile_scaling is not called then it doesn't have to scale.
+SCALE=1
+
+if [ "X$GROUPBY" != "X" ]; then
+  NOGBY=`echo $GROUPBY | awk -F ',' '{print NF}'`
+
+  for (( i=1 ; i<=$NOGBY ; i++ )) ; do
+     GB=`echo $GROUPBY | awk -v j=$i -F',' '{print $j}'`
+     arr[$i]=$GB
+     case $GB in
+        transaction)TRANSACTION_FLAG=1;;
+        page)PG_FLAG=1;;
+        session)SESS_FLAG=1;;
+        access)ACC_FLAG=1;;
+        location)LOC_FLAG=1;;
+        status)ST_FLAG=1;;
+        generator)GENERATOR_FLAG=1;;
+     esac
+  done
+fi
+
+#Add obj name
+add_obj_name
+
+#Add select elements
+set_sel_seg
+#add_select_elements
+
+#Add Status selection
+NOF=`echo $STATUS |awk -F ',' '{print NF}'`
+if [ $NOF -gt 1 ];then
+  set_where
+  INQ_WHERE="$INQ_WHERE $OBJ.Status in ($STATUS)"
+else
+  if [ $STATUS -eq -1 ];then
+     set_where
+    INQ_WHERE="$INQ_WHERE $OBJ.Status > 0"
+  elif [ $STATUS -ne -2 ];then
+     set_where
+    INQ_WHERE="$INQ_WHERE $OBJ.Status = $STATUS"
+
+  fi
+fi
+
+
+#Add Script selection
+
+if [ "X$SCRIPT" != "X" ];then
+  if [ $OBJECT -eq 3 ];then
+    set_whr
+    WHERE="$WHERE SessionTable_$TRNUM.SessionName = ""'"$SCRIPT"'"
+  else
+    if [ $SESS_TAB_FLAG -eq 0 ];then
+      INQ_FROM="$INQ_FROM, SessionTable_$TRNUM"
+      SESS_TAB_FLAG=1
+    fi
+    set_where
+    INQ_WHERE="$INQ_WHERE SessionTable_$TRNUM.SessionIndex = $OBJ.SessionIndex"
+    set_where
+    INQ_WHERE="$INQ_WHERE SessionTable_$TRNUM.SessionName = ""'"$SCRIPT"'"
+  fi
+fi
+#Add Script index selection
+if [ $SCRIPTIDX -ge 0 ];then
+ set_where
+ INQ_WHERE="$INQ_WHERE SessionRecord_$TRNUM.SessionIndex = $SCRIPTIDX"
+fi
+
+
+#Add Transaction selection
+if [ "X$TRANS" != "X" ];then
+ if [ $OBJECT -eq 2 ];then
+    set_whr
+    WHERE="$WHERE TransactionTable_$TRNUM.TransactionName = ""'"$TRANS"'"
+ else
+    set_where
+    INQ_WHERE="$INQ_WHERE TransactionTable_$TRNUM.TransactionName = ""'"$TRANS"'"
+    set_where
+    INQ_WHERE="$INQ_WHERE TransPageRecord_$TRNUM.TransactionIndex = TransactionTable_$TRNUM.TransactionIndex"
+    set_where
+    INQ_WHERE="$INQ_WHERE TransPageRecord_$TRNUM.pageinstance = $OBJ.pageinstance"
+    set_where
+    INQ_WHERE="$INQ_WHERE $OBJ.childindex = TransPageRecord_$TRNUM.childindex"
+    set_where
+    INQ_WHERE="$INQ_WHERE TransPageRecord_$TRNUM.sessioninstance = $OBJ.sessioninstance"
+    set_where
+    INQ_WHERE="$INQ_WHERE TransPageRecord_$TRNUM.TransactionIndex = $OBJ.TransactionIndex"
+    if [ "X$INC_TRT_FLAG" = "X" ]; then
+      INQ_FROM="$INQ_FROM, TransactionTable_$TRNUM"
+      INC_TRT_FLAG=1
+    fi
+    if [ "X$TRANSPAGERECORD_TABLE_FLAG" = "X" ]; then
+      INQ_FROM="$INQ_FROM, TransPageRecord_$TRNUM"
+      TRANSPAGERECORD_TABLE_FLAG=1
+    fi
+  fi
+fi
+
+
+#Add Transaction index selection
+if [ $TRANSIDX -ge 0 ];then
+  set_where
+  INQ_WHERE="$INQ_WHERE TransPageRecord_$TRNUM.TransactionIndex = $TRANSIDX"
+fi
+
+
+#Add page selection
+if [ "X$PAGE" != "X" ];then
+  if [ $OBJECT -eq 1 ];then
+    set_whr
+    WHERE="$WHERE PageTable_$TRNUM.PageName = ""'"$PAGE"'"
+  else 
+    set_where
+    INQ_WHERE="$INQ_WHERE PageTable_$TRNUM.PageName = ""'"$PAGE"'"
+    if [ $PG_FLAG -eq 0 ];then
+      INQ_FROM="$INQ_FROM, PageTable_$TRNUM"
+    fi
+  fi
+fi
+
+
+#Add Page index selection
+if [ $PAGEIDX -ge 0 ];then
+  set_where
+  INQ_WHERE="$INQ_WHERE PageRecord_$TRNUM.PageIndex = $PAGEIDX"
+fi
+
+
+#Add Url selection
+if [ "X$URL" != "X" ];then
+    set_whr
+  WHERE="$WHERE URLTable_$TRNUM.URLName = ""'"$URL"'"
+fi
+
+#Add Url index selection
+if [ "X$URLIDX" != "X-1" ];then
+ set_where 
+ INQ_WHERE="$INQ_WHERE URLRecord_$TRNUM.URLIndex in ($URLIDX)"
+fi
+
+
+#Add response time selection
+if [ "X$RESPONSETIME" != "X" ];then
+ if [ $RESPTIMEQMODE -eq 1 ];then
+   set_where
+   INQ_WHERE="$INQ_WHERE $OBJ.RespTime <= $RESPONSETIME "
+ elif [ $RESPTIMEQMODE -eq 2 ];then
+   set_where
+   INQ_WHERE="$INQ_WHERE $OBJ.RespTime >= $RESPONSETIME"
+ elif [ $RESPTIMEQMODE -eq 3 ];then
+   set_where
+   INQ_WHERE="$INQ_WHERE $OBJ.RespTime BETWEEN $RESPONSETIME AND $RESPONSETIME2"
+ fi
+fi
+
+
+#Phase selection
+if [ "X$PHASEIDX" != "X" ];then
+  set_where
+  INQ_WHERE="$INQ_WHERE $OBJ.PhaseIndex = $PHASEIDX"
+fi
+
+if [ $ADD_ERROR_CODE_TABLE -eq 1 ];then 
+  INQ_ORDERBY="$INQ_ORDERBY, ErrorCodes_$TRNUM"
+fi
+
+if [ "X$GENERATORID" != "X" -a $OBJECT -ne 2 ]; then
+  if [ "X$GENERATOR_FLAG" != "X1" ]; then
+    INQ_FROM="$INQ_FROM, GeneratorTable_$TRNUM"
+    set_where
+    INQ_WHERE="$INQ_WHERE $OBJ.GeneratorId = GeneratorTable_$TRNUM.GeneratorId"
+  fi
+  set_where
+  INQ_WHERE="$INQ_WHERE $OBJ.GeneratorId = $GENERATORID"
+fi
+
+location_selection
+access_selection
+browser_selection
+
+#Add Start time and End time selection
+if [ "X$STARTTIME" != "X" ]; then
+
+  if [ "X$URLRECORD_TABLE_FLAG" == "X1" ]; then
+    set_where
+    INQ_WHERE="$INQ_WHERE URLRecord_$TRNUM.EndTime >= $STARTTIME"
+  fi
+
+  if [ "X$PAGERECORD_TABLE_FLAG" == "X1" ]; then
+    set_where
+    INQ_WHERE="$INQ_WHERE PageRecord_$TRNUM.EndTime >= $STARTTIME"
+  fi
+
+  if [ "X$TRANSPAGERECORD_TABLE_FLAG" == "X1" ]; then
+    set_where
+    INQ_WHERE="$INQ_WHERE TransPageRecord_$TRNUM.EndTime >= $STARTTIME"
+  fi
+
+  if [ "X$SESSIONRECORD_TABLE_FLAG" == "X1" ]; then
+    set_where
+    INQ_WHERE="$INQ_WHERE SessionRecord_$TRNUM.EndTime >= $STARTTIME"
+  fi
+
+fi
+
+if [ "X$ENDTIME" != "X" ]; then
+
+  if [ "X$URLRECORD_TABLE_FLAG" == "X1" ]; then
+    set_where
+    INQ_WHERE="$INQ_WHERE URLRecord_$TRNUM.StartTime <= $ENDTIME"
+  fi
+
+  if [ "X$PAGERECORD_TABLE_FLAG" == "X1" ]; then
+    set_where
+    INQ_WHERE="$INQ_WHERE PageRecord_$TRNUM.StartTime <= $ENDTIME"
+  fi
+
+  if [ "X$TRANSPAGERECORD_TABLE_FLAG" == "X1" ]; then
+    set_where
+    INQ_WHERE="$INQ_WHERE TransPageRecord_$TRNUM.StartTime <= $ENDTIME"
+  fi
+
+  if [ "X$SESSIONRECORD_TABLE_FLAG" == "X1" ]; then
+    set_where
+    INQ_WHERE="$INQ_WHERE SessionRecord_$TRNUM.StartTime <= $ENDTIME"
+  fi
+
+fi
+
+#Add Absoulte Start time and Absoulte End time selection
+if [ "X$ABS_STARTTIME" != "X" ];then
+
+  if [ "X$URLRECORD_TABLE_FLAG" == "X1" ]; then
+    set_where
+    INQ_WHERE="$INQ_WHERE URLRecord_$TRNUM.EndTime >= $ABS_STARTTIME"
+  fi
+
+  if [ "X$PAGERECORD_TABLE_FLAG" == "X1" ]; then
+    set_where
+    INQ_WHERE="$INQ_WHERE PageRecord_$TRNUM.EndTime >= $ABS_STARTTIME"
+  fi
+
+  if [ "X$TRANSPAGERECORD_TABLE_FLAG" == "X1" ]; then
+    set_where
+    INQ_WHERE="$INQ_WHERE TransPageRecord_$TRNUM.EndTime >= $ABS_STARTTIME"
+  fi
+
+  if [ "X$SESSIONRECORD_TABLE_FLAG" == "X1" ]; then
+    set_where
+    INQ_WHERE="$INQ_WHERE SessionRecord_$TRNUM.EndTime >= $ABS_STARTTIME"
+  fi
+
+fi
+
+if [ "X$ABS_ENDTIME" != "X" ];then
+
+  if [ "X$URLRECORD_TABLE_FLAG" == "X1" ]; then
+    set_where
+    INQ_WHERE="$INQ_WHERE URLRecord_$TRNUM.StartTime <= $ABS_ENDTIME"
+  fi
+
+  if [ "X$PAGERECORD_TABLE_FLAG" == "X1" ]; then
+    set_where
+    INQ_WHERE="$INQ_WHERE PageRecord_$TRNUM.StartTime <= $ABS_ENDTIME"
+  fi
+
+  if [ "X$TRANSPAGERECORD_TABLE_FLAG" == "X1" ]; then
+    set_where
+    INQ_WHERE="$INQ_WHERE TransPageRecord_$TRNUM.StartTime <= $ABS_ENDTIME"
+  fi
+
+  if [ "X$SESSIONRECORD_TABLE_FLAG" == "X1" ]; then
+    set_where
+    INQ_WHERE="$INQ_WHERE SessionRecord_$TRNUM.StartTime <= $ABS_ENDTIME"
+  fi
+
+fi
+
+init_percentile_scaling
+
+# calculate SCALE only when the percentile scaling is enabled, otherwise use scale value 1
+if [ "X$percentile_scaling" == "X1" ]; then
+  calculate_percentile_scale
+fi
+
+add_select_elements $SCALE
+
+if [ $GET_COUNT -eq 0 ];then
+  ns_run_query
+else
+  INNER_QUERY="$SELECT $NEWLINE$FROM $NEWLINE$INNER_QUERY"
+  SELECT="SELECT Count(*) As \"Rows \" "
+  FROM="FROM ("
+  OFFSET="$OFFSET ) As \"Total \""
+  ns_run_query
+fi
+
+show_query_result
+
+#debug_logs "$SELECT $INNER_QUERY $FROM   $WHERE $ORDER_BY"
+
+exit 0
+

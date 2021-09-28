@@ -1,0 +1,12 @@
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|DNS Stats|14229|vector|3|0|Dynatrace Metrics|AccountName>Host>DNS|Dynatrace DNS stats.
+
+Graph|DNS Errors|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of DNS errors by type.
+Graph|DNS Queries|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of DNS queries.
+Graph|DNS Query Time (ms)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|DNS query time in millisecond.

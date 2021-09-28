@@ -1,0 +1,22 @@
+#--- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|HDFS Cluster Stats|10336|vector|16|0|Application Metrics|Tier>Server>Cluster|HDFS Cluster stats monitors metrics related to file operations, storage system and block operations across the cluster.
+Graph|Live Data Nodes|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of data nodes live.
+Graph|Dead Data Nodes|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of data nodes dead.
+Graph|Used Capacity (TB)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Storage space used in TeraBytes.
+Graph|Available Capacity (TB)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Storage space available in TeraBytes.
+Graph|Total Capacity (TB)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Storage space total in TeraBytes.
+Graph|Used Capacity (PCT)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Storage space used in percentage.
+Graph|Non DFS Used Capacity (TB)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Storage space used in TeraBytes for non distributed file system.
+Graph|NameNode Heap Used Memory (GB)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Heap space used in GigaBytes.
+Graph|Connections Count|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of connections.
+Graph|Files Appended/Sec|10|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of files appended per second.
+Graph|Files Renamed/Sec|11|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of files renamed per second.
+Graph|Files Deleted/Sec|12|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of delete file operations per second.
+Graph|Blocks Count|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of blocks.
+Graph|Corrupt Blocks Count|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of corrupt blocks.
+Graph|Blocks Under Replication|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of blocks under replication.
+Graph|Block Pending Replication|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of blocks replication pending.

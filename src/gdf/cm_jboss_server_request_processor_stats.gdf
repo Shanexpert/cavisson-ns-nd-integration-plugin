@@ -1,0 +1,23 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|JBoss Request Processor|10203|vector|13|0|Application Metrics|Tier>Server>Instance>ProcessorName|JBoss Request Processor stats
+
+Graph|Request Processing Time|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Introspected attribute requestProcessingTime.
+Graph|Bytes Sent|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Introspected attribute bytesSent.
+Graph|Processing Time|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Introspected attribute processingTime.
+Graph|Error Count|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Introspected attribute errorCount.
+Graph|Maximum Time|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Introspected attribute maxTime.
+Graph|Request Bytes Received|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Introspected attribute requestBytesReceived.
+Graph|Stage|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Introspected attribute stage.
+Graph|Last Request Processing Time|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Introspected attribute lastRequestProcessingTime.
+Graph|Server Port|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Introspected attribute serverPort.
+Graph|Bytes Received|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Introspected attribute bytesReceived.
+Graph|Request Count|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Introspected attribute requestBytesSent.
+Graph|Request Bytes Sent|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Introspected attribute requestBytesSent.
+Graph|Content Length|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Introspected attribute contentLength.

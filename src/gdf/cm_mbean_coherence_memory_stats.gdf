@@ -1,0 +1,18 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+
+#ObjectName :Coherence:type=Platform,Domain=java.lang,subType=GarbageCollector,name=*,nodeId=*
+
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Coherence Memory Stats|14169|vector|1|0|Coherence Metrics|Tier>Server>Instance>nodeId|This stats provides information about Coherence Memory.
+
+
+Graph|Coherence Object Pending Finalization Count|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Approximate number of objects for which finalization is pending.
+
+

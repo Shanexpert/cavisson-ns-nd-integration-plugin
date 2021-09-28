@@ -1,0 +1,17 @@
+info|3.1|1|-|-|-1|-1|-
+
+Group|AWS AutoScaling Stats|11249|vector|13|0|AWS Metrics|AccountName>Region>AutoScalingGroupName|An Auto Scaling group contains a collection of Amazon EC2 instances that are treated as a logical grouping for the purposes of automatic scaling and management.
+
+Graph|AWS AutoScaling Terminating instances|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of instances that are in the process of terminating. This metric does not include instances that are in service or pending.
+Graph|AWS AutoScaling Desired Capacity|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of instances that the Auto Scaling group attempts to maintain.
+Graph|AWS AutoScaling Max Size|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The maximum size of the Auto Scaling group.
+Graph|AWS AutoScaling Standby Capacity|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|AWS AutoScaling Group Standby Capacity.
+Graph|AWS AutoScaling Terminating Capacity|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|AWS AutoScaling Group Terminating Capacity.
+Graph|AWS AutoScaling Standby Instance|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|AWS AutoScaling Group Standby Instances
+Graph|AWS AutoScaling Total Capacity|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|AWS AutoScaling Group Total Capacity.
+Graph|AWS AutoScaling Min Size|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|AWS AutoScaling Group Min Size.
+Graph|AWS AutoScaling Total Instance|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|AWS AutoScaling  Group Total Instances
+Graph|AWS AutoScaling InService Instance|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|AWS AutoScaling Group InService Instances.
+Graph|AWS AutoScaling InService Capacity|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|AWS AutoScaling Group InService Capacity.
+Graph|AWS AutoScaling Pending Instance|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of instances that are pending. A pending instance is not yet in service.
+Graph|AWS AutoScaling Pending Capacity|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|AWS AutoScaling Pending Capacity.

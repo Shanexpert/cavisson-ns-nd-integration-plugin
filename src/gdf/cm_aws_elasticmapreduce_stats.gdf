@@ -1,0 +1,151 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS ElasticMapReduce Stats|11242|vector|72|0|AWS Metrics|AccountName>Region>JobFlowId|Amazon ElasticMapReduce (EMR) is a managed cluster platform that simplifies running big data frameworks, such as Apache Hadoop and Apache Spark, on AWS to process and analyze vast amounts of data.
+
+Graph|AWS EMR Total Load Sum|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The sum of the total number of concurrent data transfers.
+
+Graph|AWS EMR DFS FS Name System Pending Replication Blocks|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The status of block replication: blocks being replicated, age of replication requests, and unsuccessful replication requests.
+
+Graph|AWS EMR Under Replicated Blocks|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of blocks that need to be replicated one or more times.
+
+Graph|AWS EMR Corrupt Blocks|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of blocks that HDFS reports as corrupted.
+
+Graph|AWS EMR Pending Deletion Blocks|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of blocks marked for deletion.
+
+Graph|AWS EMR Missing Blocks|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of blocks in which HDFS has no replicas. These might be corrupt blocks.
+
+Graph|AWS EMR Capacity Remaining (GB)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average amount of remaining HDFS disk capacity.
+
+Graph|AWS EMR HDFS Utilization (%)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of HDFS storage currently used.
+
+Graph|AWS EMR Live Data Nodes (%)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of data nodes that are receiving work from Hadoop.
+
+Graph|AWS EMR S3 Bytes Written|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of bytes written to Amazon S3.
+
+Graph|AWS EMR Apps Running|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of applications submitted to YARN that are running.
+
+Graph|AWS EMR Container Reserved|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of containers reserved.
+
+Graph|AWS EMR MR Total Nodes|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of nodes presently available to MapReduce jobs.
+
+Graph|AWS EMR HDFS bytes Read|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of bytes read from HDFS.
+
+Graph|AWS EMR S3 Bytes Read|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of bytes read from Amazon S3.
+
+Graph|AWS EMR Apps Completed|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of applications submitted to YARN that have completed.
+
+Graph|AWS EMR YARN Memory Available (%)|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of remaining memory available to YARN (YARNMemoryAvailablePercentage = MemoryAvailableMB , MemoryTotalMB). This value is useful for scaling cluster resources based on YARN memory usage.
+
+Graph|AWS EMR MR Lost Nodes|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of nodes allocated to MapReduce that have been marked in a LOST state.
+
+Graph|AWS EMR Apps Failed|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of applications submitted to YARN that have failed to complete.
+
+Graph|AWS EMR Apps Killed|20|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of applications submitted to YARN that have been killed.
+
+Graph|AWS EMR Apps Pending|21|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of applications submitted to YARN that are in a pending state.
+
+Graph|AWS EMR Apps Submitted|22|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of applications submitted to YARN.
+
+Graph|AWS EMR Container Allocated|23|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of resource containers allocated by the ResourceManager.
+
+Graph|AWS EMR Container Pending|24|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of containers in the queue that have not yet been allocated.
+
+Graph|AWS EMR Container Pending Ratio (%)|25|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average percentage of containers in the queue that have not yet been allocated.
+
+Graph|AWS EMR Core Nodes Pending|26|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of core nodes waiting to be assigned. All of the core nodes requested may not be immediately available; this metric reports the pending requests. Data points for this metric are reported only when a corresponding instance group exists.
+
+Graph|AWS EMR Core Nodes Running|27|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of core nodes working. Data points for this metric are reported only when a corresponding instance group exists.
+
+Graph|AWS EMR HBASE Backup Failed|28|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Whether the last backup failed. This is set to 0 by default and updated to 1 if the previous backup attempt failed. This metric is only reported for HBASE clusters.
+
+Graph|AWS EMR HBASE Most Recent Backup Duration|29|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The amount of time it took the previous backup to complete. This metric is set regardless of whether the last completed backup succeeded or failed. While the backup is ongoing, this metric returns the number of minutes after the backup started. This metric is only reported for HBASE clusters.
+
+Graph|AWS EMR HBASE Time Since Last Successful Backup|30|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of elapsed minutes after the last successful HBASE backup started on your cluster. This metric is only reported for HBASE clusters.
+
+Graph|AWS EMR HDFS Bytes Written|31|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of bytes written to HDFS.
+
+Graph|AWS EMR Is Idle|32|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Indicates that a cluster is no longer performing work, but is still alive and accruing charges. It is set to 1 if no tasks are running and no jobs are running, and set to 0 otherwise. This value is checked at five-minute intervals and a value of 1 indicates only that the cluster was idle when checked, not that it was idle for the entire five minutes.
+
+Graph|AWS EMR Jobs Failed|33|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of jobs in the cluster that have failed.
+
+Graph|AWS EMR Jobs Running|34|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of jobs in the cluster that are currently running.
+
+Graph|AWS EMR Live Task Trackers (%)|35|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of task trackers that are functional.
+
+Graph|AWS EMR Map Slots Open|36|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average unused map task capacity. This is calculated as the maximum number of map tasks for a given cluster, less the total number of map tasks currently running in that cluster.
+
+Graph|AWS EMR Memory Allocated (MB)|37|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average amount of memory allocated to the cluster.
+
+Graph|AWS EMR Memory Available (MB)|38|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average amount of memory available to be allocated.
+
+Graph|AWS EMR Memory Reserved (MB)|39|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average amount of memory reserved.
+
+Graph|AWS EMR Memory Total (MB)|40|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average total amount of memory in the cluster.
+
+Graph|AWS EMR MR Active Nodes|41|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of nodes presently running MapReduce tasks or jobs.
+
+Graph|AWS EMR MR Decommissioned Nodes|42|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of nodes allocated to MapReduce applications that have been marked in a DECOMMISSIONED state.
+
+Graph|AWS EMR MR Rebooted Nodes|43|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of nodes available to MapReduce that have been rebooted and marked in a REBOOTED state.
+
+Graph|AWS EMR MR Unhealthy Nodes|44|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of nodes available to MapReduce jobs marked in an UNHEALTHY state.
+
+Graph|AWS EMR Reduce Slots Open|45|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average unused reduce task capacity. This is calculated as the maximum reduce task capacity for a given cluster, less the number of reduce tasks currently running in that cluster.
+
+Graph|AWS EMR Remaining Map Tasks|46|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of remaining map tasks for each job. If you have a scheduler installed and multiple jobs running, multiple graphs are generated. A remaining map task is one that is not in any of the following states: Running, Killed, or Completed.
+
+Graph|AWS EMR Remaining Map Tasks Per Slot|47|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The ratio of the total map tasks remaining to the total map slots available in the cluster.
+
+Graph|AWS EMR Remaining Reduce Tasks|48|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of remaining reduce tasks for each job. If you have a scheduler installed and multiple jobs running, multiple graphs are generated.
+
+Graph|AWS EMR Running Map Tasks|49|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of running map tasks for each job. If you have a scheduler installed and multiple jobs running, multiple graphs are generated.
+
+Graph|AWS EMR Running Reduce Tasks|50|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of running reduce tasks for each job. If you have a scheduler installed and multiple jobs running, multiple graphs are generated.
+
+Graph|AWS EMR Task Nodes Pending|51|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of task nodes waiting to be assigned. All of the task nodes requested may not be immediately available; this metric reports the pending requests. Data points for this metric are reported only when a corresponding instance group exists.
+
+Graph|AWS EMR Task Nodes Running|52|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of task nodes working. Data points for this metric are reported only when a corresponding instance group exists.
+
+Graph|AWS EMR Total Map Tasks|53|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of running map tasks for each job.
+
+Graph|AWS EMR Total Remaining Tasks|54|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of remaining map tasks for each job. If you have a scheduler installed and multiple jobs running, multiple graphs are generated.
+
+Graph|AWS EMR Total Units Requested|55|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The target total number of units,nodes,vCPUs in a cluster as determined by managed scaling.
+
+Graph|AWS EMR Total Nodes Requested|56|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The target total number of units,nodes,vCPUs in a cluster as determined by managed scaling.
+
+Graph|AWS EMR Total VCPU Requested|57|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The target total number of units,nodes,vCPUs in a cluster as determined by managed scaling.
+
+Graph|AWS EMR Total Units Running|58|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The current total number of units,nodes,vCPUs available in a running cluster. When a cluster resize is requested, this metric will be updated after the new instances are added or removed from the cluster.
+
+Graph|AWS EMR Total Nodes Running|59|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The current total number of units,nodes,vCPUs available in a running cluster. When a cluster resize is requested, this metric will be updated after the new instances are added or removed from the cluster.
+
+Graph|AWS EMR Total VCPU Running|60|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The current total number of units,nodes,vCPUs available in a running cluster. When a cluster resize is requested, this metric will be updated after the new instances are added or removed from the cluster.
+
+Graph|AWS EMR Core Units Requested|61|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The target number of CORE units,nodes,vCPUs in a cluster as determined by managed scaling.
+
+Graph|AWS EMR Core Nodes Requested|62|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The target number of CORE units,nodes,vCPUs in a cluster as determined by managed scaling.
+
+Graph|AWS EMR Core VCPU Requested|63|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The target number of CORE units,nodes,vCPUs in a cluster as determined by managed scaling.
+
+Graph|AWS EMR Core Units Running|64|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The current number of CORE units,nodes,vCPUs running in a cluster.
+
+Graph|AWS EMR Core Nodes Running|65|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The current number of CORE units,nodes,vCPUs running in a cluster.
+
+Graph|AWS EMR Core VCPU Running|66|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The current number of CORE units,nodes,vCPUs running in a cluster.
+
+Graph|AWS EMR Task Units Requested|67|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The target number of TASK units,nodes,vCPUs in a cluster as determined by managed scaling.
+
+Graph|AWS EMR Task Nodes Requested|68|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The target number of TASK units,nodes,vCPUs in a cluster as determined by managed scaling.
+
+Graph|AWS EMR Task VCPU Requested|69|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The target number of TASK units,nodes,vCPUs in a cluster as determined by managed scaling.
+
+Graph|AWS EMR Task Units Running|70|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The current number of TASK units,nodes,vCPUs running in a cluster.
+
+Graph|AWS EMR Task Nodes Running|71|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The current number of TASK units,nodes,vCPUs running in a cluster.
+
+Graph|AWS EMR Task VCPU Running|72|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The current number of TASK units,nodes,vCPUs running in a cluster.

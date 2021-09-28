@@ -1,0 +1,43 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+#
+#cm_nd_db_query_stats.gdf
+#Note - Group Id and graph should not be changed as these are used in Dashboard GUI
+
+Info|3.1|1|-|-|-1|-1|-
+Group|DB Query Stats|10246|vector|21|0|Application Metrics|Tier>Server>Instance>DB Query Stats|ND DB Query Stats monitor.
+
+Graph|All DB Queries per sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|All DB Queries per sec
+Graph|All DB Queries Duration (ms)|2|scalar|times|-|-|0|NA|-1|-1|NA|NA|All DB Queries Duration (ms)
+
+Graph|SELECT DB Queries per sec|3|scalar|rate|-|-|0|NA|-1|-1|NA|NA|SELECT DB Queries per sec
+Graph|SELECT DB Queries Duration (ms)|4|scalar|times|-|-|0|NA|-1|-1|NA|NA|SELECT DB Queries Duration (ms)
+
+Graph|INSERT DB Queries per sec|5|scalar|rate|-|-|0|NA|-1|-1|NA|NA|INSERT DB Queries per sec
+Graph|INSERT DB Queries Duration (ms)|6|scalar|times|-|-|0|NA|-1|-1|NA|NA|INSERT DB Queries Duration (ms)
+
+Graph|UPDATE DB Queries per sec|7|scalar|rate|-|-|0|NA|-1|-1|NA|NA|UPDATE DB Queries per sec
+Graph|UPDATE DB Queries Duration (ms)|8|scalar|times|-|-|0|NA|-1|-1|NA|NA|UPDATE DB Queries Duration (ms)
+
+Graph|DELETE DB Queries per sec|9|scalar|rate|-|-|0|NA|-1|-1|NA|NA|DELETE DB Queries per sec
+Graph|DELETE DB Queries Duration (ms)|10|scalar|times|-|-|0|NA|-1|-1|NA|NA|DELETE DB Queries Duration (ms)
+
+Graph|CREATE DB Queries per sec|11|scalar|rate|-|-|0|NA|-1|-1|NA|NA|CREATE DB Queries per sec
+Graph|CREATE DB Queries Duration (ms)|12|scalar|times|-|-|0|NA|-1|-1|NA|NA|CREATE DB Queries Duration (ms)
+
+Graph|DROP DB Queries per sec|13|scalar|rate|-|-|0|NA|-1|-1|NA|NA|DROP DB Queries per sec
+Graph|DROP DB Queries Duration (ms)|14|scalar|times|-|-|0|NA|-1|-1|NA|NA|DROP DB Queries Duration (ms)
+
+Graph|Other DB Queries per sec|15|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Other DB Queries per sec
+Graph|Other DB Queries Duration (ms)|16|scalar|times|-|-|0|NA|-1|-1|NA|NA|Other DB Queries Duration (ms)
+
+Graph|Prepared DB Queries|17|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Prepared DB Queries per sec
+Graph|Prepared DB Queries Duration (ms)|18|scalar|times|-|-|0|NA|-1|-1|NA|NA|Prepared DB Queries Duration (ms)
+
+Graph|NonPrepared DB Queries|19|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Prepared DB Queries per sec
+Graph|NonPrepared DB Queries Duration (ms)|20|scalar|times|-|-|0|NA|-1|-1|NA|NA|Prepared DB Queries Duration (ms)
+
+Graph|Error Queries/sec|21|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Prepared DB Queries per sec

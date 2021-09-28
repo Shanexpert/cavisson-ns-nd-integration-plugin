@@ -1,0 +1,129 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+# Note: Please Use the Group Name and Graph Name having no special character like {%, !, ^, &, + } etc..
+
+# General information line
+# Info|msgVersion|numGroups|startIndex|testRun|sizeOfMsgData|interval|testRunStartDate/Time
+#
+# Group information line
+# Group|groupName|rptGrpId|groupType|numGraphs|numVectors
+#
+# Graph information line
+# Graph|graphName|rptId|graphType|dataType|graphDataIndex|formula|numVectors
+#
+#CUSTOM_MONITOR /home/netstorm/work/test_custom custom_test.gdf 1 0 NO 
+#
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Datatype Testing|10005|vector|93|0|Application Metrics|Tier>Server|Datatype Testing
+
+Graph|Sample No Formula|1|scalar|sample|-|-|0|NA|-1|-1|H|NA|Sample No Formula
+Graph|Sample PS|2|scalar|sample|-|PS|0|NA|-1|-1|M|NA|Sample PS
+Graph|Sample PM|3|scalar|sample|-|PM|0|NA|-1|-1|NA|NA|Sample PM
+Graph|Sample DBH|4|scalar|sample|-|DBH|0|NA|-1|-1|NA|NA|Sample DBH
+Graph|Sample Kbps|5|scalar|sample|-|KBPS|0|NA|-1|-1|NA|NA|Sample Kbps
+Graph|Sample SEC|6|scalar|sample|-|SEC|0|NA|-1|-1|H|NA|Sample SEC
+
+Graph|Sample_1B No Formula|7|scalar|sample_1B|-|-|0|NA|-1|-1|L|NA|Sample_1B No Formula
+Graph|Sample_1B PS|8|scalar|sample_1B|-|PS|0|NA|-1|-1|H|NA|Sample_1B PS
+Graph|Sample_1B PM|9|scalar|sample_1B|-|PM|0|NA|-1|-1|NA|NA|Sample_1B PM
+Graph|Sample_1B DBH|10|scalar|sample_1B|-|DBH|0|NA|-1|-1|NA|NA|Sample_1B DBH
+Graph|Sample_1B Kbps|11|scalar|sample_1B|-|KBPS|0|NA|-1|-1|NA|NA|Sample_1B Kbps
+Graph|Sample_1B SEC|12|scalar|sample_1B|-|SEC|0|NA|-1|-1|NA|NA|Sample_1B SEC
+Graph|Sample_1B Data Overflow|13|scalar|sample_1B|-|NA|0|NA|-1|-1|M|NA|Sample_1B Data Overflow
+
+Graph|Sample_2B_100 No Formula|14|scalar|sample_2B_100|-|-|0|NA|-1|-1|L|NA|Sample_2B_100 No Formula
+Graph|Sample_2B_100 PS|15|scalar|sample_2B_100|-|PS|0|NA|-1|-1|H|NA|Sample_2B_100 PS
+Graph|Sample_2B_100 PM|16|scalar|sample_2B_100|-|PM|0|NA|-1|-1|NA|NA|Sample_2B_100 PM
+Graph|Sample_2B_100 DBH|17|scalar|sample_2B_100|-|DBH|0|NA|-1|-1|NA|NA|Sample_2B_100 DBH
+Graph|Sample_2B_100 Kbps|18|scalar|sample_2B_100|-|KBPS|0|NA|-1|-1|NA|NA|Sample_2B_100 Kbps
+Graph|Sample_2B_100 SEC|19|scalar|sample_2B_100|-|SEC|0|NA|-1|-1|NA|NA|Sample_2B_100 SEC
+Graph|Sample_2B_100 Data Overflow|20|scalar|sample_2B_100|-|NA|0|NA|-1|-1|M|NA|Sample_2B_100 Data Overflow
+
+Graph|Sample_4B No Formula|21|scalar|sample_4B|-|-|0|NA|-1|-1|H|NA|Sample_4B No Formula
+Graph|Sample_4B PS|22|scalar|sample_4B|-|PS|0|NA|-1|-1|NA|NA|Sample_4B PS
+Graph|Sample_4B PM|23|scalar|sample_4B|-|PM|0|NA|-1|-1|NA|NA|Sample_4B PM
+Graph|Sample_4B DBH|24|scalar|sample_4B|-|DBH|0|NA|-1|-1|H|NA|Sample_4B DBH
+Graph|Sample_4B Kbps|25|scalar|sample_4B|-|KBPS|0|NA|-1|-1|NA|NA|Sample_4B Kbps
+Graph|Sample_4B SEC|26|scalar|sample_4B|-|SEC|0|NA|-1|-1|NA|NA|Sample_4B SEC
+Graph|Sample_4B Data Overflow|27|scalar|sample_4B|-|NA|0|NA|-1|-1|L|NA|Sample_4B Data Overflow
+
+Graph|Sample_4B_1000 No Formula|28|scalar|sample_4B_1000|-|-|0|NA|-1|-1|M|NA|Sample_4B_1000 No Formula
+Graph|Sample_4B_1000 PS|29|scalar|sample_4B_1000|-|PS|0|NA|-1|-1|H|NA|Sample_4B_1000 PS
+Graph|Sample_4B_1000 PM|30|scalar|sample_4B_1000|-|PM|0|NA|-1|-1|H|NA|Sample_4B_1000 PM
+Graph|Sample_4B_1000 DBH|31|scalar|sample_4B_1000|-|DBH|0|NA|-1|-1|NA|NA|Sample_4B_1000 DBH
+Graph|Sample_4B_1000 Kbps|32|scalar|sample_4B_1000|-|KBPS|0|NA|-1|-1|NA|NA|Sample_4B_1000 Kbps
+Graph|Sample_4B_1000 SEC|33|scalar|sample_4B_1000|-|SEC|0|NA|-1|-1|NA|NA|Sample_4B_1000 SEC
+Graph|Sample_4B_1000 Data Overflow|34|scalar|sample_4B_1000|-|NA|0|NA|-1|-1|L|NA|Sample_4B_1000 Data Overflow
+
+Graph|Sample_2B_100_Count_4B No Formula|35|scalar|sample_2B_100_count_4B|-|-|0|NA|-1|-1|H|NA|Sample_2B_100_Count_4B No Formula
+Graph|Sample_2B_100_Count_4B PS|36|scalar|sample_2B_100_count_4B|-|PS|0|NA|-1|-1|M|NA|Sample_2B_100_Count_4B PS
+Graph|Sample_2B_100_Count_4B PM|37|scalar|sample_2B_100_count_4B|-|PM|0|NA|-1|-1|NA|NA|Sample_2B_100_Count_4B PM
+Graph|Sample_2B_100_Count_4B DBH|38|scalar|sample_2B_100_count_4B|-|DBH|0|NA|-1|-1|NA|NA|Sample_2B_100_Count_4B DBH
+Graph|Sample_2B_100_Count_4B Kbps|39|scalar|sample_2B_100_count_4B|-|KBPS|0|NA|-1|-1|NA|NA|Sample_2B_100_Count_4B Kbps
+Graph|Sample_2B_100_Count_4B SEC|40|scalar|sample_2B_100_count_4B|-|SEC|0|NA|-1|-1|NA|NA|Sample_2B_100_Count_4B SEC
+Graph|Sample_2B_100_Count_4B Data Overflow|41|scalar|sample_2B_100_count_4B|-|NA|0|NA|-1|-1|L|NA|Sample_2B_100_Count_4B Data Overflow
+
+Graph|Rate No Formula|42|scalar|rate|-|-|0|NA|-1|-1|H|NA|Rate No Formula
+Graph|Rate PS|43|scalar|rate|-|PS|0|NA|-1|-1|NA|NA|Rate PS
+Graph|Rate PM|44|scalar|rate|-|PM|0|NA|-1|-1|NA|NA|Rate PM
+Graph|Rate DBH|45|scalar|rate|-|DBH|0|NA|-1|-1|NA|NA|Rate DBH
+Graph|Rate Kbps|46|scalar|rate|-|KBPS|0|NA|-1|-1|NA|NA|Rate Kbps
+Graph|Rate SEC|47|scalar|rate|-|SEC|0|NA|-1|-1|M|NA|Rate SEC
+
+Graph|Rate_4B_1000 No Formula|48|scalar|rate_4B_1000|-|-|0|NA|-1|-1|L|NA|Rate_4B_1000 No Formula
+Graph|Rate_4B_1000 PS|49|scalar|rate_4B_1000|-|PS|0|NA|-1|-1|NA|NA|Rate_4B_1000 PS
+Graph|Rate_4B_1000 PM|50|scalar|rate_4B_1000|-|PM|0|NA|-1|-1|NA|NA|Rate_4B_1000 PM
+Graph|Rate_4B_1000 DBH|51|scalar|rate_4B_1000|-|DBH|0|NA|-1|-1|H|NA|Rate_4B_1000 DBH
+Graph|Rate_4B_1000 Kbps|52|scalar|rate_4B_1000|-|KBPS|0|NA|-1|-1|NA|NA|Rate_4B_1000 Kbps
+Graph|Rate_4B_1000 SEC|53|scalar|rate_4B_1000|-|SEC|0|NA|-1|-1|NA|NA|Rate_4B_1000 SEC
+Graph|Rate_4B_1000 Data Overflow|54|scalar|rate_4B_1000|-|NA|0|NA|-1|-1|M|NA|Rate_4B_1000 Data Overflow
+
+Graph|Cummulative No Formula|55|scalar|cumulative|-|-|0|NA|-1|-1|H|NA|Cummulative No Formula
+Graph|Cummulative PS|56|scalar|cumulative|-|CumToPS|0|NA|-1|-1|NA|NA|Cummulative PS
+Graph|Cummulative PM|57|scalar|cumulative|-|CumToPM|0|NA|-1|-1|NA|NA|Cummulative PM
+Graph|Cummulative DBH|58|scalar|cumulative|-|DBH|0|NA|-1|-1|NA|NA|Cummulative DBH
+Graph|Cummulative Kbps|59|scalar|cumulative|-|KBPS|0|NA|-1|-1|NA|NA|Cummulative Kbps
+Graph|Cummulative SEC|60|scalar|cumulative|-|SEC|0|NA|-1|-1|M|NA|Cummulative SEC
+
+Graph|Times No Formula|61|scalar|times|-|-|0|NA|-1|-1|L|NA|Times No Formula
+Graph|Times PS|62|scalar|times|-|PS|0|NA|-1|-1|NA|NA|Times PS
+Graph|Times PM|63|scalar|times|-|PM|0|NA|-1|-1|NA|NA|Times PM
+Graph|Times DBH|64|scalar|times|-|DBH|0|NA|-1|-1|NA|NA|Times DBH
+Graph|Times Kbps|65|scalar|times|-|KBPS|0|NA|-1|-1|NA|NA|Times Kbps
+Graph|Times SEC|66|scalar|times|-|SEC|0|NA|-1|-1|H|NA|Times SEC
+
+Graph|Times_4B_10 No Formula|67|scalar|times_4B_10|-|-|0|NA|-1|-1|M|NA|Times_4B_10 No Formula
+Graph|Times_4B_10 PS|68|scalar|times_4B_10|-|PS|0|NA|-1|-1|H|NA|Times_4B_10 PS
+Graph|Times_4B_10 PM|69|scalar|times_4B_10|-|PM|0|NA|-1|-1|NA|NA|Times_4B_10 PM
+Graph|Times_4B_10 DBH|70|scalar|times_4B_10|-|DBH|0|NA|-1|-1|NA|NA|Times_4B_10 DBH
+Graph|Times_4B_10 Kbps|71|scalar|times_4B_10|-|KBPS|0|NA|-1|-1|NA|NA|Times_4B_10 Kbps
+Graph|Times_4B_10 SEC|72|scalar|times_4B_10|-|SEC|0|NA|-1|-1|NA|NA|Times_4B_10 SEC
+Graph|Times_4B_10 Data Overflow|73|scalar|times_4B_10|-|NA|0|NA|-1|-1|M|NA|Times_4B_10 Data Overflow
+
+Graph|Times_4B_1000 No Formula|74|scalar|times_4B_1000|-|-|0|NA|-1|-1|H|NA|Times_4B_1000 No Formula
+Graph|Times_4B_1000 PS|75|scalar|times_4B_1000|-|PS|0|NA|-1|-1|L|NA|Times_4B_1000 PS
+Graph|Times_4B_1000 PM|76|scalar|times_4B_1000|-|PM|0|NA|-1|-1|NA|NA|Times_4B_1000 PM
+Graph|Times_4B_1000 DBH|77|scalar|times_4B_1000|-|DBH|0|NA|-1|-1|NA|NA|Times_4B_1000 DBH
+Graph|Times_4B_1000 Kbps|78|scalar|times_4B_1000|-|KBPS|0|NA|-1|-1|NA|NA|Times_4B_1000 Kbps
+Graph|Times_4B_1000 SEC|79|scalar|times_4B_1000|-|SEC|0|NA|-1|-1|NA|NA|Times_4B_1000 SEC
+Graph|Times_4B_1000 Data Overflow|80|scalar|times_4B_1000|-|NA|0|NA|-1|-1|H|NA|Times_4B_1000 Data Overflow
+
+Graph|TimesStd No Formula|81|scalar|timesStd|-|-|0|NA|-1|-1|H|NA|TimesStd No Formula
+Graph|TimesStd PS|82|scalar|timesStd|-|PS|0|NA|-1|-1|NA|NA|TimesStd PS
+Graph|TimesStd PM|83|scalar|timesStd|-|PM|0|NA|-1|-1|H|NA|TimesStd PM
+Graph|TimesStd DBH|84|scalar|timesStd|-|DBH|0|NA|-1|-1|NA|NA|TimesStd DBH
+Graph|TimesStd Kbps|85|scalar|timesStd|-|KBPS|0|NA|-1|-1|NA|NA|TimesStd Kbps
+Graph|TimesStd SEC|86|scalar|timesStd|-|SEC|0|NA|-1|-1|M|NA|TimesStd SEC
+
+Graph|TimesStd_4B_1000 No Formula|87|scalar|timesStd_4B_1000|-|-|0|NA|-1|-1|M|NA|TimesStd_4B_1000 No Formula
+Graph|TimesStd_4B_1000 PS|88|scalar|timesStd_4B_1000|-|PS|0|NA|-1|-1|NA|NA|TimesStd_4B_1000 PS
+Graph|TimesStd_4B_1000 PM|89|scalar|timesStd_4B_1000|-|PM|0|NA|-1|-1|NA|NA|TimesStd_4B_1000 PM
+Graph|TimesStd_4B_1000 DBH|90|scalar|timesStd_4B_1000|-|DBH|0|NA|-1|-1|NA|NA|TimesStd_4B_1000 DBH
+Graph|TimesStd_4B_1000 Kbps|91|scalar|timesStd_4B_1000|-|KBPS|0|NA|-1|-1|NA|NA|TimesStd_4B_1000 Kbps
+Graph|TimesStd_4B_1000 SEC|92|scalar|timesStd_4B_1000|-|SEC|0|NA|-1|-1|NA|NA|TimesStd_4B_1000 SEC
+Graph|TimesStd_4B_1000 Data Overflow|93|scalar|timesStd_4B_1000|-|NA|0|NA|-1|-1|H|NA|TimesStd_4B_1000 Data Overflow

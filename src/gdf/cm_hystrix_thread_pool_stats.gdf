@@ -1,0 +1,23 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Hystrix Thread Pool Stats|10310|vector|14|0|Hystrix Metrics|Tier>Server>Instance>PoolName|Information related to all properties of Hystrix Thread pool metrics.
+
+Graph|Active Thread Count|1|scalar|sample_4B|-|-|0|NA|-1|-1|NA|NA|The approximate number of threads that are actively executing tasks.
+Graph|Completed Task Count|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The approximate total number of tasks that have completed execution.
+Graph|Core Thread Pool Size|3|scalar|sample_4B_1000|-|-|0|NA|-1|-1|NA|NA|The maximum number of HystrixCommands that can execute concurrently.
+Graph|Largest Thread Pool Size|4|scalar|sample_4B_1000|-|-|0|NA|-1|-1|NA|NA|The largest number of threads that have ever simultaneously been in the pool.
+Graph|Maximum Thread Pool Size|5|scalar|sample_4B_1000|-|-|0|NA|-1|-1|NA|NA|The maximum allowed number of threads.
+Graph|Current Pool Size|6|scalar|sample_4B_1000|-|-|0|NA|-1|-1|NA|NA|The current number of threads in the pool.
+Graph|Current Queue Size|7|scalar|sample_4B_1000|-|-|0|NA|-1|-1|NA|NA|Current size of BlockingQueue used by the thread-pool.
+Graph|Current Task Count|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The approximate total number of tasks that have ever been scheduled for execution.
+Graph|Rolling Count Threads Executed|9|scalar|sample_4B|-|-|0|NA|-1|-1|NA|NA|Rolling count of number of threads executed during rolling statistical window.
+Graph|Rolling Max Active Threads|10|scalar|sample_4B|-|-|0|NA|-1|-1|NA|NA|Rolling maximum number of active threads during rolling statistical window.
+Graph|Rolling Count Command Rejections|11|scalar|sample_4B|-|-|0|NA|-1|-1|NA|NA|Rolling count of number of command is rejected from the thread-pool.
+Graph|Queue Size Rejection Threshold|12|scalar|sample_4B|-|-|0|NA|-1|-1|NA|NA|This is used by HystrixCommand when queuing a thread for execution.
+Graph|Statistical Rolling Window Time (ms)|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The duration of the statistical rolling window, in milliseconds. This is how long metrics are kept for the thread pool.The window is divided into buckets and rolls by those increments.
+Graph|Reporting Host|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of Reporting Host.

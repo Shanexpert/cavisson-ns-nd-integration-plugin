@@ -1,0 +1,7 @@
+#!/bin/bash
+Y=`cat /etc/build_num`
+echo $Y
+Y=`expr $Y + 1`
+#echo $Y
+echo $Y > /etc/build_num
+#echo $Y

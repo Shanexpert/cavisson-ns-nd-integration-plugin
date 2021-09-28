@@ -1,0 +1,20 @@
+#LAST_MAX_ASSIGNED_GRAPH_ID = 2
+#LAST_MODIFIED_DATE = 07/17/13 15:38:10
+
+Info|3.1|1|-|-|-1|-1|-
+Group|FCC Stats|10168|vector|14|0|Application Metrics|Tier>Server|FCC application statistics
+Graph|Max(ms)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum value in milliseconds
+Graph|Mean(ms)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Mean value in milliseconds
+Graph|Min(ms)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Minimum value in milliseconds
+Graph|50th Percentile(ms)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|50th Percentile in milliseconds
+Graph|75th Percentile(ms)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|75th Percentile in milliseconds
+Graph|95th Percentile(ms)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|95th Percentile in milliseconds
+Graph|98th Percentile(ms)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|98th Percentile in milliseconds
+Graph|99th Percentile(ms)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|99th Percentile in milliseconds
+Graph|99.9th Percentile(ms)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|99.9th Percentile in milliseconds
+Graph|Total Count|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total count
+Graph|Active Count|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Active count
+Graph|Exceptions|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Exception count
+Graph|Request Size|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Size of request 
+Graph|Response Size|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Size of response 
+

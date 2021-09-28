@@ -1,0 +1,24 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+info|3.1|1|-|-|-1|-1|-
+
+Group|Apache Kafka Fetch Session Cache|11443|vector|5|0|Apache Kafka Metrics|Tier>Server>Instance>Name|Kafka server fetch session encapsulates the state of an individual fetcher.IncrementalFetchSessionEvictionsPerSec = number of incremental fetch sessions that were evicted from the cache per second, NumIncrementalFetchPartitionsCached = Tracks the total number of partitions cached by incremental fetch sessions,NumIncrementalFetchSessions = Tracks the number of incremental fetch sessions which exist.
+
+#G1
+Graph|Apache Kafka Fetch Session Cache Count|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of incremented fetch sessions.
+
+#G2
+Graph|Apache Kafka Fetch Session Cache Mean Rate|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Mean rate of incremented fetch sessions.
+
+#G3
+Graph|Apache Kafka Fetch Session Cache/One Minute|3|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Incremented fetch sessions per one minute.
+
+#G4      
+Graph|Apache Kafka Fetch Session Cache/Five Minute |4|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Incremented fetch sessions per Five minute.
+#G5
+Graph|Apache Kafka Fetch Session Cache/Fifteen Minute|5|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Incremented fetch sessions per fifteen minute.
+
+

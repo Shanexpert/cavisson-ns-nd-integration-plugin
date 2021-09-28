@@ -1,0 +1,17 @@
+#!/bin/sh
+if [ "XX$NS_WDIR/scripts" = "XX" ];then
+	echo "NS_WDIR env variable must be defined"
+	exit 1
+fi
+#NS_WORK_DIR would be $NS_WDIR/workspace/<user_name>/<profile_name>/cavisson/<proj>/<sub_proj>/scripts
+NS_WORK_DIR=$NS_WDIR/workspace
+#NS_CA_DIR=$NS_WDIR/capture
+NS_CA_DIR=/apps/capture
+export NS_WORK_DIR
+export NS_CA_DIR
+cd $NS_CA_DIR
+rm -f ~/.TestGtkEmbed/TestGtkEmbed/cookies.txt
+#$NS_CA_DIR/dist/bin/run-mozilla.sh  $NS_CA_DIR/dist/bin/TestGtkEmbed
+$NS_CA_DIR/dist/bin/run-mozilla.sh  $NS_CA_DIR/dist/bin/TestGtkEmbed>/dev/null 2>&1
+rm -f core.*
+

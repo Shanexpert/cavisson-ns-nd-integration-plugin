@@ -1,0 +1,94 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS Firehose Stats|11376|vector|43|0|AWS Metrics|AccountName>Region>DeliveryStreamName|Amazon Kinesis Data Firehose is a fully managed service for delivering real-time streaming data to destinations such as Amazon Simple Storage Service (Amazon S3), Amazon Redshift, Amazon Elasticsearch Service (Amazon ES), and Splunk.
+
+Graph|AWS Firehose Delivery To Elasticsearch Bytes|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of bytes indexed to Amazon ElasticSearch.
+
+Graph|AWS Firehose Delivery To Elasticsearch DataFreshness|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The age (from getting into Kinesis Data Firehose to now) of the oldest record in Kinesis Data Firehose.
+
+Graph|AWS Firehose Delivery To Elasticsearch Records|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of records indexed to Amazon ElasticSearch.
+
+Graph|AWS Firehose Delivery To Elasticsearch Success|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Fraction of records successfully indexed to Amazon ElasticSearch.
+
+Graph|AWS Firehose Delivery To S3 Bytes|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of bytes delivered to Amazon S3 per delivery.
+
+Graph|AWS Firehose Delivery To S3 DataFreshness|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Age (from getting into Firehose to now) of the oldest record in Firehose. Any record older than this age has been delivered to the S3 bucket.
+
+Graph|AWS Firehose Delivery To S3 Records|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of records delivered to Amazon S3.
+
+Graph|AWS Firehose Delivery To S3 Success|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Fraction of successful deliveries to S3
+
+Graph|AWS Firehose Backup To S3 Bytes|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of bytes delivered to Amazon S3 for backup over the specified time period.
+
+Graph|AWS Firehose Backup To S3 Bytes DataFreshness|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Age (from getting into Kinesis Data Firehose to now) of the oldest record in Kinesis Data Firehose. Any record older than this age has been delivered to the Amazon S3 bucket for backup.
+
+Graph|AWS Firehose Backup To S3 Records|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of records delivered to Amazon S3 for backup over the specified time period. Kinesis Data Firehose emits this metric when backup is enabled
+
+Graph|AWS Firehose Backup To S3 Success|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Sum of successful Amazon S3 put commands for backup over sum of all Amazon S3 backup put commands.
+
+Graph|AWS Firehose Delivery To Redshift Bytes|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of bytes copied to Amazon Redshift per delivery.
+
+Graph|AWS Firehose Delivery To Redshift Records|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of records copied to Amazon Redshift.
+
+Graph|AWS Firehose Delivery To Redshift Success|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Fraction of successful Redshift COPY commands
+
+Graph|AWS Firehose Delivery To Splunk Bytes|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of bytes delivered to Splunk per delivery.
+
+Graph|AWS Firehose Delivery To Splunk Data Ack Latency|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average approximate duration it takes to receive an acknowledgement from Splunk after Kinesis Data Firehose sends it data.
+
+Graph|AWS Firehose Delivery To Splunk DataFreshness|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average age (from getting into Firehose to now) of the oldest record in Firehose. Any record older than this age has been delivered to Splunk.
+
+Graph|AWS Firehose Delivery To Splunk Records|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of records delivered to Splunk.
+
+Graph|AWS Firehose Delivery To Splunk Success|20|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Fraction of successfully indexed records
+
+Graph|AWS Firehose Describe Delivery Stream Latency|21|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average time taken per DescribeDeliveryStream operation.
+
+Graph|AWS Firehose Describe Delivery Stream Requests|22|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of DescribeDeliveryStream requests.
+
+Graph|AWS Firehose Incoming Bytes|23|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of bytes ingested into the Firehose delivery stream.
+
+Graph|AWS Firehose Incoming Records|24|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of records ingested into the Firehose delivery stream.
+
+Graph|AWS Firehose List Delivery Stream Latency|25|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average time taken per ListDeliveryStream operation.
+
+Graph|AWS Firehose List Delivery Stream Requests|26|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of ListDeliveryStream requests.
+
+Graph|AWS Firehose Put Record Batch Bytes|27|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of bytes put to the Firehose delivery stream using PutRecordBatch.
+
+Graph|AWS Firehose Put Record Batch Latency|28|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average time taken per PutRecordBatch operation.
+
+Graph|AWS Firehose Put Record Batch Records|29|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of records from PutRecordBatch operations.
+
+Graph|AWS Firehose Put Record Batch Requests|30|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of PutRecordBatch requests.
+
+Graph|AWS Firehose Put Record Bytes|31|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of bytes put to the Firehose delivery stream using PutRecord.
+
+Graph|AWS Firehose Put Record Latency|32|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average time taken per PutRecord operation.
+
+Graph|AWS Firehose Put Record Requests|33|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of PutRecord requests.
+
+Graph|AWS Firehose Put Requests Per Second Limit|34|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The maximum number of put requests per second that a delivery stream can handle before throttling. This number includes PutRecord and PutRecordBatch requests.
+
+Graph|AWS Firehose Throttled describe Stream|35|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of times the DescribeStream operation is throttled when the data source is a Kinesis data stream.
+
+Graph|AWS Firehose Throttled Get Records|36|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of times the GetRecords operation is throttled when the data source is a Kinesis data stream.
+
+Graph|AWS Firehose Throttled Get Shard Iterator|37|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of times the GetShardIterator operation is throttled when the data source is a Kinesis data stream.
+
+Graph|AWS Firehose Update Delivery Stream Latency|38|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average time taken per UpdateDeliveryStream operation.
+
+Graph|AWS Firehose Update Delivery Stream Requests|39|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of UpdateDeliveryStream requests.
+
+Graph|AWS Firehose Execute Processing Duration|40|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The time it takes for each Lambda function invocation performed by Kinesis Data Firehose.
+
+Graph|AWS Firehose Execute Processing Success|41|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The sum of the successful Lambda function invocations over the sum of the total Lambda function invocations.
+
+Graph|AWS Firehose Succeed Processing Records|42|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of successfully processed records over the specified time period.
+
+Graph|AWS Firehose Succeed Processing Bytes|43|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of successfully processed bytes over the specified time period.
+

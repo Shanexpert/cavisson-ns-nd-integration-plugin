@@ -1,0 +1,3 @@
+Info|3.1|1|-|-|-1|-1|-
+Group|Prometheus Job Health Stats|10748|vector|1|0|Prometheus Health Metrics|Tier>Server>Instance>Job|Prometheus Job Health Status. 
+Graph|Prometheus Job Health Status|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Health status of prometheus job (1-UP, 0-DOWN).

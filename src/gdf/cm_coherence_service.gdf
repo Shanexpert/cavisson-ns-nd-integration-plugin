@@ -1,0 +1,29 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Coherence Service Stats|10286|vector|21|0|Application Metrics|Tier>Server>Instance>ServiceName|Information related to All the attributes of a service managed bean for a  Coherence instance collected by coherence monitor.
+Graph|Aggregate Abandoned Thread Count|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of abandoned threads from the service thread pool. A thread is abandoned and replaced with a new thread if it executes a task for a period of time longer than execution timeout and all attempts to interrupt it fail.
+Graph|Aggregate Idle Thread Count|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of currently idle threads in the service thread pool.
+Graph|Aggregate Thread Count|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of threads in the service thread pool.
+Graph|Average Active Thread|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of active (not idle) threads in the service thread pool since the last time the statistics were reset.
+Graph|Aggregate Partitions Endangered|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of partitions that are not currently backed up.
+Graph|Aggregate Partitions Unbalanced|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of primary and backup partitions which remain to be transferred until the partition distribution across the storage enabled service members is fully balanced.
+Graph|Aggregate Partitions Vulnerable|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of partitions that are backed up on the same machine where the primary partition owner resides.
+Graph|Hung Task Count|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of currently executing hung tasks.
+Graph|Pending Request Count|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of pending synchronous requests issued by the service.
+Graph|Aggregate Task Backlog|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The size of the backlog queue that holds tasks scheduled to be executed by one of the service threads.
+Graph|Request Per Minute|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Request per minute in sample duration.
+Graph|Task Executed Per Minute |12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Task Executed per minute in sample duration.
+Graph|Time-out Request Per Minute|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Time-out request per minute in sample duration.
+Graph|Time-out Task Per Minute|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Time-out task per minute in sample duration.
+Graph|Average Request Duration (ms)|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA| The average duration (in milliseconds) of an individual synchronous request issued by the service since the last time the statistics were reset.
+Graph|Average Task Duration (ms)|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average duration (in milliseconds) of an individual task execution.
+Graph|Maximum Hung Task Duration (ms)|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The longest currently executing hung task duration in milliseconds.
+Graph|Maximum Pending Request Time (ms)|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The duration (in milliseconds) of the oldest pending synchronous request issued by the service.
+Graph|Maximum Request Duration (ms)|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The maximum duration (in milliseconds) of a synchronous request issued by the service since the last time the statistics were reset.
+Graph|Maximum Task Backlog|20|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The maximum size of the backlog queue since the last time the statistics were reset.
+Graph|Storage Enabled Nodes|21|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of cluster nodes running this service for which local storage is enabled.

@@ -1,0 +1,27 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Solr Cache V2|10175|vector|18|0|Solr Metrics|Tier>Server>Instance>Core>Cache|Solr Cache Stats
+
+Graph|Cache Lookups/Sec|1|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of cache lookups per second.
+Graph|Cache Hits/Sec|2|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of cache hits per second.
+Graph|Cache HitRatio|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percentage of queries that were satisfied by the cache since last reset.
+Graph|Cache Inserts/Sec|4|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of entries added into cache per second.
+Graph|Cache Evictions/Sec|5|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of entries removed from the cache per second.
+Graph|Number of Cache Entries|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of entries in the cache.
+Graph|Cache Warmup Time(ms)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Time taken in caching items that will be regenerated in the new searcher from an old cache since last reset.
+Graph|Total Cache Lookups|8|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Number of Cache lookups over its lifetime.
+Graph|Total Cache Hits|9|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Number of queries that were satisfied by the cache over its lifetime.
+Graph|Total Cache HitRatio|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percentage of queries that were satisfied by the cache (a number between 0 and 1, where 1 is ideal) over its lifetime.
+Graph|Total Cache Inserts|11|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Number of entries added to the cache over its lifetime.
+Graph|Total Cache Evictions|12|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Number of entries removed from the cache over its lifetime.
+Graph|LRU Cache Max Size|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum number of LRU cache entries.
+Graph|LRU Cache Initial Size|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Initial size of LRU Cache.
+Graph|Concurrent LRU Cache Maximum Size|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum number of concurrent LRU cache entries.
+Graph|Concurrent LRU Cache Initial Size|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of initial entries of the concurrent LRU cache.
+Graph|Concurrent LRU Cache Minimum Size|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of minimum LRU cache entries, after the concurrent LRU cache entriers reaches to its size, the cache tries to bring it down to the minimum number of entries.
+Graph|Concurrent LRU Cache Acceptable Size|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of possible least entries after LRU cache removes old entries, it targets to achieve the minSize. If not possible it at least tries to bring it down to acceptable number of entries.

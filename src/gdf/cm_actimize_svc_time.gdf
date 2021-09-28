@@ -1,0 +1,20 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Actimize Request Stats|10027|vector|12|0|Application Metrics|Tier>Server>Instance|Actimize Request Stats
+Graph|Actimize service time (Sec)|1|scalar|sample|-|None|0|NA|-1|-1|NA|NA|Actimize service time (Sec)
+Graph|Number of successful requests (Pct)|2|scalar|sample|-|None|0|NA|-1|-1|NA|NA|Number of successful requests (Pct)
+Graph|Number of failures - Timeouts (Pct)|3|scalar|sample|-|None|0|NA|-1|-1|NA|NA|Number of failures - Timeouts (Pct)
+Graph|Number of failures - AIS client Thread pool exhausted (Pct)|4|scalar|sample|-|None|0|NA|-1|-1|NA|NA|Number of failures - AIS client Thread pool exhausted (Pct)
+Graph|Number of failures - AIS Internal Error (Pct)|5|scalar|sample|-|None|0|NA|-1|-1|NA|NA|Number of failures - AIS Internal Error (Pct)
+Graph|Number of failures - Others (Pct)|6|scalar|sample|-|None|0|NA|-1|-1|NA|NA|Number of failures - Others (Pct)
+Graph|Cumulative number of requests|7|scalar|cumulative|-|None|0|NA|-1|-1|NA|NA|Cumulative number of requests
+Graph|Cumulative successful requests|8|scalar|cumulative|-|None|0|NA|-1|-1|NA|NA|Cumulative successful requests
+Graph|Cumulative failures - Timeouts|9|scalar|cumulative|-|None|0|NA|-1|-1|NA|NA|Cumulative failures - Timeouts
+Graph|Cumulative number of failures - AIS client Thread pool exhausted|10|scalar|cumulative|-|None|0|NA|-1|-1|NA|NA|Cumulative number of failures - AIS client Thread pool exhausted
+Graph|Cumulative number of failures - AIS Internal Error|11|scalar|cumulative|-|None|0|NA|-1|-1|NA|NA|Cumulative number of failures - AIS Internal Error
+Graph|Cumulative number of failures - Others|12|scalar|cumulative|-|None|0|NA|-1|-1|NA|NA||Cumulative number of failures - Others

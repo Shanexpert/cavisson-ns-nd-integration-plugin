@@ -1,0 +1,21 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Azure DataLake Analytics Stats|11531|vector|7|0|Azure Metrics|AccountName>Region>ResourceGroup>DataLakeAnalytics|Azure Data Lake Analytics is an on-demand analytics job service that simplifies big data.
+
+Graph|Azure Datalake Analytics Job Ended Success(Count)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Count of successful jobs.
+
+Graph|Azure Datalake Analytics Job Ended Failure(Count)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Count of failed jobs.
+
+Graph|Azure Datalake Analytics Job Ended Cancelled(Count)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Count of cancelled jobs.
+
+Graph|Azure Datalake Analytics Job AUEnded Success(Sec)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total AU time for successful jobs.
+
+Graph|Azure Datalake Analytics Job AUEnded Failure(Sec)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total AU time for failed jobs.
+
+Graph|Azure Datalake Analytics Job AUEnded Cancelled(Sec)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total AU time for cancelled jobs.
+
+Graph|Azure Datalake Analytics Job Stage(Count)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of jobs in each stage.

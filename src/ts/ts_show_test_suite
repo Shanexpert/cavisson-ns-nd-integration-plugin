@@ -1,0 +1,120 @@
+#!/bin/sh
+
+# Name: ts_show_test_suite
+# Purpose: To show testsuite
+
+if [ $# != 2 ];then
+  echo "Usage: ts_show_test_suite -n <test suite name>"
+  exit 1
+fi
+
+TEMP_TEST_CASE=/tmp/testcases.$$
+TEST_SUITE_NAME=$2
+TEST_SUITE_NAME_CONF=${TEST_SUITE_NAME}.conf
+TEST_CASES_DIR=$NS_WDIR/testcases
+
+# Check suite
+if [ ! -f $NS_WDIR/testsuites/$TEST_SUITE_NAME_CONF ];then
+  echo "There is no suite named $TEST_SUITE_NAME"
+  exit 1
+fi
+
+# Get test cases from testsuites
+get_test_case()
+{
+  cat "$NS_WDIR/testsuites/$TEST_SUITE_NAME_CONF" | grep ^TEST_CASE_NAME >$TEMP_TEST_CASE
+}
+
+# Make header of output
+make_header ()
+{
+  echo "      Test Suite Name: $TEST_SUITE_NAME"
+  echo "  Test Case Name           Itr Spec Description" 
+  echo "  --------------           --- ---- -----------"
+}
+
+# Show test case description
+show_testcase_description()
+{
+  printf "  %-24s %-4s %-3s %s \n" $1 $2 $3 "$4"
+}
+
+# Get the values and send to show description
+get_values_to_show ()
+{
+  while read line
+  do
+    TEST_CASE_NAME=`echo $line | cut -d" " -f2`
+    #variable ITRATION,SPEC added by : arun 02/22/08
+    # ITRATION = ITRATION COUNT fot the test run
+    ITRATION=`echo $line | cut -d" " -f4`
+    # COUNT_NO is the iteration count given with the TEST_CASE_NAME in testsuite.conf
+    if [ "XX$ITRATION" == "XX" ];then
+      ITRATION=1
+    fi
+
+    # SPEC will be having the SPEC_MODE for the Test Run
+    SPEC=`echo $line | cut -d" " -f5` 
+    if [ "XX$SPEC" == "XX" ];then
+      SPEC=0
+    fi
+
+    if [ ! -d $TEST_CASES_DIR/$TEST_CASE_NAME ];then
+      echo "There is no test case with name $TEST_CASE_NAME"
+      exit 1
+    fi
+    # here we get a valide testcase
+    # Assumption if SPEC=0, then DESCRIPTION is what has been given in the tetscase.conf, if SPEC=1, then DESCRIPTION is the 1st element given in the var_value_line of iterartion.spec file
+    if [ $SPEC == 0 ];then
+      while read var
+      do
+        set $var >>/dev/null
+        if [ "XX$var" == "XX" ];then
+          continue
+        fi
+        if [ "$1" == DESCRIPTION ];then
+          #To remove keyword
+          shift 1
+          DESCRIPTION=$*
+          show_testcase_description $TEST_CASE_NAME $ITRATION $SPEC "$DESCRIPTION"
+        fi
+      done <$TEST_CASES_DIR/$TEST_CASE_NAME/testcase.conf
+    fi
+    if [ $SPEC == 1 ];then
+      while read spec_var_val
+      do
+        echo $spec_var_val | egrep "^#" >/dev/null
+        if [ $? == 0 ];then
+          continue
+        fi 
+        if [ "XX$spec_var_val" == "XX"  ];then
+          continue
+        fi
+        echo $spec_var_val | egrep '^\$' >/dev/null
+        if [ $? == 0 ];then
+          continue
+        fi
+        DESCRIPTION=`echo $spec_var_val | cut -d '|' -f1`
+        show_testcase_description $TEST_CASE_NAME $ITRATION $SPEC "$DESCRIPTION" 
+      done <$TEST_CASES_DIR/$TEST_CASE_NAME/iteration.spec
+    fi
+    #Added by Arun for Spec Mode 2 on 07/02/08
+    if [ $SPEC == 2 ];then
+      VAL_LINE=`echo $line | cut -d" " -f7-`
+      TEMP_VAR=`echo $VAL_LINE | awk -F";" '{ print NF }'`
+      for (( i=1; $i<=$TEMP_VAR; i=`expr $i + 1` ))
+      do
+        DESCRIPTION=`echo $VAL_LINE | awk -F";" '{ print $i }'| cut -d"|" -f1`
+        show_testcase_description $TEST_CASE_NAME $ITRATION $SPEC "$DESCRIPTION"
+      done
+    fi
+  done <$TEMP_TEST_CASE
+}
+
+get_test_case
+make_header
+get_values_to_show 
+
+rm -f $TEMP_TEST_CASE
+exit 0
+

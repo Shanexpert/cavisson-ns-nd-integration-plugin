@@ -1,0 +1,275 @@
+
+###############################################################################
+#  Name    : nsi_get_test_run_du
+#  Author  : Atul/Neeraj
+#  Purpose : To get disk space consumed (in KB) by one or more test runs. Disk space consumed
+#            is given in the following components:
+#             - Detail data, Saved scripts, Saved graphs, Raw Graph Data, Reports, Logs and Page Dump
+#            It also calculate total size of a test run on disk.
+#  Usage   : nsi_get_test_run_du <TestRun1> [TestRun2 TestRun3 .......]
+#  Argument : 1 or More Test Runs
+#  Exit Values : 
+#    0 - Success
+#    1 - Validation errors
+#    2 - System errors
+#  Modification History:
+#    10/18/06:Atul/Neeraj:1.4.2 - Initial version
+#
+#  Files which are not included in any components:
+#   1. Files in TestRun directory which are not *.report or *log or *.cvs or *.dat
+#
+###############################################################################
+
+USER=`whoami`
+if [ "X$USER" != "Xcavisson" ];then
+    echo "You must be logged in as cavisson user to execute this command"
+    exit -1
+fi
+
+if [ $# -lt 1 ]
+then
+  echo "Invalid number of arguments"
+  echo "Usage: nsi_get_test_run_du <TestRun1> [TestRun2 TestRun3 ......]"
+  exit 1
+fi
+
+if [ "XX" = "XX$NS_WDIR" ]
+then
+  NS_WDIR=/home/cavisson/work
+fi
+
+if [ ! -d $NS_WDIR/webapps/logs/TR$1 ]
+then
+  echo "Test Run does not exist !"
+  exit 1
+fi
+
+TR_PATH="$NS_WDIR/webapps/logs"
+
+# Return size of all direcotries passed in double quotes as $1
+getSize()
+{
+  #sizeString=`du -ksc $* 2>/dev/null | tail -1`
+  #Here using du -b instead of du -k because du -k shows size of file in multiple of 4K
+  #So if directory has a large number of files, 
+  #then size of directory is reported very large as compared to actual size.
+  sizeString=`du -bsc $* 2>/dev/null | tail -1`
+  #Cut should be done as second step as it did not work on done with above line
+  size=`echo $sizeString | cut -d" " -f1` 
+  size=`expr $size \/ 1024`
+  echo $size
+}
+
+# This Function is used to evaluate the Detail Data of the Test Run
+getDatabaseSize()
+{
+  dbSize=0
+  selectDid="SELECT datid FROM pg_stat_database WHERE datname='test'"     #this give the database no.
+  selectTid="SELECT relfilenode FROM pg_class WHERE relname like '%_$1'"  #this give the fileno.
+
+  OFILE="/tmp/t1.$$"
+  EFILE="/tmp/t2.$$"
+  #this has to run as is, to be changed after discussion
+  psql -A test >$OFILE <<+ 2>$EFILE
+  $selectDid;   
+  $selectTid;
+  
++
+
+  FFILE="/tmp/t3.$$"
+  if [ ! -s $EFILE ] #Error file is 0 size which means no error
+  then
+    sed '1D'  $OFILE | grep -v "row)" | grep -v "relfilenode" | grep -v "datid" | grep -v "rows)" | grep -v ^$ | sed '2,$s/ //g' >> $FFILE
+    arrayTid=(`cat $FFILE`)
+    countTid=${#arrayTid[@]}      #get the result in an array where first element is database no. and rest are table no.s
+    for ((i = 1; i <$countTid; i++))
+    do
+      dbTableFile="/var/lib/pgsql/data/base/${arrayTid[0]}/${arrayTid[$i]}"
+      if [ -f $dbTableFile ]; then   # Make sure file is present
+      # Read permission is not checked as this command runs from root and root can read all files. If we put check for read permission, it fails as database files are owned by ‘postgres’ id and does not have read permission for other users.
+          dbSize1=`getSize $dbTableFile` #get the size of each table. 
+          dbSize=$(echo "scale=3;( $dbSize + $dbSize1 )"|bc)        
+      else
+        echo "Database file $dbTableFile does not exist"
+        exit -1  
+      fi 
+    done 
+  else
+    echo "Error in execution of following database queries for getting size of DB tables"
+    echo $selectDid
+    echo $selectTid
+    echo "Error is:"
+    cat $EFILE
+    exit -1
+  fi
+  rm -f $OFILE     #remove temp file
+  rm -f $EFILE
+  rm -f $FFILE
+}
+
+# This Function is used to evaluate the size of graphs on the disk
+getGraphsSize()
+{
+  graphSize=`getSize "$TR_PATH/TR$1/graphs"`
+}
+
+# This Function is used to evaluate the size of Raw Graphs on the disk
+getRawGraphSize()
+{
+  rawGraphSize=`getSize "$TR_PATH/TR$1/*.dat $TR_PATH/TR$1/ns_logs/req_rep/*.dat"`
+}
+
+# This Function is used to evaluate the size of Reports on the disk
+getReportsSize()
+{ 
+  reportSize=`getSize "$TR_PATH/TR$1/*.report $TR_PATH/TR$1/reports"`
+} 
+
+# This Function is used to evaluate the size of Logs on the disk
+getLogsSize()
+{
+  logSize=`getSize "$TR_PATH/TR$1/reports/csv/*.csv $TR_PATH/TR$1/*log $TR_PATH/TR$1/*log.prev $TR_PATH/TR$1/ns_files/*log $TR_PATH/TR$1/ns_files/*log.prev $TR_PATH/TR$1/ns_logs/*log $TR_PATH/TR$1/ns_logs/*log.prev"`
+}
+
+# This Function is used to evaluate the total size of page dump of all the script on the disk
+getDumpsSize()
+{
+  pageDumpSize=`getSize "$TR_PATH/TR$1/page_dump/docs"`
+}
+
+# This Function is used to evaluate the size of scripts on the disk
+getScriptsSize()
+{
+  scriptSize=`getSize "$TR_PATH/TR$1/scripts"`
+}
+
+getTotalSize()
+{
+  totalSize=`getSize "$TR_PATH/TR$1"`
+}
+
+getPartitionsize1()
+{
+  getDatabaseSize $testRun       #call function database with argument $1
+  getGraphsSize $testRun         #call function graphs with argument $1
+  getRawGraphSize $testRun       #call function Rawgraphs with argument $1
+  getReportsSize $testRun        #call function reports with argument $1
+  getLogsSize $testRun           #call function logs with argument $1
+  getDumpsSize $testRun          #call function dumps with argument $1 
+  getScriptsSize $testRun        #call function srcipts with argument $1
+}
+
+#This function calculates size of TR in non partition mode
+getTRSize()
+{
+  getDatabaseSize $1       #call function database with argument $1
+  getGraphsSize $1         #call function graphs with argument $1
+  getRawGraphSize $1       #call function Rawgraphs with argument $1
+  getReportsSize $1        #call function reports with argument $1
+  getLogsSize $1           #call function logs with argument $1
+  getDumpsSize $1          #call function dumps with argument $1 
+  getScriptsSize $1        #call function srcipts with argument $1
+  getTotalSize $1
+}
+
+getPartitionSize()
+{
+  getDatabaseSize ${TR}_${PARTITION}       #call function database with argument $1
+  getGraphsSize $1         #call function graphs with argument $1
+  getRawGraphSize $1       #call function Rawgraphs with argument $1
+  getReportsSize $1 --exclude='slog'       #call function reports with argument $1
+  getLogsSize $1           #call function logs with argument $1
+  getDumpsSize $1          #call function dumps with argument $1 
+  getScriptsSize $1        #call function srcipts with argument $1
+  getTotalSize $1
+}
+
+#this function calculates size of files in TR in partition mode
+#this doesn't include partitions and common_files directory
+getPartitionTRSize()
+{
+  getDatabaseSize $1       #call function database with argument $1
+  getGraphsSize $1         #call function graphs with argument $1
+  getRawGraphSize $1       #call function Rawgraphs with argument $1
+  getLogsSize $1           #call function logs with argument $1
+  getDumpsSize $1          #call function dumps with argument $1 
+}
+
+getCommonFilesSize()
+{
+  getRawGraphSize $1       #call function Rawgraphs with argument $1
+  getReportsSize $1        #call function reports with argument $1
+  getLogsSize $1           #call function logs with argument $1
+  getTotalSize $1
+}
+
+reset_vars()
+{
+  dbSize=0
+  scriptSize=0
+  graphSize=0
+  rawGraphSize=0
+  reportSize=0
+  logSize=0
+  pageDumpSize=0
+  totalSize=0
+}
+
+PARTITION_MODE=0
+echo "TestRun|Detailed Data|Saved Scripts|Saved Graphs|Raw Graphs|Reports|Logs|Page Dumps|Total"
+
+for TR_OR_PARTITION in $*
+do
+  if [ ! -d $NS_WDIR/webapps/logs/TR${TR_OR_PARTITION} ]; then
+    echo "$testRun|NA|NA|NA|NA|NA|NA|NA|NA"
+    continue
+  fi
+
+  #Find TR and Partition from user input
+  TR=`echo $TR_OR_PARTITION | awk -F'/' '{print $1}'`
+  PARTITION=`echo $TR_OR_PARTITION | awk -F'/' '{print $2}'`
+
+  #if TR is partition enabled, .curPartition file must be present
+  stat $NS_WDIR/webapps/logs/TR$TR/.curPartition 1>/dev/null 2>/dev/null
+  if [ $? -eq 0 ]; then
+    PARTITION_MODE=1
+  fi
+
+  reset_vars
+  if [ "$PARTITION_MODE" = "0" ]; then  #test is running in non partition mode
+    getTRSize $TR
+    echo "${TR}|$dbSize|$scriptSize|$graphSize|$rawGraphSize|$reportSize|$logSize|$pageDumpSize|$totalSize"
+    
+  else   #test is running in partition mode
+    if [ "X$PARTITION" != "X" ]; then  #if user has provided partition
+      getPartitionSize ${TR}/${PARTITION}
+      totalSize=`expr $totalSize + $dbSize`
+      echo "${TR}/${PARTITION}|$dbSize|$scriptSize|$graphSize|$rawGraphSize|$reportSize|$logSize|$pageDumpSize|$totalSize"
+    else   #find size of all partitions
+      #get all partitions in TR
+      ALL_PARTITION=`ls $NS_WDIR/webapps/logs/TR$TR/ | grep "^[0-9]*$"`
+
+      for PARTITION in $ALL_PARTITION
+      do
+        reset_vars
+        getPartitionSize $TR/$PARTITION
+        totalSize=`expr $totalSize + $dbSize`
+        echo "${TR}/${PARTITION}|$dbSize|$scriptSize|$graphSize|$rawGraphSize|$reportSize|$logSize|$pageDumpSize|$totalSize"
+      done
+
+      #get size of TR excluding common_files and all partitions
+      reset_vars
+      getPartitionTRSize $TR
+      totalSize=`expr $total + $dbSize + $scriptSize + $graphSize + $rawGraphSize + $reportSize + $logSize + $pageDumpSize`
+      echo "$TR|$dbSize|$scriptSize|$graphSize|$rawGraphSize|$reportSize|$logSize|$pageDumpSize|$totalSize"
+   
+      #get sizeof common_files dir
+      reset_vars
+      getCommonFilesSize $TR/common_files
+      totalSize=`expr $totalSize + $dbSize`
+      echo "${TR}/common_files|$dbSize|$scriptSize|$graphSize|$rawGraphSize|$reportSize|$logSize|$pageDumpSize|$totalSize"
+    fi
+  fi
+done
+
+exit 0

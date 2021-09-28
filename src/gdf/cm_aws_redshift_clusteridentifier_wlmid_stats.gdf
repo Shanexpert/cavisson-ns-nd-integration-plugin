@@ -1,0 +1,10 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS RedShift ClusterIdentifier WorkLoad Stats|11403|vector|1|0|AWS Metrics|AccountName>Region>ClusterIdentifier>wlmid|Amazon RedShift is a data warehouse product which forms part of the larger cloud-computing platform Amazon Web Services. (wlmid = The identifier for a workload management queue)
+
+Graph|AWS RedShift WLM Running Query|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of queries running from both the main cluster and concurrency scaling cluster per WLM queue.
+

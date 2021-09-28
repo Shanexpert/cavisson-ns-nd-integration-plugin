@@ -1,0 +1,5 @@
+Info|3.1|1|-|-|-1|-1|-
+Group|Windows CRM Platform|14267|vector|3|0|CRM Metrics|Tier>Server>Instance|Windows CRM Platform Stats.
+Graph|Average time of import request|1|scalar|sample|-|-|0|NA|-1|-1|H|NA|Average time that is required to process Microsoft Dynamics CRM data import requests
+Graph|Import requests/hour|2|scalar|sample|-|-|0|NA|-1|-1|H|NA|Number of import requests that have been submitted by organizations in the deployment in the past hour and this counter is useful to indicate how many import requests are being processed concurrently.
+Graph|Publish requests/hour|3|scalar|sample|-|-|0|NA|-1|-1|H|NA|Number of requests that have been submitted by organizations in the deployment in the past hour and this counter is useful to indicate how many publish requests are being processed concurrently.

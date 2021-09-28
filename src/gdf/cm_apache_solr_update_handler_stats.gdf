@@ -1,0 +1,25 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Solr Update Handler Stats|10177|vector|14|0|Solr Metrics|Tier>Server>Instance>Core>UpdateHandler|Solr Update Handler Monitor determines how sequences of adds and deletes and commit of document are processed by Solr.
+
+Graph|Update Handler Commits/Sec|1|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of operation writes per second. A commit operation makes document index changes visible to new search requests. 
+Graph|Update Handler Auto Commits/Sec|2|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of operation auto writes per second. Auto commit operation makes document index changes visible to new search requests.
+Graph|Update Handler Optimizes Command Issued/Sec|3|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of optimize operation performed by update handler to merge internal data structures in a second. For a large index, optimization will take some time to complete, but by merging many small segment files into a larger one, search performance will improve.
+Graph|Update Handler Rollbacks/Sec|4|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of rollback command exceuted per second to successfully rollbacks.
+Graph|Update Handler Expunge Deletes/Sec|5|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of Operation merges segments per second that have more than 10% deleted docs.
+Graph|Update Handler Pending Docs|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of documents pending to commit.
+Graph|Update Handler Doc Adds/Sec|7|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number Of document added per second.
+Graph|Update Handler Doc Deletes By Id/Sec|8|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of the document deleted from index in a second.
+Graph|Update Handler Doc Deletes By Query/Sec|9|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of documents deleted from index with a specified query in a second.
+Graph|Update Handler Errors/Sec|10|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of errors in add/delete/commit/rollback commands execution in a second.
+Graph|Total Update Handler Doc Adds|11|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total number of document added since last reset.
+Graph|Total Update Handler Doc Deletes By Id|12|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total number of the document deleted from index with specified ids since last reset.
+Graph|Total Update Handler Doc Deletes By Query|13|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total number of document deleted from index with the specified queries since last reset.
+Graph|Total Update Handler Errors|14|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Cumulative errors for add/delete commands since last reset.
+
+

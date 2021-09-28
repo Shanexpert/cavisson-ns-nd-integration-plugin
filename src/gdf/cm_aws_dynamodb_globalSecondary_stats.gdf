@@ -1,0 +1,8 @@
+info|3.1|1|-|-|-1|-1|-
+
+Group|AWS DynamoDB Global Secondary Stats|11454|vector|4|0|AWS Metrics|AccountName>Region>TableName>GlobalSecondaryIndexName|AWS DynamoDB global secondary Stats provides metrics related to DynamoDB. 
+
+Graph|AWS Consumed Read Capacity Units|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of read capacity units consumed over the specified time period, so you can track how much of your provisioned throughput is used.
+Graph|AWS Consumed Write Capacity Units|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of write capacity units consumed over the specified time period, so you can track how much of your provisioned throughput is used.
+Graph|AWS Provisioned Read Capacity Units|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of provisioned read capacity units for a table or a global secondary index.
+Graph|AWS Provisioned Write Capacity Units|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of provisioned write capacity units for a table or a global secondary index.

@@ -1,0 +1,11 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|1.0|1|-|-|-1|-1|-
+
+Group|Oracle Tuxedo Server Stats|10826|vector|4|0|Oracle Tuxedo Metrics|Tier>Server>Appserver|shows the server informations for application and administrative servers 
+
+Graph|Request/Sec|1|scalar|rate|-|CumToPS|0|NA|-1|-1|L|NA|Number of requests completed per second.
+Graph|Load/Sec|2|scalar|rate|-|CumToPS|0|NA|-1|-1|L|NA|Server load per second.
+Graph|Up Time(mins)|3|scalar|sample|-|-|0|NA|-1|-1|L|NA|Server uptime in minutes.
+Graph|Status|4|scalar|sample|-|-|0|NA|-1|-1|L|NA|Current status of server, Status would be 1 = BUSY, 2 = IDLE, 3 =UNKNOWN.

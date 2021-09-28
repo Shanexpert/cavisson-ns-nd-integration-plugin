@@ -1,0 +1,87 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+#
+# Note: Please Use the Group Name and Graph Name having no special character like {%, !, ^, &, + } etc..
+
+# General information line
+# Info|msgVersion|numGroups|startIndex|testRun|sizeOfMsgData|interval|testRunStartDate/Time
+#
+# Group information line
+# Group|groupName|rptGrpId|groupType|numGraphs|numVectors
+#
+# Graph information line
+# Graph|graphName|rptId|graphType|dataType|graphDataIndex|formula|numVectors
+
+
+Group|JavaMemoryPool|10752|vector|21|0|Application Metrics|Tier>Server>Instance>Monitor>Vector|Java memory pool collection stats. This information is taken from JMX Mbean.
+
+#G1
+Graph|Eden space allocated memory|1|scalar|sample|-|None|0|I|-1|-1|NA|NA|The eden space allocated memory.
+
+#G2
+Graph|Eden space allocated memory (KB)|2|scalar|sample|-|None|0|D|-1|-1|NA|DIV(G1,1024)|The eden space allocated memory in kilo bytes
+
+#G3
+Graph|Eden space used memory|3|scalar|sample|-|None|0|I|-1|-1|NA|NA|The eden space used memory 
+
+#G4
+#Graph|Eden space used memory (Pct)|4|scalar|sample|-|None|0|D|-1|-1|NA|PERCENT(G1,G3)|The eden space used memory in percentage
+Graph|Eden space used memory (Pct)|4|scalar|sample|-|None|0|D|-1|-1|NA|DIV(MUL(G3,100),G1)|The eden space used memory in percentage
+
+
+#G5
+Graph|Survivor Space allocated memory|5|scalar|sample|-|None|0|I|-1|-1|NA|NA|The survivur space allocated memory
+
+#G6
+Graph|Survivor Space allocated memory (KB)|6|scalar|sample|-|None|0|D|-1|-1|NA|DIV(G5,1024)|The survivur space allocated memory in kilo bytes
+
+#G7
+Graph|Survivor Space used memory|7|scalar|sample|-|None|0|I|-1|-1|NA|NA|The survivur space used memory
+
+#G8
+#Graph|Survivor Space used memory (Pct)|8|scalar|sample|-|None|0|D|-1|-1|NA|PERCENT(G5,G7)|The survivur space used memory in percentage
+Graph|Survivor Space used memory (Pct)|8|scalar|sample|-|None|0|D|-1|-1|NA|DIV(MUL(G7,100),G5)|The survivur space used memory in percentage
+
+#G9
+Graph|Young generation allocated memory (KB)|9|scalar|sample|-|None|0|D|-1|-1|NA|DIV(SUM(G1,G5),1024)|The young generation allocated memory in kilo bytes
+
+#G10
+Graph|Young generation used memory (KB)|10|scalar|sample|-|None|0|D|-1|-1|NA|DIV(SUM(G3,G7),1024)|The young generation used memory.
+
+#G11
+#Graph|Young generation used memory (Pct)|11|scalar|sample|-|None|0|D|-1|-1|NA|PERCENT(G9,G10)|The young generation used memory in percentage
+Graph|Young generation used memory (Pct)|11|scalar|sample|-|None|0|D|-1|-1|NA|DIV(MUL(G10,100),G9)|The young generation used memory in percentage
+
+#G12
+Graph|Tenured generation allocated memory|12|scalar|sample|-|None|0|I|-1|-1|NA|NA|The tenured generation allocated memory.
+
+#G13
+Graph|Tenured generation allocated memory (KB)|13|scalar|sample|-|None|0|D|-1|-1|NA|DIV(G12,1024)|The tenured generation allocated memory in kilo bytes
+
+#G14
+Graph|Tenured generation used memory|14|scalar|sample|-|None|0|I|-1|-1|NA|NA|The tenured generation used memory
+
+#G15
+Graph|Tenured generation used memory (KB)|15|scalar|sample|-|None|0|D|-1|-1|NA|DIV(G14,1024)|The tenured generation used memory in kilo bytes
+
+#G16
+Graph|Tenured generation used memory (Pct)|16|scalar|sample|-|None|0|D|-1|-1|NA|DIV(MUL(G14,100),G12)|The tenured generation used memory in percentage
+
+#G17
+Graph|MetaSpace generation allocated memory|17|scalar|sample|-|None|0|I|-1|-1|NA|NA|The metaspace generation allocated memory. For Java version 7, this metric has permanent generation memory.
+
+#G18
+Graph|MetaSpace generation allocated memory (KB)|18|scalar|sample|-|None|0|D|-1|-1|NA|DIV(G17,1024)|The metaspace generation allocated memory in kilo bytes. For Java version 7, this metric has permanent generation memory.
+
+#G19
+Graph|MetaSpace generation used memory|19|scalar|sample|-|None|0|I|-1|-1|NA|NA|The metaspace generation used memory. For Java version 7, this metric defined permanent generation memory.
+
+#G20
+Graph|MetaSpace generation used memory (KB)|20|scalar|sample|-|None|0|D|-1|-1|NA|DIV(G19,1024)|The metaspace generation used memory in kilo bytes. For Java version 7, this metric defined permanent generation memory.
+
+#G21
+#Graph|MetaSpace generation used memory (Pct)|21|scalar|sample|-|None|0|D|-1|-1|NA|PERCENT(G17,G19)|The metaspace generation used memory in percentage. From Java version 7, this metric defined permanent generation memory.
+Graph|MetaSpace generation used memory (Pct)|21|scalar|sample|-|None|0|D|-1|-1|NA|DIV(MUL(G19,100),G17)|The metaspace generation used memory in percentage. From Java version 7, this metric defined permanent generation memory.

@@ -1,0 +1,15 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# Command to get data for this gdf on windows server :
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#wmic path Win32_PerfFormattedData_MSSQLSTOREDB_MSSQLSTOREDBLatches get counters #AverageLatchWaitTimems,LatchWaitsPersec,NumberofSuperLatches,SuperLatchDemotionsPersec,SuperLatchPromotionsPersec,TotalLatchWaitTimems
+
+Info|3.1|1|-|-|-1|-1|-
+Group|MS SQL DB Latches Stats|10297|vector|6|0|MSSQL Metrics|Tier>Server|MS SQL DB Latches Stats provides metrics to monitor internal SQL Server resource locks called latches.
+
+Graph|Average Latch Wait Time (ms)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average latch wait time in milliseconds for latch requests that had to wait.
+Graph|Latch Waits/Sec|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of latch requests per second that could not be granted immediately and had to wait before being granted.
+Graph|SuperLatches Count|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of latches that are currently SuperLatches.
+Graph|Super Latch Demotions/Sec|4|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of SuperLatches that have been demoted to regular latches per second.
+Graph|Super Latch Promotions/Sec|5|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of latches that have been promoted to SuperLatches per second.
+Graph|Total Latch Wait Time (ms)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total latch wait time in milliseconds for latch requests that had to wait in the last second.

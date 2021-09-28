@@ -1,0 +1,282 @@
+Note:All db querry roiutines generaerate output in /tmp/t2
+	/tmp/t1 contains formatted output
+	/tmp/q contains the generated db querry
+
+nsi_get_3x 
+----------
+Generates screen reports when "idividual objects" is selected in "For Objects"
+section.
+
+args: TR-NUM select-fields obj-type group-by
+
+TR-NUM is the test run number
+select-fields is the ANDed VALUE of fields to be selected
+#select-fields is anded fields with
+#	1: Tries
+#	2: Fail
+#	4: success
+#	8: Fail Pct
+#	16: min
+#	32: avg
+#	64: max
+#	128: median
+#	256: 80%
+#	512: 90%
+#	1024: 95%
+#	2048: 99%
+#obj-type can be 0: URL, 1:Page: 2: Tx 3:Sess
+#group-by: is ANDED field (0 allowed)
+#	1: By Location
+#	2: By Access
+#if WAN_ENV is zero, UI disableis GROUP BY  section selection. and group-by is
+passed as 0 to this querry
+
+example 
+#nsi_get_3x 2578 4095 1 3
+
+sessionname|pagename|pageindex|location|access|tries|failed|success|failpct|min|avg|max|median|80%|90%|95%|99%
+test35|findflight|3|SanFrancisco|Cable|1|0|1|0|500|500|500|500|500|500|500|500
+test35|findflight_2|5|SanFrancisco|Cable|1|0|1|0|211|211|211|211|211|211|211|211
+test35|findflight_3|6|SanFrancisco|Cable|1|0|1|0|530|530|530|530|530|530|530|530
+test35|findflight_4|7|SanFrancisco|Cable|1|0|1|0|540|540|540|540|540|540|540|540
+test35|findflight_5|9|SanFrancisco|Cable|1|0|1|0|220|220|220|220|220|220|220|220
+test35|login|1|London|56K|1|0|1|0|3800|3800|3800|3800|3800|3800|3800|3800
+test35|login|1|SanFrancisco|Cable|1|0|1|0|560|560|560|560|560|560|560|560
+test35|reservation|2|SanFrancisco|Cable|1|0|1|0|448|448|448|448|448|448|448|448
+test35|reservation_2|4|SanFrancisco|Cable|1|0|1|0|160|160|160|160|160|160|160|160
+test35|reservation_3|8|SanFrancisco|Cable|1|0|1|0|230|230|230|230|230|230|230|230
+test35|tours|0|London|56K|1|0|1|0|22810|22810|22810|22810|22810|22810|22810|22810
+test35|tours|0|SanFrancisco|Cable|1|0|1|0|991|991|991|991|991|991|991|991
+test35|welcome|10|SanFrancisco|Cable|1|0|1|0|142|142|142|142|142|142|142|142
+
+in this output pageindex is not displayed and is kept hidden for passing to
+drill down querries
+
+nsi_get_3xx
+----------
+Generates screen reports when "Aggregate over all bjects" is selected in "For Objects"
+section. Usage is same as nsi_get_3x
+
+Eaxmple output
+#nsi_get_3x 2578 4095 1 3
+
+All|location|access|tries|failed|success|failpct|min|avg|max|median|80%|90%|95%|99%
+All|London|56K|2|0|2|0|3800|13305|22810|22810|22810|22810|22810|22810
+All|SanFrancisco|Cable|11|0|11|0|142|412|991|448|540|560|991|991
+
+First column can be ignored. It is always All.
+
+nsi_get_errors 
+-------------
+Args: TR-NUM obj-type
+#obj-type can be 0: URL, 1:Page: 2: Tx 3:Sess
+
+This prints on stdout the list of errors for the specified object type in the
+order of error codes. (First one is success with code 0).
+
+nsi_get_objects
+--------------
+Args TR-NUM obj-type
+
+Prints on stdout the name of teh specified objects in the order of object code 
+starting from 0.
+
+nsi_get_location
+---------------
+Args: TR-NUM
+
+Prints the list of Location names
+
+nsi_get_access
+---------------
+Args: TR-NUM
+
+Prints the list of Access names
+
+nsi_get_4x:
+----------
+#args: TR-NUM wan-env obj-type obj-status obj-selection loc-selection acc-selection querry-type
+#wan-env 0 or 1, 1 means display location and Access data
+#obj-type can be 0: URL, 1:Page: 2: Tx 3:Sess
+#obj-status : 0:Success, positive:Failure -1: all failure -2:all
+#obj selection: -1: All, >=0 :obj-id
+#location-slectection: "All"for all or location-name
+#access-slectection: "All"for all or access-name
+#querry-type : 0: all instance: 1: uniq instance
+
+example run
+#nsi_get_4x 2578 1 1 -2 -1 All All 0
+
+
+sessionname|pagename|location|access|userindex|sessioninstance|pageinstance|childindex|starttime|totaltime|status
+test35|tours|London|56K|0|0|0|1|2661|22810|0
+test35|tours|SanFrancisco|Cable|0|0|0|2|2671|991|0
+test35|login|SanFrancisco|Cable|0|0|1|2|4671|560|0
+test35|reservation|SanFrancisco|Cable|0|0|2|2|6233|448|0
+test35|findflight|SanFrancisco|Cable|0|0|3|2|7681|500|0
+test35|reservation_2|SanFrancisco|Cable|0|0|4|2|9181|160|0
+test35|findflight_2|SanFrancisco|Cable|0|0|5|2|10341|211|0
+test35|findflight_3|SanFrancisco|Cable|0|0|6|2|11561|530|0
+test35|findflight_4|SanFrancisco|Cable|0|0|7|2|13091|540|0
+test35|reservation_3|SanFrancisco|Cable|0|0|8|2|14631|230|0
+test35|findflight_5|SanFrancisco|Cable|0|0|9|2|15861|220|0
+test35|welcome|SanFrancisco|Cable|0|0|10|2|17089|142|0
+test35|login|London|56K|0|0|1|1|26471|3800|0
+
+
+nsi_get_5a
+---------
+args: parent-obj 'obj-name' location-name  access-name
+#this is called when page migrates from 3S or 3T by clicking on the avg column
+values, 
+#parent-obj can be 2(transaction), if migrating from 3T and would be 
+#3 (session) if migrating from 3S.
+#obj-name is the 'session-name' of in the correspong row on 3S or
+'transaction-name; in the corresponding row on 3T.
+#location-name and access-names are from the correspodnding row from 3S or 3T.
+#They may be "All", if the column is missing on 3T/3S.
+
+Output contains
+PageName|pageIndex|AvgTime
+
+PageIndex is not displayed. Its a hidden data and woulb be used to pass to
+next screens.
+Think Duaration is calculated by GUI = 
+	Total Avg Time (comming from page 3S/3T) -
+	Sum of all AvgTime from all the rowa of output
+Also, GUI will calculate the percentage 
+
+Example run:
+nsi_get_5a 2573 3 test35 All All
+
+
+pagename|pageindex|avg
+findflight|3|12
+findflight_2|5|11
+findflight_3|6|13
+findflight_4|7|13
+findflight_5|9|11
+login|1|21
+reservation|2|51
+reservation_2|4|49
+reservation_3|8|46
+tours|0|7
+welcome|10|17
+
+Note: pageindex column is for hodden data
+
+
+nsi_get_5p:
+----------
+args:TR-NUM parent-tx pg-idx location access
+this is called from 5A or from 3P
+
+#parent-tx is the name of the parent tx and is the name of tx 
+comming from page 3T->5A->5P, in all other cases, it would be "All".
+#pg-idx is the didden field of the row on 5A or 3P.
+#location is location name or "All"
+#Access is the access name or "All"
+
+output contains
+UrlType|avgTime
+
+There will be max of 2 rows: one for recdirection and other for main.
+GUO wil calculate for embedded by subtracting sum of the tow rows in out data
+from total time recived from parent screen.
+% will also be calculated by GUI
+
+example run
+nsi_get_5p 2573 All 2 All All
+
+urltype|avg
+1|48
+
+Note: URL type 1: Main URL, 3: Redirection
+
+nsi_get_5u1:
+
+args:TR-NUM url-index location access
+All args from parent screen 3U.
+
+output will be
+PreConnect|Connection|SSLHandShake|RequestSend|FirstByte|ContentDownsload
+
+GUI will calc percnentage
+
+Example run
+nsi_get_5u1 2578 3 All All
+
+preconnect|connect|ssl|write|firstbyte|download
+1|352|0|0|2881|0
+
+nsi_get_5u2:
+
+args:TR-NUM parent-tx pg-index url-type location access url-type
+All args from parent screen 5P.
+output would be
+url-name|PreConnect|Connection|SSLHandShake|RequestSend|FirstByte|ContentDownsload
+
+GUI wil calc pct
+
+Example Run
+nsi_get_5u2 2578 All 3 All All 2
+
+urlname|preconnect|connect|ssl|write|firstbyte|download
+/tours/images/splash_Searchresults.gif|1|150|0|0|149|0
+/tours/images/startover.gif|1|31|0|0|118|0
+
+nsi_get_6x
+-----------
+args: TR-NUM obj-type obj location access
+obj-type can be 0: URL, 1:Page: 2: Tx 3:Sess
+obj-id
+output:
+failtype|numfail
+
+failtype is error code. GUI will convert to Err description for display
+
+Example Run
+nsi_get_6x 2575 0 0 All All
+
+failtype|numfail
+4|9
+
+nsi_get_7x
+----------
+lists all sessions for a user-id
+its a drill down from 4S/4T/4S/4U 
+args: TR-NUM child-id user-id wan-env
+wan-env can be 0 or 1
+args are picked up from parent screen
+output would be :
+SessionName|ChildId|location|access|SessionId|StartTime|TotalTime|status
+
+location|access will not be output if wan-env 0.
+
+Example run:
+nsi_get_7x 2573 1 1 1
+
+
+childindex|sessioninstance|location|access|sessionname|starttime|totaltime|status
+1|1|SanFrancisco|56K|test35|13065|10321|0
+
+
+nsi_get_8x
+------------
+args: rt-num obj-type childIndex SessionInatanec ...
+#This querry is made on the results of nsi_get_8x
+#obj-type can be 0,1,2 or 3.
+#childIndex
+usage:
+nsu_get_8x tr-num 0  childIndex sessionInstance pageInstance UrlIndex
+Or
+nsu_get_8x tr-num 1  childIndex sessionInstance pageInstance
+Or
+nsu_get_8x tr-num 2  childIndex sessionInstance TransactionInstance
+Or
+nsu_get_8x tr-num 3  childIndex sessionInstance
+
+Example Run:
+nsi_get_8x 2573 1 1 1 1
+
+

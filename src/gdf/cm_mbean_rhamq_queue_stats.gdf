@@ -1,0 +1,81 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|RHAMQ Queue Stats|11036|vector|24|0|ActiveMQ Metrics|Tier>Server>Instance>Monitor>Vector>Broker>Address>RoutingType>Queue|ActiveMQ Queues stats. This information is taken from JMX Mbean.
+
+#G1
+Graph|MaxConsumers|1|scalar|sample|-|NONE|0|AS|-1|-1|NA|NA|maximum number of consumers allowed on this queue at any one time.
+
+#G2
+Graph|PersistentSize|2|scalar|sample|-|NONE|0|AS|-1|-1|NA|NA|persistent size of all messages (including durable and non-durable) currently in this queue (includes scheduled, paged, and in-delivery messages).
+
+#G3
+Graph|RingSize|3|scalar|sample|-|NONE|0|AS|-1|-1|NA|NA|Get the ring size.
+
+#G4
+Graph|ConsumerCount|4|scalar|sample|-|NONE|0|AS|-1|-1|NA|NA|number of consumers consuming messages from this queue.
+
+#G5
+Graph|MessageCount|5|scalar|sample|-|NONE|0|AS|-1|-1|NA|NA|number of messages currently in this queue (includes scheduled, paged, and in-delivery messages).
+
+#G6
+Graph|MessagesAdded|6|scalar|sample|-|NONE|0|AS|-1|-1|NA|NA|number of messages added to this queue since it was created.
+
+#G7
+Graph|MessagesAcknowledged|7|scalar|sample|-|NONE|0|AS|-1|-1|NA|NA|number of messages acknowledged from this queue since it was created.
+
+#G8
+Graph|MessagesKilled|8|scalar|sample|-|NONE|0|AS|-1|-1|NA|NA|number of messages removed from this queue since it was created due to exceeding the max delivery attempts.
+
+#G9
+Graph|ScheduledSize|9|scalar|sample|-|NONE|0|AS|-1|-1|NA|NA|persistent size of scheduled messages in this queue.
+
+#G10
+Graph|DurableDeliveringSize|10|scalar|sample|-|NONE|0|AS|-1|-1|NA|NA|persistent size of durable messages that this queue is currently delivering to its consumers.
+
+#G11
+Graph|DurableScheduledCount|11|scalar|sample|-|NONE|0|AS|-1|-1|NA|NA|number of durable scheduled messages in this queue.
+
+#G12
+Graph|DurablePersistentSize|12|scalar|sample|-|NONE|0|AS|-1|-1|NA|NA|persistent size of durable messages currently in this queue (includes scheduled, paged, and in-delivery messages).
+
+#G13
+Graph|ScheduledCount|13|scalar|sample|-|NONE|0|AS|-1|-1|NA|NA|number of scheduled messages in this queue.
+
+#G14
+Graph|DeliveringCount|14|scalar|sample|-|NONE|0|AS|-1|-1|NA|NA|number of messages that this queue is currently delivering to its consumers.
+
+#G15
+Graph|MessagesExpired|15|scalar|sample|-|NONE|0|AS|-1|-1|NA|NA|number of messages expired from this queue since it was created.
+
+#G16
+Graph|GroupCount|16|scalar|sample|-|NONE|0|AS|-1|-1|NA|NA|Get the current number of active groups.
+
+#G17
+Graph|DeliveringSize|17|scalar|sample|-|NONE|0|AS|-1|-1|NA|NA|persistent size of messages that this queue is currently delivering to its consumers.
+
+#G18
+Graph|DurableMessageCount|18|scalar|sample|-|NONE|0|AS|-1|-1|NA|NA|number of durable messages currently in this queue (includes scheduled, paged, and in-delivery messages).
+
+#G19
+Graph|DurableDeliveringCount|19|scalar|sample|-|NONE|0|AS|-1|-1|NA|NA|number of durable messages that this queue is currently delivering to its consumers.
+
+#G20
+Graph|DurableScheduledSize|20|scalar|sample|-|NONE|0|AS|-1|-1|NA|NA|persistent size of durable scheduled messages in this queue.
+
+#G21
+Graph|AcknowledgeAttempts|21|scalar|sample|-|NONE|0|AS|-1|-1|NA|NA|number of messages acknowledged attempts from this queue since it was created.
+
+#G22
+Graph|FirstMessageTimestamp|22|scalar|sample|-|NONE|0|AS|-1|-1|NA|NA|timestamp of the first message in milliseconds.
+
+#G23
+Graph|FirstMessageAge|23|scalar|sample|-|NONE|0|AS|-1|-1|NA|NA|age of the first message in milliseconds.
+
+#G24
+Graph|ID|24|scalar|sample|-|NONE|0|AS|-1|-1|NA|NA|ID of this queue.
+

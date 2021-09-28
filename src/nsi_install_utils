@@ -1,0 +1,237 @@
+#!/bin/bash
+#
+# Name: nsi_install_utils
+#
+# Author: 
+#
+# Purpose: 
+#
+
+LOG_FILE="$NS_WDIR/upgrade/.nsi_install_utils.$$"
+
+psql --version|grep -w 12 >/dev/null 2>&1
+
+if [ $? -eq 0 ];then
+  POSTGRESQL_VERSION=12
+else
+  if [[ "$DISTRO" == "Ubuntu" &&  $RELEASE -eq 1604 || "$DISTRO" == "Redhat" ]];then
+    POSTGRESQL_VERSION=9.5
+  else
+    POSTGRESQL_VERSION=9.1
+  fi
+fi
+
+
+#Get Postgres conf location based on distro
+if [ "$DISTRO" == "Ubuntu" ] ;then
+  POSTGRESQLCONF=/etc/postgresql/$POSTGRESQL_VERSION/main/postgresql.conf
+  POSTGRESQL_HBA_CONF=/etc/postgresql/$POSTGRESQL_VERSION/main/pg_hba.conf
+elif [ "$DISTRO" == "Redhat" ];then
+  POSTGRESQLCONF=/var/lib/pgsql/9.5/data/postgresql.conf
+  POSTGRESQL_HBA_CONF=/var/lib/pgsql/9.5/data/pg_hba.conf
+fi
+
+
+#This general routine to modify key=value params supercedes increasing_work_mem_in_postgresql()
+#inputs - 1.keyword to search 2. value to assign
+modify_postgresql_conf()
+{
+  key=$1
+  value=$2
+  if [[ -z $key || -z $value ]]; then
+    echo "NULL key or value passed to tune in $POSTGRESQLCONF"
+    return
+  fi
+
+  if [ -f $POSTGRESQLCONF ];then
+    grep "^[[:blank:]]*$key[[:blank:]]=[[:blank:]]$value" $POSTGRESQLCONF >/dev/null
+    if [ $? -eq 0 ];then
+      return
+    fi 
+    
+    grep "^[[:blank:]]*$key" $POSTGRESQLCONF >/dev/null
+    if [ $? -eq 0 ];then
+      sed -i -e 's/^[[:blank:]]*'$key'\(.*\)/#'$key'\1/g' -e '/^#'$key'/ a\'$key' = '$value'\t\t\t\t#Added by install.sh' $POSTGRESQLCONF 
+    else
+      sed -i -e '$ a\'$key' = '$value'\t\t\t\t#Added by install.sh' $POSTGRESQLCONF 
+    fi
+
+    #grep "^[[:blank:]]*#$key" $POSTGRESQLCONF >/dev/null 
+    #if [ $? -eq 0 ];then
+     # sed -i -e 's/^[[:blank:]]*#'$key'\(.*\)/#'$key'\1/g' -e '/^#'$key'/ a\'$key' = '$value'\t\t\t\t#Added by install.sh' $POSTGRESQLCONF
+    #else
+     # grep "^[[:blank:]]*$key" $POSTGRESQLCONF >/dev/null
+      #if [ $? -eq 0 ];then
+       # sed -i -e 's/^[[:blank:]]*'$key'\(.*\)/#'$key'\1/g' -e '/^#'$key'/ a\'$key' = '$value'\t\t\t\t#Added by install.sh' $POSTGRESQLCONF 
+     # else
+       # sed -i -e '$ a\'$key' = '$value'\t\t\t\t#Added by install.sh' $POSTGRESQLCONF 
+      #fi
+    #fi
+  else
+    echo  "$POSTGRESQLCONF configuration file doesn't exist."
+  fi
+}
+
+
+
+modify_hba_conf()
+{
+  key_val1=$1
+  key_val2=$2  
+  key_val3=$3
+  key_val4=$4
+  key_val5=$5
+
+  SEARCH_STRING="$key_val1[[:blank:]]*$key_val2[[:blank:]]*$key_val3[[:blank:]]*$key_val4[[:blank:]]*$key_val5"
+  if [ -f $POSTGRESQL_HBA_CONF ];then
+    #Checking if any of the configuration is already present then return 
+    #    local all postgres trust
+    #    local all all trust
+    #    host all all 127.0.0.1/32 trust
+    #    host all all ::1/128 trust
+
+    grep -i -e "^[[:blank:]]*$key_val1[[:blank:]]*$key_val2[[:blank:]]*$key_val3[[:blank:]]*trust" -e "^[[:blank:]]*$key_val1[[:blank:]]*$key_val2[[:blank:]]*$key_val3[[:blank:]]*$key_val4[[:blank:]]*trust" $POSTGRESQL_HBA_CONF >/dev/null
+    if [ $? -eq 0 ];then
+      return
+    fi
+
+    grep -i "^[[:blank:]]*#$SEARCH_STRING" $POSTGRESQL_HBA_CONF >/dev/null
+    if [ $? -eq 0 ];then
+      if [ "X$key_val5" == "X" ];then
+        sed -i '/^#[[:blank:]]*'$key_val1'[[:blank:]]*'$key_val2'[[:blank:]]*'$key_val3'[[:blank:]]*'$key_val4'/ a \'$key_val1'\t'$key_val2'\t\t'$key_val3'\t\ttrust\t\t\t#Added by install.sh' $POSTGRESQL_HBA_CONF
+      else
+        sed -i '/^#[[:blank:]]*'$key_val1'[[:blank:]]*'$key_val2'[[:blank:]]*'$key_val3'[[:blank:]]*'$key_val4'[[:blank:]]*'$key_val5'/ a \'$key_val1'\t'$key_val2'\t\t'$key_val3'\t\t'$key_val4'\t\ttrust\t\t\t#Added by install.sh' $POSTGRESQL_HBA_CONF
+      fi
+    else
+      grep "^[[:blank:]]*$SEARCH_STRING" $POSTGRESQL_HBA_CONF >/dev/null
+      if [ $? -eq 0 ];then
+        if [ "X$key_val5" == "X" ];then
+          sed -i 's/^[[:blank:]]*'$key_val1'[[:blank:]]*'$key_val2'[[:blank:]]*'$key_val3'[[:blank:]]*'$key_val4'/#'$key_val1'\t'$key_val2'\t\t'$key_val3'\t\t'$key_val4'\n'$key_val1'\t'$key_val2'\t\t'$key_val3'\t\ttrust\t\t\t#Added by install.sh/g' $POSTGRESQL_HBA_CONF
+        else
+          sed -i 's/^[[:blank:]]*'$key_val1'[[:blank:]]*'$key_val2'[[:blank:]]*'$key_val3'[[:blank:]]*'$key_val4'[[:blank:]]*'$key_val5'/#'$key_val1'\t'$key_val2'\t\t'$key_val3'\t\t'$key_val4'\t\t'$key_val5'\n'$key_val1'\t'$key_val2'\t\t'$key_val3'\t\t'$key_val4'\t\ttrust\t\t\t#Added by install.sh/g' $POSTGRESQL_HBA_CONF
+        fi
+      else
+        echo "WARNING:tried to change value for keyword \"$key_val1\t$key_val2\t$key_val3\t$key_val4\t$key_val5\" in $POSTGRESQL_HBA_CONF but keyword was not found"
+      fi
+    fi
+  else
+    echo  "$POSTGRESQL_HBA_CONF configuration file doesn't exist."
+  fi
+}
+
+tune_postgres_for_queries_drill_down()
+{ 
+  #pg_stat_statements
+  modify_postgresql_conf pg_stat_statements.max "10000"
+  modify_postgresql_conf pg_stat_statements.track "all"
+  modify_postgresql_conf track_activity_query_size "2048"
+  modify_postgresql_conf auto_explain.log_min_duration "0"
+  modify_postgresql_conf auto_explain.log_format "'XML'"
+  modify_postgresql_conf auto_explain.log_nested_statements "ON"
+  modify_postgresql_conf shared_preload_libraries "'pg_stat_statements,auto_explain'"
+
+  OUTPUT=`psql test postgres 2>&1<<+
+  Create extension pg_stat_statements;
++`
+  echo "$OUTPUT" >>$LOG_FILE
+}
+
+check_viewExist_and_tune_postgres_for_queriesDrillDown()
+{    
+  viewExist=`psql test cavisson -t -A 2>&1<<+
+  select table_name from  information_schema.views where table_name ilike 'pg_stat_statements';
++`
+
+  echo "VIEW_OUTPUT[$viewExist]" >>$LOG_FILE
+
+  if [ "X$viewExist" == "X" ];then
+    echo "pg_stat_statements view doesnt exist so creating" >>$LOG_FILE
+    tune_postgres_for_queries_drill_down
+    RESTART_POSTGRES=1
+  else
+    echo "pg_stat_statements view already exist" >>$LOG_FILE
+  fi
+
+  log_directory_path=`psql test postgres -A -t 2>&1<<+
+  show log_directory ;
++`
+ 
+  echo "log_directory_path[$log_directory_path]" >>$LOG_FILE
+
+  if [ "$log_directory_path" != "/home/cavisson/work/webapps/logs/pg_log" ];then
+    #create directory and change owner and perms
+    echo "log_dir with path[/home/cavisson/work/webapps/logs/pg_log] doesnt exist so creating it" >>$LOG_FILE
+    mkdir -p /home/cavisson/work/webapps/logs/pg_log
+      
+    chown cavisson:cavisson /home/cavisson/work/webapps
+    chown cavisson:cavisson /home/cavisson/work/webapps/logs
+    chown cavisson:cavisson /home/cavisson/work/webapps/logs/pg_log
+
+    chmod 777 /home/cavisson/work/webapps/logs/pg_log
+    #change postgres log_dir
+    modify_postgresql_conf log_directory "'/home/cavisson/work/webapps/logs/pg_log'"
+    modify_postgresql_conf log_file_mode "0644"
+    RESTART_POSTGRES=1
+  else
+    echo "log_dir with path[/home/cavisson/work/webapps/logs/pg_log] already exist" >>$LOG_FILE
+  fi
+  
+  if [ "X$RESTART_POSTGRES" == "X1" -a "X$CAV_BIN_UPGRADATION" == "X" ];then
+    echo "RESTARTING POSTGRESQL" >>$LOG_FILE
+    systemctl restart postgresql >>$LOG_FILE 2>&1
+  fi
+
+  chown cavisson:cavisson $LOG_FILE
+}
+
+tune_postgres()
+{
+  #Begin postgres tunes
+  #
+  #NOTE: http://wiki.postgresql.org/wiki/Tuning_Your_PostgreSQL_Server
+  #work_mem is the memory used per sort per user per table. depends on max_connections. effective usage can be large for more users, 
+  #sorts and tables
+  modify_postgresql_conf work_mem 32MB
+  #maintenance_work_mem is used for operations like vacuum.
+  modify_postgresql_conf  maintenance_work_mem 256MB
+  #recommended value for shared_buffers is 1/4 of total mem. minimum on our boxes is 1G - can increase for customer boxes
+  modify_postgresql_conf shared_buffers 1GB 
+  #recommended value is 1/2-3/4 of total mem. minimum on our boxes is 1G - can increase for customer boxes
+  modify_postgresql_conf  effective_cache_size 2GB
+  #
+  modify_postgresql_conf  listen_addresses "'127.0.0.1'"
+
+  modify_postgresql_conf  log_statement "'ddl'"
+
+  modify_hba_conf "local" "all" "postgres" "peer" ""
+  modify_hba_conf "local" "all" "all" "peer" ""
+  modify_hba_conf "host" "all" "all" "127.0.0.1\\/32" "md5"
+  modify_hba_conf "host" "all" "all" "::1\\/128" "md5"
+ 
+  CAV_BIN_UPGRADATION=1
+ 
+  check_viewExist_and_tune_postgres_for_queriesDrillDown
+
+  /etc/init.d/postgresql restart > /dev/null 2>&1
+  #End postgres tunes
+}
+
+tune_postgres_for_localconn_ddl()
+{
+  echo "tune_postgres_for_localconn_ddl" >>$LOG_FILE
+  if [ -f "$POSTGRESQLCONF" ];then
+    echo "changing ddl command" >>$LOG_FILE
+    #modify_postgresql_conf  listen_addresses "'127.0.0.1'"
+    modify_postgresql_conf  log_statement "'ddl'"
+
+    #BUG ID : 93306   
+    #doc PATH :\cavisson\docs\Products\WebDashboard\GenericDBMonitoring\Req\PostgresMonitoringSetupGuide.docx
+    #PURPOSE: changes for enabling postgres monitoring 
+    echo "check_viewExist_and_tune_postgres_for_queriesDrillDown" >>$LOG_FILE
+    check_viewExist_and_tune_postgres_for_queriesDrillDown
+
+  else
+    echo "file $POSTGRESQLCONF doesnt exist" >>$LOG_FILE
+  fi
+}
+

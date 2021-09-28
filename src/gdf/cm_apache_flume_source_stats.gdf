@@ -1,0 +1,9 @@
+Info|3.1|1|-|-|-1|-1|-
+Group|Apache Flume Source Stats|10710|vector|7|0|Apache Flume Metrics|Tier>Server>Instance>Source|Apache Flume Source Stats monitor activity related to events consumed by the source.
+Graph|Flume Source Append Event Accepted/Sec|1|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of single-event appends per second successfully accepted.
+Graph|Flume Source Append Batches Accepted/Sec|2|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of append batches per second successfully accepted.
+Graph|Flume Source Append Event Received/Sec|3|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of single-event appends per second received.
+Graph|Flume Source Append Batches Received/Sec|4|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of append batches per second received.
+Graph|Flume Source Event Accepted/Sec|5|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of events successfully accepted per second, either through append batches or single-event appends.
+Graph|Flume Source Event Received/Sec|6|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of events received per second, either through append batches or single-event appends.
+Graph|Flume Open Connections|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of Open Connections.

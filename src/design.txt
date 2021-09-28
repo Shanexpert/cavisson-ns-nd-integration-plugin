@@ -1,0 +1,784 @@
+Design Section: Accounting
+--------------------------
+
+Normally, accounting is started after warm-up time and is stopped when Run Time is over.
+Only the completed  objects are accounted.
+
+ACCOUNT_ALL  keyword when set to 1 counts all objects right from ramp up to completion.
+
+If RUN_TIME has a count of sessions like
+RUN_TIME 10 C
+(meaning 10 session would be accessed.)
+ACCOUNT_ALL is always forced to 1, in this case.
+
+Time case:
+	Counters are initialized at the begining of test, if ACCOUNT_ALL =1
+	otherwise, they are initialzed when warmup is completed and all netstorm
+	children are synchronized for accounting
+
+	A.On Run Time completion:
+	1.Close of users in Session Think time
+	2. mark close_sessions = 1
+	3. if (ACCOUNT_ALL == 0) {
+		close_accounting();
+		if (numActiveUsers == 0) && (numThinkingUsers == 0)
+			send_finish()
+	   }
+
+	B. On session Think Timer completion:
+	numThinkgUsers--;
+	if (close_sessions)
+		if (numActiveUsers == 0) && (numThinkingUsers == 0)
+			if (ACCOUNT_ALL == 1)
+				close_accouting();
+			send_finish();
+
+	on Session Completion:
+	    C. Before accouting:
+		if (close_sessions && ACCOUNT_ALL == 0) {
+			numActiveUsers--;	
+			if (numActiveUsers == 0) && (numThinkingUsers == 0)
+				send_finish()
+			return;
+		}
+
+
+	    D. After accounting but before moving on to next session:
+		if (close_sessions && ACCOUNT_ALL == 1) {
+			numActiveUsers--;	
+			if (numActiveUsers == 0) && (numThinkingUsers == 0) {
+				close_accounting();
+				send_finish()
+			}
+			return;
+		}
+		
+NUM_FETCHES case:
+	
+	E. before starting any session, 
+		1.increment a sess_fetches_started,
+		2.if (sess_fetches_sarted == TARGET) {
+			close_users in session think time;	
+			close_session = 1;
+		  }
+		3.if (close_session == 1) //no new session to be started
+			return;
+Notes: 1. E3 will apply to Run time case also and others wont conflict
+	2. B, C, D will apply to  NUM_FETCHES case also . A wont conflict
+	3. B is really startight away moves to session start routines. 
+	   and hence combbined with E3.
+
+Design Section: Data Processing and Page Status
+----------------------------------------------
+At the close_connection, for main url, cpttr data is moved on to page.
+do_data_processing is done at page completion.
+It does :
+a)parsed receiced page and initialized any variables and do page checks
+b)next_page_xxx is called
+c)page data is logged
+
+
+Design Section: Errror codes and description
+--------------------------------------------
+Fixed error codes cannot be redfined
+User defined error codes can be defined in
+pg_error_codes
+tx_error_codes
+sess_error_codes
+
+These files have the format
+errcode description
+
+Lines begining with # are considered comments
+Error Codes without descrion are given given default error description
+Page Error : PgErr*
+Trransaction Err: TxErr*
+Sess Err: SsErr*
+
+Where * is the error code number
+
+Design Section: Progress report And Finish report collection at parent
+----------------------------------------------------------------------
+Childern will awlays send a progress report every progress interval
+and one in the end along with finish report.
+
+Server will start a timer: 5sec*num_children + 3*progress interval
+and wait for progress and finish reports
+
+num_active = num_pge(cur samples expected) = num_npge = num_nnpge = num_children
+AND
+cur_sample = 0;
+Also, three bufs cur_avg, next_avg and finish_avg for aggregate current 
+progress, next progress and finish samples.
+
+Note that, after a child is done sending progress report, its cumulatitive
+count would be missing from overall cumuative sum. As, cum count for such
+childern is no more rcd. To take care of it,
+two bufs, cur_finished and next_finshed will keep completed finished
+cumulatives. Also, progress sample's complete flag will be set to 1 in last
+sample.
+
+When complete == 1, only current values will be accumulated.
+and cumulative sample will be stored in the cur or next finished
+sturtucres. This will be taken care by add_to() function.
+complte flag = 1 suggest that it is last sample. cumulative numbers are saved 
+from such samples.
+
+add_finsised() will add the finsihed cumulative data.
+save_finished() saves adds next_finshed to cur_finished and make next_finished=0.
+
+set_timer;
+num_rcd, got_next = 0;
+while (1) {
+ recv_data;
+ if (PROGRESS) {
+	if (p.CurSample < cur_sample) {
+		ignore;
+		if (p.complete) add_finished(cur_finished, cur_avg);
+	} else if (p.CurSample == cur_sample) {
+	    num_rcd++; 
+	    add_to(cur_avg. cur_finished)
+	    if (num_rcd == num_pge) {
+		add_finished(cur_finished, cur_avg);
+		save_finished();
+		deliver_report(cur_avg);
+		copy next_avg to cur_avg;
+		num_rcd = got_next;
+		init cur_avg;
+		got_next = 0;
+		num_pge = num_npge;
+		num_npge = num_nnpge;
+		cur_sample++;
+		set_timer;
+	    }
+	} else if (p.CurSample == cur_sample+1) {
+	    got_next++; 
+	    add_to(next_avg, next_finished)
+	    if (got_next == num_npge) {
+		printf("Moving to next");
+		save_finished();
+		add_finished(cur_finished, next_avg);
+		deliver_report(next_avg);
+		init cur_avg, next_avg;
+		num_rcd=got_next = 0;
+		num_pge = num_npge = num_nnpge;
+		cur_sample += 2;
+		set_timer;
+	    }
+	} else if (p.CurSample == cur_sample+2) {
+	    printf("Jumping to next");
+	    add_finished(cur_finished, cur_avg);
+	    save_finished();
+	    deliver_report(cur_avg*);
+	    cur_sample = cur_sample+1;
+	    cur points to next; num_rcd = got_next
+	    init next; got_next = 0
+	    num_pge = num_npge;
+	    num_npge = num_nnpge;
+	    add to (next_avg, next_finished)
+	    got_next++
+	    if (got_next == num_npge) {
+		printf("Moving to next");
+		save_finished();
+		add_finished(cur_finished, next_avg);
+		deliver_report(next_avg);
+		init cur_avg, next_avg;
+		num_rcd=got_next = 0;
+		num_pge = num_npge = num_nnpge;
+		cur_sample += 2;
+	    }
+	    set_timer;
+	} else if (p.CurSample > cur_sample+2) {
+	    printf("Jumping to next");
+	    save_finished();
+	    add_finished(cur_finished, next_avg);
+	    deliver_report(next_avg*);
+	    cur_sample = p.CurSample;
+	    init cur_avg, next_avg;
+	    num_rcd=got_next = 0;
+	    num_rcd++; 
+	    add_to(cur_avg, cur_finished)
+	    num_pge = num_npge = num_nnpge;
+	    if (num_rcd == num_pge) {
+		add_finished(cur_finished, cur_avg);
+		save_finished();
+		deliver_report(cur_avg);
+		copy next_avg to cur_avg;
+		num_rcd = got_next;
+		init cur_avg;
+		got_next = 0;
+		num_pge = num_npge;
+		num_npge = num_nnpge;
+		cur_sample++;
+	    }
+	    set_timer;
+	}
+ } else if (FINISH) {
+	num_active--;
+	add_to(finish);
+	if (f.CurSample < cur_sample) { 
+		num_pge--;
+		num_npge--;
+		num_nnpge--;
+	} else if (f.CurSample == cur_sample) { 
+		num_npge--;
+		num_nnpge--;
+	} else if (f.CurSample == cur_sample+1) { 
+		num_nnpge--;
+	} else if (f.CurSample == cur_sample+2) { 
+	    cur_sample = cur_sample+ 1;
+	    move cur to next; num_rcd = got_next;
+	    init next; got_next = 0;
+	    num_pge = num_npge;
+	    num_npge = num_nnpge;
+	    num_nnpge--;
+	    set_timer;
+	} else if (f.CurSample > cur_sample+2) { 
+	    printf("Jumping to next");
+	    cur_sample = f.CurSample - 1;
+	    init cur_avg, next_avg;
+	    num_rcd=got_next = 0;
+	    num_npge = num_npge = num_nnpge;
+	    num_nnpge--;
+	    set_timer;
+	}
+	if (num_active == 0) {
+		FINISH
+	}
+
+ } else if (Timeout) {
+	FINISH
+ }
+
+}
+
+
+Design Section: Premature Test Run Stop
+---------------------------------------
+1)^C generates SIGINT and goes to all processes assocaited with the terminal
+2)SIGINT is ignored by parent but all children do fiinish(), on completetion
+parent sends SIGKILL to kill all childre,
+3)nsu_stop_netstorm is the clean stop cmd.Usage: nsu_stop_netstorm [-f] TRNUM
+a)-f sends SIGKILL tto netstorm and all its children
+b)Other sends SIGUSR1 to parent, parnet inturn send SIGINT to all children and
+than like point 2.
+4)If parent dies, all childern exit at their own
+5)If children dies, parenr detents using SIGCHLD and SIGTERM all children abd
+exit.
+6)Signal handling
+Signal	| 	Children	| Parennt
+SIGTERM		exit	  	  Ignore
+SIGINT		do_finish	  Ignore
+SIGHUP		Ignore		  Ignore
+SIGQUIT		Ignore		  Ignore
+SIGUSR1		Ignore		  Ignore
+SIGUSR2		Ignore		  send SIGINT to childre
+SIGCHLD		Ignore		  Ignore
+
+Design Section: Run phase & Test Run duration:
+---------------------------------------------
+At the Parent:
+
+RUN_TIME:			Time	|	Count		|	Indef
+Test Start:	Just before fork	|	Same		|	Same
+Test End	At the last finish   	|  	Same		| 	Same
+Run Phase Start: At START_COLLECT	|	Same		|	Same
+Run Phase End:   At First Ramp Down	|	Same		| stop signal
+
+Note: Fix USER Rate need to move to WARMUP, right at the test start
+
+
+At the children:
+
+RUN_TIME:			Time	|	Count		|	Indef
+Test Start:	Just before fork	|	Same		|	Same
+Test End	At the last finish   	|  	Same		| 	Same
+Run Phase Start: At START_COLLECT	|	Same		|	Same
+Run Phase End:   At RUN Phase Down	| At Count up		| stop signal
+
+Design Section: Last Progress Report Time
+---------------------------------------------
+Print the time from the start of the test fro, the last sample.
+
+Design Section: Increasing the fd limit
+---------------------------------------
+A small number of open file descriptors (sockets) can significantly reduce
+both the performance of an Internet Server and the load that workload
+generator like httperf can generate. This is meant to provide some information
+about how to increase the limits on the number of open file descriptors
+(sockets) on Linux. Note: the actual numbers used below are examples. The
+numbers you should use will depend on weather you are modifying a system that
+will be used as a client or a server and the load being generated. In this
+example we increase the limit to 65535.
+
+Also note that some of these steps may or may not be required depending on
+whether you are using PAM and if some of the stuff is being done remotely
+using ssh.
+
+   1. To check and modify system limits.
+
+[The current limit shown is 8192]
+% cat /proc/sys/fs/file-max
+8192
+
+[To increase this to 65535 (as root)]
+# echo "65535" > /proc/sys/fs/file-max
+
+   2. Modify your software to make use of a larger number of open FDs.
+
+[Find out where __FD_SETSIZE is defined]
+% grep "#define __FD_SETSIZE" /usr/include/*.h /usr/include/*/*.h
+/usr/include/bits/types.h:#define __FD_SETSIZE  1024
+/usr/include/linux/posix_types.h:#define __FD_SETSIZE   1024
+
+[Make a local copy of these files]
+% cp /usr/include/bits/types.h include/bits/types.h
+% cp /usr/include/linux/posix_types.h include/linux/posix_types.h
+
+[Modify them so that they look something like
+#define __FD_SETSIZE  65535
+
+[Recompile httperf and/or your server so that it uses a larger file
+descriptor set size by using -I include during compliation, this
+will allow the compiler/preprocessor to use the new include files
+rather than the default versions]
+
+
+      If you want this new value to survive across reboots you can at it to
+/etc/sysctl.conf
+
+# Maximum number of open files permited
+fs.file-max = 65535
+
+      Note: that this isn't proc.sys.fs.file-max as one might expect.
+
+      To list the available parameters that can be modified using sysctl do
+
+% sysctl -a 
+
+      To load new values from the sysctl.conf file.
+
+% sysctl -p /etc/sysctl.conf
+
+
+   3. To check and modify limits per shell.
+
+[Using csh: openfiles and descriptors show that the limit here is 1024]
+% limit
+cputime         unlimited
+filesize        unlimited
+datasize        unlimited
+stacksize       8192 kbytes
+coredumpsize    0 kbytes
+memoryuse       unlimited
+descriptors     1024 
+memorylocked    unlimited
+maxproc         8146 
+openfiles       1024 
+
+[To increase this to 65535 for all users (as root)]
+# vi /etc/security/limits.conf
+
+[Modify or add "nofile" (number of file) entries - note
+that a userid can be used in place of *]
+*                soft    nofile          65535
+*                hard    nofile          65535
+
+# vi /etc/pam.d/login
+[Add the line]
+session    required   /lib/security/pam_limits.so
+
+[On many systems this will be sufficient - log in as a regular
+user and try it before doing the following steps]
+
+[These steps may be required depending on how PAM and ssh are configured
+[Note on some systems - Debian?]
+# vi /etc/pam.d/ssh
+[Note on other systems - RedHat]
+# vi /etc/pam.d/sshd
+[Add the line]
+session    required   /lib/security/pam_limits.so
+
+# vi /etc/ssh/sshd_config
+[May need to modify or add the line]
+UsePrivilegeSeparation no
+
+[Restart the ssh daemon]
+[Note on some systems - Debian?]
+# /etc/init.d/ssh reload
+[Note on other systems - RedHat]
+# /etc/rc.d/init.d/sshd reload
+
+
+NOTE: it may still be necessary in some cases to adjust the limits manually.
+
+In tcsh
+limit descriptors 65535
+
+In bash
+ulimit -n 65535
+
+
+
+Last sample has 'complete' flag set.
+
+----------
+
+Design Section monitors:
+------------------------
+
+All monitors will output all elements blank separated as longs
+
+Linux Monitor (linmon):
+/proc files maintain  different counters. linmon tell the difference in
+counters between different invocations.
+current values of different elements are available in /proc files
+linmon save the read values in /tmp/linmon.last. On startup linmon reads the values
+from /tmp/linmon.last (space separaed values on single line).
+linmon, prints the values on stdout saves the current counter values in 
+/tmp/monout.last.
+First time, linmon will print all diff values as 0 if no /tmp/linmon.last is
+available.
+
+Get following elements:
+	3 for cpu (4 fields starting with cpu in /proc/stat: user, user_nice, sys, total)
+	    last values = x1, x2, x3, x4
+	    cur values =  y1, y2, y3, y4
+            cpuUser = ((y1-x1)+(y2-x2))*10000/(y4-x4)
+            cpuSys = (y3-x3)*10000/(y4-x4)
+            cpuIdle = 10000-va1-val2
+	2 for pages (pagein/pageout)	
+	    2 fields starting with page in /proc/stat: pagein, pageout
+	    last values = x1, x2
+	    cur values =  y1, y2
+	    pageIn = y1-x1
+	    pageOut = y2-x2
+	2 for swap (swapin and swapout)
+	    2 fields starting with swap in /proc/stat: swapin,swapout
+	    last values = x1, x2
+	    cur values =  y1, y2
+	    swapIn = y1-x1
+	    swapOut = y2-x2
+	2 for disk
+	     pick up the following line /proc/stat 
+		disk_io: (2,0):(31,30,5764,1,2) (3,0):...
+		There may be 2 or more space seaparted fields.
+		format of 2 and onward fields is: 
+                     (major,minor):(noinfo,read_io_ops,blks_read,write_io_ops,blks_written)
+		This is 6 , separated fields. convert 4th and 6th fields to
+long. Let us say they are x1, x2
+		sum up all x1's for if there are more than 2 fields in the
+disk_io line. Let us this is X1, similarly sum of of 6th fields are X2,
+		Let us say last values are : X1, X2
+                           cur values are : Y1, Y2
+                DiskIn = Y1-X1
+                DiskOut = Y2-X2
+	1 for interupts 
+		pick up line starting with intr in /proc/stat
+		last value is x1 and current value is y1
+		interrupts = y1-x1
+	1 for ContextSwitches 
+		pick up line starting with ctxt in /proc/stat
+		last value is x1 and current value is y1
+		cs = y1-x1
+	1 for free memory
+		pick up line starting with MemFree in /proc/meminfo
+		last value is x1 and current value is y1
+		free = y1-x1
+	3 from /proc/loadavg (first 3 fields * 100)
+	    These values are exception to general rule. They are not
+maintained as running countrs. and hence last values are not saved in
+/tmp/linmon.last
+	    loadAvg1 = first_val*100
+	    loadAvg5 = second_val*100
+	    loadAvg15 = third_val*100
+-----------
+
+Design Section:
+
+Logic in page sequnce execution of an script
+--------------------------------------------
+By default, all recorded pages are executed, one after other in a sequnce,
+based on the next page returned by next_page_xxx() function.
+
+User may like to do complex things such as - 
+two pages forms login sequnce. and then do 20% times workflow A and 80%
+work-flow B, both flows merged into 1 page of logout. Further, middle part 
+between login/logout is required to be done a mean random of 5 times.
+
+To support, folloiwng find of blocks are defined.
+1. Sequnec Block: a sequnce of pages or blocks
+2. Pct Block: mix group of blocks or pages in certain % mix all adding to
+100%.
+3. Wigthed Block: similar to Pct Block, but the weigths do not add to a
+pre-determined number.
+4.Count Block: A block or page may be executed specified number of count. A
+min and max count is specified. when both are equal.
+5.DoWhile Block : A block or page may be exeuted as a do-while loop.
+Condition for while is provided by an user specified function. Loop continues,
+till user specified function returns true.
+6.While Block: is similar to DoWhile Block. But unlike, DoWhile Block, loop
+may not to executed even a single time, dpending upon the retun value of the
+function.
+7. Case Block: A user specified function retiurn the page or block to be
+executed.
+
+NetStorm provided method will process all of these type of blocks.
+
+Following will represent the data model fr each block type:
+1. Sequence: int num_elements, struct {int is_page_or_bloc, int
+page_or_block_num} []
+2.Pct : int num_elemnst, strcut {int is_page_or_bloc, int
+page_or_block_num int pct} []
+3.Wieghted : int num_elemnst, strcut {int is_page_or_bloc, int
+page_or_block_num int weight} []
+4. Count: int is_page_or_bloc, int page_or_block_num, int min_count, int
+max_cnt
+5. DoWhile: int is_page_or_bloc, int page_or_block_num, func()
+6. While: int is_page_or_bloc, int page_or_block_num, func()
+7. Case: func ()
+
+Type and required data model, effectively represent a bock.
+
+master_block-idx, num-of-blocs and array of block-data-models 
+represent the control-flow of an script.
+master block is the root block.
+
+Sample Block processing code:
+
+Block processing code is passed, 
+	block-data-model structure, 
+	int * state_var //input-output var
+	int *out_index //output var
+returns: 
+	PAGE //means out_idx is page
+	BLOCK //means out_idx is block
+	DONE //done with processing block already
+	ERR //some error occoured
+	
+in last two case out_index is not checked
+
+Runtime for each Vuser -
+Each Vuser will have Stack and cur_depth.
+Stack frame contains: int block_index and int state_var 
+
+new session begind with begin with,
+cur_dept = 1
+block_index = master_block from script control_flow_model
+state_var = 0
+
+On init and on ecah next_page, get_next_pg_using_control_flow (Stack *, cur_dept, script_blocks[])
+is called, that return nets page.
+
+Impl of get_next_pg_using_control_flow:
+{
+
+	/*
+	when a block is processed: 
+	PAGE: got page_index, return, and keep stack as is
+	BLOCK: Add Block to stack, incresae cur_depth, and contune;
+	Done: if (cur_depth != 1) Remove block from Stack, reduce cur_dept and contnue, 
+	      else, return -1 //iteration done
+	ERR: Give error, retrun -1. kill all stack, 
+	*/
+
+	while (1) {
+	    ret =  process_block (
+block_data_model[stack[cur_depth-1].block-idex] ,&
+stack[cur_depth-1].state_var, *pg_or_block_index) ;
+	
+	   switch(ret) {
+	   case PAGE:
+	     return  *page_index;
+	   case BLOCK:
+	     stack[cur_dept].block_index = *block_index;
+	     stack[cur_dept].state_var = 0; //better init with block data
+model's init_state_var_fun{};
+	     cur_dept++;
+	     break;
+	   case DONE:
+	     if (cur_dept == -1)
+		return -1;
+	     else 
+		cur_dept--;
+	     break;
+	   case ERR:
+		print error
+		return -2;
+	   }
+	}
+}
+
+
+Implementaion of process_block (block_data_model, int *state_var, int
+*pg_or_block)
+{
+	switch (block_data_model->type) {
+	case: SEQUENCE:
+	    if (*state_var >= block_data_model->max) {
+		*state_var = 0;
+		return DONE;
+	    } else {
+		*pg_or_blocki_idx = block_data_model->pg_or_block_idx;
+		return block_data_model->pg_or_block == PAGE: PAGE: BLOCK;
+	    }
+	   break;
+	
+	case PCT: 
+	    
+	
+	}
+}
+
+	
+Design Section: system stats
+----------------------------
+ /proc/stat explained
+Various pieces of information about kernel activity are available in the
+/proc/stat file. All of the numbers reported in this file are aggregates since
+the system first booted.
+
+For a quick look, simply cat the file:
+
+> cat /proc/stat
+cpu  2255 34 2290 22625563 6290 127 456
+cpu0 1132 34 1441 11311718 3675 127 438
+cpu1 1123 0 849 11313845 2614 0 18
+intr 114930548 113199788 3 0 5 263 0 4 [... lots more numbers ...]
+ctxt 1990473
+btime 1062191376
+processes 2915
+procs_running 1
+procs_blocked 0
+
+The very first "cpu" line aggregates the numbers in all of the other "cpuN"
+lines.
+.
+
+These numbers identify the amount of time the CPU has spent performing
+different kinds of work. Time units are in USER_HZ (typically hundredths of a
+second).
+
+The meanings of the columns are as follows, from left to right:
+
+    * user: normal processes executing in user mode
+    * nice: niced processes executing in user mode
+    * system: processes executing in kernel mode
+    * idle: twiddling thumbs
+    * iowait: waiting for I/O to complete
+    * irq: servicing interrupts
+    * softirq: servicing softirqs
+
+The "intr" line gives counts of interrupts serviced since boot time, for each
+of the possible system interrupts. The first column is the total of all
+interrupts serviced; each subsequent column is the total for that particular
+interrupt.
+
+
+The "ctxt" line gives the total number of context switches across all CPUs.
+
+
+The "btime" line gives the time at which the system booted, in seconds since
+the Unix epoch.
+
+
+The "processes" line gives the number of processes and threads created, which
+includes (but is not limited to) those created by calls to the fork() and
+clone() system calls.
+
+
+The "procs_running" line gives the number of processes currently running on
+CPUs.
+
+
+The "procs_blocked" line gives the number of processes currently blocked,
+waiting for I/O to complete.
+
+copied from the kernel documentation of the /proc filesystem
+
+Note: On my 2.6.18 kernel, cpu lines have 8 numeric fields, not 7. Wander what
+that one means...
+
+Note: The 8th column is called steal_time. It counts the ticks spent executing
+other virtual hosts (in virtualised environments like Xen)
+
+
+03/01/08
+Design Section: GUI Connectivity screen shows failure for cross sub-net connectivity
+------------------------------------------------------------------------------------
+
+Add a master flag in net properties file: use_self_as_router No
+Do not try to connect across subnet if gateway no defined.
+
+for (each src subnet)
+  for (each dst subnet)
+a. ping same sub-net
+b. if (gatewau defined) ping other subnet
+  done
+done
+
+if (c-gw) ping srcip to c-gw
+if (s-gw) ping dstip from s-gw (on netocean)
+if (c-gw || same-subnet) ping dstip from srcip
+
+Design Section: If same sub-net VIP (DUT) need to be hit , check fails as this
+is not NetOcean IP
+------------------
+for same sub-net check, only check if server address is not a src ip and
+belongs to same src subnet
+
+
+Desgin Section: HTTP Version support and KA headers
+---------------------------------------------------
+
+Client: 
+   A. How to define version (increasing order of precedance)
+	1. Keep Version is idefined globally for scenario 
+	    (default 1.1)
+	2. Can be overridden by scenario group definition (Not now)
+	3. Can be associated with user profile, browser type
+	4. Can be set using ns_set_http_proto() API from script.c
+	   (from init_script())
+   B. User API may set any browser attribute in init_script. Not fully now.
+	UA string 
+	Browser type
+	max con svr
+	max con
+	SSL cipher
+   C.
+
+04/30/08
+Design Section: Close wiats by browsers
+---------------------------------------
+
+Observation:
+IE: 
+1)A Non Keepalive connection is closed by IE using FIN
+Send immediately after receving Connection: Close
+2)A keep aive connection is closed by RST
+3)A KA connection is closed immediately after IE KA timeout (60 sec)
+4)A KA connection is closed after 0-10 sec delay after receiving close from
+server
+
+FF:
+1)All connections are closed using FIN
+2)A KA connection is closed immediately after FF KA timeout (300 sec)
+3)A KA connection is closed after 0-10 sec delay after receiving close from
+server
+
+Implemantion:
+KA timer is started for all idle connections after putting in available
+connection list. This time is stopped after taking out from cwavailable list.
+
+07/06/08
+Design Section: Monitoring Scenario
+-----------------------------------
+Requirements:
+0.Mode is Fix concurrent type, Indefinite duration, session pacing once every
+x seconds.
+1. Add/Remove scenario groups anytime
+2. Add/remove users anytime
+3. Change runtime setting anytime 
+4. Monitor Nameing: uniq id = company.dept.script
+5. Save Stats per monitor-id
+6. Saved on remote server every hour

@@ -1,0 +1,14 @@
+#LAST_MAX_ASSIGNED_GRAPH_ID = 3
+#LAST_MODIFIED_DATE = 03/06/14 11:13:32
+#https://devcenter.heroku.com/articles/log-runtime-metrics
+Info|3.1|1|-|-|-1|-1|-
+Group|Dyno System Stats|10205|vector|9|0|System Metrics|Tier>Server|Information related to CPU load average, Memory stats of Dyno
+Graph|Total Memory (MB)|1|scalar|sample|-|-|0|A|-1|-1|NA|NA|The total memory (megabytes) being used by the dyno, equal to the sum of resident, cache, and swap memory.
+Graph|Resident Memory (MB)|2|scalar|sample|-|-|0|A|-1|-1|NA|NA|The portion of the dyno's memory (megabytes) held in RAM.
+Graph|Disk Cache Memory (MB)|3|scalar|sample|-|-|0|A|-1|-1|NA|NA|The portion of the dyno's memory (megabytes) used as disk cache.
+Graph|Swap Memory (MB)|4|scalar|sample|-|-|0|A|-1|-1|NA|NA|The portion of the dyno's memory (megabytes) stored on disk.
+Graph|Pages Read from Disk|5|scalar|cumulative|-|-|0|A|-1|-1|NA|NA|The cumulative total of the pages read from disk.
+Graph|Pages Written to Disk|6|scalar|cumulative|-|-|0|A|-1|-1|NA|NA|The cumulative total of the pages written to disk.
+Graph|Load Average 1 Minute|7|scalar|sample|-|-|0|A|-1|-1|NA|NA|The load average for the dyno in the last 1 minute. This reflects the number of CPU tasks that are in the running and  waiting to be processed.
+Graph|Load Average 5 Minute|8|scalar|sample|-|-|0|A|-1|-1|NA|NA|The load average for the dyno in the last 5 minutes.
+Graph|Load Average 15 Minute|9|scalar|sample|-|-|0|A|-1|-1|NA|NA|The load average for the dyno in the last 15 minutes.

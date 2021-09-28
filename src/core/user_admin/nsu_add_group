@@ -1,0 +1,184 @@
+#!/bin/sh
+
+#----------------------------------------------------------------------
+# Name    :    nsu_add_group
+# Author  :    Archana
+# Note    :    This command only can run by root
+#              From GUI, admin user will run this command using Bean which runs as root
+# Purpose :    To create a new group
+# Usage   :    nsu_add_group -n <group name> -t <group type> -d <description>
+# Where   :
+#  -n <group name> 	: Group Name 
+#  -t <group type>	: Group type
+#  -d <description>	: Description of group (It should be in double quotes.)
+# Modification History:
+#   01/27/09:  Archana - Initial Version
+#----------------------------------------------------------------------
+
+. $NS_WDIR/bin/ns_user_admin_lib
+
+USER_PROFILE_PATH=$HOME_DIR/users
+
+add_header_for_firsttime()
+{
+  if [ ! -f $GROUP_PROFILE ];then
+    echo "Group Name|Group Type|Description" >$GROUP_PROFILE
+  fi
+}
+
+#To check uid call check_root_uid 
+#check_root_uid "nsu_add_group"
+
+NFLAG=0
+TFLAG=0
+DFLAG=0 
+GROUP_NAME=""
+GROUP_TYPE=""
+DESCRIPTION=""
+
+#This method to give error Usage message and exit
+display_help_and_exit()
+{
+  err_msgout "$1"
+  err_msgout "Usage: nsu_add_group -n <group name> -t <group type> -d <description>"
+  err_msgout "Where:"
+  err_msgout "  -n is used to specify Group Name"
+  err_msgout "  -t is used to specify Group type (Engineers/Observers)"
+  err_msgout "  -d is used to specify Description of group. It should be in double quotes."
+  err_msgout "All options are mandatory."
+  exit 1
+}
+
+#This method to check mandatory options
+check_mandatory_options()
+{
+  if [ "$GROUP_NAME" == "XX" -o "XX$GROUP_TYPE" == "XX" -o "XX$DESCRIPTION" == "XX" ];then
+    display_help_and_exit "nsu_add_group: mandatory options are missing"
+  fi
+}
+
+#This method to check if any option given more than one.
+check_option()
+{
+  OPTION_FLAG=$1
+  if [ $OPTION_FLAG -gt 0 ] ;then 
+    display_help_and_exit "nsu_add_group: $2 option cannot be specified more than once."
+  fi
+}
+
+#'root' group can not be add.
+check_root_group()
+{
+  if [ "XX$GROUP_NAME" == "XXroot" ];then
+    err_msgout "Error: '$GROUP_NAME' is a reserved internal group. It cannot be added."
+    exit -1
+  fi
+}
+
+
+#Check group if not exist then add that group else show error message.
+check_and_add_group()
+{
+  check_root_group
+
+  CMD_OUT_FILE=/tmp/cmd.out.$$
+  CMD_ERR_FILE=/tmp/cmd.err.$$
+  # Add group in the Linux system using groupadd linux command
+  groupadd $GROUP_NAME 1>$CMD_OUT_FILE 2>$CMD_ERR_FILE
+  cmd_ret_value=$?
+  if [ $cmd_ret_value == 0 ]; then
+    msgout "Group '$GROUP_NAME' created successfully."   
+    rm -f $CMD_OUT_FILE $CMD_ERR_FILE
+    return 0
+  fi
+
+  #Handle errors
+  if [ $cmd_ret_value == 9 ];then
+    err_msgout "Error: Group '$GROUP_NAME' already exists as Linux group."
+  else
+    err_msgout "Error in adding as Linux group."
+    #err_msgout "Error in adding group '$GROUP_NAME' as Linux group."
+    cat $CMD_OUT_FILE $CMD_ERR_FILE
+  fi
+  rm -f $CMD_OUT_FILE $CMD_ERR_FILE
+  exit -1
+}
+
+#If successful add group then create group profile, if already group profile exists then add further details.
+#Date format: "MM/DD/YY HH:MM:SS" (24 hour format)
+create_group_profile()
+{
+  DATE=`get_cur_date`
+  if [ -f $GROUP_PROFILE ];then
+    echo "$GROUP_NAME|$GROUP_TYPE|"${DESCRIPTION}"" >>$GROUP_PROFILE
+  fi
+  #msgout "Details of group '$GROUP_NAME' has been successfully added in $GROUP_PROFILE."
+}
+
+#To check group type , it should be only Engineers/Observers
+check_group_type()
+{
+  if [ "$GROUP_TYPE" != "Engineers" -a "$GROUP_TYPE" != "Observers" ];then
+    err_msgout "Group type should be Engineers/Observers only."
+    exit -1
+  fi
+}
+
+while getopts n:t:d:? c
+do
+  case $c in
+    n) check_option $NFLAG "-n"
+       NFLAG=`expr $NFLAG + 1`
+       GROUP_NAME="$OPTARG" ;;
+    t) check_option $TFLAG "-t"
+       TFLAG=`expr $TFLAG + 1`
+       GROUP_TYPE="$OPTARG" ;;
+    d) check_option $DFLAG "-d"
+       DFLAG=`expr $DFLAG + 1`
+       DESCRIPTION="$OPTARG" ;;
+    ?) display_help_and_exit ;;
+    *) display_help_and_exit ;;
+  esac
+done
+check_mandatory_options
+
+check_group_type
+
+mkdir -p $USER_PROFILE_PATH
+chmod 775 $USER_PROFILE_PATH
+
+check_group=0
+group_exist=0
+group_profile_exist=0
+
+# Since netstorm group is created during new machine installation, we need to check if netstorm group exists or not.
+# Install can be done many times so we need to check if already there or not
+#if [ "XX$GROUP_NAME" == "XXnetstorm" -o "XX$GROUP_NAME" == "XXadmin" ];then
+if [ "XX$GROUP_NAME" == "XXguest" -o "XX$GROUP_NAME" == "XXadmin" -o "XX$GROUP_NAME" == "XXcavisson" ];then
+  add_header_for_firsttime
+  check_group=1
+  #group_exist=`cat /etc/group | egrep "^$GROUP_NAME:" | wc -l`
+  group_exist=`getent group $GROUP_NAME | wc -l`
+  group_profile_exist=`cat $GROUP_PROFILE | grep -w "^$GROUP_NAME" | wc -l`
+else
+  echo "Error: Adding group $GROUP_NAME is not allowed"
+  exit -1
+fi
+
+if [ $check_group != 1 -o $group_exist != 1 ];then
+  add_header_for_firsttime
+  check_and_add_group
+else
+  echo "Group '$GROUP_NAME' already exists as linux group"
+fi
+
+# Add all groups details in group profile
+if [ $group_profile_exist -le 0 ];then
+  create_group_profile 
+  echo "Group '$GROUP_NAME' has been successfully added as '$GROUP_TYPE' type."
+  msgout "----------------------------------------------------------------------"
+else
+  echo "Group '$GROUP_NAME' profile already exists."
+fi
+
+exit 0

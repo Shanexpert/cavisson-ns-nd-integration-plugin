@@ -1,0 +1,20 @@
+#LAST_MAX_ASSIGNED_GRAPH_ID = 6
+#LAST_MODIFIED_DATE = 03/31/17 04:48:18
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Node Stats|10462|vector|7|0|Kubernetes Metrics|Tier>Server>Region>Zone>Node|Displays the total capacity of resources and the resources available for scheduling.
+
+Graph|Node Allocatable MilliCPU|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The CPU resources of a node that are available for scheduling in MilliCPU
+Graph|Node Allocatable Memory (MB)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The memory resources of a node that are available for scheduling in Megabyte
+Graph|Node Allocatable Pods|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The pod resources of a node that are available for scheduling
+Graph|Node MilliCPU Capacity|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total CPU capacity of cluster nodes in MilliCPU
+Graph|Node Memory Capacity (MB)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total memory resources of the node in Megabyte
+Graph|Node Pods Capacity|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total pod resources of the node
+Graph|Node Unschedulable Status|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Unschedulable Status. 1 = True, 0 = False
+
+

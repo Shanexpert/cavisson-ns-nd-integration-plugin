@@ -1,0 +1,40 @@
+# --- GDF Version History ---
+# # 1.0 - Initial version
+# # 2.0 - Change done for match Long_data and Long_long_data to double
+# # 3.0 - Changes done for Dynamic data in Execution GUI
+# # 3.1 - Use future1 field of group line for Metric group name
+#
+#
+# Command to get data for this gdf on windows server :
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# wmic path Win32_PerfFormattedData_Tcpip_NetworkInterface.Name='_Global_' get  BytesReceivedPersec, BytesSentPersec, BytesTotalPersec, CurrentBandwidth, OffloadedConnections, OutputQueueLength, PacketsOutboundErrors, PacketsReceivedPersec, PacketsSentPersec, PacketsPersec /every:10
+#
+# Entry in mprof to get data :
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# CUSTOM_MONITOR <server ip> cm_win_NetInt.gdf <NetInt> 2 wmic path Win32_PerfFormattedData_Tcpip_NetworkInterface.Name='_Global_' get  BytesReceivedPersec, BytesSentPersec, BytesTotalPersec, CurrentBandwidth, OffloadedConnections, OutputQueueLength, PacketsOutboundErrors, PacketsReceivedPersec, PacketsSentPersec, PacketsPersec /every:10
+#
+
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Windows NetWork Interface Stats|10093|vector|10|0|System Metrics|Tier>Server>Interface|Windows Network Interface Stats measure the rates at which bytes and packets are sent and received over a network connection. It includes counters that monitor connection errors.
+
+Graph|Bytes Received/Sec|1|scalar|rate|-|-|0|NA|-1|-1|L|NA|Number of bytes received per second over each network adapter, including framing characters.
+Graph|Bytes Sent/Sec|2|scalar|rate|-|-|0|NA|-1|-1|L|NA|Number of bytes sent per second over each network adapter, including framing characters.
+Graph|Total Bytes/Sec|3|scalar|rate|-|-|0|NA|-1|-1|L|NA|Number of bytes which are sent and received per second over each network adapter, including framing characters.
+Graph|Current Bandwidth (bps)|4|scalar|sample|-|-|0|NA|-1|-1|M|NA|Current bandwidth is an estimate of the network interface in bits per second (bps).
+Graph|OffLoaded Connections|5|scalar|sample|-|-|0|NA|-1|-1|L|NA|OffLoaded connections is the number of TCP connections (over both IPv4 and IPv6) that are currently handled by the TCP chimney offload capable network adapter.
+Graph|Output Packet Queue Length|6|scalar|sample|-|-|0|NA|-1|-1|L|NA|It is the Length of the output packet queue (in packets).
+Graph|Packets Out Bound Errors/Sec|7|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of outbound packets that could not be transmitted per second because of errors.
+Graph|Packets Received/Sec|8|scalar|rate|-|-|0|NA|-1|-1|H|NA|Number of packets received per second on the network interface.
+Graph|Packets Sent/Sec|9|scalar|rate|-|-|0|NA|-1|-1|M|NA|Number of packets sent per second on the network interface.
+Graph|Packets/Sec|10|scalar|rate|-|-|0|NA|-1|-1|L|NA|Number of packets sent and received per second on the network interface.
+
+
+
+
+
+
+
+
+
+

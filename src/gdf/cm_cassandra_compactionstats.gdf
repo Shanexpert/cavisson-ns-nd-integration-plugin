@@ -1,0 +1,12 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Cassandra Compaction Stats|10159|vector|2|0|Cassandra Metrics|Tier>Server>Instance|Cassandra Compaction Stats provides metrics about Pending Tasks, Active Compaction Remaining Time.
+
+Graph|Cassandra Pending Tasks|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of Pending Tasks. This metric has been derived from 'org.apache.cassandra.metrics:type=Compaction,name=PendingTasks', where attribute name is 'Value'.
+Graph|Cassandra Active Compaction Remaining Time (Sec)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Active compaction remaining time in second. Remaining Comapaction time is calculate by, remaining compacted bytes and compaction throughput. compaction throughput has drvied from 'org.apache.cassandra.db:type=StorageService(attribute=CompactionThroughputMbPerSec)' and  remaining compacted bytes is the sum of all compactions, where bytes are required to compacted. Each remain bytes compaction in calculated as org.apache.cassandra.db:type=CompactionManager(attribute=Compactions, tasktype=Compaction,totalBytes) - org.apache.cassandra.db:type=CompactionManager(attribute=Compactions, tasktype=Compaction,bytesComplate). If compaction throughput or remain compaction bytes is greater than '0', remaing compaction time will be calculated by (remainingCompactedBytes/(1024 * 1024 * CompactionThroughputMbPerSec)) otherwise it will be '0'.

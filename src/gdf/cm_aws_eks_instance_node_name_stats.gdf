@@ -1,0 +1,23 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS EKS Instance Node Stats|11371|vector|8|0|AWS Metrics|AccountName>Region>Instance Name>ClusterName>InstanceId>NodeName|Amazon Elastic Kubernetes Service (Amazon EKS) is a managed service that makes it easy for you to run Kubernetes on AWS without needing to stand up or maintain your own Kubernetes control plane.
+
+Graph|AWS EKS Node Number Of Running Pods|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|node number of running pods
+
+Graph|AWS EKS Node Number Of Running Containers|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|node number of running containers
+
+Graph|AWS EKS Node Network Total (Bytes/Sec)|3|scalar|rate|-|-|0|NA|-1|-1|NA|NA|node network total bytes
+
+Graph|AWS EKS Node Memory Utilization (%)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|node memory utilization
+
+Graph|AWS EKS Node Memory Reserved Capacity (%)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|node memory reserved capacity
+
+Graph|AWS EKS Node Filesystem Utilization (%)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|node filesystem utilization
+
+Graph|AWS EKS Node CPU Utilization (%)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|node cpu utilization
+
+Graph|AWS EKS Node CPU Reserved Capacity (%)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|NODE CPU Reserved Capacity

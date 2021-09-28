@@ -1,0 +1,14 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Azure HDInsight Stats|14014|vector|3|0|Azure Metrics|AccountName>Region>ResourceGroup>HDInsight|Azure HDInsight is a cloud distribution of Hadoop components. Azure HDInsight makes it easy, fast, and cost-effective to process massive amounts of data.
+
+Graph|Azure HDInsight Gateway Requests|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of gateway requests.
+
+Graph|Azure HDInsight Categorized Gateway Requests|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of gateway requests by categories (1xx,2xx,3xx,4xx,5xx).
+
+Graph|Azure HDInsight NumActive Workers|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of Active Workers.
+

@@ -1,0 +1,37 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Oracle Time Model Statistics|10125|vector|27|0|Oracle Metrics|Tier>Server>Instance|Oracle Time Model Stats
+
+Graph|Sql execute elapsed time (Sec)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Time spent on processing of users sql's in seconds.
+Graph|Sql execute elapsed time (Pct)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Time spent on processing of users sql's as percentage of DB Time.
+Graph|DB CPU (Sec)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|DB CPU in seconds
+Graph|DB CPU (Pct)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|DB CPU as percentage of DB Time.
+Graph|PL/SQL execution elapsed time (Sec)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Time spent on processing of users PLSQL's in seconds
+Graph|PL/SQL execution elapsed time (Pct)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Time spent on processing of users PLSQL's as percentage of DB Time.
+Graph|Parse time elapsed (Sec)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total time spent on parsing in seconds
+Graph|Parse time elapsed (Pct)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total time spent on parsing as percentage of DB Time.
+Graph|Connection management call elapsed time (Sec)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Connection management call elapsed time in seconds
+Graph|Connection management call elapsed time (Pct)|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Connection management call elapsed time as percentage of DB Time.
+Graph|Hard parse elapsed time (Sec)|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Time spent on hard parse in seconds
+Graph|Hard parse elapsed time (Pct)|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Time spent on hard parse as percentage of DB Time.
+Graph|hard parse (sharing criteria) elapsed time (Sec)|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Time spent on hard parse (sharing criteria) in seconds
+Graph|hard parse (sharing criteria) elapsed time (Pct)|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Time spent on hard parse (sharing criteria) as percentage of DB Time.
+Graph|Sequence load elapsed time (Sec)|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Sequence load elapsed time in seconds
+Graph|Sequence load elapsed time (Pct)|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Sequence load elapsed time as percentage of DB Time.
+Graph|Repeated bind elapsed time (Sec)|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Repeated bind elapsed time in seconds
+Graph|Repeated bind elapsed time (Pct)|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Repeated bind elapsed time as percentage of DB Time.
+Graph|Failed parse elapsed time (Sec)|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Failed parse elapsed time in seconds
+Graph|Failed parse elapsed time (Pct)|20|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Failed parse elapsed time as percentage of DB Time.
+Graph|PL/SQL compilation elapsed time (Sec)|21|scalar|sample|-|-|0|NA|-1|-1|NA|NA|PL/SQL compilation elapsed time in seconds
+Graph|PL/SQL compilation elapsed time (Pct)|22|scalar|sample|-|-|0|NA|-1|-1|NA|NA|PL/SQL compilation elapsed time as percentage of DB Time
+Graph|hard parse (bind mismatch) elapsed time (Sec)|23|scalar|sample|-|-|0|NA|-1|-1|NA|NA|hard parse (bind mismatch) elapsed time in seconds
+Graph|hard parse (bind mismatch) elapsed time (Pct)|24|scalar|sample|-|-|0|NA|-1|-1|NA|NA|hard parse (bind mismatch) elapsed time as percentage of DB Time
+Graph|DB Time (Sec)|25|scalar|sample|-|-|0|NA|-1|-1|NA|NA|DB time in seconds
+Graph|Background cpu time (Sec)|26|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Background cpu time in seconds
+Graph|Background elapsed time (Sec)|27|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Background elapsed time in seconds

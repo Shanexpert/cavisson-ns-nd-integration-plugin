@@ -1,0 +1,49 @@
+#!/bin/sh
+#----------------------------------------------------------------------
+# Name    :    nsi_user_login_profile
+# Author  :    Archana
+# Purpose :    This is a login shell for a registered netstorm user
+#              It will do checking if user is authorized to login or not
+#              It will also set user specific variables, environment etc.
+#Modification History:
+#   01/27/09:  Archana - Initial Version
+#----------------------------------------------------------------------
+
+USER_NAME=`whoami 2>/dev/null`
+
+if [ $? != 0 ];then
+  echo "Error: Unable to get the real user name"
+  exit 1
+fi
+
+give_error_and_exit()
+{
+  msg="$1"
+  echo "$msg"
+  echo -n "Please press enter."
+  read temp
+  exit -1
+}
+
+if [ "XX" = "XX$NS_WDIR" ]
+then
+  NS_WDIR=/home/cavisson/work
+fi
+
+#Source any site specific login profile if any
+if [ -f $NS_WDIR/sys/site_user_login.profile ];then
+  . $NS_WDIR/sys/site_user_login.profile 
+fi
+
+if [ -f $NS_WDIR/bin/nsi_controller_selection_profile ];then
+  . $NS_WDIR/bin/nsi_controller_selection_profile
+fi
+
+if [ "XX" == "XX$LPS_ROOT" ];then
+  export LPS_ROOT=$NS_WDIR/lps
+  export LPS_CMD=lps
+  export NDC_CMD=ndc
+fi
+
+cd $NS_WDIR
+

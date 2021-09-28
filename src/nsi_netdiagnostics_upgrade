@@ -1,0 +1,41 @@
+#! /bin/sh
+
+HOME_DIR=/home/cavisson
+if [ ! -d $NS_WDIR/webapps/netdiagnostics/WEB-INF/lib ]; then
+  mkdir -p $NS_WDIR/webapps/netdiagnostics/WEB-INF/lib/
+fi
+
+#This is added as we had bug of this directory getting created by root
+#chown -R cavisson.cavisson $NS_WDIR/webapps/netdiagnostics
+
+cp $NS_WDIR/webapps/netstorm/WEB-INF/lib/netstorm_bean.jar $NS_WDIR/webapps/netdiagnostics/WEB-INF/lib/
+cp $NS_WDIR/webapps/netstorm/WEB-INF/lib/CmonLib.jar $NS_WDIR/webapps/netdiagnostics/WEB-INF/lib/
+
+if [ "$BASENAME" != "work" ];then
+  msgout_both "Not upgrading NetDiagnostics for $BASENAME"
+  exit 0
+fi
+
+#This is done for work only
+mkdir -p $HOME_DIR/lps/conf/download/nd_appsrc/  $HOME_DIR/lps/conf/nd_iprofiles/.whitelist
+mkdir -p $HOME_DIR/netdiagnostics 
+cd $HOME_DIR/netdiagnostics
+
+msgout_both "Removing directories of old version and uncompressing tar file - $GZ"
+rm -f netdiagnostics.*.gz
+rm -rf lib thirdparty 
+
+cp $NS_WDIR/.rel/$GZ .
+msgout_both "Uncompressing tar file - $GZ"
+tar xvzf $GZ >> $LOG_FILE_NAME
+
+#Change perm to 777 so that we can open log files if not running as root
+# DO it after untar as tar also has logs dir
+mkdir -p logs 
+chmod 777 logs 
+
+if [ ! -f "$HOME_DIR/netdiagnostics/log4j.properties" ];then
+  cp $HOME_DIR/netdiagnostics/samples/log4j.properties $HOME_DIR/netdiagnostics/ >>/dev/null 2>&1
+fi
+
+exit 0

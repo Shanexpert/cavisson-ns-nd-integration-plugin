@@ -1,0 +1,13 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Bloomreach Log Stats|10174|vector|3|0|Application Metrics|Tier>Server>Instance|Request stats using bloom Search log
+
+Graph|Bloomreach response time(ms)|1|scalar|times|-|None|0|NA|-1|-1|NA|NA|Response time of bloom search requests.
+Graph|Bloomreach requests/second|2|scalar|rate|-|None|0|NA|-1|-1|NA|NA|Number of requests in a second.
+Graph|Bloomreach Total request|3|scalar|cumulative|-|None|0|NA|-1|-1|NA|NA|Total Number of requests.
+

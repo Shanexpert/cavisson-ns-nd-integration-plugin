@@ -1,0 +1,81 @@
+#on History ---
+# 1.0 - Initial version
+
+Info|1.1|1|-|-|-1|-1|-
+Group|TCP Stats Rate (Aix)|10189|vector|73|0|Network Metrics|Tier>Server|TCP Stats for AIX (per sec) 
+
+
+Graph|Packet Sent/Sec|1|scalar|rate|-|-|0|A|-1|-1|NA|NA|Packets sent by the machine (per second).
+Graph|Data Packet Sent/Sec|2|scalar|rate|-|-|0|A|-1|-1|NA|NA|Out of the total packets sent, new data packets, which are sent (per second).
+Graph|Data Packet Retransmitted/Sec|3|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Data packets sent, which came from previous session (per second).
+Graph|Ack Only Packet/Sec|4|scalar|rate|-|-|0|A|-1|-1|NA|NA|Packets used only for acknowledgment purpose and have no data in it (per second).
+Graph|Urgent Only Packet/Sec|5|scalar|rate|-|-|0|AS|-1|-1|NA|NA| Urgent Packets (per second).
+Graph|Window Probe Packets/Sec|6|scalar|rate|-|-|0|A|-1|-1|NA|NA|The count of window probe packets.(per second) (Window probe packets are typically sent by a sender when the receiver last advertised a zero receive window, to see if the window has opened up now).
+Graph|Window Update Packets/Sec|7|scalar|rate|-|-|0|A|-1|-1|NA|NA|Window Update Packet (per second). TCP uses a sliding window flow control protocol. In each TCP segment, the receiver specifies in the receive window field the amount of additional received data (in bytes) that it is willing to buffer for the connection. The sending host can send only up to that amount of data before it must wait for an acknowledgment and window update from the receiving host. 
+Graph|Control Packets/Sec|8|scalar|rate|-|-|0|A|-1|-1|NA|NA|Control packets sent (per second).
+Graph|Large Send/Sec|9|scalar|rate|-|-|0|A|-1|-1|NA|NA|Large Send (per second). The TCP large send offload option allows the AIX® TCP layer to build a TCP message up to 64 KB longand send it in one call down the stack through IP and the Ethernet device driver.
+Graph|Bytes Using Large Send/Sec|10|scalar|rate|-|-|0|A|-1|-1|NA|NA|Bytes sent using large send (per second).
+Graph|Biggest Large Send/Sec|11|scalar|rate|-|-|0|A|-1|-1|NA|NA|Bytes is the biggest large send (per second).
+Graph|Packet received/Sec|12|scalar|rate|-|-|0|A|-1|-1|NA|NA|Packets which are received (per second).
+Graph|Ack Received/Sec|13|scalar|rate|-|-|0|A|-1|-1|NA|NA|Acknowledgments received (per second).
+Graph|Duplicate Ack/Sec|14|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Duplicate acknowledgments (per second).
+Graph|Ack Received for Unsent Data/Sec|15|scalar|rate|-|-|0|AS|-1|-1|NA|NA|ACKs received for the data that was unsent (per second).
+Graph|Packet Received in Sequence/Sec|16|scalar|rate|-|-|0|A|-1|-1|NA|NA|Packets which are received in sequence that is, in proper order (per second).
+Graph|Duplicate Packet Received/Sec|17|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Duplicate packets which were received (per second).
+Graph|Old Duplicate Packets/Sec|18|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Duplicate packets which were received from a previous session (per second).
+Graph|Packets With Some Duplicate/Sec|19|scalar|rate|-|-|0|A|-1|-1|NA|NA|Packets which had duplicate or same data in it (per second).
+Graph|Out Of Order Packets/Sec|20|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Out of order Packets (per second).
+Graph|Packets Received After Window/Sec|21|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Packets received after the connection was closed (per second)..
+Graph|Probing Window Packets Received/Sec|22|scalar|rate|-|-|0|A|-1|-1|NA|NA|Probing window packers received (per second).
+Graph|Update Window Packets Received/Sec|23|scalar|rate|-|-|0|A|-1|-1|NA|NA|Window update packets received (per second).
+Graph|Packets Received After Close/Sec|24|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Packets received after close (per second).
+Graph|Packets With h/w Assist Chksum/Sec|25|scalar|rate|-|-|0|A|-1|-1|NA|NA|Some packets are sent to tell that the checksum related to harwdare has failed.. This shows the number of such packets (per second).
+Graph|Discarded for bad checksums/Sec|26|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Discarded for bad checksums (per second).
+Graph|Bad Header Offset Field Packets Discarded/Sec|27|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Packets which had bad or wrong header offset field in it (per second).
+Graph|Short Packets Discarded/Sec|28|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Packets that were received which has less size as expected (per second).
+Graph|Packets Discarded By Listeners/Sec|29|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Packets that were rejected by the listening party, or where the packets were sent (per second).
+Graph|Packets Discarded Due to Listeners Queue Full/Sec|30|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Packets discarded because the  packets that the listener can listen to at a time has become full (per second).
+Graph|Ack Packets Correctly Predicted/Sec|31|scalar|rate|-|-|0|A|-1|-1|NA|NA|Acknowledgment packets that were correctly predicted (per second).
+Graph|Data Packets Correctly Predicted/Sec|32|scalar|rate|-|-|0|A|-1|-1|NA|NA|Data packets that were correctly predicted (per second).
+Graph|Connection Requests/Sec|33|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Connections which were requested by the machine (per second).
+Graph|Connection Accepts/Sec|34|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Connections that were accepted by the machine (per second).
+Graph|Connection Closed (including Drops)/Sec|35|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Connections that were closed including that ones that were dropped and were not completed (per second).
+Graph|Connection with ECN/Sec|36|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Connections that have the explicit congession notification capabilty (per second).
+Graph| Times Responded To ECN/Sec|37|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Times a response was sent to a explicit congession notification (per second).
+Graph|Embryonic Connecton Drops/Sec|38|scalar|rate|-|-|0|AS|-1|-1|NA|NA|An embryonic connection refers to a TCP connection which is in the process of being established.this shows the  such connections that were dropped (per second)..
+Graph|Segment Updated rtt/Sec|39|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Segment Updated rtt (per second).
+Graph|Segments With Congestion Window Reduced Bit Set/Sec|40|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Segments With Congestion Window Reduced Bit Set (per second).
+Graph|Segments With Congestion Experienced Bit Set/Sec|41|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Segments With Congestion Experienced Bit Set (per second).
+Graph|Packets Resends Due To Path MTU Discovery/Sec|42|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Packets Resends Due To Path MTU Discovery (per second).
+Graph|Path MTU Discovery Terminations Due To Retransmits/Sec|43|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Path MTU terminations because of retramisions of packets (per second).
+Graph|Retransmit Timeouts/Sec|44|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Timeouts due to retransmissions (per second).
+Graph|Connections Dropped By Rexmit Timeout/Sec|45|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Connections that were dropped due to retransmission time outs (per second).
+Graph|Fast Retransmits/Sec|46|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Fast retransmits (per second).
+Graph|Fast Retransmits For Congestion Window Less Than 4 Segments/Sec|47|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Fast retransmits when the size of congestion window was less than 4 segments (per second).
+Graph|Newreno Retransmits/Sec|48|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Newreno Retransmits (per second).
+Graph| Times Avoided False Fast Retransmits/Sec|49|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Times Avoided False Fast Retransmits (per second).
+Graph|Persist Timeouts/Sec|50|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Persist Timeouts (per second).
+Graph|Connections Dropped Due To Persist Timeout/Sec|51|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Connections Dropped Due To Persist Timeout (per second).
+Graph|Keep Alive Timeouts/Sec|52|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Times, times outs occurred while making a keepalive connection (per second).
+Graph|Keep Alive Prob Sent/Sec|53|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Keepalive probes sent (per second).
+Graph|Connection Dropped By Keep Alive/Sec|54|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Connections dropped by already established keepalive connection (per second).
+Graph| Times SACK Blocks Array is Extended/Sec|55|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Times the selective acknowledgment blocks were extended (per second).
+Graph| Times SACK Holes Array is Extended/Sec|56|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Time the SACK holes array was extended (per second).
+Graph|Packets Dropped Due To Memory Allocation Failure/Sec|57|scalar|rate|-|-|0|AS|-1|-1|NA|NA|The packets that were dropped due to memory allocation failure (per second).
+Graph|Connections In TIMEWAIT Reused/Sec|58|scalar|rate|-|-|0|AS|-1|-1|NA|NA|There are some connections that are sent in wait state, which can be reused. This shows those many  connections (per second).
+Graph|Delayed ACKs For SYN/Sec|59|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Delayed acknowledgments for SYN flag.. If the SYN flag is set, then this is the initial sequence Number. The sequence  the actual first data byte will then be this sequence Number plus 1.If the SYN flag is not set, then this is the sequence  the first data byte (per second).
+Graph|Delayed ACKs For FIN/Sec|60|scalar|rate|-|-|0|AS|-1|-1|NA|NA|FIN flag states that - No more data from sender, this states the  Acks for the packets that have FIN flag set (per second).
+Graph|Send And Disconnects/Sec|61|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Send And Disconnects (per second).
+Graph|Spliced Connections/Sec|62|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Spliced Connections (per second).
+Graph|Spliced Connections Closed/Sec|63|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Spliced connections closed (per second).
+Graph|Spliced Connections Reset|64|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Spliced connections that were reset (per second).
+Graph|Spliced Connections Timeout/Sec|65|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Spliced connections that were timed out (per second).
+Graph|Spliced Connections Persist Timeouts/Sec|66|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Spliced connections which were persist timeout (per second).
+Graph|Spliced Connections Closed/Sec|67|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Spliced connections that were keepalive timeout (per second).
+Graph|TCP Checksum Offload Disabled During Retransmit/Sec|68|scalar|rate|-|-|0|AS|-1|-1|NA|NA|TCP checksums disabled for retransmitting the packets (per second).
+Graph|Connection Dropped Due to Bad ACKs/Sec|69|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Connections rejected due to improper acknowledgments (per second).
+Graph|Connection Dropped Due To Duplicate SYN Packets|70|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Connections that were rejected due to same SYN packets (per second).
+Graph|Fastpath Loopback Connection/Sec|71|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Fastpath Loopback Connection (per second).
+Graph|Fastpath Loopback Sent Packet/Sec|72|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Fastpath Loopback Sent Packet (per second).
+Graph|Fastpath Loopback Received Packet/Sec|73|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Fastpath Loopback Received Packet (per second).
+         

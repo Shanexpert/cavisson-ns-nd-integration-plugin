@@ -1,0 +1,11 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS S3 Replication Metric Stats|11339|vector|3|0|AWS Metrics|AccountName>Region>DestinationBucket>RuleId>SourceBucket|Use Amazon S3 to store and retrieve any amount of data at any time using the same highly scalable, reliable, fast, inexpensive data storage infrastructure that Amazon uses to run its own global network of websites.
+
+Graph|AWS S3 Replication Latency|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|AWS S3 Replication Latency
+Graph|AWS S3 Operations Pending Replication|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|AWS S3 Operations Pending Replication
+Graph|AWS S3 Bytes Pending Replication|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|AWS S3 Bytes Pending Replication

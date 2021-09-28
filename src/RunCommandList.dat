@@ -1,0 +1,14 @@
+#If only blank lines and/or commented lines are found in Runcommandlist.dat file, then
+#all commands will be allowed to execute.
+#If any wrong keyword is found, then all command will be Blocked.
+#If RunCommandList.dat file is not found in sys/ directory, then all commands will be Blocked.
+#To blacklist command use FILETYPE=BLACKLIST and to whitelist command use FILETYPE=WHITELIST
+#<Command>|NA|NA|NA|<Description>
+#FILETYPE=BLACKLIST
+#rm|NA|NA|NA|Remove Files
+#
+#While using FILETYPE=WHITELIST; following commands must be added.
+#nsi_get_java_instances|NA|NA|NA|Get Java Instance
+#nsi_get_java_thread_dump|NA|NA|NA|Get Java Thread Dump
+#nsi_get_java_heap_dump|NA|NA|NA|Get Java Heap Dump
+#nsi_get_flight_recorder|NA|NA|NA|Get Java Flight Recorder

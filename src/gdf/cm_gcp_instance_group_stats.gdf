@@ -1,0 +1,7 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Instance Group Stats|10756|vector|2|0|GCP Metrics|Tier>Server>InstanceGroup|Instance Group Stats provide metrics related to running and terminated instances.
+Graph|Running Instances|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of running instances in an instance group. 
+Graph|Terminated Instances|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of terminated instances in an instance group. 

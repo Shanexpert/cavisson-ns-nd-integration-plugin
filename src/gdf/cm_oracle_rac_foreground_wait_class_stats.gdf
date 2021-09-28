@@ -1,0 +1,32 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Oracle Wait Events stats|10195|vector|22|0|Oracle Metrics|Tier>Server>Instance|Oracle monitor for Wait Events stats
+
+Graph|User I/O (Sec)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of user input/output operations that are waiting.
+Graph|System I/O(Sec)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of system input/output operations that are waiting.
+Graph|Other (Sec)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|NumberOther operation that are waiting.
+Graph|Application (Sec)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Application operations that are waiting.
+Graph|Commit (Sec)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Commit operations that are waiting.
+Graph|Network (Sec)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of Network operations that are waiting.
+Graph|Concurcy (Sec)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of Concurcy operations that are waiting.
+Graph|Config (Sec)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of Config operations that are waiting
+Graph|Cluster (Sec)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of Cluster operations that are waiting.
+Graph|DB CPU (Sec)|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of Database CPU operations that are waiting.
+Graph|DB time|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Time taken by Database
+Graph|User I/O (Pct)|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percentage of input/output operations that are waiting.
+Graph|System I/O (Pct)|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percentage of system input/output operations that are waiting.
+Graph|Other (Pct)|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percentage of other operations that are waiting
+Graph|Application (Pct)|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percentage of Application operations that are waiting
+Graph|Commit (Pct)|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Library Hit percentage
+Graph|Network (Pct)|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Soft Parse percentage
+Graph|Concurcy (Pct)|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percentage of Concurcy operations that are waiting.
+Graph|Config (Pct)|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Latch Hit percentage
+Graph|Cluster (Pct)|20|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Parse CPU to Parse Elapsd percentage
+Graph|DB CPU (Pct)|21|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Non-Parse CPU percentagei
+Graph|Total DB time (pct)|22|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Non-Parse CPU percentage

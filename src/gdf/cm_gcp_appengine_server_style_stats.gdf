@@ -1,0 +1,5 @@
+# 1.0 - Initial version
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP App Engine Server Style|11597|vector|1|0|GCP Metrics|ProjectID>Zone>ModuleID>VersionID>Cached>Dynamic|Server Style provide metrics related to server.
+Graph|GCP App Engine Server Response Style/Sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Counts on the HTTP serve styles per seconds.

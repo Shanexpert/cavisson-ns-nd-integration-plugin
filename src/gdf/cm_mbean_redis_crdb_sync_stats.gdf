@@ -1,0 +1,14 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Redis CRDB Sync Stats|10969|vector|4|0|Redis Metrics|Tier>Server>DatabaseName>ClusterUid|Redis CRDB sync stats provides metrics for Redis Conflict-Free Replicated Databases (CRDBs) sync sources.
+Graph|Redis CRDB Lag (ms)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Delay in milliseconds between the time when a command was executed on the source and when it is executed on the destination.
+Graph|Redis CRDB Database Size (MB)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Sync sources database size in Megabytes.
+Graph|Redis CRDB Data Transferred/Sec|3|scalar|rate|CumToPS|-|0|NA|-1|-1|NA|NA|Sync sources data transferred per second.
+Graph|Redis CRDB Sync Status|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Sync status of Redis CRDB. Sync status is 1 = (syncing) indicates that the synchronization process has started from scratch, Sync status is 2 = (Synced) indicates that the initial synchronization process was completed and the destination is synchronizing changes on an ongoing basis, Sync status is 3 = (Sync stopped) indicates that the synchronization process is currently not running and the user needs to restart it in order for it to continue running, Sync status is 4 = (in-sync) indicates that the synchronization process is in sync, Sync status is 5 = (out-of-sync) indicates that the synchronization process is out of sync.
+	
+	

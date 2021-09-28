@@ -1,0 +1,23 @@
+#!/bin/sh
+
+#----------------------------------------------------------------------
+# Name    :    nsu_show_group
+# Author  :    Archana
+# Purpose :    This commands to show existing groups details.
+# Usage   :    nsu_show_group 
+# Format of Output:
+#  Group Name|Group Type|Description
+# Modification History:
+#   01/27/09:  Archana - Initial Version
+#----------------------------------------------------------------------
+
+. $NS_WDIR/bin/ns_user_admin_lib
+
+show_group_details()
+{
+  cat $GROUP_PROFILE
+}
+
+show_group_details
+#msgout "----------------------------------------------------------------------"
+exit 0

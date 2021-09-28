@@ -1,0 +1,168 @@
+#LAST_MAX_ASSIGNED_GRAPH_ID = 22
+#LAST_MODIFIED_DATE = 09/01/16 01:56:09
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|MSSQL Server Stats|10724|vector|158|0|MSSQL Metrics|Tier>Server>Source|MSSQL database server statitstics.
+Graph|MSSQL Active Cursors|1|scalar|sample|-|-|0|NA|-1|-1|H|NA|Number of active cursors.
+Graph|MSSQL Active Temp Tables|2|scalar|sample|-|-|0|NA|-1|-1|H|NA|Number of temporary tables.
+Graph|MSSQL Active Transactions|3|scalar|sample|-|-|0|NA|-1|-1|H|NA|Number of active transactions.
+Graph|MSSQL AU Cleanup Batches/Sec|4|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|The number of batches per second that were completed successfully by the background task that cleans up deferred dropped allocation units.
+Graph|MSSQL AU Cleanups/Sec|5|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|The number of allocation units per second that were successfully dropped the background task that cleans up deferred dropped allocation units. Each allocation unit drop requires multiple batches.
+Graph|MSSQL Auto-Param Attempts/Sec|6|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of auto param attempts per second.
+Graph|MSSQL Latch Wait Time (ms)/Sec|7|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Latch wait time (in milliseconds) per second for latch requests that had to wait.
+Graph|MSSQL Wait Time (ms)/Sec|8|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Time(in millisecond ) for the selected type of wait per second.
+Graph|MSSQL Backup and Restore Throughput/Sec|9|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Read/write throughput for backup and restore operations of a database per second..
+Graph|MSSQL Batch Requests/Sec|10|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of Transact-SQL command batches received per second.
+Graph|MSSQL Buffer Cache Hit Ratio (Pct)|11|scalar|sample|-|-|0|NA|-1|-1|H|NA|Indicates the percentage of pages found in the buffer cache without having to read from disk. The ratio is the total number of cache hits divided by the total number of cache lookups over the last few thousand page accesses.
+Graph|MSSQL Bulk Copy Rows/Sec|12|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of bulk copy rows per second.
+Graph|MSSQL Bulk Copy Throughput (KB)/Sec|13|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Amount of data bulk copied (in kilobytes) per second.
+Graph|MSSQL By-Reference Lob Create/Sec|14|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of large object (lob) values per second that were passed by reference. By-reference lobs are used in certain bulk operations to avoid the cost of passing them by value.
+Graph|MSSQL By-Reference Lob Used/Sec|15|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of by-reference lob values per second that were used. By-reference lobs are used in certain bulk operations to avoid the cost of passing them by-value.
+Graph|MSSQL Cache Hit Ratio|16|scalar|sample|-|-|0|NA|-1|-1|H|NA|Ratio between cache hits and lookups.
+Graph|MSSQL Cache Objects|17|scalar|sample|-|-|0|NA|-1|-1|H|NA|Number of cache objects in the cache.
+Graph|MSSQL Cache Objects In Use|18|scalar|sample|-|-|0|NA|-1|-1|H|NA|Number of cache object in use.
+Graph|MSSQL Cache Pages|19|scalar|sample|-|-|0|NA|-1|-1|H|NA|Number of 8-kilobyte (KB) pages used by cache objects.
+Graph|MSSQL Cached Cursors|20|scalar|sample|-|-|0|NA|-1|-1|H|NA|Number of cursors of a given type in the cache.
+Graph|MSSQL Checkpoint Pages/Sec|21|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of pages flushed to disk per second by a checkpoint or other operation that require all dirty pages to be flushed.
+Graph|MSSQL CLR Execution Time (mus)|22|scalar|sample|-|-|0|NA|-1|-1|H|NA|Total execution time in CLR (microseconds).
+Graph|MSSQL Connection Memory (KB)|23|scalar|sample|-|-|0|NA|-1|-1|H|NA|Connection memory in killobytes.
+Graph|MSSQL Lob Readahead/Sec|24|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of lob pages per second on which readahead was issued.
+Graph|MSSQL Pull In Row/Sec|25|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of column values per second that were pulled in-row from off-row.
+Graph|MSSQL Push Off Row/Sec|26|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of column values per second that were pushed from in-row to off-row.
+Graph|MSSQL Cursor Memory Usage (KB)|27|scalar|sample|-|-|0|NA|-1|-1|H|NA|Amount of memory consumed by cursors in kilobytes (KB).
+Graph|MSSQL Cursor Requests/Sec|28|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of SQL cursor requests received by server per second.
+Graph|MSSQL Cursor Worktable Usage|29|scalar|sample|-|-|0|NA|-1|-1|H|NA|Number of worktables used by cursors.
+Graph|MSSQL Data File Size (KB)|30|scalar|cumulative|-|-|0|NA|-1|-1|H|NA|Cumulative size (in kilobytes) of all the data files in the database.
+Graph|MSSQL Database Pages|31|scalar|sample|-|-|0|NA|-1|-1|H|NA|Number of database pages.
+Graph|MSSQL DBCC Logical Scan Bytes/Sec|32|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of logical read scan bytes per second for database console commands (DBCC).
+Graph|MSSQL Deferred Dropped Rowsets/Sec|33|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of rowsets created per second as a result of aborted online index build operations that are waiting to be dropped by the background task that cleans up deferred dropped rowsets.
+Graph|MSSQL Dropped Rowset Cleanups/Sec|34|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of rowsets per second created as a result of aborted online index build operations that were successfully dropped by the background task that cleans up deferred dropped rowsets.
+Graph|MSSQL Dropped Rowset Skipped/Sec|35|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of rowsets per second created as a result of aborted online index build operations that were skipped by the background task that cleans up deferred dropped rowsets created.
+Graph|MSSQL Errors/Sec|36|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of errors per second.
+Graph|MSSQL Event Notifications Delayed Drop|37|scalar|sample|-|-|0|NA|-1|-1|H|NA|Number of event notifications waiting to be dropped by a system thread.
+Graph|MSSQL Extent Deallocations/Sec|38|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of extents deallocated per second in all databases in this instance of SQL Server.
+Graph|MSSQL Extent Allocated/Sec|39|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of extents allocated per second in all databases in this instance of SQL Server.
+Graph|MSSQL Failed AU Cleanup Batches/Sec|40|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|The number of batches per second that failed and required retry, by the background task that cleans up deferred dropped allocation units. Failure could be due to lack of memory or disk space, hardware failure and other reasons.
+Graph|MSSQL Failed Auto-Params/Sec|41|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of failed auto params per second.
+Graph|MSSQL Failed Leaf Page Cookie/Sec|42|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of times per second that a leaf page cookie could not be used during an index search since changes happened on the leaf page. The cookie is used to speed up index search.
+Graph|MSSQL Failed Tree Page Cookie/Sec|43|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of times per second that a tree page cookie could not be used during an index search since changes happened on the parent pages of those tree pages. The cookie is used to speed up index search.
+Graph|MSSQL Forced Parameterizations/Sec|44|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of forced parameterizations per second.
+Graph|MSSQL Forwarded Records/Sec|45|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of records per second fetched through forwarded record pointers.
+Graph|MSSQL Free List Stalls/Sec|46|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of free list stalls per second.
+Graph|MSSQL Free Space In Tempdb (KB)|47|scalar|sample|-|-|0|NA|-1|-1|H|NA|The amount of space (in kilobytes) available in tempdb. There must be enough free space to hold both the snapshot isolation level version store and all new temporary objects created in this instance of the Database Engine.
+Graph|MSSQL FreeSpace Page Fetches/Sec|48|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of pages fetched per second by free space scans. These scans search for free space within pages already allocated to an allocation unit, to satisfy requests to insert or modify record fragments.
+Graph|MSSQL FreeSpace Scans/Sec|49|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of scans per second that were initiated to search for free space within pages already allocated to an allocation unit to insert or modify record fragment. Each scan may find multiple pages.
+Graph|MSSQL Full Scans/Sec|50|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of unrestricted full scans per second. These can be either base-table or full-index scans.
+Graph|MSSQL Granted Workspace Memory (KB)|51|scalar|sample|-|-|0|NA|-1|-1|H|NA|Total amount of memory currently granted to executing processes, such as hash, sort, bulk copy, and index creation operations in kilobytes.
+Graph|MSSQL HTTP Authenticated Requests/Sec|52|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of http authenticated requests per second.
+Graph|MSSQL Index Searches/Sec|53|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of index searches per second. These are used to start a range scan, reposition a range scan, revalidate a scan point, fetch a single index record, and search down the index to locate where to insert a new row.
+Graph|MSSQL Latch Waits/Sec|54|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of latch requests per second that could not be granted immediately.
+Graph|MSSQL Lazy Writes/Sec|55|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|number of buffers written per second by the buffer manager's lazy writer. The lazy writer is a system process that flushes out batches of dirty, aged buffers (buffers that contain changes that must be written back to disk before the buffer can be reused for a different page) and makes them available to user processes. The lazy writer eliminates the need to perform frequent checkpoints in order to create available buffers.
+Graph|MSSQL LobHandle Created/Sec|56|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of temporary lobs handle created per second.
+Graph|MSSQL LobHandle Destroyed/Sec|57|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of temporary lobs handle destroyed per second.
+Graph|MSSQL LobSS Provider Create/Sec|58|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of lob Storage Service Providers (LobSSP) created per second. One worktable created per LobSSP.
+Graph|MSSQL LobSS Provider Destroy/Sec|59|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of lob SS provider destroyed per second.
+Graph|MSSQL LobSS Provider Truncation/Sec|60|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of lob ss provider truncates per second.
+Graph|MSSQL Lock Blocks|61|scalar|sample|-|-|0|NA|-1|-1|H|NA|current number of lock blocks in use on the server (refreshed periodically). A lock block represents an individual locked resource, such as a table, page, or row.
+Graph|MSSQL Lock Blocks Allocated|62|scalar|sample|-|-|0|NA|-1|-1|H|NA|Current number of allocated lock blocks. At server startup, the number of allocated lock blocks plus the number of allocated lock owner blocks depends on the SQL Server Locks configuration option. If more lock blocks are needed, the value increases.
+Graph|MSSQL Lock Memory (KB)|63|scalar|sample|-|-|0|NA|-1|-1|H|NA|Total amount of dynamic memory the server is using for locks.
+Graph|MSSQL Lock Owner Blocks|64|scalar|sample|-|-|0|NA|-1|-1|H|NA|Number of lock owner blocks currently in use on the server (refreshed periodically). A lock owner block represents the ownership of a lock on an object by an individual thread. Therefore, if three threads each have a shared (S) lock on a page, there will be three lock owner blocks.
+Graph|MSSQL Lock Owner Blocks Allocated|65|scalar|sample|-|-|0|NA|-1|-1|H|NA|Current number of allocated lock owner blocks. At server startup, the number of allocated lock owner blocks and the number of allocated lock blocks depend on the SQL Server Locks configuration option. If more lock owner blocks are needed, the value increases dynamically.
+Graph|MSSQL Lock Requests/Sec|66|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of lock requests per second.
+Graph|MSSQL Lock Timeouts (Without NOWAIT)/Sec|67|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of lock requests per second that timed out, but excluding requests for NOWAIT locks.
+Graph|MSSQL Lock Timeouts/Sec|68|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of lock requests per second that timed out, including requests for NOWAIT locks.
+Graph|MSSQL Lock Wait Time (ms)|69|scalar|sample|-|-|0|NA|-1|-1|H|NA|Total wait time (in milliseconds) for locks in the last second.
+Graph|MSSQL Lock Waits/Sec|70|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of lock requests per second that required the caller to wait.
+Graph|MSSQL Log Bytes Flushed/Sec|71|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of log bytes flushed per second.
+Graph|MSSQL Log Cache Hit Ratio (Pct)|72|scalar|sample|-|-|0|NA|-1|-1|H|NA|Percentage of log cache reads satisfied from the log cache.
+Graph|MSSQL Log Cache Reads/Sec|73|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of log cache reads per second.
+Graph|MSSQL Log File Size (KB)|74|scalar|cumulative|-|-|0|NA|-1|-1|H|NA|Cumulative size (in kilobytes) of all the transaction log files in the database.
+Graph|MSSQL Log File Used Size (KB)|75|scalar|cumulative|-|-|0|NA|-1|-1|H|NA|Cumulative used size of all the log files in the database.
+Graph|MSSQL Log Flush Wait Time (ms)/Sec|76|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Log flush wait time (in milliseconds) per second to flush the log. On an Always On secondary database, this value indicates the wait time for log records to be hardened to disk.
+Graph|MSSQL Log Flush Waits/Sec|77|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of commits per second waiting for the log flush.
+Graph|MSSQL Log Flushes/Sec|78|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of log flushes per second.
+Graph|MSSQL Log Growths/Sec|79|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of times per second the transaction log for the database has been expanded..
+Graph|MSSQL Log Shrinks/Sec|80|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of times per second log shrinks for this database.
+Graph|MSSQL Log Truncations/Sec|81|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of times per second the transaction log has been shrunk.
+Graph|MSSQL Logical Connections|82|scalar|sample|-|-|0|NA|-1|-1|H|NA|Number of logical connections to the system.
+Graph|MSSQL Logins/Sec|83|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Total number of logins started per second. This does not include pooled connections.
+Graph|MSSQL Logouts/Sec|84|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Total number of logout operations started per second.
+Graph|MSSQL Longest Transaction Running Time (ms)|85|scalar|sample|-|-|0|NA|-1|-1|H|NA|Transaction longest running time in miliseconds.
+Graph|MSSQL Mars Deadlocks/Sec|86|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of MARS deadlocks per second.
+Graph|MSSQL Maximum Workspace Memory (KB)|87|scalar|sample|-|-|0|NA|-1|-1|H|NA|Maximum amount of memory available for executing processes, such as hash, sort, bulk copy, and index creation operations in kilobytes.
+Graph|MSSQL Memory Grants Outstanding/Sec|88|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Total number of processes per second that have successfully acquired a workspace memory grant.
+Graph|MSSQL Memory Grants Pending|89|scalar|sample|-|-|0|NA|-1|-1|H|NA|Total number of processes waiting for a workspace memory grant.
+Graph|MSSQL Mixed Page Allocations/Sec|90|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of pages allocated per second from mixed extents. These could be used for storing the IAM pages and the first eight pages that are allocated to an allocation unit.
+Graph|MSSQL Non-Atomic Yields/Sec|91|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of non-atomic yields per second.
+Graph|MSSQL NonSnapshot Version Transactions|92|scalar|sample|-|-|0|NA|-1|-1|H|NA|Number of currently active transactions that are not using snapshot isolation level and have made data modifications that have generated row versions in the tempdb version store.
+Graph|MSSQL Active Cursor Plans|93|scalar|sample|-|-|0|NA|-1|-1|H|NA|Number of active cursor plans.
+Graph|MSSQL Deadlocks/Sec|94|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of lock requests per second that resulted in a deadlock.
+Graph|MSSQL Current SuperLatches|95|scalar|sample|-|-|0|NA|-1|-1|H|NA|Number of latches that are currently SuperLatches.
+Graph|MSSQL Optimizer Memory (KB)|96|scalar|sample|-|-|0|NA|-1|-1|H|NA|Total amount of dynamic memory the server is using for query optimization.
+Graph|MSSQL Page Compression Attempts/Sec|97|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of pages evaluated for page-level compression. Includes pages that were not compressed because significant savings could be achieved. Includes all objects in the instance of SQL Server.
+Graph|MSSQL Page Deallocations/Sec|98|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of pages deallocated per second in all databases in this instance of SQL Server. These include pages from mixed extents and uniform extents.
+Graph|MSSQL Page Life Expectancy (Sec)|99|scalar|sample|-|-|0|NA|-1|-1|H|NA|Number of seconds a page will stay in the buffer pool without references.
+Graph|MSSQL Page Lookups/Sec|100|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of requests per second to find a page in the buffer pool.
+Graph|MSSQL Page Reads/Sec|101|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of physical database page reads that are issued per second.
+Graph|MSSQL Page Splits/Sec|102|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of page splits per second that occur as the result of overflowing index pages.
+Graph|MSSQL Page Writes/Sec|103|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of physical database page writes that are issued per second.
+Graph|MSSQL Pages Allocated/Sec|104|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of pages allocated per second in all databases in this instance of SQL Server. These include pages allocations from both mixed extents and uniform extents.
+Graph|MSSQL Pages Compressed/Sec|105|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of data pages that are compressed by using PAGE compression. Includes all objects in the instance of SQL Server. 
+Graph|MSSQL Log Used (Pct)|106|scalar|sample|-|-|0|NA|-1|-1|H|NA|Percentage of space in the log that is in use.
+Graph|MSSQL Probe Scans/Sec|107|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of probe scans per second that are used to find at most one single qualified row in an index or base table directly.
+Graph|MSSQL Processes Blocked|108|scalar|sample|-|-|0|NA|-1|-1|H|NA|Number of currently blocked processes.
+Graph|MSSQL Range Scans/Sec|109|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of qualified range scans through indexes per second.
+Graph|MSSQL Readahead Pages/Sec|110|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of read ahead pages per second.
+Graph|MSSQL Replication Transactions/Sec|111|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of transactions per second read out of the transaction log of the publication database and delivered to the distribution database.
+Graph|MSSQL Safe Auto-Params/Sec|112|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of safe auto params per second.
+Graph|MSSQL Scan Point Revalidations/Sec|113|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of times per second that the scan point had to be revalidated to continue the scan.
+Graph|MSSQL Skipped Ghosted Records/Sec|114|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of ghosted records per second skipped during scans.
+Graph|MSSQL Snapshot Transactions|115|scalar|sample|-|-|0|NA|-1|-1|H|NA|Number of currently active transactions using the snapshot isolation level.
+Graph|MSSQL SOAP Empty Requests/Sec|116|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of empty SOAP requests started per second.
+Graph|MSSQL SOAP Method Invocations/Sec|117|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of SOAP method invocations per second.
+Graph|MSSQL SOAP Session Initiate Requests/Sec|118|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of SOAP session initiate requests per second.
+Graph|MSSQL SOAP Session Terminate Requests/Sec|119|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of SOAP session terminate requests per second.
+Graph|MSSQL SOAP SQL Requests/Sec|120|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of SOAP SQL requests started per second.
+Graph|MSSQL SOAP WSDL Requests/Sec|121|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of SOAP Web Service Description Language requests started per second.
+Graph|MSSQL SQL Attentions/Sec|122|scalar|sample|-|-|0|NA|-1|-1|H|NA|Number of attentions per second. An attention is a request by the client to end the currently running request
+Graph|MSSQL SQL Cache Memory (KB)|123|scalar|sample|-|-|0|NA|-1|-1|H|NA|Total amount of dynamic memory the server is using for the dynamic SQL cache.
+Graph|MSSQL SQL Compilations/Sec|124|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of SQL compilations per second. Indicates the number of times the compile code path is entered. Includes compiles caused by statement-level recompilations in SQL Server. After SQL Server user activity is stable, this value reaches a steady state.
+Graph|MSSQL SQL Re-Compilations/Sec|125|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of statement recompiles per second.
+Graph|MSSQL Stored Procedures Invoked/Sec|126|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of stored procedures invoked per second.
+Graph|MSSQL SuperLatch Demotions/Sec|127|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of SuperLatches per second that have been demoted to regular latches in the last second.
+Graph|MSSQL SuperLatch Promotions/Sec|128|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of latches per second that have been promoted to SuperLatches in the last second.
+Graph|MSSQL Table Lock Escalations/Sec|129|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of times locks on a table were escalated to the TABLE or HoBT granularity.
+Graph|MSSQL Target Pages|130|scalar|sample|-|-|0|NA|-1|-1|H|NA|Ideal number of pages in the buffer pool.
+Graph|MSSQL Target Server Memory (KB)|131|scalar|sample|-|-|0|NA|-1|-1|H|NA|Ideal amount of memory the server can consume in kilobytes.
+Graph|MSSQL Task Limit Reached|132|scalar|sample|-|-|0|NA|-1|-1|H|NA|Total number of times that a queue monitor would have started a new task, but did not because the maximum number of tasks for the queue is already running.
+Graph|MSSQL Task Limit Reached/Sec|133|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of times per second that a queue monitor would have started a new task, but did not because the maximum number of tasks for the queue is already running.
+Graph|MSSQL Tasks Aborted/Sec|134|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of activation stored procedure tasks per second that end with an error, or are aborted by a queue monitor for failing to receive messages.
+Graph|MSSQL Tasks Running|135|scalar|sample|-|-|0|NA|-1|-1|H|NA|Number of activation stored procedures that are currently running.
+Graph|MSSQL Tasks Started/Sec|136|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of activation stored procedures started per second by all queue monitors in the instance.
+Graph|MSSQL Temp Tables Created/Sec|137|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of temporary tables/table variables created per second.
+Graph|MSSQL Temp Tables For Destruction|138|scalar|sample|-|-|0|NA|-1|-1|H|NA|Number of temporary tables/table variables waiting to be destroyed by the cleanup system thread.
+Graph|MSSQL Total Latch Wait Time (ms)|139|scalar|sample|-|-|0|NA|-1|-1|H|NA|Total latch wait time in milliseconds.
+Graph|MSSQL Total Server Memory (KB)|140|scalar|sample|-|-|0|NA|-1|-1|H|NA|Aamount of memory the server has committed using the memory manager in kilobytes.
+Graph|MSSQL Total Transactions|141|scalar|sample|-|-|0|NA|-1|-1|H|NA|total number of transactions.
+Graph|MSSQL Transactions/Sec|142|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of transaction per second.
+Graph|MSSQL Unsafe Auto-Params/Sec|143|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of unsafe auto-params per second.
+Graph|MSSQL Update Conflict Ratio (Pct)|144|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percentage of those transactions using the snapshot isolation level that have encountered update conflicts within the last second. An update conflict occurs when a snapshot isolation level transaction attempts to modify a row that last was modified by another transaction that was not committed when the snapshot isolation level transaction started.
+Graph|MSSQL Update Snapshot Transactions|145|scalar|sample|-|-|0|NA|-1|-1|H|NA|Number of currently active transactions using the snapshot isolation level and have modified data.
+Graph|MSSQL Used Leaf Page Cookie/Sec|146|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of times per second a leaf page cookie is used successfully during an index search since no change happened on the leaf page. The cookie is used to speed up index search.
+Graph|MSSQL Used Tree Page Cookie/Sec|147|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of times per second a tree page cookie is used successfully during an index search since no change happened on the parent page of the tree page. The cookie is used to speed up index search.
+Graph|MSSQL User Connections|148|scalar|sample|-|-|0|NA|-1|-1|H|NA|Number of user connections.
+Graph|MSSQL Version Cleanup Rate (KB/Sec)|149|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|The rate (in kilobytes per second) at which row versions are removed from the snapshot isolation version store in tempdb.
+Graph|MSSQL Version Store Size (KB)|150|scalar|sample|-|-|0|NA|-1|-1|H|NA|The amount of space (in kilobytes) in tempdb being used to store snapshot isolation level row versions.
+Graph|MSSQL Version Generation Rate (KB/Sec)|151|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|The rate (in kilobytes per second) at which new row versions are added to the snapshot isolation version store in tempdb.
+Graph|MSSQL Version Store Units|152|scalar|sample|-|-|0|NA|-1|-1|H|NA|The number of active allocation units in the snapshot isolation version store in tempdb.
+Graph|MSSQL Version Store Unit Creation/Sec|153|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of allocation units that have been created per second in the snapshot isolation store since the instance of the Database Engine was started.
+Graph|MSSQL Version Store Unit Truncation/Sec|154|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of allocation units that have been removed per second from the snapshot isolation store since the instance of the Database Engine was started.
+Graph|MSSQL Workfiles Created/Sec|155|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of work files created per second. For example, work files could be used to store temporary results for hash joins and hash aggregates.
+Graph|MSSQL Worktables Created/Sec|156|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of work tables created per second. For example, work tables could be used to store temporary results for query spool, lob variables, XML variables, and cursors.
+Graph|MSSQL Worktables From Cache Ratio|157|scalar|sample|-|-|0|NA|-1|-1|H|NA|Percentage of work tables created where the initial two pages of the work table were not allocated but were immediately available from the work table cache. (When a work table is dropped, two pages may remain allocated and they are returned to the work table cache. This increases performance.)
+Graph|MSSQL Write Transactions/Sec|158|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of write transactions per second.

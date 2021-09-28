@@ -1,0 +1,14 @@
+# --- GDF Version History ---
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS EC2 ImageId Stats|11290|vector|7|0|AWS Metrics|AccountName>Region>ImageId|Amazon Elastic Compute Cloud (Amazon EC2) is a web service that provides resizable computing capacity—literally, servers in Amazon's data centers—that you use to build and host your software systems.
+
+Graph|AWS EC2 CPU Utilization (%)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average percentage of allocated EC2 compute units that are currently in use on the instance.
+Graph|AWS EC2 Disk Read Bytes|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Bytes read from all ephemeral disks available to the instance.
+Graph|AWS EC2 Disk Read Ops|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Completed read operations from all ephemeral disks available to the instance.
+Graph|AWS EC2 Disk Write Bytes|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Bytes written to all ephemeral disks available to the instance.
+Graph|AWS EC2 Disk Write Ops|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Completed write operations to all ephemeral disks available to the instance.
+Graph|AWS EC2 Network Received Bytes|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average number of bytes received on all network interfaces by the instance.
+Graph|AWS EC2 Network Transmitted Bytes|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average number of bytes sent out on all network interfaces by the instance.

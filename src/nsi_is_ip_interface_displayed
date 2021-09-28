@@ -1,0 +1,89 @@
+#!/bin/sh
+# Name    : nsi_is_ip_interafce_displayed 
+# Author  : Achint
+# usage   :
+#	    nsi_is_ip_interafce_displayed [-s]
+# Purpose :
+# Check either more than one interface is defined OR ip_entries files have refernce to more than one interface name
+# This will echo 1, if only 1 interface defined, else 0, if more then 1 interfcae is defined
+# If no input is given then it will check Client side interfaces otherwise Server Side interface.
+# Modification History:
+#   07/27/06  Initial version
+# 
+
+TEMP=/tmp/temp.$$
+TEMP_INTERFACE=/tmp/temp_interface.$$
+#ip entries is now no longer Controller specific . Hence changing it to /home/cavisson/work
+IP_ENTRIES=/home/nettsorm/work/sys/ip_entries
+show_interface_ip_entries=0
+
+if [ $1XX != "XX" ];then
+  if [ $1 == "-s" ];then
+    entity=S
+  fi
+else
+  entity=C
+fi
+
+if [ $entity == C ];then
+  LOAD=NSLoadIF
+else
+  LOAD=SRLoadIF
+fi
+
+cat $HOME_DIR/etc/cav.conf | grep $LOAD | cut -d" " -f2 | cut -d/ -f1 >$TEMP_INTERFACE
+interface=`cat $HOME_DIR/etc/cav.conf | grep $LOAD | cut -d" " -f2 | cut -d/ -f1`
+
+get_ip_fields()
+{
+  ENTITY=`echo $1 | cut -d "|" -f1`
+  INTERFACE=`echo $1 | cut -d "|" -f10`
+}
+
+> $TEMP
+ #Reading IP Entries File
+if [ -f $IP_ENTRIES ] ; then
+ while read line
+ do
+ #Extracting the Entity and Interface from particular line of IP Entries file.
+   get_ip_fields $line
+   if [ "$ENTITY" != "$entity" ];then
+     continue
+   else
+     echo $INTERFACE >>$TEMP
+   fi
+ done <$IP_ENTRIES
+ 
+ #Remove lines which are dublicate.If total lines are greater then 1 then show_interface_ip_entries=1
+ num=`sort -u $TEMP | wc -l`
+ if [ $num -gt 1 ];then
+   show_interface_ip_entries=1
+ fi
+fi
+
+ #Check defined interface.if there are more than i interfaces defined in cav.conf file then show_cav=1 
+ len=`echo $interface | wc -c`
+ len=`expr $len - 1`
+ i=1
+ s=0
+ show_cav=0
+ while [ $i -le $len ]
+ do
+   st=`cut -c$i $TEMP_INTERFACE`
+   if [ "$st" = "|" ];then
+     s=`expr $s + 1`
+   fi
+   i=`expr $i + 1`
+ done
+ if [ $s -ge 1 ];then
+  show_cav=1
+ fi
+ rm -f $TEMP_INTERFACE
+ rm -f $TEMP
+ 
+ if [ $show_interface_ip_entries == 1 -o $show_cav == 1 ];then
+   echo 0
+ else
+   echo 1
+ fi 
+exit 0

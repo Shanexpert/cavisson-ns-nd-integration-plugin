@@ -1,0 +1,13 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+
+Info|1.0|1|-|-|-1|-1|-
+Group|CPU Stats|10729|vector|5|0|System Metrics|Tier>Server|CPU architecture information
+
+Graph|Number Of CPU Cores|1|scalar|sample|-|None|0|NA|-1|-1|NA|NA|Number of Cores of the CPU
+Graph|L1d Cache Memory(KB)|2|scalar|sample|-|None|0|NA|-1|-1|NA|NA|Level1 cache memory for instructions
+Graph|L1i Cache Memory(KB)|3|scalar|sample|-|None|0|NA|-1|-1|NA|NA|Level1 cache memory for data
+Graph|L2 Cache Memory(KB)|4|scalar|sample|-|None|0|NA|-1|-1|NA|NA|Level2 cache memory
+Graph|L3 Cache Memory(KB)|5|scalar|sample|-|None|0|NA|-1|-1|NA|NA|Level3 cache memory
+

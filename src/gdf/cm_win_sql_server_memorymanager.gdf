@@ -1,0 +1,32 @@
+# --- GDF Version History ---
+# # 1.0 - Initial version
+# # 2.0 - Change done for match Long_data and Long_long_data to double
+# # 3.0 - Changes done for Dynamic data in Execution GUI
+# # 3.1 - Use future1 field of group line for Metric group name
+#
+# Command to get data for this gdf on windows server :
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# wmic path Win32_PerfFormattedData_MSSQLSERVER_SQLServerMemoryManager get ConnectionMemoryKB   GrantedWorkspaceMemoryKB  LockBlocks  LockBlocksAllocated  LockMemoryKB  LockOwnerBlocks  LockOwnerBlocksAllocated  MaximumWorkspaceMemoryKB  MemoryGrantsOutstanding  MemoryGrantsPending  OptimizerMemoryKB  SQLCacheMemoryKB  TargetServerMemoryKB  TotalServerMemoryKB /every:10
+#
+# Entry in mprof to get data :
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# CUSTOM_MONITOR 192.168.1.52 cm_win_sql_server_memorymanager.gdf Win_SQLServer_MemoryManager 2 wmic path Win32_PerfFormattedData_MSSQLSERVER_SQLServerMemoryManager get ConnectionMemoryKB   GrantedWorkspaceMemoryKB  LockBlocks  LockBlocksAllocated  LockMemoryKB  LockOwnerBlocks  LockOwnerBlocksAllocated  MaximumWorkspaceMemoryKB  MemoryGrantsOutstanding  MemoryGrantsPending  OptimizerMemoryKB  SQLCacheMemoryKB  TargetServerMemoryKB  TotalServerMemoryKB /every:10
+#
+
+Info|3.1|1|-|-|-1|-1|-
+Group|SQL Server Memory Manager Stats|10067|vector|14|0|Application Metrics|Tier>Server|SQL Server Memory Manager provides metrics related to dynamic memory, lock stats etc.
+
+Graph|Connection Memory (KB)|1|scalar|sample|-|-|0|NA|-1|-1|M|NA|Total amount of dynamic memory the server is using for maintaining connections in Kilobytes.
+Graph|Granted Workspace Memory (KB)|2|scalar|sample|-|-|0|NA|-1|-1|M|NA|Total amount of memory granted to executing processes in Kilobytes. This memory is used for hash, sort and create index operations.
+Graph|Lock Blocks|3|scalar|sample|-|-|0|NA|-1|-1|M|NA|Number of lock blocks refreshed periodically that are in use on the server.
+Graph|Lock Blocks Allocated|4|scalar|sample|-|-|0|NA|-1|-1|M|NA|Number of allocated lock blocks.
+Graph|Lock Memory (KB)|5|scalar|sample|-|-|0|NA|-1|-1|M|NA|Total amount of dynamic memory the server is using for locks in Kilobytes.
+Graph|Lock Owner Blocks|6|scalar|sample|-|-|0|NA|-1|-1|M|NA|Number of lock owner blocks refreshed periodically that are currently in use on the server.
+Graph|Lock Owner Blocks Allocated|7|scalar|sample|-|-|0|NA|-1|-1|M|NA|Number of allocated lock owner blocks.
+Graph|Maximum Workspace Memory (KB)|8|scalar|sample|-|-|0|NA|-1|-1|M|NA|Total amount of memory granted to executing processes in Kilobytes. This memory is used primarily for hash, sort and create index operations.
+Graph|Memory Granted Process Count|9|scalar|sample|-|-|0|NA|-1|-1|M|NA|Number of processes that have successfully acquired a workspace memory grant.
+Graph|Memory Grants Pending|10|scalar|sample|-|-|0|NA|-1|-1|M|NA|Number of processes waiting for a workspace memory grant.
+Graph|Optimizer Memory (KB)|11|scalar|sample|-|-|0|NA|-1|-1|M|NA|Total amount of dynamic memory the server is using for query optimization in Kilobytes.
+Graph|SQL Cache Memory (KB)|12|scalar|sample|-|-|0|NA|-1|-1|M|NA|Total amount of dynamic memory the server is using for the dynamic SQL cache in Kilobytes.
+Graph|Target Server Memory (KB)|13|scalar|sample|-|-|0|NA|-1|-1|M|NA|Total amount of dynamic memory the server is willing to consume in Kilobytes.
+Graph|Total Server Memory (KB)|14|scalar|sample|-|-|0|NA|-1|-1|M|NA|Total amount of dynamic memory the server is currently consuming in Kilobytes.

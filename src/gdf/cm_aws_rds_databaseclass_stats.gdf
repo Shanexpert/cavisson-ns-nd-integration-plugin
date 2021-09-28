@@ -1,0 +1,119 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS RDS DatabaseClass Stats|11390|vector|56|0|AWS Metrics|AccountName>Region>DatabaseClass|(Amazon RDS) makes it easy to set up, operate, and scale a relational database in the cloud. It provides cost-efficient and resizable capacity while automating time-consuming administration tasks such as hardware provisioning, database setup, patching and backups.
+
+Graph|AWS RDS Active Transactions/Sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The average rate of current transactions executing on a DB instance. (Standard, Aurora-MySQL only)
+
+Graph|AWS RDS Aurora Binlog Replica Lag|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The amount of time a replica DB cluster running on Aurora with MySQL compatibility lags behind the source DB cluster. (Standard, Aurora-MySQL only)
+
+Graph|AWS RDS Binary Log Disk Usage|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of disk space occupied by binary logs on the master. (Standard)
+
+Graph|AWS RDS Blocked Transactions/Sec|4|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The average rate of transactions in the database that are blocked. (Standard, Aurora-MySQL only)
+
+Graph|AWS RDS Buffer Cache Hit Ratio (%)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of requests that are served by the Buffer cache. (Standard, Aurora only)
+
+Graph|AWS RDS Burst Balance (%)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percent of General Purpose SSD (gp2) burst-bucket I,O credits available. (Standard)
+
+Graph|AWS RDS Commit Latency (ms)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The amount of latency for committed transactions. (Standard, Aurora only)
+
+Graph|AWS RDS Commit Throughput (Bytes/Sec)|8|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The average rate of committed transactions. (Standard, Aurora only)
+
+Graph|AWS RDS CPU Credit Balance|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|[T2 instances] Number of CPU credits that an instance has accumulated. (Standard)
+
+Graph|AWS RDS CPU Credit Usage|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|[T2 instances] Number of CPU credits consumed. (Standard)
+
+Graph|AWS RDS CPU Surplus Credit Balance|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of surplus credits that have been spent by an unlimited instance when its CPUCreditBalance value is zero.
+
+Graph|AWS RDS CPU Surplus Credits Charged|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of spent surplus credits that are not paid down by earned CPU credits, and which thus incur an additional charge.
+
+Graph|AWS RDS CPU Utilization (%)|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percentage of CPU utilization. Recommended metric for standard monitoring. (Standard)
+
+Graph|AWS RDS Database Connection|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of database connections in use. (Standard)
+
+Graph|AWS RDS DB Load|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of active sessions for the DB engine (Performance Insights must be enabled).
+
+Graph|AWS RDS DB Load CPU|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of active sessions where the wait event type is CPU (Performance Insights must be enabled).
+
+Graph|AWS RDS DB Load Non CPU|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of active sessions where the wait event type is not CPU (Performance Insights must be enabled).
+
+Graph|AWS RDS DDL Latency (ms)|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The amount of latency for DDL requests (create,alter,drop). (Standard, Aurora-MySQL only)
+
+Graph|AWS RDS DDL Throughput (Bytes/Sec)|19|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The average rate of DDL requests per second. (Standard, Aurora-MySQL only)
+
+Graph|AWS RDS Dead Locks/Sec|20|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The average number of deadlocks in the database per second. (Standard, Aurora only)
+
+Graph|AWS RDS Delete Latency (ms)|21|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average latency for delete queries. (Standard, Aurora only)
+
+Graph|AWS RDS Delete Throughput (Bytes/Sec)|22|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The average rate of delete queries. (Standard, Aurora only)
+
+Graph|AWS RDS Disk Queue Depth|23|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of outstanding IOs (read,write requests) waiting to access the disk. (Standard)
+
+Graph|AWS RDS DML Latency (ms)|24|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The average latency for inserts and updates and deletes. (Standard, Aurora-MySQL only)
+
+Graph|AWS RDS DML Throughput (Bytes/Sec)|25|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The average rate of inserts and updates and deletes. (Standard, Aurora-MySQL only)
+
+Graph|AWS RDS Engine Uptime (Sec)|26|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The amount of time that the DB instance has been active. (Standard, Aurora only)
+
+Graph|AWS RDS Failed Sqlserver Agent Job|27|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of failed SQL Server Agent jobs during the last minute.
+
+Graph|AWS RDS Freeable Memory (Bytes)|28|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of available random access memory. (Standard)
+
+Graph|AWS RDS Free Local Storage (Bytes)|29|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The amount of local storage that is free on an instance. (Standard, Aurora only)
+
+Graph|AWS RDS Free Storage Space (Bytes)|30|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of available storage space. (Standard)
+
+Graph|AWS RDS Insert Latency (ms)|31|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The amount of latency for insert queries. (Standard, Aurora-MySQL only)
+
+Graph|AWS RDS Insert Throughput (Bytes/Sec)|32|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The average rate of insert queries. (Standard, Aurora-MySQL only)
+
+Graph|AWS RDS Login Failures/Sec|33|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The average number of failed login attempts per second (Standard, Aurora-MySQL only)
+
+Graph|AWS RDS LVM Read IO/Sec|34|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The average number of LVM Read IOPS
+
+Graph|AWS RDS LVM Write IO/Sec|35|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The average number of LVM Write IOPS
+
+Graph|AWS RDS Maximum Used TransactionId|36|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The maximum transaction ID that has been used. Applies to PostgreSQL.
+
+Graph|AWS RDS Network Received Throughput (Bytes/Sec)|37|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Incoming (Receive) network traffic on the DB instance. (Standard)
+
+Graph|AWS RDS Network Throughput (Bytes/Sec)|38|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The rate of network throughput sent and received from clients by each instance in the DB cluster. (Standard, Aurora only)
+
+Graph|AWS RDS Network Transmitted Throughput (Bytes/Sec)|39|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Outgoing (Transmit) network traffic on the DB instance. (Standard)
+
+Graph|AWS RDS Oldest Replication Slot Lag|40|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The lagging size of the replica lagging the most in terms of WAL data received. Applies to PostgreSQL.
+
+Graph|AWS RDS Queries/Sec|41|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The average rate of queries. (Standard, Aurora-MySQL only)
+
+Graph|AWS RDS Read IO/Sec|42|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average number of disk read I,O operations. (Standard)
+
+Graph|AWS RDS Read Latency (Sec)|43|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average amount of time taken per disk read I,O operation. (Standard)
+
+Graph|AWS RDS Read Throughput (Bytes/Sec)|44|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average number of bytes read from disk. (Standard)
+
+Graph|AWS RDS Replication Slot Disk Usage (Bytes)|45|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The disk space used by replication slot files. (Standard, Postgres Only)
+
+Graph|AWS RDS Result Set Cache Hit Ratio (%)|46|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of requests that are served by the Resultset cache. (Standard, Aurora-MySQL only)
+
+Graph|AWS RDS Select Latency (ms)|47|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The average latency for select queries. (Standard, Aurora-MySQL only)
+
+Graph|AWS RDS Select Throughput (Bytes/Sec)|48|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The average rate of select queries. (Standard, Aurora-MySQL only)
+
+Graph|AWS RDS Swap Usage (Bytes)|49|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of swap space used on the DB Instance. (Standard)
+
+Graph|AWS RDS Transaction Logs Disk Usage (Bytes)|50|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of disk space occupied by transaction logs. (Standard, Postgres Only)
+
+Graph|AWS RDS Transaction Logs Generation/Sec|51|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The size of transaction logs generated per second. Applies to PostgreSQL.
+
+Graph|AWS RDS Update Latency (ms)|52|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The average latency for update queries. (Standard, Aurora-MySQL only)
+
+Graph|AWS RDS Update Throughput (Bytes/Sec)|53|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The average rate of update queries. (Standard, Aurora-MySQL only)
+
+Graph|AWS RDS Write IO/Sec|54|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average number of disk write I,O operations per second. (Standard)
+
+Graph|AWS RDS Write Latency (Sec)|55|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average amount of time taken per disk write I,O operation. (Standard)
+
+Graph|AWS RDS Write Throughput (Bytes/Sec)|56|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average number of bytes written to (Standard)

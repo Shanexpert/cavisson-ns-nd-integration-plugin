@@ -1,0 +1,7 @@
+Info|3.1|1|-|-|-1|-1|-
+Group|Kafka Lag Stats|10813|vector|3|0|Kafka Metrics|Tier>Server>Instance|Kafka lag states provide metrices related to kafka and zookeeper Topic Offsets and Lag.
+
+Graph|Kafka Topic Offset|1|scalar|sample|-|-|0|A|-1|-1|NA|NA|Topic offsets of kafka.
+Graph|Zookeeper Topic Offset|2|scalar|sample|-|-|0|A|-1|-1|NA|NA|Topic offsets of  zookeeper.
+Graph|Kafka Zookeeper Lag|3|scalar|sample|-|-|0|A|-1|-1|NA|NA|Lag between kafka and zookeeper.
+

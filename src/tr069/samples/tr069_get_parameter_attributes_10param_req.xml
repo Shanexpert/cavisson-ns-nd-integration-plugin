@@ -1,0 +1,24 @@
+<soapenv:Envelope
+  xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+  soap:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+  xmlns:cwmp="urn:dslforum-org:cwmp-1-0">
+    <soapenv:Header>
+      <cwmp:ID soap:mustUnderstand="1">1234</cwmp:ID>
+    </soapenv:Header>
+    <soapenv:Body>
+      <cwmp:GetParameterAttributes>
+	<ParameterNames soap:arrayType="xsd:string[10]">
+	  <string>InternetGatewayDevice.LANDeviceNumberOfEntries</string>
+	  <string>InternetGatewayDevice.WANDeviceNumberOfEntries</string>
+	  <string>InternetGatewayDevice.DeviceSummary</string>
+	  <string>InternetGatewayDevice.DeviceInfo.</string>
+	  <string>InternetGatewayDevice.ManagementServer.</string>
+	  <string>InternetGatewayDevice.Time.</string>
+	  <string>InternetGatewayDevice.DeviceInfo.Manufacturer</string>
+	  <string>InternetGatewayDevice.DeviceInfo.ManufacturerOUI</string>
+	  <string>InternetGatewayDevice.DeviceInfo.ModelName</string>
+	  <string>InternetGatewayDevice.DeviceInfo.Description</string>
+	</ParameterNames>
+      </cwmp:GetParameterAttributes>
+    </soapenv:Body>
+</soapenv:Envelope>

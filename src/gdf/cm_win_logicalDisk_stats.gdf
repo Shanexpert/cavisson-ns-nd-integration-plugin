@@ -1,0 +1,41 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+#
+# Command to get data for this gdf on windows server :
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# wmic path Win32_PerfFormattedData_PerfDisk_LogicalDisk.Name='_Total' get AvgDiskBytesPerRead,AvgDiskBytesPerTransfer,AvgDiskBytesPerWrite,AvgDiskQueueLength,AvgDiskReadQueueLength,AvgDisksecPerRead,AvgDisksecPerTransfer,AvgDisksecPerWrite,AvgDiskWriteQueueLength,CurrentDiskQueueLength,DiskBytesPersec,DiskReadBytesPersec,DiskReadsPersec,DiskTransfersPersec,DiskWriteBytesPersec,DiskWritesPersec,FreeMegabytes,PercentDiskReadTime,PercentDiskTime,PercentDiskWriteTime,PercentFreeSpace,PercentIdleTime,SplitIOPerSec /every:10
+#
+# Entry in mprof to get data :
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# CUSTOM_MONITOR 192.168.1.52 cm_win_logicalDisk_stats.gdf Win_Mon_LogicalDisk 2 wmic path Win32_PerfFormattedData_PerfDisk_LogicalDisk.Name='_Total' get AvgDiskBytesPerRead,AvgDiskBytesPerTransfer,AvgDiskBytesPerWrite,AvgDiskQueueLength,AvgDiskReadQueueLength,AvgDisksecPerRead,AvgDisksecPerTransfer,AvgDisksecPerWrite,AvgDiskWriteQueueLength,CurrentDiskQueueLength,DiskBytesPersec,DiskReadBytesPersec,DiskReadsPersec,DiskTransfersPersec,DiskWriteBytesPersec,DiskWritesPersec,FreeMegabytes,PercentDiskReadTime,PercentDiskTime,PercentDiskWriteTime,PercentFreeSpace,PercentIdleTime,SplitIOPerSec /every:10
+#
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Windows Logical Disk Stats|10036|vector|23|0|System Metrics|Tier>Server>LogicalDisk|Windows logical disk stats. Logical disk volume or virtual disk is a virtual device that provides an area of usable storage capacity on one or more physical disk drive in a computer system. 
+
+Graph|Average Disk Read (MB)|1|scalar|rate|-|-|0|NA|-1|-1|M|NA|Amount of data transferred from the disk during read operations in Megabytes.
+Graph|Average Disk Transfer (MB)|2|scalar|rate|-|-|0|NA|-1|-1|M|NA|Amount of data transferred to or from the disk during write or read operations in Megabytes.
+Graph|Average Disk Write (MB)|3|scalar|rate|-|-|0|NA|-1|-1|M|NA|Amount of data transferred to the disk during write operations in Megabytes.
+Graph|Average Disk Queue Length|4|scalar|sample|-|-|0|NA|-1|-1|M|NA|Average number of both read and write requests that were queued for the selected disk.
+Graph|Disk Read Queue Length|5|scalar|sample|-|-|0|NA|-1|-1|M|NA|Average number of read requests that were queued for the selected disk.
+Graph|Average Disk Read Time (Sec)|6|scalar|rate|-|-|0|NA|-1|-1|M|NA|Average time a disk read took to complete in seconds.
+Graph|Average Disk Transfer Time (Sec)|7|scalar|rate|-|-|0|NA|-1|-1|M|NA|Average time a disk transfer took to complete in seconds.
+Graph|Average Disk Write Time (Sec)|8|scalar|rate|-|-|0|NA|-1|-1|M|NA|Average time a disk write took to complete in seconds.
+Graph|Disk Write Queue Length|9|scalar|sample|-|-|0|NA|-1|-1|M|NA|Average Disk Write Queue Length is the average number of write requests that were queued for the selected disk during the sample interval.
+Graph|Current Disk Queue Legth|10|scalar|sample|-|-|0|NA|-1|-1|L|NA|Current Disk Queue Length is the number of requests outstanding on the disk.
+Graph|Disk Bytes/Sec|11|scalar|rate|-|-|0|NA|-1|-1|M|NA|Rate at which bytes are transferred to or from the disk during write or read operations.
+Graph|Disk Read Bytes/Sec|12|scalar|rate|-|-|0|NA|-1|-1|L|NA|Rate at which bytes are transferred from the disk during read operations.
+Graph|Disk Reads/Sec|13|scalar|rate|-|-|0|NA|-1|-1|L|NA|Rate of read operations on the disk.
+Graph|Disk Transfers/Sec|14|scalar|rate|-|-|0|NA|-1|-1|L|NA|Rate of read and write operations on the disk.
+Graph|Disk Write Bytes/Sec|15|scalar|rate|-|-|0|NA|-1|-1|M|NA|Rate at which bytes are transferred to the disk during write operations.
+Graph|Disk Writes/Sec|16|scalar|rate|-|-|0|NA|-1|-1|L|NA|Rate of write operations on the disk.
+Graph|Free Memory (MB)|17|scalar|sample|-|-|0|NA|-1|-1|L|NA|Free memory displays the unallocated space on the disk drive in Megabytes.
+Graph|Disk Read Time (Pct)|18|scalar|sample|-|-|0|NA|-1|-1|L|NA|Percentage elapsed time for which selected disk drive was busy servicing read requests.
+Graph|Disk Time (Pct)|19|scalar|sample|-|-|0|NA|-1|-1|L|NA|Percentage elapsed time for which selected disk drive was busy servicing read or write requests.
+Graph|Disk Write Time (Pct)|20|scalar|sample|-|-|0|NA|-1|-1|L|NA|Percentage elapsed time for which selected disk drive was busy servicing write requests.
+Graph|Free Space (Pct)|21|scalar|sample|-|-|0|NA|-1|-1|M|NA|Percentage of total usable space on the selected logical disk drive that was free.
+Graph|Idle Time (Pct)|22|scalar|sample|-|-|0|NA|-1|-1|M|NA|Percentage of time during the sample interval that the disk was idle.
+Graph|Split IO/Sec|23|scalar|rate|-|-|0|NA|-1|-1|L|NA|Rate at which I/Os to the disk were split into multiple I/Os. A split I/O may result from requesting data of a size that is too large to fit into a single I/O or that the disk is fragmented.

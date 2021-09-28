@@ -1,0 +1,16 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+#ObjectName :org.apache.cassandra.auth:type=CredentialsCache
+info|3.1|1|-|-|-1|-1|-
+Group|Apache Cassandra Authentication|14100|vector|3|0|Apache Cassandra Metrics|Tier>Server>Instance|This stats gives information about credential.
+#G1
+Graph|Apache Cassandra Authentication Validity|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The expiration of cache entries. 
+#G2
+Graph|Apache Cassandra Authentication Maximum Entries|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|This controls the upper bound on cache size.
+#G3
+Graph|Apache Cassandra Authentication Update Interval |3|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Controls the rate at which background reads are performed to pick up any changes to the underlying data.
+
+

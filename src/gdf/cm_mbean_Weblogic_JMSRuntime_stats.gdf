@@ -1,0 +1,24 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+
+#ObjectName :com.bea:ServerRuntime=AdminServer,Name=AdminServer.jms,Type=JMSRuntime
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Weblogic JMS Runtime Stats|14194|vector|6|0|Weblogic Metrics|Tier>Server>Instance|This stats provides information about the WebLogic JMS service.
+
+Graph|Weblogic Connections Total Count|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The total number of connections made to this WebLogic Server since the last reset.
+
+Graph|Weblogic Connections Current Count|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The current number of connections to WebLogic Server server.
+
+Graph|Weblogic JMS Servers Total Count|3|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The total number of JMS servers that were deployed on this WebLogic Server instance since this server was started.
+
+Graph|Weblogic JMS Servers High Count|4|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The highest number of JMS servers that were deployed on this WebLogic Server instance since this server was started.
+
+Graph|Weblogic Connections High Count|5|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The highest number of connections to this WebLogic Server since the last reset.
+
+Graph|Weblogic JMS Servers Current Count|6|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The current number of JMS servers that are deployed on this WebLogic Server instance.

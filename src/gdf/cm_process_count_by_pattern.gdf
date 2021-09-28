@@ -1,0 +1,11 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+
+Info|1.0|1|-|-|-1|-1|-
+Group|Process Count|10773|vector|3|0|System Metrics|Tier>Server>Instance|to count the numver of servers on which the process is running
+
+Graph|Total Server|1|scalar|sample|-|None|0|NA|-1|-1|NA|NA|Total number of servers
+Graph|Process Active|2|scalar|sample|-|None|0|NA|-1|-1|NA|NA|Number of server on which process is active
+Graph|Process Inactive|3|scalar|sample|-|None|0|NA|-1|-1|NA|NA|Number of server on which process is inactive
+

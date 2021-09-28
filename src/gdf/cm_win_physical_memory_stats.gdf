@@ -1,0 +1,16 @@
+# --- GDF Version History ---
+# # 1.0 - Initial version
+#
+# Command to get data for this gdf on windows server :
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# wmic path Win32_PerfFormattedData_PerfOS_Memory and Win32_ComputerSystem 
+#
+
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Windows Physical Memory Stats|14224|vector|4|0|System Metrics|Tier>Server|Windows physical memory stats provides information about the physical memory of the computer. Physical memory is the amount of random access memory on the computer.
+
+Graph|Total Memory (MB)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total amount of physical memory, in Megabytes, that Windows has access to.
+Graph|Available Memory (MB)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of physical memory, in Megabytes, immediately available for allocation to a process or for system use.
+Graph|Used Memory (MB)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of physical memory, in Megabytes, used for system work or any process.
+Graph|Used Memory (Pct)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of physical memory, in percentage, used for system work or any process.

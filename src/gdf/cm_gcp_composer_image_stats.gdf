@@ -1,0 +1,13 @@
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP Composer Images|14034|vector|9|0|GCP Metrics|ProjectID>LocationID>EnvironmentName>ImageVersion|It provides metrics related to images stats for composer.
+
+Graph|GCP Composer Dag Bag Size|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The current dag bag size.
+Graph|GCP Composer DAG Parsing Processes|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of currently running dag parsing processes.
+Graph|GCP Composer Executor Open Slots|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of open slots on executor.
+Graph|GCP Composer Executor Running Tasks|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of running tasks on executor.
+Graph|GCP Composer Environment Healthy|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Healthiness of Composer environment.
+Graph|GCP Composer Parse Error Count/Sec|6|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of errors raised per second during parsing dag files.
+Graph|GCP Composer Scheduler Heartbeats/Sec|7|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Scheduler heartbeats per second.
+Graph|GCP Composer Total Parse Time (Sec)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of seconds taken to scan and import all dag files once.
+Graph|GCP Composer Pod Eviction Count/Sec|9|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The number of Airflow worker pods evictions per second.

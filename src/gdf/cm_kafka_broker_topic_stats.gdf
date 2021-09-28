@@ -1,0 +1,12 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Kafka Broker Topic Stats|10360|vector|6|0|Kafka Metrics|Tier>Server>Instance>Topic|Kafka Broker Topic Stats monitors metrics related to messaging pipeline, message fetching rate etc on the broker.
+Graph|Kafka Broker Topic Bytes Read/Sec|1|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of bytes read per second across all the topics by the consumer.
+Graph|Kafka Broker Topic Bytes Write/Sec|2|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of bytes written to all the topics per second.
+Graph|Kafka Broker Topic Bytes Rejected/Sec|3|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of bytes in messages rejected per second by broker.
+Graph|Kafka Broker Topic Fetch Request Failed/Sec|4|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of data read requests per second from consumers that brokers failed to process for topics.
+Graph|Kafka Broker Topic Produce Request Failed/Sec|5|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of data write requests per second from consumers that brokers failed to process for topics.
+Graph|Kafka Broker Topic Message Recieved/Sec|6|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of messages written to topics on this broker per second.

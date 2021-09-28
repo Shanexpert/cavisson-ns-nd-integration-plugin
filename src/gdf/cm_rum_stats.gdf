@@ -1,0 +1,26 @@
+# --- GDF Version History ---
+# # 1.0 - Initial version
+#
+Info|3.1|1|-|-|-1|-1|-
+#
+Group|Rum Stats|10191|vector|16|0|Application Metrics|BucketType>BucketName|Rum monitor
+#
+Graph|Requests/Sec|1|scalar|rate|-|-|0|A|-1|-1|NA|NA|Number of requests recieved in the sample period
+Graph|New Session/Min|2|scalar|rate|-|-|0|A|-1|-1|NA|NA|Number of new session per minute
+Graph|Page Load time(sec)|3|scalar|times|-|-|0|A|-1|-1|NA|NA| The amount of time it takes that page to load, from initiation of pageview(eg. click on page link) to load completion in the browser.
+Graph|DOM Content Load time(sec)|4|scalar|times|-|-|0|A|-1|-1|NA|NA|Time that browser takes to parse the document and execute deferred and parser-inserted scripts, including the network time from user's location to server when the DOM is ready.
+Graph|DOM Time(sec)|5|scalar|times|-|-|0|A|-1|-1|NA|NA|Time that browser takes to parse the document and execute deferred and parser-inserted scripts, including the network time from user's location to server when the DOM is not fully loaded.
+#
+Graph|Redirection time(sec)|6|scalar|times|-|-|0|A|-1|-1|NA|NA|Time spent in redirection before fetching the page.If there are no redirects, the value for this metric is expected to be 0.
+Graph|Cache lookup time(sec)|7|scalar|times|-|-|0|A|-1|-1|NA|NA|Time taken in browser cache lookup.
+Graph|Fetch time(sec)|8|scalar|times|-|-|0|A|-1|-1|NA|NA|Time taken in fetching response(cache/server).
+Graph|Dns Lookup time(sec)|9|scalar|times|-|-|0|A|-1|-1|NA|NA|Time spent in DNS lookup for the page.
+Graph|Connection time(sec)|10|scalar|times|-|-|0|A|-1|-1|NA|NA|Time taken in establising connection(exclude ssl handshake).
+Graph|Secure Connection time(sec)|11|scalar|times|-|-|0|A|-1|-1|NA|NA|Time taken in establising secure connection(ssl handshake)
+Graph|First Byte time(sec)|12|scalar|times|-|-|0|A|-1|-1|NA|NA|This is the time that the requested page is received by the browser.
+Graph|Response time(sec)|13|scalar|times|-|-|0|A|-1|-1|NA|NA|Time taken by server to respond to a user request, including the network time from the user location to server(cache/server).
+Graph|Unload time(sec)|14|scalar|times|-|-|0|A|-1|-1|NA|NA|Time spent in unloading the previous document(if any) and it applies only for page.
+Graph|Load event time(sec)|15|scalar|times|-|-|0|A|-1|-1|NA|NA|Time spent in loading the page including its scripts,style sheets, images and iframes.
+Graph|Dome Complete time(sec)|16|scalar|times|-|-|0|A|-1|-1|NA|NA|Time to load dom completely from navigation start time.
+#
+

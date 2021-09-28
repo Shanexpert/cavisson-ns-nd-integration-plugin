@@ -1,0 +1,9 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|1.0|1|-|-|-1|-1|
+
+Group|Kubernetes Node Usage|14094|vector|2|0|Kubernetes Metrics|Cluster>Node|Provides metrics related to kubernetes node usage stats.
+
+Graph|Kubernetes CPU (cpu)|1|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|Total cpu usage of node. The expression 0.1 is equivalent to the expression 100m, which can be read as "one hundred millicpu"
+Graph|Kubernetes Memory (MiB)|2|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|Total memory usage of node in mebibytes.

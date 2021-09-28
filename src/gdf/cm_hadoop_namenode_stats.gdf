@@ -1,0 +1,42 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Hadoop NameNode Stats|10258|vector|19|0|Application Metrics|Tier>Server>Instance|Hadoop Name Node Stats
+Graph|Live Data Nodes|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The approximate number of data nodes ,which are currently active.
+Graph|Dead Data Node|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The approximate number of data nodes, which are currently inactive.
+Graph|Stale Data Node|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The approximate number of stale data node .
+Graph|Total Capacity(GB)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total amount of storage space available for storage from all DataNodes.
+Graph|Capacity Used (Pct)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percentage of capacity used across all data nodes in GB.
+Graph|Capacity Remaining (Pct)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percentage of remaining capacity across all data nodes.
+Graph|Total Files|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of total file on data node.
+Graph|Deleted Files|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of total file deleted on data node.
+Graph|Created Files|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of total files created on data node.
+Graph|Appended Files|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of appended file on data node.
+Graph|Renamed Files|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of file renamed on data node.
+Graph|Blocks Total|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total amount of blocks present in all data Nodes.
+Graph|Blocks Corrupt|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of blocks with corrupt replicas.
+Graph|Excess Blocks|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of excess Blocks.
+Graph|Pending Deletion Blocks|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of blocks pending for deletion.
+Graph|Pending Replication Blocks|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of blocks pending for replication.
+Graph|Scheduled Replication Blocks|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of blocks scheduled for replication.
+Graph|Block Capacity(blocks)|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Capacity of block.
+Graph|Missing Blocks|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of block Missing.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

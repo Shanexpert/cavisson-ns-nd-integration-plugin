@@ -1,0 +1,33 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+#
+Info|3.1|1|-|-|-1|-1|-
+Group|Coherence ClusterNode Stats|10139|vector|23|0|Application Metrics|Tier>Server>ClusterName>Instance|Information related to all the attributes fetched for Coherence ClusterNode Mbean
+#Derived Attributes
+Graph|Tx Success Rate|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The publisher success rate for this cluster node since the node statistics were last reset. Publisher success rate is a ratio of the number of packets successfully delivered in a first attempt to the total number of sent packets. A failure count is incremented when there is no ACK received within a timeout period. It could be caused by either very high network latency or a high packet drop rate.
+Graph|Rx Success Rate|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The receiver success rate for this cluster node since the node statistics were last reset. Receiver success rate is a ratio of the number of packets successfully acknowledged in a first attempt to the total number of received packets. A failure count is incremented when a re-delivery of previously received packet is detected. It could be caused by either very high inbound network latency or lost ACK packets.
+Graph|Packets Sent|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of packets sent since the node statistics were last reset.
+Graph|Current Packets Sent|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of packets sent in current sample.
+Graph|Packets Resent|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of packets resent since the node statistics were last reset. A packet is resent when there is no ACK received within a timeout period.
+Graph|Current Packets Resent|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of packets resent in current sample. A packet is resent when there is no ACK received within a timeout period.
+Graph|Packets Received|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of packets received since the node statistics were last reset.
+Graph|Current Packets Received|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of packets received in current sample.
+Graph|Packets Repeated|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of duplicate packets received since the node statistics were last reset.
+Graph|Current Packets Repeated|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of duplicate packets received in current sample.
+Graph|Packets Bundled|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of packets which were bundled prior to transmission. The total number of network transmissions is equal to (PacketsSent - PacketsBundled).
+Graph|Current Packets Bundled|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of packets received in current sample.
+#Non Derived attributes
+Graph|Publisher Packet Utilization|13|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The publisher packet utilization for this cluster node since the node socket was last reopened. This value is a ratio of the number of bytes sent to the number that would have been sent had all packets been full. A low utilization indicates that data is not being sent in large enough chunks to make efficient use of the network.
+Graph|Receiver Packet Utilization|14|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The receiver packet utilization for this cluster node since the socket was last reopened. This value is a ratio of the number of bytes received to the number that would have been received had all packets been full. A low utilization indicates that data is not being sent in large enough chunks to make efficient use of the network.
+Graph|Send Queue Size|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of packets currently scheduled for delivery. This number includes both packets that are to be sent immediately and packets that have already been sent and awaiting for acknowledgment. Packets that do not receive an acknowledgment within ResendDelay interval will be automatically resent.
+Graph|Buffer Publish Size|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The buffer size of the unicast datagram socket used by the Publisher, measured in the number of packets. Changing this value at runtime is an inherently unsafe operation that will pause all network communications and may result in the termination of all cluster services.
+Graph|Buffer Receive Size|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The buffer size of the unicast datagram socket used by the Receiver, measured in the number of packets. Changing this value at runtime is an inherently unsafe operation that will pause all network communications and may result in the termination of all cluster services.
+Graph|Burst Count|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The maximum number of packets to send without pausing. Anything less than one (e.g. zero) means no limit.
+Graph|Burst Delay|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of milliseconds to pause between bursts. Anything less than one (e.g. zero) is treated as one millisecond.
+Graph|Socket Count|20|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of CPU sockets for the machine this Member is running on.
+Graph|Cpu Count|21|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of CPU cores for the machine this Member is running on.
+Graph|Memory Available(MB)|22|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total amount of memory in the JVM available for new objects in MB.
+Graph|Memory Max(MB)|23|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The maximum amount of memory that the JVM will attempt to use in MB.

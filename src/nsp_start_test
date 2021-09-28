@@ -1,0 +1,261 @@
+#!/bin/sh
+
+#NS_TA_DIR=$NS_WDIR/workspace/<workspacename>/<proflename>/cavisson
+#SCENARIO=<project>/<subporject>/scenarios/<scenario.conf>
+#Allocated server path where data will be copied from ns portal
+CONTROLLER_WORKSPACE="/home/cavisson/work/workspace/admin/system/cavisson"
+default_proj_subproj="default/default"
+#WORKSPACE_PROFILE ==> WORKSPACE + PROFILE
+WORKSPACE_PROFILE="admin/default"
+
+debug_log()
+{
+  echo $*
+}
+
+copy_scenario()
+{
+  scenario=$SCENARIO 
+  scenario_dir=`dirname $scenario`
+  scenario_name=`echo $scenario|awk -F'.' '{print $1}'`
+  debug_log "scenario name = $scenario_name" 
+  mkdir -p "$CTRL_DIR/rel/$scenario_dir"
+  #TODO: need to check scenario path
+  cp $scenario "$CTRL_DIR/rel/$scenario_dir"
+  if [ -d $scenario_name ];then
+   cp -r $scenario_name "$CTRL_DIR/rel/$scenario_dir" 
+  fi
+}
+
+copy_scenario_profile()
+{
+  scenario_path=`echo $scenario|awk -F'/' '{print $1"/"$2}'`
+  scenario_profile=`grep "^SCENARIO_SETTINGS_PROFILE" $scenario|awk '{print $2}'`
+
+  if [ "XX${scenario_profile}" == "XX" ];then
+     return   
+  fi
+ 
+  scenario_profile_path==`dirname $scenario_profile`
+  scenario_profile_name==`basename $scenario_profile`
+  if [ "${scenario_profile_path}" == "." ];then
+    scenario_profile_path="$scenario_path/scenario_profile"
+  else
+    scenario_profile_path="$scenario_profile_path/scenario_profile"
+  fi
+
+  debug_log "scenario profile  = $scenario_profile_path" 
+  mkdir -p "$CTRL_DIR/rel/$scenario_profile_path"
+  cp "$scenario_profile_path/$scenario_profile_name" "$CTRL_DIR/rel/$scenario_profile_path"
+}
+
+copy_scripts()
+{  
+  scenario=$SCENARIO 
+  scenario_path=`echo $scenario|awk -F'/' '{print $1"/"$2}'`
+  script_array=`grep "^SGRP" $scenario|awk '{print $3}'`
+  D_IFS="$IFS" IFS=$'\n' script_array=($script_array) IFS="$D_IFS"
+
+  for (( i=0; i<${#sgrp_array[@]}; i++ )) 
+  do
+    script_path=`dirname ${script_array[$i]}`
+    script_name=`basename ${script_array[$i]}`
+    if [ "${script_path}" == "." ];then
+      script_array[$i]="$scenario_path/scripts/$script_name"
+    else
+      script_array[$i]="$script_path/scripts/$script_name"
+    fi  
+  done
+
+  script_array=`echo "${script_array[@]}"|tr ' ' '\n'|awk -F'|' '!seen[$1]++'`
+  D_IFS="$IFS" IFS=$'\n' script_array=($script_array) IFS="$D_IFS"
+
+  for (( i=0; i<${#script_array[@]}; i++ )) 
+  do
+    debug_log "script name  = ${script_array[$i]}" 
+    mkdir -p "$CTRL_DIR/rel/${script_array[$i]}"
+    cp -r ${script_array[$i]}/* "$CTRL_DIR/rel/${script_array[$i]}"
+  done
+}
+ 
+copy_data_files()
+{
+  scenario=$SCENARIO 
+  scenario_path=`echo $scenario|awk -F'/' '{print $1"/"$2}'`
+  sgrp_array=`grep "^SGRP" $scenario|awk '{print $2}'`
+  script_array=`grep "^SGRP" $scenario|awk '{print $7}'`
+  data_dir_all=`grep "^G_DATADIR ALL 1" $scenario|awk '{print $NF}'`
+  grp_data_dir=`grep "^G_DATADIR" $scenario| grep -v "G_DATADIR ALL"| awk '($3 == 1){print $2}'`
+  grp_data_dirname=`grep "^G_DATADIR" $scenario| grep -v "G_DATADIR ALL"| awk '($3 == 1){print $4}'`
+  D_IFS="$IFS" IFS=$'\n' sgrp_array=($sgrp_array) IFS="$D_IFS"
+  D_IFS="$IFS" IFS=$'\n' script_array=($script_array) IFS="$D_IFS"
+  D_IFS="$IFS" IFS=$'\n' grp_data_dir=($grp_data_dir) IFS="$D_IFS"
+  D_IFS="$IFS" IFS=$'\n' grp_data_dirname=($grp_data_dirname) IFS="$D_IFS"
+
+
+  for (( i=0; i<${#sgrp_array[@]}; i++ )) 
+  do
+    script_path=`dirname ${script_array[$i]}`
+    script_name=`basename ${script_array[$i]}`
+    if [ "${script_name}" == "${script_array[$i]}" ];then
+      script_array[$i]="$scenario_path/scripts/$script_name"
+    else
+      script_array[$i]="$script_path/scripts/$script_name"
+    fi  
+
+    if [ "XX$data_dir_all" != "XX" ]; then
+      data_dir_array[$i]="${script_array[$i]}|$data_dir_all"
+    else 
+      data_dir_array[$i]="${script_array[$i]}|-"
+    fi
+
+    for (( j=0; j<${#grp_data_dir[@]}; j++ ))
+    do 
+      if [ "${grp_data_dir[$j]}" == "${sgrp_array[$i]}" ];then
+        data_dir_array[$i]="${script_array[$i]}|${grp_data_dirname[$j]}"
+        break
+      fi
+    done
+  done
+  data_dir_array=`echo "${data_dir_array[@]}"|tr ' ' '\n'|awk -F'|' '!seen[$1]++'`
+  D_IFS="$IFS" IFS=$'\n' data_dir_array=($data_dir_array) IFS="$D_IFS"
+
+  for (( i=0; i<${#data_dir_array[@]}; i++ )) 
+  do
+    D_IFS="$IFS" IFS=$'|' script_name_data_dir=(${data_dir_array[$i]}) IFS="$D_IFS"
+    while line
+    do
+      fileapi=`echo ${line//[[:blank:]]/}|grep -v  "^//"|grep -i "FILENAME"`
+      if [ "XX$fileapi" == "XX"]
+        continue
+      fi
+      filename=`echo $fileapi|awk -F "FILENAME=|Filename=|filename=|" '{print $2}' | awk -F ',|)| ' '{print $1}'`
+      datadir=`echo $fileapi|awk -F "DATADIR=|Datadir=|datadir=|" '{print $2}' | awk -F ',|)| ' '{print $1}'`
+      filepath=`dirname $filename`
+
+      if [ "$filepath" != "." ];then
+        debug_log "file name  = $filename" 
+        mkdir -p "$CTRL_DIR/abs/$filepath"
+        cp $filename "$CTRL_DIR/abs/$filepath"
+       continue;
+      fi
+
+      if [ "XX$datadir" != "XX" ];then
+        if [ "${script_name_data_dir[1]}" != "-" ] 
+          datadir=${script_name_data_dir[1]} 
+        fi
+        debug_log "file name = $filename datadir = $datadir" 
+        mkdir -p "$CTRL_DIR/rel/data/$datadir"
+        cp $filename "$CTRL_DIR/rel/data/$datadir"
+      fi
+    done < "${script_name_data_dir[0]}/registrations.spec"
+  done
+}
+
+
+copy_test_assets()
+{
+  copy_scenario
+  copy_scenario_profile
+  copy_scripts
+  copy_data_dirs
+}
+
+get_unique_allocation_id()
+{
+  UNIQUE_ID=$((100000 + RANDOM % 999999))
+  
+  #create dir for running test with name unique number
+  mkdir $LOGS_DIR/$UNIQUE_ID 
+  CTRL_IP=`egrep ^NSAdminIP $HOME_DIR/etc/cav.conf | awk -F " " '{print $2}'|cut -d '/' -f1`
+  HOST=`gethostip -x $CTRL_IP|tr '[:upper:]' '[:lower:]'`
+  ALLOCATION_ID="i$HOST-id$UNIQUE_ID" 
+}
+
+get_controller_server()
+{
+  #nsi_allocate_gen_instances $ALLOCATION_ID 'US-Central' 1
+  scenario=$SCENARIO 
+  START_TIMESTAMP=`date +%s`
+  OUTPUT=`nsi_gen_server_api -o allocateGenerator -a "$ALLOCATION_ID|$UNIQUE_ID|$CTRL_IP|US-Central|1|$TEST_OWNER|$scenario|$START_TIMESTAMP"`
+  if [ "X$OUTPUT"  == "X" ];then
+    #TODO: add error msg
+    ns_exit 1
+  fi
+  SERVER_IP=`echo $OUTPUT| awk -f '|' '{print $1}'`
+}
+
+ship_controller_test_asset()
+{
+  #copy script,scenario and all other required relative test assets to rel directory
+  copy_scenario 
+  copy_scenario_profile
+  copy_scripts
+  #copy_testsuites
+  #copy_testcases
+  #copy_check_profile
+  #copy all the absolution data files and data directory files with absolute path in abs path
+  #copy_data_files
+  #tar both rel and abs directory 
+  make_rel_tar
+  #make_abs_tar
+  #copy rel tar file on path /home/cavisson/work/workspace/admin/system/cavisson
+  copy_controller_rel_tar_file
+  #copy abs tar file on path /home/cavisson/
+  #extract rel tar
+  extract_controller_rel_tar_file
+  #extract abs tar
+}
+
+#########################################################################################
+########################## Start the execution from here ################################
+  
+LZ4_PATH=$NS_WDIR/thirdparty/bin/lz4
+
+while getopts n:u:? c
+do 
+   case $c in
+        n) SCENARIO="$OPTARG" ;; 
+        u) TEST_OWNER="$OPTARG" ;;
+        w) WORKSPACE_PROFILE=$OPTARG;;
+        ?) display_help_and_ns_exit ;;
+    esac
+done
+
+if [ "X$SCENARIO" == "X" ];then
+  echo "Scenario name is not provided."
+  exit 1
+fi
+
+
+SCEN_PROJ=`echo $SCENARIO|cut -d '/' -f 9`
+SCEN_SUBPROJ=`echo $SCENARIO|cut -d '/' -f 10`
+SCEN_NAME=`echo $SCENARIO|cut -d '/' -f 12`
+
+#To hold UID information
+CONTROLLER_PATH="$NS_WDIR/.portal/controller"
+
+#To hold the controller test run
+LOGS_DIR="$NS_WDIR/.portal/logs"
+
+mkdir -p $LOGS_DIR
+mkdir -p $CONTROLLER_DIR
+
+#allocate unique allocation id
+get_unique_allocation_id
+
+CTRL_DIR=$NS_WDIR/.portal/controller/ID$UNIQUE_ID
+
+#allocate 1 controller server from gcp for location US-central
+get_controller_server
+
+#ship all the test assets  to allocated machine using nsu serveradmin to /home/cavisson/work/workspace/admin/system/cavisson
+ship_controller_test_asset
+
+#start test on allocated machine using nsu server admin
+start_test_on_ns_controller
+
+#start nsp_check_and_stop to release controller
+%check_and_stop_allcated_inst
+
+exit 0

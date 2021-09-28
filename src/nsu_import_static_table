@@ -1,0 +1,51 @@
+#! /bin/sh
+
+function Usage()
+{
+  echo $*
+  echo "Usage: nsu_import <Test Run Number>"
+  echo "Example:"
+  echo "  nsu_import 1234"
+  exit -1
+}
+
+if [ $# -ne 1 ]; then
+  Usage "Test run number argument is missing"
+fi
+
+#Checking Test number is valid or not
+#TODO: Following check is duplicate in nsu_import shell
+if [ -d $PWD/TR$1 ]; then
+  BASE_DIR=$PWD
+elif [ -d $NS_WDIR/logs/TR$1 ]; then
+  BASE_DIR=$NS_WDIR/logs
+else
+  echo "Error: Test run number $1 is not a valid test run number"
+  exit -1
+fi
+
+. nsi_chk_db_table $1 > /tmp/tmp.txt
+
+CHECK=`cat /tmp/tmp.txt | tail -n 3 | head -n 1 | awk -F' ' '{print $1}'`
+rm /tmp/tmp.txt
+if [ "XX$CHECK" != "XX0" ]; then
+   Usage "Table already have data, first drop static tables then run nsu_create_table. After that run nsu_import_static_table"
+fi 
+
+psql test cavisson <<+
+\copy RunProfile_$1 FROM '$BASE_DIR/TR$1/reports/csv/rpf.csv' WITH DELIMITER ',' NULL AS ''
+\copy UserProfile_$1 FROM '$BASE_DIR/TR$1/reports/csv/upf.csv' WITH DELIMITER ',' NULL AS ''
+\copy SessionProfile_$1 FROM '$BASE_DIR/TR$1/reports/csv/spf.csv' WITH DELIMITER ',' NULL AS ''
+\copy SessionTable_$1 FROM '$BASE_DIR/TR$1/reports/csv/sst.csv' WITH DELIMITER ',' NULL AS ''
+\copy TransactionTable_$1 FROM '$BASE_DIR/TR$1/reports/csv/trt.csv' WITH DELIMITER ',' NULL AS ''
+\copy PageTable_$1 FROM '$BASE_DIR/TR$1/reports/csv/pgt.csv' WITH DELIMITER ',' NULL AS ''
+\copy URLTable_$1 FROM '$BASE_DIR/TR$1/reports/csv/urt.csv' WITH DELIMITER ',' NULL AS ''
+\copy RecordedServerTable_$1 FROM '$BASE_DIR/TR$1/reports/csv/hrt.csv' WITH DELIMITER ',' NULL AS ''
+\copy ActualServerTable_$1 FROM '$BASE_DIR/TR$1/reports/csv/hat.csv' WITH DELIMITER ',' NULL AS ''
+\copy ErrorCodes_$1 FROM '$BASE_DIR/TR$1/reports/csv/ect.csv' WITH DELIMITER ',' NULL AS ''
+\copy LogPhaseTable_$1 FROM '$BASE_DIR/TR$1/reports/csv/log_phase_table.csv' WITH DELIMITER ',' NULL AS ''
++
+
+
+
+

@@ -1,0 +1,16 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+
+#ObjectName :Hadoop:service=SecondaryNameNode,name=SecondaryNameNodeInfo
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Hadoop Secondary NameNode Info Stats|14166|vector|2|0|Hadoop Metrics|Tier>Server>Instance|This stats provides information about the Seconadary Namenode of Hadoop.
+
+Graph|Hadoop Start Time (ms)|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Time in millisecond since the node started.
+
+Graph|Hadoop Last Checkpoint Time (ms)|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Time in milliseconds since epoch of last checkpoint.

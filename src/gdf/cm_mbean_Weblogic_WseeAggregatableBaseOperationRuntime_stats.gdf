@@ -1,0 +1,46 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+
+#ObjectName :com.bea:ServerRuntime=AdminServer,Name=*,ApplicationRuntime=bea_wls9_async_response,Type=WseeAggregatableBaseOperationRuntime,WebAppComponentRuntime=AdminServer_/_async,WseeV2Runtime=*,WseePortRuntime=*
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Weblogic Wsee Aggregate table Base Operation Runtime Stats|14177|vector|16|0|Weblogic Metrics|Tier>Server>Instance>Name>WseeV2Runtime>WseePortRuntime|This stats provides information about the weblogic wsee (Weblogic Server).
+		
+Graph|Weblogic Last Response Error Time (ms)|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Time on WebLogic Server of the last error sending or receiving a response (or 0 if no failures have occurred) expressed as the number of milliseconds. 
+
+Graph|Weblogic Last Response Time (ms)|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Time on WebLogic Server of the last response to arrive for this client/service (or 0 if no responses have been received) expressed as the number of milliseconds.
+
+Graph|Weblogic Dispatch Time Total|3|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Total time for all operation dispatches in the current measurement period.
+
+Graph|Weblogic Execution Time High|4|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Longest operation execution time.
+
+Graph|Weblogic Dispatch Time High|5|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Longest operation dispatch time for the current measurement period.
+
+Graph|Weblogic Execution Time Average|6|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Average operation execution time.
+
+Graph|Weblogic Last Error Time (ms)|7|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Time on WebLogic Server of the last error for a request (sending or receiving) was detected expressed as the number of milliseconds.
+
+Graph|Weblogic Dispatch Time Low|8|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Shortest operation dispatch time for the current measurement period.
+
+Graph|Weblogic Response Time High|9|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Longest response time from the responses generated from operation invocations.
+
+Graph|Weblogic Execution Time Total|10|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Total time for all operation executions.
+
+Graph|Weblogic Last Invocation Time|11|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Time of the last operation request to be sent or received (or 0 if no requests have been sent or received).
+
+Graph|Weblogic Execution Time Low|12|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Shortest operation execution time.
+
+Graph|Weblogic Response Time Average|13|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Average response time from the responses generated from operation invocations.
+
+Graph|Weblogic Response Time Low|14|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Lowest response time from the responses generated from operation invocations.
+
+Graph|Weblogic Response Time Total|15|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Total time for all responses generated from operation invocations.
+
+Graph|Weblogic Dispatch Time Average|16|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Average operation dispatch time for the current measurement period.
+
+

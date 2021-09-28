@@ -1,0 +1,14 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Kafka Consumer Group Lag|10874|vector|3|0|Kafka Metrics|Tier>Server>Group>Topic|Kafka consumer group lag.
+
+Graph|Kafka Consumer Group Current Offset|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current offset of kafka consumer group.
+Graph|Kafka Consumer Group Log End Offset|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Log end offset of kafka consumer group.
+Graph|Kafka Consumer Group Lag|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Lag of kafka consumer group i.e difference between current offset and log end offset.
+

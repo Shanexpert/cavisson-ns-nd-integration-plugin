@@ -1,0 +1,18 @@
+# --- GDF Version History ---
+# 1.0 - Initial version, release:4.1.10 B?
+
+Info|1.0|1|-|-|-1|-1|-
+
+Group|Hikari Connection Pool|10630|vector|11|0|Hikari Metrics|Tier>Server>Instance|Provides metrics related to Hikari Connection Pool.
+
+Graph|Hikari Active Connections|1|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|Number of Active connections in the pool.
+Graph|Hikari Idle Connections|2|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|Number of Idle connections in the pool.
+Graph|Hikari Total Connections|3|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|Total number of connections in the pool.
+Graph|Hikari Connection Timeout (Sec)|4|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|The maximum amount of time(in seconds) that a client will wait for a connection from the pool.
+Graph|Hikari Idle Timeout (Sec)|5|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|The maximum amount of time(in seconds) that a connection is allowed to sit idle in the pool.
+Graph|Hikari Validation Timeout (Sec)|6|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|The maximum amount of time(in seconds) that a connection will be tested for aliveness.
+Graph|Hikari Maximum Pool Size|7|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|The maximum size that the pool is allowed to reach, including both idle and in-use connections.
+Graph|Hikari Leak Detection Threshold (Sec)|8|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|The amount of time(in seconds) that a connection can be out of the pool before a message is logged indicating a possible connection leak. A value of 0 means leak detection is disabled.
+Graph|Hikari Max Life Time (Sec)|9|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|The maximum lifetime of a connection in the pool in seconds.
+Graph|Hikari Minimum Idle Connections|10|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|The minimum number of idle connections that HikariCP tries to maintain in the pool.
+Graph|Hikari Threads Awaiting Connection|11|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|The number of threads waiting for a connection when all available connections are in use.

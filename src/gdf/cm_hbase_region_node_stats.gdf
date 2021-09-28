@@ -1,0 +1,25 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+Info|3.1|1|-|-|-1|-1|-
+
+Group|HBase RegionServer Node Stats|10271|vector|19|0|Application Metrics|Tier>Server>Instance|HBase RegionServer Node Stats
+Graph|Number Of Regions|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of regions hosted by the regionserver.
+Graph|Number Of Stores|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of stores in all regions.
+Graph|Number Of HLog Files|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of WAL Files.
+Graph|HLog Files Size(MB)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Size of all WAL Files.
+Graph|Number Of Store Files|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of store files on disk currently managed by the regionserver.
+Graph|Memory Store Size(GB)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Size of all memstores in all regions in MB.
+Graph|Stores File Size(GB)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Size of all StoreFile in MB.
+Graph|Request Count/Sec|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of requests received in region server.
+Graph|Read Request Count/Sec|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of read requests received.
+Graph|Write Request Count/Sec|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of write requests received.
+Graph|Block Cache Hit Count|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of block cache hits for requests, regardless of caching setting.
+Graph|Block Cache Miss Count|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of block cache misses for requests, regardless of caching setting.
+Graph|Block Cache Count|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number storeFiles cached in the block cache.
+Graph|Block Cache Size(GB)|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of bytes that are in the block cache.
+Graph|Append Operation/Sec|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Append Operations aggregate computed across all Regions.
+Graph|SlowAppendCount/Sec|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of appends that took more than 1000 ms to complete.
+Graph|Delete Operation/Sec|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Delete Operations aggregate computed across all Regions.
+Graph|SlowDeleteCount/Sec|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of deletes that took more than 1000 ms to complete.
+Graph|SlowPutCount/Sec|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of puts that took more than 1000 ms to complete.	
+	

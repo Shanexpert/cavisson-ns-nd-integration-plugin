@@ -1,0 +1,24 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|JavaHeap|10753|vector|5|0|Application Metrics|Tier>Server>Instance>Monitor>Vector|Java Heap collection stats. This information is taken from JMX Mbean.
+
+#G1
+Graph|JVM Heap allocated memory|1|scalar|sample|-|None|0|I|-1|-1|NA|NA|The overall allocated memory of java virtual machine in kilo bytes
+
+#G2
+Graph|JVM Heap allocated memory (KB)|2|scalar|sample|-|None|0|D|-1|-1|NA|DIV(G1,1024)|The overall allocated memory of java virtual machine in kilo bytes
+
+#G3
+Graph|JVM Heap used memory|3|scalar|sample|-|None|0|I|-1|-1|NA|NA|The overall used memory of java virtual machine in kilo bytes
+
+#G4
+Graph|JVM Heap used memory (KB)|4|scalar|sample|-|None|0|D|-1|-1|NA|DIV(G3,1024)|The overall used memory of java virtual machine in kilo bytes
+
+#G5
+#Graph|JVM Heap used memory (Pct)|5|scalar|sample|-|None|0|D|-1|-1|NA|PERCENT(G1,G3)|The overall used memory of java virtual machine in percentage
+Graph|JVM Heap used memory (Pct)|5|scalar|sample|-|None|0|D|-1|-1|NA|DIV(MUL(G3,100),G1)|The overall used memory of java virtual machine in percentage

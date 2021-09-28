@@ -1,0 +1,6 @@
+# 1.0 - Initial version
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP VPN Packets|11586|vector|2|0|GCP Metrics|ProjectID>Region>TunnelName>Status|It provide metrics related to received and sent packets.
+Graph|GCP VPN Received Packets/Sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Ingress packets for tunnel.
+Graph|GCP VPN Sent Packets/Sec|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Egress packets for tunnel.

@@ -1,0 +1,200 @@
+#!/bin/sh
+# Name: nsi_validate_ip
+# Author: Sanjay/Achint/Neeraj
+# IPV6 support: Tanmay Prakash
+# Takes input in the format 
+#  nsi_validate_ip [-l] start_ip:num_up ..
+# returns matching IP range entries for client , if matching ip range is 
+# not found, NULL is returned in the format:
+#      start_ip num_ip NULL
+#if matching ip range found, matched range returned in the format:
+#      start_ip num_ip Start IP:mataching_range_start_ip Max IP: Matching_range_num_ip
+# -l option will list all IP Addresses in the range
+#
+# Exit Values:
+#    0 - OK
+#   -1 - Bad Arguments/Invalid input format
+#   -2 - IP Address/Num is not in the assigned IP Address ranges (for -l option only)
+#
+# Example: 
+#  nsi_validate_ip 200.0.0.13:1 172.16.5.5:1 200.0.0.13:2
+#  200.0.0.13 1 Start IP: 200.0.0.13 Max IP:1
+#  172.16.5.5 1 Start IP:172.16.5.5 Max IP:1
+#  200.0.0.13 2 NULL
+#
+#  nsi_validate_ip -l 200.0.0.13:2 172.16.5.5:1 
+#  200.0.0.13
+#  200.0.0.14
+#  172.16.5.5
+#
+# Modification History:
+#   05/01/06  Initial version
+#   07/25/06  Achint:Added Interface value on showing the validate ip range 
+
+ListFormat="No"
+Server="No"
+Range="No"
+
+IPListFile=/tmp/ipListFile.$$
+
+if [ "$1" == "-s" ];then
+  Server="Yes"
+  shift
+fi
+
+if [ "$1" == "-l" ];then
+  ListFormat="Yes"
+  >$IPListFile
+  shift
+fi
+
+if [ "$1" == "-r" ];then
+  Range="Yes"
+  shift
+fi
+
+if [ "$#" -lt 1 ];then
+  echo "Usage: nsi_validate_ip [-s] [-l] start_ip-num-ip ..."
+  echo "Usage: nsi_validate_ip [-s] [-l] -r start_ip-end_ip ..."
+  exit -1
+fi
+
+check_ip_version()
+{
+  if [ "$1" != "${1#*[0-9].[0-9]}" ]; then
+    return 1
+  elif [ "$1" != "${1#*:[0-9a-fA-F]}" ]; then
+    return 2
+  else
+    echo "Unrecognized IP format '$1'"
+  fi
+}
+
+
+#Create list of input ranges into start_ip[] and num_ip[] arrays
+#List index starts from 1 and has num_args entries
+num_inputs=$#
+for j in `seq 1 $num_inputs`
+do
+  start_ip[$j]=`echo "$1" | cut -d"-" -f1`
+  check_ip_version ${start_ip[$j]}
+  IP_VERSION_TYPE=$?
+  if [ $Range == "Yes" ];then
+    #Check format - IP:num_ip
+    out=`nsi_check_format -v $IP_VERSION_TYPE -R $1 2>/dev/null`
+    if [ $? -ne 0 ];then
+      echo "ERROR: Input ($1) should be in start_ip-end_ip format" 
+      exit -1
+    fi
+  
+    #Extract Starting IP and Number of IPs given by the User.
+    start_ip[$j]=`echo "$1" | cut -d"-" -f1`
+    num_ip[$j]=`echo "$1" | cut -d"-" -f2`
+
+    #Get Numeric IP's
+    numeric_ip=`echo $out | cut -d" " -f1`
+    numeric_eip=`echo $out | cut -d" " -f2`
+    num_ip[$j]=`expr $numeric_eip - $numeric_ip + 1`
+    numeric_start_ip[$j]=$numeric_ip
+    numeric_end_ip[$j]=$numeric_eip
+  else
+    #Check format - IP-num_ip
+    out=`nsi_check_format -v $IP_VERSION_TYPE -X $1 2>/dev/null`
+    if [ $? -ne 0 ];then
+      echo "ERROR: Input ($1) should be in start_ip-num_ip format" 
+      exit -1
+    fi
+  
+    #Extract Starting IP and Number of IPs given by the User.
+    start_ip[$j]=`echo "$1" | cut -d"-" -f1`
+    num_ip[$j]=`echo "$1" | cut -d"-" -f2`
+
+    #Get Numeric IP's
+    numeric_ip=`echo $out | cut -d" " -f1`
+    numeric_start_ip[$j]=$numeric_ip
+    numeric_end_ip[$j]=`expr $numeric_ip + ${num_ip[$j]} - 1`
+  fi
+  shift
+done
+
+#Create list of available ranges into avail_start_ip[] and avail_num_ip[] arrays
+#Also convert to numeric start and end IP's
+#List index starts from 1 and has num_avail entries
+k=1
+#Using nsu_show_address for creating the IP ranges.
+if [ $Server == "Yes" ];then
+    nsu_show_address -s -v $IP_VERSION_TYPE >/tmp/nsi_validate_ip.$$
+else
+    nsu_show_address -v $IP_VERSION_TYPE >/tmp/nsi_validate_ip.$$
+fi
+while read ip num eth
+do
+  # Tanmay: we are skipping the admin ip validate in case of ipv6 because currently it is configured in ipv4 format
+  if [ $ip = "Admin" ];then
+
+    if [ $IP_VERSION_TYPE -eq 1 ]; then
+      avail_start_ip[$k]=`echo $eth | cut -d" " -f2`
+      avail_num_ip[$k]=1
+    else
+      continue
+    fi
+
+  elif [ $ip = "Additional" -o $ip = "Start" ];then
+    continue
+  else
+    avail_start_ip[$k]=$ip
+    avail_num_ip[$k]=$num
+    avail_eth[$k]=$eth
+  fi
+  # Numeric available start ip
+  numeric_avail_start_ip[$k]=`nsi_check_format -v $IP_VERSION_TYPE -I ${avail_start_ip[$k]} 2>/dev/null`
+  numeric_avail_end_ip[$k]=`expr ${numeric_avail_start_ip[$k]} + ${avail_num_ip[$k]} - 1`
+  k=`expr $k + 1`
+done </tmp/nsi_validate_ip.$$
+rm /tmp/nsi_validate_ip.$$
+
+#Total  available entries
+num_avail_entries=`expr $k - 1`
+
+#For each input range check the matching available range
+#print the matching available range
+#If no available range, print NULL for that input range
+for i in `seq 1 $num_inputs`
+do 
+  matched=0
+  A=${numeric_start_ip[$i]}
+  B=${numeric_end_ip[$i]}
+  for j in `seq 1 $num_avail_entries`
+  do
+    X=${numeric_avail_start_ip[$j]}
+    Y=${numeric_avail_end_ip[$j]}
+    # A-B is inclusive in range X-Y
+    #IS_INCLUSIVE(A,B, X, Y) ((A >= X && A <= Y) && (B >= X && B <= Y))
+      if [ \( $A -ge $X -a $A -le $Y \) -a \( $B -ge $X -a $B -le $Y \) ];then
+      matched=1
+      break
+      fi
+    
+    done
+    if [ $matched -eq 1 ];then
+      if [ $ListFormat == "Yes" ];then
+        $NS_WDIR/bin/nsu_seq_ip $IP_VERSION_TYPE ${start_ip[$i]} ${num_ip[$i]} >> $IPListFile
+      else
+        #Input entry matached at index i with avail_entry at indext k
+   echo "${start_ip[$i]} ${num_ip[$i]} Start IP=${avail_start_ip[$j]} Max IP=${avail_num_ip[$j]} Interface=${avail_eth[$j]}"
+      fi
+    elif [ $ListFormat == "Yes" ];then
+        echo "${start_ip[$i]}-${num_ip[$i]} not found in the assigned IP Ranges"
+        exit -2
+      else
+        #No match for Input entry at index i
+        echo "${start_ip[$i]} ${num_ip[$i]} NULL "
+    fi
+done
+
+if [ $ListFormat == "Yes" ];then
+  cat $IPListFile
+  rm $IPListFile
+fi
+
+exit 0

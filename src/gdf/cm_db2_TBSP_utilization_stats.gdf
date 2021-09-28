@@ -1,0 +1,18 @@
+# --- GDF Version History ---
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|DB2 TableSpace Stats|10966|vector|12|0|DB2 Metrics|Tier>Server>TBSPName>TBSPType>TBSPState|DB2 tableSpace utilization stats.TBSPType are DMS=Database managed table space and SMS=System managed table space.
+Graph|DB2 TBSP Create Time (Sec)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Time difference between current time and time at which tableSpace was created in seconds.
+Graph|DB2 TBSP Content Type|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The type of content in the table space. ANY=Regular table space of permanent data(1), LARGE=Large table space of permanent data(2),SYSTEMP=System temporary data(3) And USRTEMP=User temporary data(4).
+Graph|DB2 TBSP Total Size (GB)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total size of the table space in GB.
+Graph|DB2 TBSP Used Size (GB)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total used size of the table space in GB.
+Graph|DB2 TBSP Free Size (GB)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total free size of the table space in GB.
+Graph|DB2 TBSP Utilization (Pct)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The utilization of the table space in percentage.
+Graph|DB2 TBSP Total Pages|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of pages in a table space.
+Graph|DB2 TBSP Used Pages|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of pages that are currently used (not free) in a table space.
+Graph|DB2 TBSP Free Pages|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of pages that are currently free in a table space.
+Graph|DB2 TBSP Pages In High Watermark|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of pages in a table space that is holding the high watermark.
+Graph|DB2 TBSP Page Size (Bytes)|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Page size used by a table space in bytes.
+Graph|DB2 TBSP Increase Size (pct)|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|This element shows the amount by which an auto-resize table space will increase when the table space becomes full and more space is required in percentage.

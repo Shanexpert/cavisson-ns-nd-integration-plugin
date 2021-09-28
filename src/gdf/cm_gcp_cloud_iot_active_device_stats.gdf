@@ -1,0 +1,5 @@
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP Cloud IOT Active Device|14040|vector|1|0|GCP Metrics|ProjectID>LocationID>RegstryID>Protocol|It provides metrics related to active device stats for cloud iot.
+
+Graph|GCP Cloud IOT API Active Devices|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of devices that have recently sent data to cloud IOT core.

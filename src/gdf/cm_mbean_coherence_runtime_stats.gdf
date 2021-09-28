@@ -1,0 +1,19 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+
+#ObjectName :Coherence:type=Platform,Domain=java.lang,subType=MemoryPool,name=*,nodeId=*
+
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Coherence Runtime Stats|14173|vector|2|0|Coherence Metrics|Tier>Server>Instance>service>nodeId|This stats provides information about Coherence time statictics.
+
+
+Graph|Coherence Up Time|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|This graph provides the up time of the system.
+
+Graph|Coherence Start Time|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|This graph provides the start time of the system.
+

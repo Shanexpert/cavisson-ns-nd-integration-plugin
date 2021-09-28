@@ -1,0 +1,19 @@
+# --- GDF Version History ---
+#  1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Redis Performance StatsV2Ex|10917|vector|13|0|Redis Metrics|Tier>Server>Namespace>Pod|Redis server Performance stats monitor measure health of redis server.It provides metrics related to latency, command/sec, connection recieved, total command processed.
+
+Graph|Redis Command Processed/sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of operations processed by the database within a given period of interval.
+Graph|Redis Connections Received|2|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total number of connections accepted by the server.
+Graph|Redis Commands Processed|3|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total number of commands processed by the server.
+Graph|Redis Inbound traffic (Kbps)|4|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Total inbound traffic in kilobits per second
+Graph|Redis Outbound traffic (Kbps)|5|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Total outbound traffic in kilobits per second
+Graph|Redis Full Synchronizations|6|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Number of times slaves have fully synchronized with master.
+Graph|Redis Partial OK Synchronizations |7|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Count of the number of times partial syncs have completed.
+Graph|Redis Partial Error Synchronizations|8|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Count of the number of times partial syncs have failed to complete.
+Graph|Redis Latest Fork Operation (ms)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Duration of the latest fork operation in milliseconds.
+Graph|Redis Migrate Cached Sockets|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of migrate cached sockets.
+Graph|Redis SlowLog Queries|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of slowlog queries.
+Graph|Redis SlowLog Queries (Pct)|12|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Slowlog query in percentage with respect to total query.
+Graph|Redis Average SlowLog Query time (mus)|13|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average slow log query time in microseconds.

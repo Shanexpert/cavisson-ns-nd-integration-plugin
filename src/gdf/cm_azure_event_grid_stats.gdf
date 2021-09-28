@@ -1,0 +1,26 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Azure EventGrid Stats|11461|vector|9|0|Azure Metrics|AccountName>Region>ResourceGroup>EventGridTopics|A system topic in Event Grid represents one or more events published by Azure services such as Azure Storage and Azure Event Hubs
+
+Graph|Azure EventGrid Topics Published Events|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total events published to this topic
+
+Graph|Azure EventGrid Topics Publish Failed Events|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total events failed to publish to this topic
+
+Graph|Azure EventGrid Topics Publish Success Latency(ms)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Publish success latency in milliseconds
+
+Graph|Azure EventGrid Topics Matched Events|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total events matched to this event subscription
+
+Graph|Azure EventGrid Topics Delivery Failed Events|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total events failed to deliver to this event subscription
+
+Graph|Azure EventGrid Topics Delivered Events|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total events delivered to this event subscription
+
+Graph|Azure EventGrid Topics Destination Processing Duration(ms)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Destination processing duration in milliseconds
+
+Graph|Azure EventGrid Topics Dropped Events|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total dropped events matching to this event subscription
+
+Graph|Azure EventGrid Topics Dead Lettered Events|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total dead lettered events matching to this event subscription
+

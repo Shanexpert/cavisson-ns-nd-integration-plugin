@@ -1,0 +1,121 @@
+#!/bin/bash
+# Name  : nsi_show_config
+# Author: Achint
+# usage :
+#       nsi_show_config
+# Modification History:
+#   05/11/06  Initial version
+
+Usage()
+{
+  echo "$*"
+  echo "Usage:"
+  echo "     nsi_show_config [-tdn]"
+  echo "     where :"
+  echo "            -t: display NO type"
+  echo "            -d: display Server Name"
+  echo "            -n: NDE is enabled or not"
+  echo "            -s: display sub config"
+  exit -1
+}
+
+HOME_DIR=/home/cavisson
+NoTypeNeed=0
+DisplayName=0
+NDEnabled=0
+SubConfigNeeded=0
+while getopts c:tdns? c 
+do
+  case $c in
+    t) NoTypeNeed=1;;
+    d) DisplayName=1;;
+    n) NDEnabled=1;;
+    s) SubConfigNeeded=1;;
+    c) ConfFileName=$OPTARG;;
+    ?) Usage "Invalid arguments";;
+    *) Usage "Invalid arguments";;
+  esac
+done
+
+CONF_FILE=$HOME_DIR/etc/cav.conf
+
+#If not present, then use cav.conf
+if [ ! -f $ConfFileName ]; then
+  ConfFileName=""
+fi
+
+if [ "X$ConfFileName" != "X" ]; then
+  CONF_FILE=$ConfFileName
+else
+  CONTROLLER_NAME=`basename $NS_WDIR`
+  #If Controller specific config is present, then use it
+  if [ -f $HOME_DIR/etc/cav_$CONTROLLER_NAME.conf ]; then
+    CONF_FILE=$HOME_DIR/etc/cav_$CONTROLLER_NAME.conf
+  fi
+fi
+
+config_line=`cat $CONF_FILE | egrep -w "^CONFIG"`
+
+if [ $? != 0 ]; then
+  CONF_FILE=$HOME_DIR/etc/cav.conf
+  config_line=`cat $CONF_FILE | egrep -w "^CONFIG"`
+fi
+
+config=`echo $config_line | cut -d" " -f2`
+
+ND_Enabled_line=""
+if [ $NDEnabled -eq 1 ]; then
+  if [ "X$config" == "XNDE" ]; then
+    echo 1
+    exit 0
+  else
+    ND_Enabled_line=`cat $CONF_FILE | egrep -w "^ND"`
+    if [ $? != 0 ]; then
+      echo 0
+      exit 0
+    else
+      echo `cat $CONF_FILE | egrep -w "^ND" | cut -d" " -f2`
+      exit 0
+    fi
+  fi
+fi
+
+if [ "X$config" == "X" ]; then
+  echo "CONFIG not set in $CONF_FILE"
+  exit -1
+fi
+
+if [ "X$config" != "XNS" -a "X$config" != "XNO" -a "X$config" != "XNS+NO" -a "X$config" != "XNS>NO" -a "X$config" != "XNF"  -a "X$config" != "XNDE" -a "X$config" != "XNV" -a "X$config" != "XED" -a "X$config" != "XPD" -a "X$config" != "XNC" -a "X$config" != "XNCH" -a "X$config" != "XNCP" -a "X$config" != "XSM" ]; then
+  echo "Invalid CONFIG set in $CONF_FILE"
+  exit -1
+fi
+
+DISPLAY_NAME=""
+if [ $DisplayName -eq 1 ]; then
+   DISPLAY_NAME=`cat $CONF_FILE | egrep -w "^DISPLAY_NAME" | cut -d" " -f2`
+     echo "$DISPLAY_NAME"
+
+#If no SUB_CONFIG found, then "NA" will be shown as SUB_CONFIG, in place of blank
+else
+  if [ $NoTypeNeed -eq 0 ]; then
+    echo "$config"
+    if [ $SubConfigNeeded -eq 1 ];then
+      sub_config=`egrep -w "^SUB_CONFIG" $CONF_FILE | cut -d" " -f2`
+      if [ "X$sub_config" != "X" ]; then
+        echo $sub_config
+      else
+        echo "NA"
+      fi
+    fi
+  else 
+    if [ "X$config" == "XNO" ]; then
+      NO_TYPE=`cat $CONF_FILE | egrep -w "^NO_TYPE" | cut -d" " -f2`
+      if [ "X$NO_TYPE" != "X" ]; then
+        echo "$NO_TYPE"
+      fi
+    fi
+    echo "$config"
+  fi
+fi
+  
+exit 0

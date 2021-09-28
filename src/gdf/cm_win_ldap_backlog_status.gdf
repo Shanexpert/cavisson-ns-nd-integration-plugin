@@ -1,0 +1,6 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Windows LDAP Backlog Stats|10940|vector|1|0|LDAP Metrics|Tier>Server>Source>Destination|Windows LDAP Backlog Stats provide information about the backlog files.
+Graph|LDAP Backlog Files Count|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of files that are in queue and is not replicated. 0 means all the files have been replicated.

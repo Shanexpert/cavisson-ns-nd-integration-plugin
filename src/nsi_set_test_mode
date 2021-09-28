@@ -1,0 +1,104 @@
+#!/bin/bash
+# Name     : nsi_set_test_mode
+# Author   : Abhishek
+# Purpose  : To set mode of a test run
+#
+# Output   : Set Permisson of TestRun as read only or read-write
+# Arguments: TestRun  and TestMode('R' for read only and 'W' for read-write)
+#
+# Exit Values: 0 for success, 1 for input error and -1 for existence error  
+# Modification History:
+#   01/24/06: - Initial Version
+
+#!/bin/bash
+
+#Check for correct input from user
+if [ $# -lt 2 ];then
+	echo "Usage: nsi_set_test_mode <TestRunNumber> <TestMode> <Partition>"
+	exit 1
+fi
+
+if [ $# -gt 3 ];then
+        echo "Usage: nsi_set_test_mode <TestRunNumber> <TestMode> <Partition>"
+        exit 1
+fi
+
+if [ "X$NS_WDIR" = "X" ];then
+	echo "NS_WDIR env var must be defined"
+	exit 1
+fi
+
+TRNum=$1
+export TestMode=$2
+Partition=$3
+
+#This will set path to log directory
+NSLogsPath=$NS_WDIR/logs
+#TRNumDir=TR$TRNum
+TempFile="/tmp/nsi_set_test_mode$$"
+#PartitionDir=$TRNumDir/$Partition
+Dir=""
+
+cd $NSLogsPath
+
+#This will check for correct TestMode to input  
+if [ $TestMode != "R" ] &&  [ $TestMode != "W" ]
+then
+   echo "Usage: nsi_set_test_mode <TestRunNumber> <TestMode> where TestMode as R for ReadOnly or W for ReadWrite permission <Partition>"
+   exit 1 
+fi
+
+#run same command on ns repo
+CMD="${NS_WDIR}/bin/nsi_repo_utils -o run -c nsi_set_test_mode -a \"$@\""
+OUTPUT=`eval "$CMD"`
+
+if [ "X${OUTPUT}" == "X" ]; then
+  if [ ! -d "${NSLogsPath}/TR${TRNum}" ]; then
+   exit 0
+  fi
+fi
+
+if [ $# -eq 3 ]; then
+  Dir=TR$TRNum/$Partition
+else
+  Dir=TR$TRNum  
+fi
+
+#This will check existence of directory
+if [ ! -d $Dir ]
+then
+   echo "$Dir not exist"
+   exit -1
+fi  
+
+#Abhishek M - Disable to code to lock generator TR in case of NC.#
+#             Bug #111136.                                       #
+#             Approve by Neeraj Jain Sir                         #
+
+#if [ -f $Dir/NetCloud/NetCloud.data ];then
+#  while read line
+#  do
+#  IP=`echo $line| cut -d'|' -f3`
+#  GEN_WDIR=`echo $line| cut -d '|' -f5`
+#  GEN_TR=`echo $line| cut -d '|' -f1|cut -d ' ' -f2`
+#  nsu_server_admin -g -s $IP -S | grep "cmon is running" >/dev/null 2>&1
+#  [ $? = 0 ] && nsu_server_admin -i -g -s $IP -c "$GEN_WDIR/bin/nsi_set_test_mode $GEN_TR $TestMode env_var:NS_WDIR=$GEN_WDIR" 2>/dev/null
+#  done<$Dir/NetCloud/NetCloud.data 
+#fi
+
+if [ -f $Dir/summary.top ]
+ then
+   CUR_MODE=`cat $Dir/summary.top | cut -d '|' -f14|grep "A"`
+   if [ "XX${CUR_MODE}" != "XX" ];then
+    TestMode="A${TestMode}"
+   fi
+   cat $Dir/summary.top | awk -F\| '{ printf "%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s\n", $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, ENVIRON["TestMode"], $15, $16 }' > $TempFile
+   cp $TempFile $Dir/summary.top
+else
+   echo "File does't exist, TestMode can't be change"
+   exit -1
+fi
+
+rm -f $TempFile
+exit 0
+

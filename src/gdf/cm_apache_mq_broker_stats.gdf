@@ -1,0 +1,26 @@
+Info|3.1|1|-|-|-1|-1|-
+Group|Apache Active MQ Broker Stats|10632|vector|18|0|Application Metrics|Tier>Server>Instance>Broker|Apache Broker stats provides information about the Broker.
+Graph|Active MQ Total Connections|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of connections serviced since this Broker was started.
+Graph|Active MQ Current Connections|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current number of active connections on this Broker.
+#Graph for Active MQ Enqueue/Sec and Active MQ Dequeue/Sec is replaced by Active MQ Enqueue/Min and Active MQ Dequeue/Min in 4.1.14 build #4. 
+Graph|Active MQ Enqueue/Min|3|scalar|rate|-|CumToPM|0|NA|-1|-1|NA|NA|Number of messages that have been sent to the broker per minute.
+Graph|Active MQ Dequeue/Min|4|scalar|rate|-|CumToPM|0|NA|-1|-1|NA|NA|Number of messages that have been acknowledged on the broker per minute.
+Graph|Active MQ Consumers|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of consumers subscribed to destinations on the broker.
+Graph|Active MQ Producers|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of producers active on destinations on the broker.
+Graph|Active MQ Messages|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of unacknowledged messages on the broker.
+Graph|Active MQ Store Limit (MB)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Disk space (in Megabytes) used for persistent messages before producers are blocked.
+Graph|Active MQ Store Usage (PCT)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percentage of the disk space in use.
+Graph|Active MQ Temp Limit (MB)|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Disk space(in Megabytes) used for non-persistent messages and temporary data before producers are blocked.
+Graph|Active MQ Temp Usage (PCT)|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percentage of available disk space in use.
+Graph|Active MQ Memory Limit (MB)|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The memory(in Megabytes) used for holding undelivered messages before paging to temporary storage.
+Graph|Active MQ Memory Usage (PCT)|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percentage of available memory in use.
+
+Graph|Active MQ JobScheduler Store Limit (KB)|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Disk limit(in Kilobytes) used for scheduled messages before producers are blocked.
+Graph|Active MQ JobScheduler Store Usage (PCT)|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percent of job store limit used.
+Graph|Active MQ Average Message Size (KB)|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average Message Size on destination in Kilobytes.
+Graph|Active MQ Max Message Size (KB)|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum  Message Size on destination in Kilobytes.
+Graph|Active MQ Min Message Size (KB)|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Minimum Message Size on destination in Kilobytes.
+
+
+
+

@@ -1,0 +1,54 @@
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Memcache Stats|10149|vector|50|0|Application Metrics|Tier>Server>Instance>CacheName|Memcahce Stats
+
+Graph|Current Connections|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of open connections
+Graph|Total Connections|2|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total number of connections opened since the server started running
+Graph|Connections per second|3|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Total number of open connections per second
+Graph|Connection Structures|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of connection structures allocated by the server
+Graph|Total Retrieval Request/Sec|5|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of retrieval requests per second
+Graph|Memcache Get Hits/Sec|6|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of keys that have been requested and found present per second
+Graph|Get Hits (Pct)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percentage of keys that have been requested and found present 
+Graph|Memcache Get Miss/Sec|8|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of items that have been requested and not found per second
+Graph|Get Miss (Pct)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percentage of items that have been requested and not found 
+Graph|Data Read(GB)|10|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total data read by this server from network in GB
+Graph|Recieved Througput(Kbps)|11|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of bytes recieved by this server from network per second
+Graph|Data Written(GB)|12|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total data sent by this server to netstorm in GB
+Graph|Sent Throughput(Kbps)|13|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of bytes sent by this server from network per second
+Graph|Current Items Size(MB)|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current size used by this server to store items in MB
+Graph|Current Items|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current number of items stored by the server
+Graph|Total Items|16|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total number of items stored by this server 
+Graph|Items Added per Second|17|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Items added per Sec
+Graph|Total Storage Requests/Sec|18|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of storage requests per second
+Graph|Flush Commands|19|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Number of flushed request
+Graph|Touch Commands|20|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Number of touched request
+Graph|Delete Misses|21|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Delete Misses
+Graph|Delete Hits|22|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Delete Misses
+Graph|Incr Misses|23|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Incr Misses
+Graph|Incr Hits|24|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Incr Hits
+Graph|Decr Misses|25|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Decr Misses
+Graph|Decr Hits|26|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Decr Hits
+Graph|Cas Misses|27|scalar|sample|-|-|0|NA|-1|-1|NA|NA|cas Misses
+Graph|Cas Hits|28|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Cas Hits 
+Graph|Cas badval|29|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Cas badval
+Graph|Touch Hits|30|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Touch Hits
+Graph|Touch Misses|31|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Touch Misses
+Graph|Authenticated Commands|32|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Auth Commands
+Graph|Auth error|33|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Auth error
+Graph|Uptime(Days)|34|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Uptime in Days
+Graph|Rusage User(sec)|35|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Specifies the accumulated user time for a process in seconds
+Graph|Rusage System(sec)|36|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Specifies the accumulated system time for a process in seconds
+Graph|Expired Unfetched|37|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Expired unfetched 
+Graph|Evicted Unfetched|38|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Evicted unfetched
+Graph|Evictions|39|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of valid items removed from cacheto free memory for new items
+Graph|Reclaimed/Sec|40|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of times an entry was stored using memory from an expired entry per second
+Graph|Accepting connections|41|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The Memcached server is currently accepting new connections
+Graph|Crawler Reclaimed|42|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total items freed by LRU Crawler. The LRU Crawler is an optional background thread which will walk from the tail toward the head of requested slab classes, actively freeing memory for expired items 
+Graph|Hash power level|43|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current size multiplier for hash table 
+Graph|Hash bytes|44|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Bytes currently used by hash tables 
+Graph|Hash is expanding|45|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Indicates if the hash table is being grown to a new size
+Graph|Malloc fails|46|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Malloc fails
+Graph|Listen disabled num|47|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Listen disabled num
+Graph|Threads|48|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of worker threads requested
+Graph|Conn yields|49|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of times any connection yielded to another due to hitting the -R limit
+Graph|Reserved fds|50|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of misc fds used internally 

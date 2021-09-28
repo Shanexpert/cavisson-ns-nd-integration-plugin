@@ -1,0 +1,27 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AzureVirtualNetworkGatewayStats|11319|vector|10|0|Azure Metrics|AccountName>Region>ResourceGroup>VirtualNetworkGateway|A VPN gateway is a specific type of virtual network gateway that is used to send encrypted traffic between an azure virtual network and an on-premises location over the public internet.
+
+Graph|Azure Gateway S2S Bandwidth (Bytes / Sec)|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average site-to-site bandwidth of a gateway in bytes per second.
+
+Graph|Azure Gateway P2S Bandwidth (Bytes / Sec)|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average point-to-site bandwidth of a gateway in bytes per second.
+
+Graph|Azure Gateway P2S Connection Count|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Point-to-site connection count of a gateway.
+
+Graph|Azure Gateway Tunnel Bandwidth (Bytes / Sec)|4|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average bandwidth of a tunnel in bytes per second.
+
+Graph|Azure Gateway Tunnel Egress Bytes|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Outgoing bytes of a tunnel.
+
+Graph|Azure Gateway Tunnel Ingress Bytes|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Incoming bytes of a tunnel.
+
+Graph|Azure Gateway Tunnel Egress Packets Count|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Outgoing packet count of a tunnel.
+
+Graph|Azure Gateway Tunnel Ingress Packets Count|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Incoming packet count of a tunnel.
+
+Graph|Azure Gateway Tunnel Egress TS Mismatch Packet Drop Count|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Outgoing packet drop count from traffic selector mismatch of a tunnel.
+
+Graph|Azure Gateway Tunnel Ingress TS Mismatch Packet Drop Count|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Incoming packet drop count from traffic selector mismatch of a tunnel.

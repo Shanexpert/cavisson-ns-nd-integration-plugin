@@ -1,0 +1,19 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+
+#ObjectName :com.bea:Name=*,Type=WLDFServerDiagnostic,Server=*
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Weblogic WLDF Server Diagnostic Stats|14195|vector|3|0|Weblogic Metrics|Tier>Server>Instance>Name>Server|This stats provides information about the Server Diagnosis.
+
+Graph|Weblogic Event Persistence Interval (ms)|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The interval, in milliseconds, at which queued up instrumentation events will be periodically dispatched to the archive.
+
+Graph|Weblogic Events Image Capture Interval (ms)|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The time span, in milliseconds, for which recently archived events will be captured in the diagnostic image. All events archived on or after will be captured.
+
+Graph|Weblogic Diagnostic Store Max File Size (bytes)|3|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The maximum file size, in bytes.
+

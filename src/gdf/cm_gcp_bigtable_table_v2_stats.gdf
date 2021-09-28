@@ -1,0 +1,18 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP Bigtable Table Stats V2|11315|vector|11|0|GCP Metrics|ProjectID>Zone>Cluster>Table|Bigtable stats provided merics related to client request to bigtable server.
+
+Graph|Bigtable Server Sent Bytes/Sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of uncompressed bytes of response data sent by servers for a table. 
+Graph|Bigtable Server Returned Rows/Sec|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of rows returned by server requests for a table.  
+Graph|Bigtable Server Requests/Sec|3|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of server requests for a table.   
+Graph|Bigtable Server Received Bytes/Sec|4|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of uncompressed bytes of request data received by servers for a table.   
+Graph|Bigtable Server Modified Rows/Sec|5|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of rows modified by server requests for a table.
+Graph|Bigtable Server Errors/Sec|6|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of server requests for a table that failed with an error. 
+Graph|Bigtable Average Server Latency (ms)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average server request latency for a table in milliseconds.
+Graph|Bigtable 5th Percentile Server Latency (ms)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|5th percentile server request latency for a table in milliseconds.
+Graph|Bigtable 50th Percentile Server Latency (ms)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|50th percentile server request latency for a table in milliseconds.
+Graph|Bigtable 95th Percentile Server Latency (ms)|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|95th percentile server request latency for a table in milliseconds.
+Graph|Bigtable 99th Percentile Server Latency (ms)|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|95th percentile server request latency for a table in milliseconds.

@@ -1,0 +1,16 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+#
+#cm_nd_bt_ip.gdf
+#Note - Group Id and graph should not be changed as these are used in Dashboard GUI
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Business Transactions by Backend|10248|vector|4|0|Application Metrics|Tier>Server>Instance>BusinessTrans>Backend|Business Transactions by Backend
+
+Graph|Total Business Transaction Invocations|1|scalar|cumulative|-|-|0|E|-1|-1|NA|NA|Cumulative Business Transaction invocation count
+Graph|Business Trans Invocations/Sec|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Business Transaction Invocation rate per sec
+Graph|Avg Business Trans Exec Time (ms)|3|scalar|times|-|-|0|NA|-1|-1|NA|NA|Average Business Transaction duration in ms
+Graph|Errors/Sec|4|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Business Transaction error rate per sec

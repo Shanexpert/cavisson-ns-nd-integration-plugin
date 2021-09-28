@@ -1,0 +1,16 @@
+# 1.0 - Initial version
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP Service Runtime API|11601|vector|12|0|GCP Metrics|ProjectID>Location>Method|It provide metric related request and response of api.
+Graph|GCP Service Runtime 5th Percentile Request Latency (Sec)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|5th Percentile distribution of latencies in seconds for non-streaming requests.
+Graph|GCP Service Runtime 50th Percentile Request Latency (Sec)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|50th Percentile distribution of latencies in seconds for non-streaming requests.
+Graph|GCP Service Runtime 95th Percentile Request Latency (Sec)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|95th Percentile distribution of latencies in seconds for non-streaming requests.
+Graph|GCP Service Runtime 99th Percentile Request Latency (Sec)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|99th Percentile distribution of latencies in seconds for non-streaming requests.
+Graph|GCP Service Runtime 5th Percentile Request Sizes (KB)|5|scalar|sample|-|-|0|D|-1|-1|NA|DIV(G5,1024)|5th Percentile distribution of request sizes in kilobytes recorded at request completion.
+Graph|GCP Service Runtime 50th Percentile Request Sizes (KB)|6|scalar|sample|-|-|0|D|-1|-1|NA|DIV(G6,1024)|50th Percentile distribution of request sizes in kilobytes recorded at request completion.
+Graph|GCP Service Runtime 95th Percentile Request Sizes (KB)|7|scalar|sample|-|-|0|D|-1|-1|NA|DIV(G7,1024)|95th Percentile distribution of request sizes in kilobytes recorded at request completion.
+Graph|GCP Service Runtime 99th Percentile Request Sizes (KB)|8|scalar|sample|-|-|0|D|-1|-1|NA|DIV(G8,1024)|99th Percentile distribution of request sizes in kilobytes recorded at request completion.
+Graph|GCP Service Runtime 5th Percentile Response Sizes (KB)|9|scalar|sample|-|-|0|D|-1|-1|NA|DIV(G9,1024)|5th Percentile distribution of response sizes in kilobytes recorded at request completion.
+Graph|GCP Service Runtime 50th Percentile Response Sizes (KB)|10|scalar|sample|-|-|0|D|-1|-1|NA|DIV(G10,1024)|50th Percentile distribution of response sizes in kilobytes recorded at request completion.
+Graph|GCP Service Runtime 95th Percentile Response Sizes (KB)|11|scalar|sample|-|-|0|D|-1|-1|NA|DIV(G11,1024)|95th Percentile distribution of response sizes in kilobytes recorded at request completion.
+Graph|GCP Service Runtime 99th Percentile Response Sizes (KB)|12|scalar|sample|-|-|0|D|-1|-1|NA|DIV(G12,1024)|99th Percentile distribution of response sizes in kilobytes recorded at request completion.

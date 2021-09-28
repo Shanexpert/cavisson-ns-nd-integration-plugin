@@ -1,0 +1,42 @@
+# General information line
+# Info|msgVersion|numGroups|startIndex|testRun|sizeOfMsgData|interval|testRunStartDate/Time
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+#
+# Group information line
+# Group|groupName|rptGrpId|groupType|numGraphs|numVectors|future1|future2|Group_Description 
+#
+# Graph information line
+# Graph|graphName|rptId|graphType|dataType|graphDataIndex|formula|numVectors|future1|PDF_ID|Percentile_Data_Idx|future2|future3|GRAPH_DESCRIPTION
+#
+# Numeric data is filled as -1 in the infoline
+
+Info|3.1|3|-1|-|-1|-1|-
+
+Group|JRMI Network Throughput|38|scalar|8|0|Test Metrics|NA|JRMI Network & connections information.
+
+Graph|JRMI Send Throughput (Kbps)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|JRMI data send thoughput in kilo bits per second (kbps) in the sampling period.
+Graph|JRMI Total Send Bytes|2|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total number of JRMI bytes send since start of the test.
+Graph|JRMI Receive Throughput (Kbps)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|JRMI data received per second in kilo bits per second (kbps) in the sampling period.
+Graph|JRMI Total Receive Bytes|4|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total JRMI bytes received since start of the test.
+Graph|JRMI Connections Open/Sec|5|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of JRMI  connections opened per second in the sampling period.
+Graph|JRMI Total Connections Open|6|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total number of open JRMI connections since start of the test.
+Graph|JRMI Connections Close/Sec|7|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of closed JRMI connections per second in the sampling period.
+Graph|JRMI Total Connections Close|8|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total number of closed JRMI connections since start of the test.
+
+
+Group|JRMI Hits|39|scalar|6|0|Test Metrics|NA|JRMI information.
+
+Graph|JRMI Request Sent/Sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of JRMI request sent (started) per seconds in the sampling period.
+Graph|JRMI Hits/Sec|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of JRMI request completed (response received from server or some error occurred) per seconds in the sampling period.
+Graph|Success JRMI Responses/Sec|3|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of successful JRMI responses per second in the sampling period.
+Graph|Average JRMI Response Time (ms)|4|scalar|times|-|-|0|-|8|-1|NA|NA|Average JRMI response time from the server in seconds in the sampling period.
+Graph|Total JRMI Hits|5|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total number of JRMI hits made on the web server by virtual users since start of the test.
+Graph|Total JRMI Success|6|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total number of success JRMI hits made on the web server by virtual users since start of the test.
+
+Group|JRMI Failures|40|vector|1|0|Test Metrics|Error|JRMI failure information
+
+Graph|JRMI Failures/Sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of failed JRMI responses for each and every individual error during each second of scenario run.

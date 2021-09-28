@@ -1,0 +1,37 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+#
+# Command to get data for this gdf on windows server :
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# wmic path Win32_PerfFormattedData_Counters_ProcessorInformation get C1TransitionsPersec  C2TransitionsPersec  C3TransitionsPersec DPCRate  DPCsQueuedPersec  InterruptsPersec  ParkingStatus  PercentC1Time  PercentC2Time  PercentC3Time  PercentDPCTime  PercentIdleTime  PercentInterruptTime PercentofMaximumFrequency  PercentPriorityTime  PercentPrivilegedTime  PercentProcessorTime  PercentUserTime  ProcessorFrequency  ProcessorStateFlags /every:10
+#
+# Entry in mprof to get data :
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# CUSTOM_MONITOR 192.168.1.52 cm_win_ProcessorInformation.gdf wmi_ProcessorInformation 2 wmic path Win32_PerfFormattedData_Counters_ProcessorInformation get C1TransitionsPersec  C2TransitionsPersec  C3TransitionsPersec DPCRate  DPCsQueuedPersec  InterruptsPersec  ParkingStatus  PercentC1Time  PercentC2Time  PercentC3Time  PercentDPCTime  PercentIdleTime  PercentInterruptTime PercentofMaximumFrequency  PercentPriorityTime  PercentPrivilegedTime  PercentProcessorTime  PercentUserTime  ProcessorFrequency  ProcessorStateFlags /every:10
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Windows Processor Information Stats|10100|vector|20|0|System Metrics|Tier>Server>Processor|Windows processor information stats. Processor is the part of the computer that performs arithmetic and logical computations, initiates operations on peripherals, and runs the threads of processes.
+
+Graph|C1 Transitions/Sec|1|scalar|rate|-|-|0|NA|-1|-1|L|NA|Number of transitions per second in which CPU enters into C1 low-power idle state.
+Graph|C2 Transitions/Sec|2|scalar|rate|-|-|0|NA|-1|-1|L|NA|Number of transitions per second in which CPU enters into C2 low-power idle state.
+Graph|C3 Transitions/Sec|3|scalar|rate|-|-|0|NA|-1|-1|L|NA|Number of transitions per second in which CPU enters into C3 low-power idle state.
+Graph|DPC/Sec|4|scalar|rate|-|-|0|NA|-1|-1|L|NA|Number of deferred procedure calls (DPCs) added per second to the processors DPC queues between the timer ticks of the processor clock.
+Graph|DPC Queued/Sec|5|scalar|rate|-|-|0|NA|-1|-1|L|NA|Number of deferred procedure calls (DPCs) per second added to the processor's DPC queue.
+Graph|Interrupts/Sec|6|scalar|rate|-|-|0|NA|-1|-1|L|NA|Number of incidents per second, at which the processor received and serviced hardware interrupts.
+Graph|Parking Status|7|scalar|sample|-|-|0|NA|-1|-1|L|NA|Parking Status represents whether a processor is parked or not.
+Graph|C1 Time (Pct)|8|scalar|sample|-|-|0|NA|-1|-1|L|NA|Amount of time in percentage, processor spends in the C1 low-power idle state.
+Graph|C2 Time (Pct)|9|scalar|sample|-|-|0|NA|-1|-1|L|NA|Amount of time in percentage, processor spends in the C2 low-power idle state.
+Graph|C3 Time (Pct)|10|scalar|sample|-|-|0|NA|-1|-1|L|NA|Amount of time in percentage, processor spends in the C3 low-power idle state.
+Graph|DPC Time (Pct)|11|scalar|sample|-|-|0|NA|-1|-1|L|NA|Amount of time in percentage, processor spent receiving and servicing deferred procedure calls (DPCs).
+Graph|Processor Idle Time (Pct)|12|scalar|sample|-|-|0|NA|-1|-1|H|NA|Amount of time in percentage, processor is idle.
+Graph|Processor Interrupt Time(Pct)|13|scalar|sample|-|-|0|NA|-1|-1|L|NA|Amount of time in percentage, processor spends receiving and servicing hardware interrupt.
+Graph|Processor Max Frequency (Pct)|14|scalar|sample|-|-|0|NA|-1|-1|L|NA|Processor Maximum Frequency percentage is the current processor's maximum frequency.
+Graph|Processor Priority Time (Pct)|15|scalar|sample|-|-|0|NA|-1|-1|L|NA|Amount of time in percentage that the processor spends executing threads that are not low priority.
+Graph|Privileged Time (Pct)|16|scalar|sample|-|-|0|NA|-1|-1|H|NA|Amount of time in percentage, process threads spent executing code in privileged mode.
+Graph|Processor Time (Pct)|17|scalar|sample|-|-|0|NA|-1|-1|L|NA|Amount of elapsed time in percentage that the processor spends to execute a non-Idle thread.
+Graph|User Time (Pct)|18|scalar|sample|-|-|0|NA|-1|-1|L|NA|Amount of elapsed time in percentage that the processor spends in the user mode.
+Graph|Processor Frequency (MHz)|19|scalar|sample|-|-|0|NA|-1|-1|H|NA|Processor Frequency is the frequency of the current processor in megahertz.
+Graph|Processor State Flags|20|scalar|sample|-|-|0|NA|-1|-1|L|NA|Processor State Flags.

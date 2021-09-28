@@ -1,0 +1,39 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Oracle RAC System Stats|10194|vector|29|0|Oracle Metrics|Tier>Server>Instance|Oracle Real Application Clusters System Stats
+
+Graph|Logical Reads|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Logical Reads
+Graph|Physical Reads|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Physical Reads
+Graph|Physical Writes|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Physical Writes
+Graph|Redo Size (Kilo)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Redo Size (k)
+Graph|Block Changes|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Block Changes
+Graph|User Calls|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|User Calls
+Graph|Execs|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Execs
+Graph|Parses|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Parses
+Graph|Logons|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Logons
+Graph|Txns|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Txns
+Graph|Logical Reads Per Sec|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Logical Reads per sec
+Graph|Physical Reads Per Sec|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Physical Reads per sec
+Graph|Physical Writes Per Sec|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Physical Writes per sec
+Graph|Redo Size kilo Per Sec|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Redo Size kilo per sec
+Graph|Block Changes Per Sec|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Block Changes per sec
+Graph|User Calls Per Sec|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|User Calls per sec
+Graph|Execs Per Sec|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Execs per sec
+Graph|Parses Per Sec|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Parses per sec
+Graph|Logons Per Sec|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Logons per sec
+Graph|Transaction Per Sec|20|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Txns per sec
+Graph|Logical Reads Per Transaction|21|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Logical Reads per transaction
+Graph|Physical Reads Per Transaction|22|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Physical Reads per transaction
+Graph|Physical Writes Per Transaction|23|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Physical Writes per transaction
+Graph|Redo Size Kilo Per Transaction|24|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Redo Size kilo per transaction
+Graph|Block Changes Per Transaction|25|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Block Changes per transaction
+Graph|User Calls Per Transaction|26|scalar|sample|-|-|0|NA|-1|-1|NA|NA|User Calls per transaction
+Graph|Execs Per Transaction|27|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Execs per transaction
+Graph|Parses Per Transaction|28|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Parses per transaction
+Graph|Logons Per Transaction|29|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Logons per transaction

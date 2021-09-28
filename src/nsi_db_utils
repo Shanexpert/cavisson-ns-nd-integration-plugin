@@ -1,0 +1,1127 @@
+#!/bin/bash
+#
+# Name: nsi_db_utils
+#
+# Author: Neeraj
+#
+# Purpose: This contains common shell functions which can be used by DB query shell programs
+#
+
+#Set new line
+NEWLINE='
+'
+#Save all argument 
+ALL_ARG="$*"
+
+QUERY_NAME=`basename $0`
+QUERY_ARGS="$*"
+
+NOF_URC_CSV=39
+NOF_PRC_CSV=13
+NOF_TRC_CSV=12
+NOF_SRC_CSV=18
+NOF_ND_FP_CSV=17
+ISND=0
+
+isPgRunning()
+{
+  #Check for version.
+  version=`psql --version | grep -o '[0-9].[0-9]'`
+  if [ "x$version" == "x9.1" ];then
+    /etc/init.d/postgresql status|grep -o '[0-9].[0-9]' >/dev/null
+    if [ $? -eq 0 ]; then
+      echo 0;
+      return;
+    fi
+  else
+    /etc/init.d/postgresql status|grep "Active: "|grep ": active" >/dev/null
+    if [ $? -eq 0 ];then
+      echo 0;
+      return;
+    fi
+    /etc/init.d/postgresql status | grep ": online" >/dev/null ;
+    if [ $? -eq 0 ];then
+      echo 0;
+      return;
+    fi
+  fi
+  echo 1;
+}
+
+umask 0000
+
+if [ "XX" = "XX$NS_WDIR" ]
+then
+  NS_WDIR=/home/cavisson/work
+fi
+
+debug_level=0
+
+init_debug_level()
+{
+
+  # Here adding tail -1, if netstorm.report.DrillDownDebugLevel define more then once in webapps/sys/config.ini file then 
+  # we are picking last one.
+  debug_level=`cat $NS_WDIR/webapps/sys/config.ini | grep "^netstorm.report.DrillDownDebugLevel" | tail -1 |  awk -F'=' '{print $2}'|dos2unix | tr -d ' ' | awk '/^[0-9]+$/'`
+
+    #Doing this as if there is no keyword in config.ini file then
+    #debug_level becomes blank and gives error in if conditions
+    if [  "X$debug_level" == "X" ];then
+      debug_level=0
+    fi
+}
+
+#Clean Cache directory
+#This function is called from nsu_import
+clean_cache_dir()
+{
+  DBQ_CACHE=$NS_WDIR/logs/TR$1/ready_reports/.cache/drilldownquery
+  if [ -d $DBQ_CACHE ];then
+   rm -f $DBQ_CACHE/*
+  fi
+}
+
+
+#This is called from query shell to override debug level
+set_debug_level()
+{
+  debug_level=$1
+}
+
+
+#Set debug level always without any need to call from main query shell programs
+init_debug_level
+
+
+DEBUG_LOG_FILE="/tmp/nsi_ns_utils_debug_log.$$"
+ 
+debug_log()
+{
+  if [ $debug_level -ne 0 ];then
+    echo $*
+  fi
+}
+
+get_db_trace_level(){
+
+  if [ -f $NS_WDIR/logs/TR$TRNUM/sorted_scenario.conf ];then
+    TRACE_LEVEL=`grep ^NSDBU_TRACE_LEVEL $NS_WDIR/logs/TR$TRNUM/sorted_scenario.conf | cut -d ' ' -f2`
+  else
+    TRACE_LEVEL=`grep ^NSDBU_TRACE_LEVEL $NS_WDIR/logs/TR$TRNUM/scenario | cut -d' ' -f2`
+  fi
+
+}
+
+error()
+{
+  echo "ERROR:"
+  echo "======="
+  echo "The build and version in $NS_WDIR/logs/TR$TRNUM/$PARTITION_NAME/version is not set properly."
+  echo "In this file, this '$LINE' is wrong entry and It should be like \"NetStorm:Version 4.1.4 (build# 21)\""
+  echo "If the Netstorm Build is older than 4.1.4 build#21 then we run the old query in which the timestamp of NS table is in Seconds."
+  echo "This build onwards, the timestamps in NS table is in milliseconds."
+  echo "Please set the version of your build accordingly."
+  exit 1
+}
+
+set_testrun_version_and_build()
+{
+  if [ -f $NS_WDIR/logs/TR$TRNUM/.curPartition ]; then
+    PARTITION_NAME=`grep "CurPartitionIdx" $NS_WDIR/logs/TR$TRNUM/.curPartition | cut -d '=' -f 2`
+    VERSION_FILE_PATH=$NS_WDIR/logs/TR$TRNUM/$PARTITION_NAME/version
+
+  else
+    VERSION_FILE_PATH=$NS_WDIR/logs/TR$TRNUM/version
+  fi
+
+  LINE=`grep "^NetStorm" $VERSION_FILE_PATH`
+
+  VERSION_FROM_LINE=`echo "$LINE" | awk -F " " '{print $2}'`
+  BUILD=`echo "$LINE" |awk -F " " '{print $4}' | egrep -o '[0-9]+'`
+  VERSION=`echo "$VERSION_FROM_LINE" | awk -F '.' '{print $1$2$3}'`
+  if [ "X$VERSION" = "X" -o "X$BUILD" = "X" ]; then
+     error
+  fi
+}
+
+#This function called by nsu_import and nsi_db_get_obj_timing_data
+check_is_nd_enabled()
+{
+  if [ -f $NS_WDIR/logs/TR$TRNUM/sorted_scenario.conf ];then
+    ISND=`grep ^NET_DIAGNOSTICS_SERVER $NS_WDIR/logs/TR$TRNUM/sorted_scenario.conf | cut -d ' ' -f2`
+  else
+    ISND=`grep ^NET_DIAGNOSTICS_SERVER $NS_WDIR/logs/TR$TRNUM/scenario | cut -d' ' -f2`
+  fi
+  if [ "X$ISND" == "X" -o "X$ISND" == "X0" ];then
+    ISND=0
+  else
+    ISND=1
+  fi
+}
+
+get_topology_name_and_vector_separator ()
+{
+  if [ -f $NS_WDIR/logs/TR$TRNUM/sorted_scenario.conf ];then
+    TOPOLOGY_NAME=`grep ^HIERARCHICAL_VIEW $NS_WDIR/logs/TR$TRNUM/sorted_scenario.conf | cut -d ' ' -f3`
+    VECTOR_SEPARATOR=`grep ^HIERARCHICAL_VIEW $NS_WDIR/logs/TR$TRNUM/sorted_scenario.conf | cut -d ' ' -f4`
+  fi
+
+  if [ "X$TOPOLOGY_NAME" == "X" ];then
+    TOPOLOGY_NAME=$DEFAULT_TOPOLOGY
+    if [ "X$TOPOLOGY_NAME" == "X" ];then
+      echo "Can't find TOPOLOGY NAME so exitting....."
+      exit 1 
+    fi
+  fi
+
+  if [ "X$VECTOR_SEPARATOR" == "X" ];then
+    VECTOR_SEPARATOR="_"
+  fi
+
+}
+
+is_tr_running()
+{
+  nsu_show_netstorm $TRNUM >/dev/null
+  return $?
+}
+
+#Function for checking whether agrument value is given or not
+chk_args_of_option()
+{
+  if [ "X$2" == "X" ];then
+    echo "Option $1 required a value."
+    usage
+  fi
+}
+
+check_cached()
+{
+ if [ ! -f $DBQ_CACHE_DIR/$1 ];then
+  return 1
+ else
+  return 0
+ fi
+
+}
+
+#For initalization of argument values
+init()
+{
+ while [ "$1" != "" ];do
+   case $1 in
+     "--testrun")
+         shift
+         chk_args_of_option "--testrun" "$1"
+         TRNUM=$1;;
+      "--object")
+         shift
+         chk_args_of_option "--object" "$1"
+         OBJECT=$1;;
+      "--type")
+         shift
+         chk_args_of_option "--type" "$1"
+         TYPE=$1;;
+      "--limit")
+         shift
+         chk_args_of_option "--LIMIT" "$1"
+         LIMIT=$1;;
+      "--offset")
+         shift
+         chk_args_of_option "--offset" "$1"
+         OFFSET=$1;;
+      "--pageidx")
+         shift
+         chk_args_of_option "--pageidx" "$1"
+         PAGEIDX=$1;;
+      "--page")
+         shift
+         chk_args_of_option "--page" "$1"
+         PAGE=$1;;
+      "--script")
+         shift
+         chk_args_of_option "--script" "$1"
+         SCRIPT=$1;;
+      "--abs_starttime")
+         shift
+         chk_args_of_option "--abs_starttime" "$1"
+         ABS_STARTTIME=$1;;
+      "--abs_endtime")
+         shift
+         chk_args_of_option "--abs_endtime" "$1"
+         ABS_ENDTIME=$1;;
+      "--starttime")
+         shift
+         chk_args_of_option "--starttime" "$1"
+         STARTTIME=$1;;
+      "--endtime")
+         shift
+         chk_args_of_option "--endtime" "$1"
+         ENDTIME=$1;;
+      "--get_count")
+         shift
+         chk_args_of_option "--get_count" "$1"
+         GET_COUNT=$1;;
+      "--running")  #Pass to indicate test is running, so that it does not return error/runing if TR is running
+         shift
+         chk_args_of_option "--running" "$1"
+         RUNNING="$1";;
+       --*)usage "Invalid Options" ;;
+         *)usage;;
+   esac
+   shift
+  done
+
+  #Checking if Test exist or not
+  if [ ! -d $NS_WDIR/logs/TR$TRNUM ];then
+    usage "Testrun does not exist"
+  else
+    TRDIR="$NS_WDIR/logs/TR$TRNUM" 
+  fi
+
+  #Setting Cache dir for DDR
+  DBQ_CACHE_DIR=$NS_WDIR/logs/TR$TRNUM/ready_reports/.cache/drilldownquery
+  
+  # Create Caching directory if not existing
+  mkdir -m 777 -p $DBQ_CACHE_DIR 
+
+  #checking whether the test is of ND or NS
+  check_is_nd_enabled
+
+  if [ "X$RUNNING" != "X1" ];then  #Check only if running was not passed
+    is_tr_running
+    INRUN=$?
+    if [ $INRUN -eq 0 ]; then
+      return 2
+    fi
+  fi
+  return 1 
+}
+
+###############################################################
+# This functions takes 3 arguments
+# TRNUM, QUERY_TO_RUN and arguments of query
+# If .cav_epoch.diff is not present then older query is run
+###############################################################
+query_selector()
+{
+  if [ ! -s $NS_WDIR/logs/TR$1/.cav_epoch.diff ]; then
+    $2 $3
+    exit 0
+  fi
+}
+
+######################################################################################
+# This function reads the summary.top file to check the start time of the test run
+# It also checks for the presence of .cav_epoch.diff file in the test run
+# If file is present, then TR is new, else old and sets the TR_NEW flag
+######################################################################################
+read_start_time_and_set_flag()
+{
+  if [ -s $NS_WDIR/logs/TR$1/summary.top ]; then
+    TEST_START_TIME=`cut -d '|' -f 3 $NS_WDIR/logs/TR$1/summary.top`
+    TR_YEAR=`echo $TEST_START_TIME | cut -d ' ' -f 1 | cut -d '/' -f 3`
+  fi
+
+  # check if the test run has .cav_epoch_diff then it is new test run , otherwise it is not
+  if [ -s $NS_WDIR/logs/TR$1/.cav_epoch.diff ]; then
+    TR_NEW=1
+    CAV_EPOCH_TIME=`cat $NS_WDIR/logs/TR$1/.cav_epoch.diff`
+  else
+    TR_NEW=0
+  fi
+
+}
+
+############################################################################################################
+#
+# This function converts the starttime, endtime, abs_starttime, abs_endtime to their corresponding values 
+# based on the TR_NEW flag.
+#
+#        |---------------------------------|-------------------|--------------------|
+#       Unix epoch                     CavEpoch             Test Start           Timestamp  
+#
+#         <-------------------------------->                      CAV_EPOCH_TIME
+#         <--------------------------------------------------->   START_TIMESTAMP_RELATIVE_TO_UNIX_EPOCH
+#                                          <------------------>   TEST_START_RELATIVE_SINCE_CAV_EPOCH
+# 
+############################################################################################################
+handle_time_filters()
+{
+
+  # set the TR_NEW value
+  read_start_time_and_set_flag $1
+ 
+  # calculate unix epoch timestamp
+  EPOCH_TIME=`date -d '01/01/1970' +%s`
+
+  # calculate start_timestamp from the NS Start time 
+  START_TIMESTAMP=`eval "date -d '$TEST_START_TIME' +%s"`
+  START_TIMESTAMP_RELATIVE_TO_UNIX_EPOCH=`expr $START_TIMESTAMP - $EPOCH_TIME`
+
+  # If any of this filter is passed in the query, then there is a need to change the values
+  # based on the value of TR_NEW flag
+  if [ "X$STARTTIME" != "X" -o "X$ENDTIME" != "X" -o "X$ABS_STARTTIME" != "X" -o "X$ABS_ENDTIME" != "X" ]; then
+
+    # for new test runs we handle for relative(--starttime and --endtime) and absolute(abs_starttime and --abs_endtime) times, both
+    if [ "X$TR_NEW" == "X1" ]; then
+      
+      TEST_START_RELATIVE_SINCE_CAV_EPOCH=`expr $START_TIMESTAMP - $CAV_EPOCH_TIME`
+      if [ "X$STARTTIME" != "X" -o "X$ENDTIME" != "X" ]; then
+ 
+        if [ "X$STARTTIME" != "X" ]; then
+          echo "$STARTTIME" |egrep -q "^[0-9]+$"
+          if [ $? -ne 0 ]; then
+             usage "ERROR:Start Time should be an Integer value."
+          fi
+          TMP_STARTTIME=$STARTTIME
+          TMP_STARTTIME_SEC=`expr $TMP_STARTTIME / 1000`
+        
+          TIME_RELATIVE_TO_CAV_EPOCH=`expr $TMP_STARTTIME_SEC + $TEST_START_RELATIVE_SINCE_CAV_EPOCH`
+        
+          STARTTIME=$TIME_RELATIVE_TO_CAV_EPOCH 
+        fi
+        
+        if [ "X$ENDTIME" != "X" ]; then
+          echo "$ENDTIME" |egrep -q "^[0-9]+$"
+          if [ $? -ne 0 ]; then
+             usage "ERROR:End Time should be an Integer value."
+          fi
+          TMP_ENDTIME=$ENDTIME
+          TMP_ENDTIME_SEC=`expr $TMP_ENDTIME / 1000`
+        
+          TIME_RELATIVE_TO_CAV_EPOCH=`expr $TMP_ENDTIME_SEC + $TEST_START_RELATIVE_SINCE_CAV_EPOCH`
+        
+          ENDTIME=$TIME_RELATIVE_TO_CAV_EPOCH
+        fi
+ 
+      elif [ "X$ABS_STARTTIME" != "X" -o "X$ABS_ENDTIME" != "X" ]; then
+     
+        if [ "X$ABS_STARTTIME" != "X" ]; then
+          echo "$ABS_STARTTIME" |egrep -q "^[0-9]+$"
+          if [ $? -ne 0 ]; then
+             usage "ERROR:ABS_STARTTIME should be an Integer value."
+          fi
+          
+          TMP_ABSSTARTTIME=`expr $ABS_STARTTIME / 1000`
+          ABS_STARTTIME=`expr $TMP_ABSSTARTTIME - $CAV_EPOCH_TIME`
+        fi
+        
+        if [ "X$ABS_ENDTIME" != "X" ]; then
+          echo "$ABS_ENDTIME" |egrep -q "^[0-9]+$"
+          if [ $? -ne 0 ]; then
+            usage "ERROR:ABS_ENDTIME should be an Integer value."
+          fi
+          
+          TMP_ABSENDTIME=`expr $ABS_ENDTIME / 1000`
+          ABS_ENDTIME=`expr $TMP_ABSENDTIME - $CAV_EPOCH_TIME`        
+        fi
+      
+      fi
+    
+    # for old test runs only absolute timestamp(--abs_starttime and --abs_endtime) needs to be handled
+    fi
+  else
+    # return to the query. Set test_start_time with relative to CAV-Epoch
+    if [ "X$TR_NEW" == "X1" ]; then
+      TEST_START_RELATIVE_SINCE_CAV_EPOCH=`expr $START_TIMESTAMP - $CAV_EPOCH_TIME` 
+    else
+      TEST_START_RELATIVE_SINCE_CAV_EPOCH=0
+    fi
+    return
+  fi
+}
+
+handle_time_filters_in_ms()
+{
+
+  # set the TR_NEW value
+  read_start_time_and_set_flag $1
+ 
+  # calculate unix epoch timestamp
+  EPOCH_TIME=`date -d '01/01/1970' +%s000`
+
+  # calculate start_timestamp from the NS Start time 
+  START_TIMESTAMP=`eval "date -d '$TEST_START_TIME' +%s000"`
+  START_TIMESTAMP_RELATIVE_TO_UNIX_EPOCH=`expr $START_TIMESTAMP - $EPOCH_TIME`
+  CAV_EPOCH_TIME=`expr $CAV_EPOCH_TIME \* 1000`
+  # If any of this filter is passed in the query, then there is a need to change the values
+  # based on the value of TR_NEW flag
+  if [ "X$STARTTIME" != "X" -o "X$ENDTIME" != "X" -o "X$ABS_STARTTIME" != "X" -o "X$ABS_ENDTIME" != "X" ]; then
+
+    # for new test runs we handle for relative(--starttime and --endtime) and absolute(abs_starttime and --abs_endtime) times, both
+    if [ "X$TR_NEW" == "X1" ]; then
+      
+      TEST_START_RELATIVE_SINCE_CAV_EPOCH=`expr $START_TIMESTAMP - $CAV_EPOCH_TIME`
+
+      if [ "X$STARTTIME" != "X" -o "X$ENDTIME" != "X" ]; then
+ 
+        if [ "X$STARTTIME" != "X" ]; then
+          echo "$STARTTIME" |egrep -q "^[0-9]+$"
+          if [ $? -ne 0 ]; then
+             usage "ERROR:Start Time should be an Integer value."
+          fi
+        
+          TIME_RELATIVE_TO_CAV_EPOCH=`expr $STARTTIME + $TEST_START_RELATIVE_SINCE_CAV_EPOCH`
+        
+          STARTTIME=$TIME_RELATIVE_TO_CAV_EPOCH 
+        fi
+        
+        if [ "X$ENDTIME" != "X" ]; then
+          echo "$ENDTIME" |egrep -q "^[0-9]+$"
+          if [ $? -ne 0 ]; then
+             usage "ERROR:End Time should be an Integer value."
+          fi
+        
+          TIME_RELATIVE_TO_CAV_EPOCH=`expr $ENDTIME + $TEST_START_RELATIVE_SINCE_CAV_EPOCH`
+        
+          ENDTIME=$TIME_RELATIVE_TO_CAV_EPOCH
+        fi
+ 
+      elif [ "X$ABS_STARTTIME" != "X" -o "X$ABS_ENDTIME" != "X" ]; then
+     
+        if [ "X$ABS_STARTTIME" != "X" ]; then
+          echo "$ABS_STARTTIME" |egrep -q "^[0-9]+$"
+          if [ $? -ne 0 ]; then
+             usage "ERROR:ABS_STARTTIME should be an Integer value."
+          fi
+          
+          ABS_STARTTIME=`expr $ABS_STARTTIME - $CAV_EPOCH_TIME`
+        fi
+        
+        if [ "X$ABS_ENDTIME" != "X" ]; then
+          echo "$ABS_ENDTIME" |egrep -q "^[0-9]+$"
+          if [ $? -ne 0 ]; then
+            usage "ERROR:ABS_ENDTIME should be an Integer value."
+          fi
+          
+          ABS_ENDTIME=`expr $ABS_ENDTIME - $CAV_EPOCH_TIME`        
+        fi
+      
+      fi
+    
+    # for old test runs only absolute timestamp(--abs_starttime and --abs_endtime) needs to be handled
+    fi
+  else
+    # return to the query. Set test_start_time with relative to CAV-Epoch
+    if [ "X$TR_NEW" == "X1" ]; then
+      TEST_START_RELATIVE_SINCE_CAV_EPOCH=`expr $START_TIMESTAMP - $CAV_EPOCH_TIME` 
+    else
+      TEST_START_RELATIVE_SINCE_CAV_EPOCH=0
+    fi
+    return
+  fi
+}
+#########################################################################################################
+#  This function adds the where clause for starttime time and end time in queries with other tables also
+#  Also used for abs_starttime and abs_endtime
+########################################################################################################
+timestamp_filter_match()
+{
+  if [ "X$URLRECORD_TABLE_FLAG" == "X1" ]; then
+    if [ "X$STARTTIME" != "X" ];then
+      WHERE="$WHERE $NEWLINE    AND URLRecord_$TRNUM.EndTime >= $STARTTIME"
+    fi
+    if [ "X$ENDTIME" != "X" ];then
+      WHERE="$WHERE $NEWLINE    AND URLRecord_$TRNUM.EndTime <= $ENDTIME"
+    fi
+
+    if [ "X$ABS_STARTTIME" != "X" ];then
+      WHERE="$WHERE $NEWLINE    AND URLRecord_$TRNUM.EndTime >= $ABS_STARTTIME"
+    fi
+    if [ "X$ABS_ENDTIME" != "X" ];then
+      WHERE="$WHERE $NEWLINE    AND URLRecord_$TRNUM.EndTime <= $ABS_ENDTIME"
+    fi
+  fi
+
+  if [ "X$SESSIONRECORD_TABLE_FLAG" == "X1" ]; then
+    if [ "X$STARTTIME" != "X" ];then
+      WHERE="$WHERE $NEWLINE    AND SessionRecord_$TRNUM.EndTime >= $STARTTIME"
+    fi
+    if [ "X$ENDTIME" != "X" ];then
+      WHERE="$WHERE $NEWLINE    AND SessionRecord_$TRNUM.EndTime <= $ENDTIME"
+    fi
+
+    if [ "X$ABS_STARTTIME" != "X" ];then
+      WHERE="$WHERE $NEWLINE    AND SessionRecord_$TRNUM.EndTime >= $ABS_STARTTIME"
+    fi
+    if [ "X$ABS_ENDTIME" != "X" ];then
+      WHERE="$WHERE $NEWLINE    AND SessionRecord_$TRNUM.EndTime <= $ABS_ENDTIME"
+    fi
+  fi
+
+  if [ "X$PAGERECORD_TABLE_FLAG" == "X1" ]; then
+    if [ "X$STARTTIME" != "X" ];then
+      WHERE="$WHERE $NEWLINE    AND PageRecord_$TRNUM.EndTime >= $STARTTIME"
+    fi
+    if [ "X$ENDTIME" != "X" ];then
+      WHERE="$WHERE $NEWLINE    AND PageRecord_$TRNUM.EndTime <= $ENDTIME"
+    fi
+
+    if [ "X$ABS_STARTTIME" != "X" ];then
+      WHERE="$WHERE $NEWLINE    AND PageRecord_$TRNUM.EndTime >= $ABS_STARTTIME"
+    fi
+    if [ "X$ABS_ENDTIME" != "X" ];then
+      WHERE="$WHERE $NEWLINE    AND PageRecord_$TRNUM.EndTime <= $ABS_ENDTIME"
+    fi
+  fi
+
+  if [ "X$TRANSPAGERECORD_TABLE_FLAG" == "X1" ]; then
+    if [ "X$STARTTIME" != "X" ];then
+      WHERE="$WHERE $NEWLINE    AND TransPageRecord_$TRNUM.EndTime >= $STARTTIME"
+    fi
+    if [ "X$ENDTIME" != "X" ];then
+      WHERE="$WHERE $NEWLINE    AND TransPageRecord_$TRNUM.EndTime <= $ENDTIME"
+    fi
+
+    if [ "X$ABS_STARTTIME" != "X" ];then
+      WHERE="$WHERE $NEWLINE    AND TransPageRecord_$TRNUM.EndTime >= $ABS_STARTTIME"
+    fi
+    if [ "X$ABS_ENDTIME" != "X" ];then
+      WHERE="$WHERE $NEWLINE    AND TransPageRecord_$TRNUM.EndTime <= $ABS_ENDTIME"
+    fi
+  fi
+
+  if [ "X$TRANSACTIONRECORD_TABLE_FLAG" == "X1" ]; then
+    if [ "X$STARTTIME" != "X" ];then
+      WHERE="$WHERE $NEWLINE    AND TransactionRecord_$TRNUM.EndTime >= $STARTTIME"
+    fi
+    if [ "X$ENDTIME" != "X" ];then
+      WHERE="$WHERE $NEWLINE    AND TransactionRecord_$TRNUM.EndTime <= $ENDTIME"
+    fi
+
+    if [ "X$ABS_STARTTIME" != "X" ];then
+      WHERE="$WHERE $NEWLINE    AND TransactionRecord_$TRNUM.EndTime >= $ABS_STARTTIME"
+    fi
+    if [ "X$ABS_ENDTIME" != "X" ];then
+      WHERE="$WHERE $NEWLINE    AND TransactionRecord_$TRNUM.EndTime <= $ABS_ENDTIME"
+    fi
+  fi
+}
+
+#provide compatibility between getopt and command line argument   
+set_query_files()
+{
+  QUERY_OUT_FILE="$NS_WDIR/logs/TR$1/$QUERY_NAME.out.$$"
+  QUERY_ERR_FILE="$NS_WDIR/logs/TR$1/$QUERY_NAME.err.$$"
+  TEMP_QUERY_CLAUSE="$NS_WDIR/logs/TR$1/$QUERY_NAME.query.$$"
+  LOG_FILE="$NS_WDIR/logs/TR$1/ready_reports/drill_down_query.log"
+#  check_valid_csv >/dev/null 2>&1
+}
+
+
+log_query()
+{
+  echo >/dev/null 
+}
+
+
+ns_query_debug_logs()
+{
+  if [ $debug_level -gt 0 -a $debug_level -lt 3 ];then
+    if [ "X$LOG_FILE" = "X" ];then 
+      LOG_FILE="/tmp/drill_down_query.log"
+    fi
+    if [ "X$1" = "XSTART" ];then
+      LOG_FILE_SIZE=`stat -c %s $LOG_FILE 2>/dev/null`
+      if [ "X$LOG_FILE_SIZE" != "X" ]; then
+        if [ $LOG_FILE_SIZE -ge 5242880 ]; then
+          mv $LOG_FILE $LOG_FILE.prev
+        fi
+      fi
+      echo "===================================================" >> $LOG_FILE
+      echo "COMMAND LINE:$NEWLINE$QUERY_NAME $QUERY_ARGS $NEWLINE" >> $LOG_FILE 
+      START=$(date +%s)
+      echo "START TIME:$NEWLINE`date` $NEWLINE" >> $LOG_FILE
+# in case of ONLY QUERY (--only_query option in ndi_db_get_seq_blob) we need only query  
+# string printed, hence the query execution is not applicable, in that case this
+# function is called from the calling main shell script with arg "END_ONLY_QUERY"
+    elif [ "X$1" = "XEND" -o "X$1" = "XEND_ONLY_QUERY" ];then
+      if [ $debug_level -eq 2 ];then
+       
+        if [ -s $QUERY_ERR_FILE ];then
+          echo "QUERY ERROR:" >> $LOG_FILE
+          cat $QUERY_ERR_FILE >> $LOG_FILE
+        fi
+        if [ -s $QUERY_OUT_FILE ];then
+          echo "QUERY RESULT:" >> $LOG_FILE
+          cat $QUERY_OUT_FILE >> $LOG_FILE
+          echo "" >> $LOG_FILE
+        fi
+      fi
+      END=$(date +%s)
+      echo "END TIME:$NEWLINE`date` $NEWLINE" >> $LOG_FILE
+      echo "EXECUTION DURATION(Seconds):" >> $LOG_FILE
+      if [ "X$1" = "XEND" ];then
+        echo "QUERY TIME|$QUERY_NAME $QUERY_ARGS|$(( $END - $START ))"  >> $LOG_FILE
+      else # see comment above
+        echo "QUERY TIME|$QUERY_NAME $QUERY_ARGS|NA"  >> $LOG_FILE
+      fi
+    else
+      echo "QUERY:" >> $LOG_FILE
+      cat $TEMP_QUERY_CLAUSE >> $LOG_FILE
+      echo "" >> $LOG_FILE
+    fi
+  fi
+}
+
+remove_files()
+{
+
+    if [  $debug_level -eq 0 ];then
+      rm -f $QUERY_ERR_FILE $QUERY_OUT_FILE $TEMP_QUERY_CLAUSE
+
+    elif [ $debug_level -eq 1 ];then
+      if [ -s $QUERY_ERR_FILE ];then
+        echo "Query error is: `cat $QUERY_ERR_FILE`" >> $NS_WDIR/logs/TR$TRNUM/ready_reports/drill_down_query_err.log 
+      fi
+      rm -f $QUERY_ERR_FILE $QUERY_OUT_FILE $TEMP_QUERY_CLAUSE
+
+    elif [ $debug_level -eq 2 ];then
+      if [ -s $QUERY_ERR_FILE ];then
+        echo "Query error is: `cat $QUERY_ERR_FILE`" >> $NS_WDIR/logs/TR$TRNUM/ready_reports/drill_down_query_err.log
+      fi
+      rm -f $QUERY_ERR_FILE $QUERY_OUT_FILE $TEMP_QUERY_CLAUSE
+    fi
+
+}
+
+show_query_error()
+{
+
+  grep "could not connect to server" $QUERY_ERR_FILE >/dev/null
+  if [ $? -eq 0 ]; then
+    echo "Postgress database is not running. Start database using /etc/init.d/postgresql start"
+  else
+    #grep "does not exist" $QUERY_ERR_FILE >/dev/null
+    egrep -E "relation ".*" does not exist" $QUERY_ERR_FILE >/dev/null
+    if [ $? -eq 0 ]; then
+      echo "Database table for test run $TRNUM are not existing"
+      #echo "There is an error in the execution of command."
+    else
+      echo "Error in getting data due to following error:"
+      cat $QUERY_ERR_FILE
+    fi
+  fi
+
+  remove_files
+  exit 1
+}
+
+log_run_query()
+{
+  echo "$SELECT" >>$TEMP_QUERY_CLAUSE
+  echo "$INNER_QUERY" >>$TEMP_QUERY_CLAUSE
+  echo "$FROM" >>$TEMP_QUERY_CLAUSE
+  echo "$WHERE" >>$TEMP_QUERY_CLAUSE
+  echo "$GROUP" >>$TEMP_QUERY_CLAUSE
+  echo "$ORDER" >>$TEMP_QUERY_CLAUSE
+  echo "$LIMIT" >>$TEMP_QUERY_CLAUSE
+  echo "$OFFSET" >>$TEMP_QUERY_CLAUSE
+  ns_query_debug_logs 
+}
+
+#All Nd query and 5u1,5a,8x
+run_nd_query()
+{
+  ns_query_debug_logs "START"
+  INNER_QUERY=""
+  LIMIT=""
+  OFFSET=""
+  log_run_query
+  
+  psql -A test cavisson >$QUERY_OUT_FILE <<+ 2>$QUERY_ERR_FILE
+  $SELECT $FROM $WHERE $GROUP $ORDER
++
+  ns_query_debug_logs "END"
+  if [ -s $QUERY_ERR_FILE ];then
+    show_query_error
+  fi
+}
+#All ndi_get_fp_signature
+run_nd_query_ex()
+{
+  ns_query_debug_logs "START"
+  INNER_QUERY=""
+  log_run_query
+  
+  psql -A test cavisson >$QUERY_OUT_FILE <<+ 2>$QUERY_ERR_FILE
+  $SELECT $FROM $WHERE $GROUP  $ORDER $LIMIT $OFFSET
++
+  ns_query_debug_logs "END"
+  if [ -s $QUERY_ERR_FILE ];then
+    show_query_error
+  fi
+}
+#3x 4x
+run_ns_query()
+{
+  ns_query_debug_logs "START"
+  GROUP=""
+  log_run_query
+  
+  psql -A test cavisson >$QUERY_OUT_FILE <<+ 2>$QUERY_ERR_FILE
+   $SELECT $INNER_QUERY $FROM $WHERE $ORDER $LIMIT $OFFSET
++
+  ns_query_debug_logs "END"
+  if [ -s $QUERY_ERR_FILE ];then
+    show_query_error
+  fi
+}
+
+#for count 
+run_for_count()
+{
+  ns_query_debug_logs "START"
+  INNER_QUERY=""
+  WHERE=""
+  GROUP=""
+  ORDER=""
+  LIMIT=""
+  OFFSET=""
+  log_run_query
+  
+   psql -A test cavisson >$QUERY_OUT_FILE <<+ 2>$QUERY_ERR_FILE  
+  $SELECT $FROM 
++
+  ns_query_debug_logs "END"
+  if [ -s $QUERY_ERR_FILE ];then
+    show_query_error
+  fi
+}
+
+
+add_orl_stats_time_filter()
+{
+  if [ "X$STARTTIME" != "X" ];then
+    WHERE="$WHERE $NEWLINE    AND orlStatsSnapTable_$TRNUM.EndTime >= $STARTTIME"
+  fi
+  if [ "X$ENDTIME" != "X" ];then
+    WHERE="$WHERE $NEWLINE    AND orlStatsSnapTable_$TRNUM.EndTime <= $ENDTIME"
+  fi
+
+  if [ "X$ABS_STARTTIME" != "X" ];then
+    WHERE="$WHERE $NEWLINE    AND orlStatsSnapTable_$TRNUM.EndTime >= $ABS_STARTTIME"
+  fi
+  if [ "X$ABS_ENDTIME" != "X" ];then
+    WHERE="$WHERE $NEWLINE    AND orlStatsSnapTable_$TRNUM.EndTime <= $ABS_ENDTIME"
+  fi
+}
+
+#3xx,6x,7x, query
+run_ns_db_query()
+{
+  ns_query_debug_logs "START"
+  INNER_QUERY=""
+  log_run_query
+  
+  psql -A test cavisson >$QUERY_OUT_FILE <<+ 2>$QUERY_ERR_FILE
+  $SELECT  $FROM $WHERE $GROUP $ORDER $LIMIT $OFFSET
++
+  ns_query_debug_logs "END"
+  if [ -s $QUERY_ERR_FILE ];then
+    show_query_error
+  fi
+}
+#5u2,5p,5a query call it.
+
+#This is used for ndi_manage_auto_sensor_signature_table
+ns_run_query_no_output()
+{
+  ns_query_debug_logs "START"
+  ns_log_run_query "$1"
+
+  psql -A test cavisson  >$QUERY_OUT_FILE  2>$QUERY_ERR_FILE<<+
+  $1
++
+  ns_query_debug_logs "END"
+}
+
+ns_only_build_query()
+{
+  if [ "X$SELECT" != "X" ];then
+    WHOLE_QUERY=" $SELECT" 
+  fi
+  if [ "X$FROM" != "X" ];then
+    WHOLE_QUERY="$WHOLE_QUERY $NEWLINE $FROM" 
+  fi
+  if [ "X$INQ_PREFIX" != "X" ];then
+    WHOLE_QUERY="$WHOLE_QUERY $NEWLINE $INQ_PREFIX"
+  fi
+  if [ "X$INNER_QUERY" != "X" ];then
+    WHOLE_QUERY="$WHOLE_QUERY $NEWLINE $INNER_QUERY"
+  fi
+  if [ "X$INQ_FROM" != "X" ];then
+    WHOLE_QUERY="$WHOLE_QUERY $NEWLINE $INQ_FROM"
+  fi
+  if [ "X$INQ_WHERE" != "X" ];then
+    WHOLE_QUERY="$WHOLE_QUERY $NEWLINE $INQ_WHERE"
+  fi
+  if [ "X$INQ_GROUPBY" != "X" ];then
+    WHOLE_QUERY="$WHOLE_QUERY $NEWLINE $INQ_GROUPBY"
+  fi
+  if [ "X$INQ_ORDERBY" != "X" ];then
+    WHOLE_QUERY="$WHOLE_QUERY $NEWLINE $INQ_ORDERBY"
+  fi
+  if [ "X$INQ_SUFFIX" != "X" ];then
+    WHOLE_QUERY="$WHOLE_QUERY $NEWLINE $INQ_SUFFIX"
+  fi
+  if [ "X$WHERE" != "X" ];then
+    WHOLE_QUERY="$WHOLE_QUERY $NEWLINE $WHERE"
+  fi
+  if [ "X$GROUP" != "X" ];then
+    WHOLE_QUERY="$WHOLE_QUERY $NEWLINE $GROUP"
+  fi
+  if [ "X$ORDER" != "X" ];then
+    WHOLE_QUERY="$WHOLE_QUERY $NEWLINE $ORDER" 
+  fi
+  if [ "X$LIMIT" != "X" ];then
+    WHOLE_QUERY="$WHOLE_QUERY $NEWLINE $LIMIT"
+  fi
+  if [ "X$OFFSET" != "X" ];then
+    WHOLE_QUERY="$WHOLE_QUERY $NEWLINE $OFFSET"
+  fi
+
+  echo "$WHOLE_QUERY"
+}
+
+run_query()
+{
+  if [ "X$ONLY_QUERY" == "X" ];then  
+  ns_query_debug_logs "START"
+  INNER_QUERY=""
+  LIMIT=""
+  OFFSET=""
+  log_run_query
+  
+  psql -A test cavisson  >$QUERY_OUT_FILE <<+ 2>$QUERY_ERR_FILE
+  $SELECT $FROM $WHERE $GROUP $ORDER
++
+  ns_query_debug_logs "END"
+  if [ -s $QUERY_ERR_FILE ];then
+    show_query_error
+  fi
+  else
+    ns_only_build_query   
+  fi
+}
+
+ns_log_run_query()
+{
+  if [ "X$1" = "X" ]; then
+    if [ "X$SELECT" != "X" ];then
+      echo "$SELECT" >>$TEMP_QUERY_CLAUSE
+    fi
+    if [ "X$FROM" != "X" ];then
+      echo "$FROM" >>$TEMP_QUERY_CLAUSE
+    fi
+    if [ "X$INQ_PREFIX" != "X" ];then
+      echo "$INQ_PREFIX" >>$TEMP_QUERY_CLAUSE
+    fi
+    if [ "X$INNER_QUERY" != "X" ];then
+      echo "$INNER_QUERY" >>$TEMP_QUERY_CLAUSE
+    fi
+    if [ "X$INQ_FROM" != "X" ];then
+      echo "$INQ_FROM" >>$TEMP_QUERY_CLAUSE
+    fi
+    if [ "X$INQ_WHERE" != "X" ];then
+      echo "$INQ_WHERE" >>$TEMP_QUERY_CLAUSE
+    fi
+    if [ "X$INQ_GROUPBY" != "X" ];then
+      echo "$INQ_GROUPBY" >>$TEMP_QUERY_CLAUSE
+    fi
+    if [ "X$INQ_ORDERBY" != "X" ];then
+      echo "$INQ_ORDERBY" >>$TEMP_QUERY_CLAUSE
+    fi
+    if [ "X$INQ_SUFFIX" != "X" ];then
+      echo "$INQ_SUFFIX" >>$TEMP_QUERY_CLAUSE
+    fi
+    if [ "X$WHERE" != "X" ];then
+      echo "$WHERE" >>$TEMP_QUERY_CLAUSE
+    fi
+    if [ "X$GROUP" != "X" ];then
+      echo "$GROUP" >>$TEMP_QUERY_CLAUSE
+    fi
+    if [ "X$ORDER" != "X" ];then
+      echo "$ORDER" >>$TEMP_QUERY_CLAUSE
+    fi
+    if [ "X$LIMIT" != "X" ];then
+      echo "$LIMIT" >>$TEMP_QUERY_CLAUSE
+    fi
+    if [ "X$OFFSET" != "X" ];then
+      echo "$OFFSET" >>$TEMP_QUERY_CLAUSE
+    fi
+  else
+    echo "$1" >> $TEMP_QUERY_CLAUSE
+  fi
+  ns_query_debug_logs "$TEMP_QUERY_CLAUSE"
+}
+
+ns_run_query()
+{
+  if [ "X$ONLY_QUERY" == "X" ];then
+  ns_query_debug_logs "START"
+  ns_log_run_query "$1"
+
+  if [ "X$1" = "X" ]; then
+    psql -A test cavisson  >$QUERY_OUT_FILE <<+ 2>$QUERY_ERR_FILE
+    $SELECT $FROM $INQ_PREFIX $INNER_QUERY $INQ_FROM $INQ_WHERE $INQ_GROUPBY $INQ_ORDERBY $INQ_SUFFIX $WHERE $GROUP $ORDER $LIMIT $OFFSET
++
+  else
+    psql -A test cavisson  >$QUERY_OUT_FILE <<+ 2>$QUERY_ERR_FILE
+    $1
++
+  fi
+  ns_query_debug_logs "END"
+
+ 
+  if [ -s $QUERY_ERR_FILE ];then
+    show_query_error
+  fi
+  else
+    ns_only_build_query
+  fi
+}
+
+
+#call by 5p and 5u1
+show_ns_query_result()
+{
+  if [ "X$ONLY_QUERY" == "X" ];then
+    sed '$d' $QUERY_OUT_FILE | grep -v "row)" | grep -v "rows)" | grep -v ^$ | sed '2,$s/ //g'
+    remove_files
+  fi
+} 
+  
+# All  NS and ND query call it.
+show_query_result()
+{ 
+  if [ "X$ONLY_QUERY" == "X" ];then
+    #sed '2d' $QUERY_OUT_FILE | grep -v "row)" | grep -v "rows)" | grep -v ^$ | sed 's/ //g'> /tmp/t2
+    #sed '2d' $QUERY_OUT_FILE | grep -v "row)" | grep -v "rows)" | grep -v ^$ | sed '2,$s/ //g'
+  
+    sed '$d' $QUERY_OUT_FILE|egrep -v "\([0-9]+ row[s]*\)"   
+    remove_files
+  fi
+}
+
+show_query_result_colon_sep()
+{
+  if [ "X$ONLY_QUERY" == "X" ];then
+    sed '$d' $QUERY_OUT_FILE | grep -v "row)" | grep -v "rows)" | grep -v ^$ | sed 's/ //g' | sed 's/|/:/g' >/tmp/nsi_db_utils.$$
+    cat /tmp/nsi_db_utils.$$
+   
+    if [ "X$RET" = "X1" ];then
+       cat /tmp/nsi_db_utils.$$ > $DBQ_CACHE_DIR/$FILE_TYPE
+    fi
+    rm -f /tmp/nsi_db_utils.$$
+    remove_files
+  fi
+}
+
+show_query_result_comma_sep()
+{
+  if [ "X$ONLY_QUERY" == "X" ];then
+    sed '$d' $QUERY_OUT_FILE | grep -v "row)" | grep -v "rows)" | grep -v ^$ | sed 's/|/,/g' >/tmp/nsi_db_utils.$$
+    cat /tmp/nsi_db_utils.$$
+   
+    if [ "X$RET" = "X1" ];then
+       cat /tmp/nsi_db_utils.$$ > $DBQ_CACHE_DIR/$FILE_TYPE
+    fi
+    rm -f /tmp/nsi_db_utils.$$
+    remove_files
+  fi
+}
+
+delete_not_needed_line1()
+{
+  #Delete last line which is num rows fetched
+  sed '$d' $QUERY_OUT_FILE
+}
+
+delete_not_needed_line2()
+{
+  #Delete first and last line which is num rows fetched
+  sed '1d' $QUERY_OUT_FILE | sed '$d'
+}
+
+debug_logs()
+{
+  if [ "X$DEBUG" != "X0" ];then
+    echo "$*"
+  fi
+}
+
+show_test_run_usage() 
+{ 
+  echo "  --testrun is test run number, which is mandatory argument." 
+}
+
+show_object_run_usage() 
+{ 
+  echo "  --object is object type. It is 2 for transaction and 3 for session. It is a mandatory argument"
+}
+
+show_location_run_usage() 
+{ 
+  echo "  --location is the location filter for which data is needed. Default is All."
+}
+
+show_access_run_usage() 
+{ 
+  echo "  --access is the access filter for which data is needed. Default is All."
+}
+
+show_browser_run_usage() 
+{ 
+  echo "  --browser is the browser filter for which data is needed. Default is All."
+}
+
+show_phaseidx_run_usage() 
+{ 
+  echo "  --phaseidx is the phase index selection, which is optional argument"
+}
+
+show_trans_run_usage() 
+{ 
+  echo "  --trans is for selecting particular Transaction name result, which is mandatory argument with --objectt 2"
+}
+
+show_script_run_usage() 
+{ 
+  echo "  --script is for selecting particular Session name result, which is mandatory argument with --object 3"
+}
+
+show_status_run_usage() 
+{ 
+  echo "  --status is for selecting particular status tupe, which is optional argument"
+}
+
+show_starttime_run_usage() 
+{ 
+  echo "  --starttime and -endtime is for selecting result that comes under the given range, which is optional argument."
+}
+
+show_resptimeqmode_run_usage() 
+{ 
+  echo "  --resptimeqmode is the selection of responsetime(1-lessthen, 2-greaterthen, 3-equal), which is optional argument."
+}
+
+show_page_run_usage()
+{
+  echo "  --page is for selecting particular page result, which is optional argument" 
+}
+
+show_url_run_usage()
+{
+  echo "  --url is for selecting particular url result, which is optional argument" 
+}
+
+###regarding --only query support in queries 
+echo $* |grep -w only_query >/dev/null 2>&1
+if [ "$?" = "0" ];then
+  ONLY_QUERY=`echo $* |awk -F "--only_query" '{print $2}' | awk '{print $1}'`
+  MYARGS=`echo $*|sed 's/--only_query[ \t][ \t]*[0-9][0-9]*//g'`
+  set -- $MYARGS
+fi
+

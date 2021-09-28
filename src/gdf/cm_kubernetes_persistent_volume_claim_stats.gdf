@@ -1,0 +1,10 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|1.0|1|-|-|-1|-1|
+
+Group|Kubernetes Persistent Volume Claims|14095|vector|3|0|Kubernetes Metrics|Cluster>NameSpace>PersistentVolumeClaims|Provides metrics related to kubernetes persistent volume claims stats.
+
+Graph|Kubernetes Request Storage (MiB)|1|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|Storage space request for a given pvc in mebibytes.
+Graph|Kubernetes Capacity Storage (MiB)|2|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|Storage capacity for a given pvc in mebibytes.
+Graph|Kubernetes Status|3|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|The phase the persistent volume claim is currently in. Status phase is 1 = (Available) a free resource that is not yet bound to a claim, status phase is 2 =  (Bound) the volume is bound to a claim, status phase is 3 = (Released) the claim has been deleted, but the resource is not yet reclaimed by the cluster, status phase is 4 = (Failed) the volume has failed its automatic reclamation.

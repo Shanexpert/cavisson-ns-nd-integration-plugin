@@ -1,0 +1,11 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|1.0|1|-|-|-1|-1|
+
+Group|Kubernetes Limit Range|14093|vector|4|0|Kubernetes Metrics|Cluster>NameSpace>LimitRanges|Provides metrics related to kubernetes limit range stats.
+
+Graph|Kubernetes Default CPU (cpu)|1|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|The Default CPU limit of a container. The expression 0.1 is equivalent to the expression 100m, which can be read as "one hundred millicpu".
+Graph|Kubernetes Default CPU Request (cpu)|2|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|The Default CPU request of a container. The expression 0.1 is equivalent to the expression 100m, which can be read as "one hundred millicpu".
+Graph|Kubernetes Default Memory (MiB)|3|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|The Default memory limit of a container in mebibytes.
+Graph|Kubernetes Default Memory Request (MiB)|4|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|The Default memory request of a container in mebibytes.

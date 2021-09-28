@@ -1,0 +1,23 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+#
+#cm_nd_hot_spot_data
+#Note - Group Id and graph should not be changed as these are used in Dashboard GUI
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Thread Hotspot Stats|10136|vector|10|0|Application Metrics|Tier>Server>Instance|Thread hotspot stats monitor provide stats for Hotspot threads and threads in states like blocked, runnable or terminated.
+
+Graph|Number Of Threads|1|scalar|sample|-|-|0|NA|-1|-1|	H|NA|Number of all live threads at the time of sampling
+Graph|Number Of All Hotspot Threads|2|scalar|sample|-|-|0|NA|-1|-1|H|NA|Number of all Hotspot threads
+Graph|All Hotspot Threads Duration (Secs)|3|scalar|times|-|-|0|NA|-1|-1|H|NA|All Hotspot Threads Duration (ms)
+Graph|Number Of New Hotspot Threads|4|scalar|sample|-|-|0|NA|-1|-1|M|NA|Number of New hotspot Threads at the time of sampling
+Graph|New Hotspot Threads Duration (Secs)|5|scalar|times|-|-|0|NA|-1|-1|M|NA|New Hotspot threads duration(ms)
+Graph|Number Of Blocked Threads|6|scalar|sample|-|-|0|NA|-1|-1|L|NA|Number of blocked threads at the time of sampling
+Graph|Number Of Runnable Threads|7|scalar|sample|-|-|0|NA|-1|-1|L|NA|Number of runnable threads at the time of sampling
+Graph|Number Of Time Waiting Threads|8|scalar|sample|-|-|0|NA|-1|-1|L|NA|Number of time waiting threads at the time of sampling
+Graph|Number Of Waiting Threads|9|scalar|sample|-|-|0|NA|-1|-1|L|NA|Number of waiting threads at the time of sampling
+#Graph|Number Of New Threads|7|scalar|sample|-|-|0|NA|-1|-1|L|NA|Number of new threads at the time of sampling
+Graph|Number Of Terminated Threads|10|scalar|sample|-|-|0|NA|-1|-1|L|NA|Number of terminated threads at the time of sampling

@@ -1,0 +1,12 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS RedShift ClusterIdentifier Latency Stats|11396|vector|2|0|AWS Metrics|AccountName>Region>ClusterIdentifier>Latency|Amazon RedShift is a data warehouse product which forms part of the larger cloud-computing platform Amazon Web Services.
+
+Graph|AWS RedShift Query Duration (Sec)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average amount of time to complete a query in seconds. 
+
+Graph|AWS RedShift Queries Completed/Sec|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The average number of queries completed per second.
+

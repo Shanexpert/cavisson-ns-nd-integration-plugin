@@ -1,0 +1,31 @@
+# Name      : nsu_get_page
+# Author    : Saloni Tyagi 
+# Purpsose  : To append page of one script to another script.
+#
+# Usage     :  nsu_get_page -s <Source scriptName> -D
+#!/bin/sh
+#Check and get login user name
+USER_NAME=`whoami 2>/dev/null`
+if [ $? != 0 ];then
+  echo "Error: Unable to get the real user name"
+  exit 1
+fi
+
+SCRIPT_NAME_WITH_PATH=$2
+WORK_PROFILE=$4
+NS_RTA_DIR="workspace/$WORK_PROFILE/cavisson"
+
+#if [ ! -d $NS_WDIR/$NS_RTA_DIR/$SCRIPT_NAME_WITH_PATH ]; then
+#  echo "Error in getting script directory $SCRIPT_NAME_WITH_PATH"
+#  echo "Script may not be present"
+#  exit -1
+#fi
+
+#cd $NS_WDIR/webapps/netstorm/WEB-INF/classes
+if [ -d /home/cavisson/monitors ];then
+  java -cp $NS_WDIR/webapps/netstorm/WEB-INF/lib/netstorm_bean.jar:/home/cavisson/monitors/lib/java-getopt-1.0.9.jar -DNS_WDIR=$NS_WDIR pac1.Bean.GetPageList $*
+else
+  java -cp $NS_WDIR/webapps/netstorm/WEB-INF/lib/netstorm_bean.jar:/opt/cavisson/monitors/lib/java-getopt-1.0.9.jar -DNS_WDIR=$NS_WDIR pac1.Bean.GetPageList $*
+fi
+exit $?
+

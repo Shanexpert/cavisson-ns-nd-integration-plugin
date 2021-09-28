@@ -1,0 +1,47 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Tomcat Request Processor|14137|vector|13|0|Application Metrics|Tier>Server>Instance>Worker>Name|This stats provide information about Request Processor of Tomcat.This monitor type monitors the Tomcat request processors.
+
+#G1
+Graph|Tomcat Max Time|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Maximum processing time of a request.
+
+#G2
+Graph|Tomcat Last Request Processing Time|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The processing time of the last request of the Tomcat Request processor.
+
+#G3
+Graph|Tomcat Server Port|3|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Introspected attribute ServerPort of Tomcat Process.
+
+#G4
+Graph|Tomcat Error Count|4|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The number of Tomcat Global Request Processor requests that encountered errors or exceptions during the collection interval. 
+
+#G5
+Graph|Tomcat Request Count|5|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The number of requests processed by the Tomcat request processor during the collection interval.
+
+#G6
+Graph|Tomcat Bytes Sent|6|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The amount of bytes sent by the Tomcat Request Processor monitor type.
+
+#G7
+Graph|Tomcat Request Processing Time|7|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The request processing time taken by the request processor.
+
+#G8
+Graph|Tomcat Processing Time|8|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Time required to complete a Tomcat Request processor request during the collection interval.
+
+#G9
+Graph|Tomcat Bytes Received|9|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Bytes received by the Tomcat Request Process monitor type.
+
+#G10
+Graph|Tomcat Stage|10|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Introspected attribute stage of Tomcat process.
+
+#G11
+Graph|Tomcat Request Bytes Sent|11|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The Tomcat request processor bytes sent.
+
+#G12
+Graph|Tomcat Request Bytes Received|12|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The request processor bytes received by the Tomcat.
+
+#G13
+Graph|Tomcat Content Length|13|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Introspected attribute contentLength of Tomcat Process.

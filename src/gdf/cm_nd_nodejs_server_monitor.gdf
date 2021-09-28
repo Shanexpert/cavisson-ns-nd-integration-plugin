@@ -1,0 +1,30 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+#
+#cm_nd_nodejs_serverMonitor
+#Note - Group Id and graph should not be changed as these are used in Dashboard GUI
+
+Info|3.1|1|-|-|-1|-1|-
+Group|NodeServer Monitor|10563|vector|18|0|Application Metrics|Tier>Server>Instance>ServerName|Server Metrices
+
+Graph|Total Requests |1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of all requests
+Graph|Average Response Time (ms)|2|scalar|times|-|-|0|NA|-1|-1|NA|NA|Average response time spent processing the business transaction from start to end of the entry point invocation.
+Graph|Average Network Time|3|scalar|times|-|-|0|NA|-1|-1|NA|NA|Average network time spent by all request in network (It is the time =last chunk of request receives - first chunk of request receives by server )
+Graph|Average Server Time|4|scalar|times|-|-|0|NA|-1|-1|NA|NA|Average time taken by server to respond over request.
+Graph|Number Of Bytes Read (bytes)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Input Throughput
+Graph|Number Of Bytes Written (bytes)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Output Throughput
+Graph|Number Of 1xx Requests|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of request with 1xx statuscode
+Graph|Number Of 2xx Requests|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of request with 2xx statuscode
+Graph|Number Of 3xx Requests|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of request with 3xx statuscode
+Graph|Number Of 4xx Requests|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of request with 4xx statuscode
+Graph|Number Of 5xx Requests|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of request with 5xx statuscode
+Graph|Number Of POST Requests|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of POST request 
+Graph|Number Of GET Requests|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of GET request
+Graph|Number Of HEAD Requests|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of HEAD request
+Graph|Number Of TRACE Requests|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of TRACE request
+Graph|Number Of DELETE Requests|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of DELETE request
+Graph|Number Of OPTIONS Requests|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of OPTIONS request
+Graph|Number Of PUT Request|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of PUT request 

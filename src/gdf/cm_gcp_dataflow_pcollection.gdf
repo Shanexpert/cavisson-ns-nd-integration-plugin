@@ -1,0 +1,9 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP Dataflow PCollection Stats|10875|vector|2|0|GCP Metrics|Tier>Server>ProjectID>Region>Job>PCollection|GCP Dataflow job pcollection metrics such as elements and estimated_element_size.
+Graph|Dataflow PCollection Elements/Sec|1|scalar|cumulative|-|CumToPS|0|NA|-1|-1|NA|NA|Number of elements/sec added to the pcollection (multi-element data set).
+Graph|Dataflow PCollection Estimated Element Size (KB)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|An estimated element size (in Kilobytes) added to the pcollection (multi-element data set) so far. Dataflow calculates the average encoded size of elements in a pcollection and multiplies it by the number of elements.
+

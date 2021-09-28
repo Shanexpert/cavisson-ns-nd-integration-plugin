@@ -1,0 +1,13 @@
+# --- GDF Version History ---
+# # 1.0 - Initial version
+#
+Info|3.1|1|-|-|-1|-1|-
+#
+Group|Form Field Analytics|10513|vector|6|0|UX Metrics|Channel>Page>Form>Field|NetVision Form Field Analytics
+#
+Graph|Form Field Interaction/min|1|scalar|rate|-|PM|0|A|-1|-1|NA|NA|Number of interactions per minute
+Graph|Unique Form Field Interaction/Min|2|scalar|rate|-|PM|0|A|-1|-1|NA|NA|Number of unique form field interactions per minute
+Graph|Form Field fill duration(ms)|3|scalar|times|-|-|0|A|-1|-1|NA|NA|Form field fill duration in milliseconds.
+Graph|Form Field Hesitation Time(ms)|4|scalar|times|-|-|0|A|-1|-1|NA|NA|Form field fill hesitation duration in milliseconds.
+Graph|Form Field Left Blank/min|5|scalar|rate|-|PM|0|A|-1|-1|NA|NA|Number of form fields left blank per minute.
+Graph|form dropped by field/min|6|scalar|rate|-|PM|0|A|-1|-1|NA|NA|Number of form fields dropped per minute.

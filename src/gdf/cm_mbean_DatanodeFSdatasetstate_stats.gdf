@@ -1,0 +1,36 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+
+#ObjectName :Hadoop:service=DataNode,name=FSDatasetState-e4a71278-e642-4edb-9298-3703bcc25d54
+
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Hadoop FSData set State Stats|14159|vector|11|0|Hadoop Metrics|Tier>Server>Instance|This stats provides information about the metrics related to state of FSdata set.
+
+
+Graph|Hadoop Remaining Capacity|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Current remaining capacity in bytes.
+
+Graph|Hadoop Num Failed Volumes|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Total number of failures occurred.
+
+Graph|Hadoop Last Volume Failure Date|3|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Date at which last volume failed in long format.
+
+Graph|Hadoop Estimated Capacity Lost Total|4|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Total number of storage capacity lost at Data Node.
+
+Graph|Hadoop Num Blocks Cached|5|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Total number of blocks cached.
+
+Graph|Hadoop Num Blocks Failed To Cache|6|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Total number of failures occurred of block cache.
+
+Graph|Hadoop Num Blocks Failed To Uncache|7|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Total number of failures occurred of block uncache.
+
+Graph|Hadoop Total Capacity|8|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Total amount of storage capacity at Data Node.
+
+Graph|Hadoop Dfs Used|9|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Amount of storage used by HDFS. (DFS - Distributed File System).
+
+Graph|Hadoop Cache Capacity|10|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Total cache capacity available at Data Node.
+
+Graph|Hadoop Cache Used|11|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Amount of cache used.

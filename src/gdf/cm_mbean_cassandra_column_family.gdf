@@ -1,0 +1,10 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+#ObjectName : org.apache.cassandra.metrics:type=ColumnFamily,name=AdditionalWriteLatencyNanos
+info|3.1|1|-|-|-1|-1|-
+Group|Apache Cassandra Column Family Stats|14106|vector|1|0|Apache Cassandra Metrics|Tier>Server>Instance>name|This stats gives information about metrics are created per column family.
+#Graphs
+Graph|Apache Cassandra Column Family Value|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of column family created.

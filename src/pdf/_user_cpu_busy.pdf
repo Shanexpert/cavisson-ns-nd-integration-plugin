@@ -1,0 +1,13 @@
+Info|1.0|1|-1|-1|-1
+
+PDF|10|10|100|10|%|User CPU Busy(%)
+Slab|0-10|1|0|10|green
+Slab|10-20|2|10|20|green
+Slab|20-30|3|20|30|green
+Slab|30-40|4|30|40|green
+Slab|40-50|5|40|50|orange
+Slab|50-60|6|50|60|orange
+Slab|60-70|7|60|70|orange
+Slab|70-80|8|70|80|red
+Slab|80-90|9|80|90|red
+Slab|90-100|10|90|100|red

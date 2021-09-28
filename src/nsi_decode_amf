@@ -1,0 +1,35 @@
+#!/bin/sh
+# Name      : nsi_decode_amf
+# Author    : Saloni
+# Purpsose  : To generate xml data file from amf data packet file
+#
+# Usage     : nsi_decode_amf
+#
+#             nsi_decode_amf -i <input file name> 
+#             nsi_decode_amf -i <input file name> -o <output file name>
+#             nsi_decode_amf -i <input file name> -o <output file name> -d <debug level [0|1]>
+# 
+#             e.g.  nsi_decode_amf -i $NS_WDIR/scripts/default/default/XactlyLogin/dump/http_request_body/url_req_body_2_63.amf
+#
+#             e.g.  nsi_decode_amf -i $NS_WDIR/scripts/default/default/XactlyLogin/dump/http_request_body/url_req_body_2_63.amf -o $NS_WDIR/scripts/default/default/XactlyLogin/dump/http_request_body/url_req_body_2_63.xml
+#
+# Modification History:
+#   16/03/11: Saloni - Initial Version
+#
+
+#Check and get login user name
+USER_NAME=`whoami 2>/dev/null`
+if [ $? != 0 ];then
+  echo "Error: Unable to get the real user name"
+  exit 1
+fi
+
+# This is to set CLASSPATH
+if [ -d /home/cavisson/monitors ];then
+  export CLASSPATH=$CLASSPATH:$NS_WDIR/webapps/netstorm/WEB-INF/lib/netstorm_bean.jar:$NS_WDIR/webapps/netstorm/lib/amf.jar:/home/cavisson/monitors/lib/java-getopt-1.0.9.jar:$NS_WDIR/webapps/netstorm/lib/commonClient.jar
+else
+  export CLASSPATH=$CLASSPATH:$NS_WDIR/webapps/netstorm/WEB-INF/lib/netstorm_bean.jar:$NS_WDIR/webapps/netstorm/lib/amf.jar:/opt/cavisson/monitors/lib/java-getopt-1.0.9.jar:$NS_WDIR/webapps/netstorm/lib/commonClient.jar
+fi
+java -classpath $CLASSPATH com.AMF3.GenerateAMFXml $*
+ 
+exit $?

@@ -1,0 +1,27 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Big Query Stats|11002|vector|16|0|Big Query Metrics|ProjectID>Dataset>JobType>StatementType|Information related to Big Query Stats
+
+Graph|Number of Queries|1|scalar|sum|-|-|0|NA|-1|-1|NA|NA|Total number of Queries per project.
+Graph|Total Bytes Processed|2|scalar|sum|-|-|0|NA|-1|-1|NA|NA|Total bytes processed by per Project.
+Graph|Total Slot Time(ms)|3|scalar|sum|-|-|0|NA|-1|-1|NA|NA|Total slot time per project.
+Graph|Avg Slot Usage Per Query(ms)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Avg slot usage of per query by per project.
+Graph|Avg Slot Usage(ms)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Avg slot usage per project.
+Graph|Avg Wait(ms)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average shard spent waiting to be scheduled(per project) in milliseconds.
+Graph|Max Wait(ms)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Slowest shard spent waiting to be scheduled(per Project) in milliseconds.
+Graph|Avg Read(ms)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average shard spent reading input(per Project) in milliseconds.
+Graph|Max Read(ms)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Slowest shard spent reading input(per Project) in milliseconds.
+Graph|Avg Compute(ms)|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average shard spent on CPU-bound tasks(per Project) in milliseconds.
+Graph|Max Compute(ms)|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Slowest shard spent on CPU-bound tasks(per Project) in milliseconds.
+Graph|Avg Write(ms)|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average shard spent on writing output(per Project) in milliseconds.
+Graph|Max Write(ms)|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Slowest shard spent on writing output(per Project) in milliseconds.
+Graph|Total Run Time(sec)|14|scalar|sum|-|-|0|NA|-1|-1|NA|NA|Total Run Time of queries per project.
+Graph|Avg Run Time(sec)|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Avg Run Time of queries per project.
+Graph|Avg Query Run Time(sec)|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Avg Query Run Time of queries per project.
+
+

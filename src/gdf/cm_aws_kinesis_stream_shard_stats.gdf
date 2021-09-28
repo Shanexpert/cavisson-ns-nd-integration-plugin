@@ -1,0 +1,15 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS Kinesis Stream Shard Stats|11246|vector|7|0|AWS Metrics|AccountName>Region>StreamName>ShardID|You can use Amazon Kinesis Data Streams to collect and process large streams of data records in real time.
+
+Graph|AWS Kinesis Incoming Bytes|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of bytes successfully put to the shard over the specified time period.
+Graph|AWS Kinesis Incoming Records|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of records successfully put to the shard over the specified time period.
+Graph|AWS Kinesis Iterator Age (ms)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The age of the last record in all GetRecords calls made against a shard, measured over the specified time period.
+Graph|AWS Kinesis Outgoing Bytes|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|he number of bytes retrieved from the shard, measured over the specified time period.
+Graph|AWS Kinesis Outgoing Records|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of records retrieved from the shard, measured over the specified time period.
+Graph|AWS Kinesis Read Provisioned Throughput|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of GetRecords calls throttled for the stream
+Graph|AWS Kinesis Write Provisioned Throughput|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of records rejected due to throttling for the stream

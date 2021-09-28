@@ -1,0 +1,181 @@
+#!/bin/bash
+
+################################################################################################
+# Name  : nsi_gen_snmp_mon 
+# Usage : 
+# Purpose: This shell generates GDF for generic SNMP monitor
+# Initial version : 
+# Modification    : 
+# Author Name     : 
+
+
+DEBUG=0
+COMMUNITY=""
+
+MIB_INP_FILE=""
+
+Usage()
+{ 
+  echo "$*"
+  echo "Usage:" 
+  echo "nsi_gen_snmp_mon -f <snmp input file> -g <gdf filename without gdf extension> -m <mprof name> [ -G <Group Name (default is SNMP Group)> -s <snmp agent server (Default 127.0.0.1)> -v <vector name (default SNMPVector)> -b breadcrumb (default -) -t topology -D"
+  exit -1
+}
+
+
+error_log()
+{
+    echo "Error: $*"
+} 
+
+debug_log()
+{   
+    if [ "X$DEBUG" == "X0" ]; then
+      return
+    else
+      echo "Debug: $*"
+    fi
+} 
+
+#Default group name
+GROUP_NAME="SNMP Group"
+
+gen_gdf()
+{
+   #File without commented lines
+   TMP_MIB_INP_FILE=/tmp/nsi_gen_snmp_mon.$$
+
+   egrep -v "^#" $MIB_INP_FILE > $TMP_MIB_INP_FILE
+   TOTAL_GRAPHS=`wc -l $TMP_MIB_INP_FILE | cut -d' ' -f1`
+
+   echo "Total number of graphs is: $TOTAL_GRAPHS"
+   #echo "mib file is: $MIB_INP_FILE"
+   #GROUP_ID=11004
+
+   old_dir=`pwd`
+   cd $NS_WDIR/sys/
+   LAST_GROUP_ID=`egrep "^Group\|" *.gdf | cut -f3 -d '|' | sort -n |tail -1`
+   cd $old_dir
+
+   GROUP_ID=`expr $LAST_GROUP_ID + 1`
+
+   echo "Info|2.0|1|-|-|-1|-1|-" > $GDF_FULL_FILE
+   echo "Group|$GROUP_NAME|$GROUP_ID|vector|$TOTAL_GRAPHS|0|SNMP Metrics|$BREADCRUMB|$GROUP_NAME" >> $GDF_FULL_FILE
+
+   GRAPH_ID=1
+
+#input file format Type, Relative, Formula, Formula Value, Index, F1,F2,F3,F4,F5,GraphName and Graph Description are optional
+
+#.iso.org.dod.internet.mgmt.mib-2.tcp.tcpPassiveOpens.0|cumulative|yes|DivideBy|10|Index|F1|F2|F3|F4|F5|TCP Passive Opens|Total number of TCP passive opens
+
+#.iso.org.dod.internet.mgmt.mib-2.tcp.tcpAttemptFails.0|scalar|yes|MultiplyBy|10|Index|F1|F2|F3|F4|F5|TCP Attempt Fails|Total number of TCP Attempt fails
+
+
+   while read line
+   do
+     
+     GRAPH_NAME=`echo $line | awk -F'|' '{printf $12}'`
+     if [ "X$GRAPH_NAME" == "X" ]; then
+       GRAPH_NAME=`echo $line | awk -F'.' '{printf $(NF-1)}'`
+     fi
+
+     GRAPH_TYPE=`echo $line | awk -F'|' '{printf $2}'`
+     if [ "X$GRAPH_TYPE" == "X" ]; then
+       GRAPH_TYPE="cumulative"
+     fi
+     
+     GRAPH_DESCRIPTION=`echo $line | awk -F'|' '{printf $13}'`
+      if [ "X$GRAPH_DESCRIPTION" == "X" ]; then
+       GRAPH_DESCRIPTION="total number of TCP connections"
+     fi
+     
+echo "Graph|$GRAPH_NAME|$GRAPH_ID|scalar|$GRAPH_TYPE|-|-|0|NA|-1|-1|NA|NA|$GRAPH_DESCRIPTION" >> $GDF_FULL_FILE
+
+    GRAPH_ID=`expr $GRAPH_ID + 1`
+   done < $TMP_MIB_INP_FILE
+
+  rm -f $TMP_MIB_INP_FILE
+
+  echo "GDF ($GDF_FULL_FILE) generated"
+}
+
+#default
+SNMP_AGENT_SERVER=127.0.0.1
+VECTOR_NAME=
+CMON_SERVER_NAME=NS
+
+gen_mprof()
+{
+
+#CUSTOM_MONITOR 192.168.0.74 cm_mib2_interface_new.gdf NS 2 cm_snmp_mib -f /tmp/cm_mib2_tcp.inp -i 10 -s 127.0.0.1
+#user if -i given not given, then it will take 10s as default value, otherwise need to mention -i option
+echo "CUSTOM_MONITOR $CMON_SERVER_NAME $GDF_FILE.gdf $VECTOR_NAME 2 cm_snmp_mib -f $MIB_INP_FILE -s $SNMP_AGENT_SERVER -c $COMMUNITY" >> $MPROF_FULL_FILE
+
+#echo "SNMP_MONITOR $CMON_SERVER_NAME $GDF_FILE.gdf $VECTOR_NAME 2 cm_snmp_mib -f $MIB_INP_FILE -i 10 -s $SNMP_AGENT_SERVER -c $COMMUNITY" >> $MPROF_FULL_FILE
+
+
+  echo "Monitor profile appended to $MPROF_FULL_FILE"
+}
+
+
+#############################################################################################
+
+
+while getopts f:g:G:m:s:v:c:b:t:D? c  2>/dev/null
+do
+  case $c in
+    f) MIB_INP_FILE=$OPTARG;;    
+    g) GDF_FILE=$OPTARG;;    
+    G) GROUP_NAME="$OPTARG";;    
+    m) MPROF_FILE="$OPTARG";;    
+    s) SNMP_AGENT_SERVER=$OPTARG;;
+    v) VECTOR_NAME=$OPTARG;;
+    c) COMMUNITY=$OPTARG;;
+    b) BREADCRUMB=$OPTARG;;
+    t) TOPOLOGY=$OPTARG;;
+    D) DEBUG=1;;
+    ?) Usage "Invalid arguments";;
+    *) Usage "Invalid arguments";;
+  esac
+done
+
+debug_log "SNMP Monitor started."
+
+if [ "X$MIB_INP_FILE" == "X" ]; then 
+  Usage "-f <input file> missing"
+fi
+
+if [ "X$GDF_FILE" == "X" ]; then 
+  Usage "-g <gdf file> missing"
+fi
+
+if [ "X$MPROF_FILE" == "X" ]; then 
+  Usage "-m <mprof file> missing"
+fi
+
+if [ "X$TOPOLOGY" != "X" ]; then
+  MPROF_FULL_FILE=$NS_WDIR/mprof/$TOPOLOGY/$MPROF_FILE.mprof
+else
+  MPROF_FULL_FILE=$NS_WDIR/mprof/$MPROF_FILE.mprof
+fi
+
+if [ ! -f $MIB_INP_FILE ];then
+  Usage "Input file $MIB_INP_FILE is not present"
+  exit -1
+fi
+
+GDF_FULL_FILE=$NS_WDIR/sys/$GDF_FILE.gdf
+
+#TODO: Use same group id if replacing
+if [ -f $GDF_FULL_FILE ]; then
+  echo "Warning: SNMP Graph Definition File (GDF) with same name $GDF_FILE is already present. This will be replaced by new definition"
+fi
+
+#If Vector name is not given, then set to agent server name/ip
+if [ "X$VECTOR_NAME" == "X" ]; then
+  VECTOR_NAME=$SNMP_AGENT_SERVER
+fi
+
+gen_gdf
+
+gen_mprof

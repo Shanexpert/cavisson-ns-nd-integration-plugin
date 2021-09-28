@@ -1,0 +1,9 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS QLDB Command Ledger Stats|11282|vector|1|0|AWS Metrics|AccountName>Region>CommandType>LedgerName|Amazon Quantum Ledger Database (Amazon QLDB) is a fully managed ledger database owned by a central trusted authority that provides a transparent, immutable, and cryptographically verifiable transaction log of all of your application changes.
+
+Graph|AWS QLDB Command Latency (ms)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The amount of time taken for data operations, reported in one-minute intervals.

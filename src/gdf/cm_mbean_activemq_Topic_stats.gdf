@@ -1,0 +1,75 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+
+#ObjectName :org.apache.activemq:type=Broker,brokerName=localhost,destinationType=Topic,destinationName=ActiveMQ.Advisory.Topic
+
+
+Info|3.1|1|-|-|-1|-1|-
+Group|ActiveMQ Topic Stats|11421|vector|29|0|Apache Activemq Metrics|Tier>Server>Instance>brokerName>destinationName|Apache ActiveMQ Topic stats matrics describing the available ActiveMQ topics, especially exchanged messages, connected consumers and producers.
+
+
+Graph|ActiveMQ Topic Queue Size|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The number of messages in the destination that are waiting to be consumed, potentially dispatched but unacknowledged.
+
+Graph|ActiveMQ Topic Enqueue Count/sec|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of messages that have been sent to the destination per second.
+
+Graph|ActiveMQ Topic Dequeue Count/sec|3|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of messages that has been acknowledged (and removed) from the destination per second.
+
+Graph|ActiveMQ Topic Consumers|4|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of consumers subscribed to this destination.
+
+Graph|ActiveMQ Topic Producers|5|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of producers attached to this destination.
+
+Graph|ActiveMQ Topic Forward Messages|6|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of messages that have been forwarded (to a networked broker) from the destination.
+
+Graph|ActiveMQ Topic Average Message Size (KB)|7|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Average message size on this destination.
+
+Graph|ActiveMQ Topic Max Message Size (KB)|8|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Max message size on this destination.
+
+Graph|ActiveMQ Topic Min Message Size (KB)|9|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Min message size on this destination.
+
+Graph|ActiveMQ Topic Expired/sec|10|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of messages that have been expired per second.
+
+Graph|ActiveMQ Topic Dispatched/sec|11|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of messages that has been delivered to consumers per seconds, including those not acknowledged.
+
+Graph|ActiveMQ Topic InFlight Messages|12|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of messages that have been dispatched to, but not acknowledged by consumers.
+
+Graph|ActiveMQ Topic Average Enqueue Time (ms)|13|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The average amount of time (in milliseconds), that messages sat in the destination before being consumed.
+
+Graph|ActiveMQ Topic Max Enqueue Time (ms)|14|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The longest amount of time (in milliseconds), that a message sat in the destination before being consumed.
+
+Graph|ActiveMQ Topic Min Enqueue Time (ms)|15|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The shortest amount of time (in milliseconds), that a message sat in the destination before being consumed.
+
+Graph|ActiveMQ Topic Memory Usage Byte Count|16|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Memory used by undelivered messages in bytes.
+
+Graph|ActiveMQ Topic Memory Usage Portion|17|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Portion of memory from the broker memory limit for this destination.
+
+Graph|ActiveMQ Topic Memory Percent Usage|18|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The percentage of the memory limit used.
+
+Graph|ActiveMQ Topic Memory Limit|19|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Memory limit, in bytes, used by undelivered messages before paging to temporary storage.
+
+Graph|ActiveMQ Topic Average Blocked Time (ms)|20|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Average time (ms) messages have been blocked by flow control.
+
+Graph|ActiveMQ Topic Total Blocked Time (ms)|21|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Total time (ms) messages have been blocked by flow control.
+
+Graph|ActiveMQ Topic Temp Usage Percent Usage|22|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The percentage of the temp usage limit used.
+
+Graph|ActiveMQ Topic Temp Usage Limit|23|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Percentage usage of storage limit for temporary messages.
+
+Graph|ActiveMQ Topic Store Message Size|24|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The memory size of all messages in this destination's store.
+
+Graph|ActiveMQ Topic Blocked Producer Warning Interval|25|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Blocked Producer Warning Interval.
+
+Graph|ActiveMQ Topic Max Producers To Audit|26|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Maximum number of producers to audit.
+
+Graph|ActiveMQ Topic Max Audit Depth|27|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Set the maximum depth of message ids to track.
+
+Graph|ActiveMQ Topic Max Page Size|28|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Maximum number of messages to be paged in.
+
+Graph|ActiveMQ Topic Blocked Sends|29|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of messages blocked for flow control.
+
+
+
+

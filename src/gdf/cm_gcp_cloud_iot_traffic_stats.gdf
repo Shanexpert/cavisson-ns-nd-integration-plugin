@@ -1,0 +1,6 @@
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP Cloud IOT Device Traffic|14044|vector|2|0|GCP Metrics|ProjectID>LocationID>RegistryID|It provides metrics related to requests stats for cloud bytes count.
+
+Graph|GCP Cloud IOT Device Received Bytes/Sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Total number of bytes received from devices per second.
+Graph|GCP Cloud IOT Device Sent Bytes/Sec||2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Total number of bytes sent by devices per second.

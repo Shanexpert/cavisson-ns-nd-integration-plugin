@@ -1,0 +1,14 @@
+{
+  "metaData": "Tier>Server>Instance>HttpServerZone",
+  "agent-type": "CMON",
+  "program-name": "cm_generic_rest_monitor",
+  "mhp": "0",
+  "cfg": ".system/rest/NginxPlusHttpServerZoneStats.xml.enc",
+  "custom-mon-name": "NginxPlusHttpServerZoneStats",
+  "pgm-type": "java",
+  "options": "",
+  "gdf-name": "cm_cav_rest_nginx_plus_http_server_zone_stats.gdf",
+  "type": "rest",
+  "category": "NginX",
+  "djn": "GenericRestMonitor.json"
+}

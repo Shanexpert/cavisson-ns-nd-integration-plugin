@@ -1,0 +1,8 @@
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Azure Traffic Manager Stats |14016|vector|2|0|Azure Metrics|AccountName>Region>ResourceGroup>TrafficManagerProfiles|Azure Traffic Manager is a DNS-based traffic load balancer that enables you to distribute traffic optimally to services across global Azure regions, while providing high availability and responsiveness
+
+Graph|Azure  QpsByEndpoint|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of times a Traffic Manager endpoint was returned in the given time frame.
+
+Graph|Azure  ProbeAgent Current Endpoint State ByProfile ResourceId|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|one if an endpoint's probe status is "Enabled", 0 otherwise(Endpoint Status by Endpoint).
+

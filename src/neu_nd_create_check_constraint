@@ -1,0 +1,386 @@
+#! /bin/sh
+
+BASE_DIR=""
+
+#this function will check if constaint already exist or not.
+is_constraint_present()
+{
+  TABLE_NAME_IN=$1
+  CONST_NAME_IN=$2
+  #change in lower case.
+  CONST_NAME=`echo $CONST_NAME_IN | tr '[:upper:]' '[:lower:]'`
+  TABLE_NAME=`echo $TABLE_NAME_IN | tr '[:upper:]' '[:lower:]'`
+  #check in table schema.
+  OUT=`psql --user=cavisson -d test -t -c "SELECT constraint_name from information_schema.table_constraints where constraint_name ~ '^$CONST_NAME$' and table_name ~ '^$TABLE_NAME$'"`
+  if [ "X$OUT" != "X" ];then
+    return 1;
+  fi
+  return 0;
+}
+
+Usage()
+{
+  echo $*
+  echo "Usage: neu_nd_create_check_constraint <Test Run Number> <Partition Name> <Start Time> <End Time>"
+  echo "Example:"
+  echo "  neu_nd_create_check_constraint 1234 201402201000 1392877529000 1392877829000"
+  exit -1
+}
+
+chk_args()
+{
+  if [ "X$TR_NUM" == "X" ]; then
+    Usage "TR is missing"
+  fi
+
+  if [ "X$PARTITION_NAME" == "X" ]; then
+    Usage "Partition Name is missing"
+  fi
+
+  #Checking if test number is numeric
+  echo $TR_NUM | egrep '^[0-9]+$' >/dev/null 2>&1
+  if [ "$?" -eq "1" ]; then
+    Usage "Test run number is not numeric"
+  fi
+
+  #Checking Test number is valid or not
+  if [ -d $PWD/TR$TR_NUM ]; then
+    BASE_DIR=$PWD
+  elif [ -d $NS_WDIR/logs/TR$TR_NUM ]; then
+    BASE_DIR=$NS_WDIR/logs
+  else
+    echo "Error: Test run number $TR_NUM is not a valid test run number"
+    exit -1
+  fi
+
+  if [ "X$START_TIME" == "X" -a "X$END_TIME" == "X" ]; then
+    Usage "Give either Start time/End time so as to apply the check constraint."
+  fi
+ 
+  if [ "X$START_TIME" != "X" ];then
+    echo $START_TIME | egrep '^[0-9]+$' >/dev/null 2>&1
+    if [ "$?" -eq "1" ]; then
+      Usage "Start Time is not numeric"
+    fi
+  fi
+
+  if [ "X$END_TIME" != "X" ];then
+    echo $END_TIME | egrep '^[0-9]+$' >/dev/null 2>&1
+    if [ "$?" -eq "1" ]; then
+      Usage "End Time is not numeric"
+    fi
+  fi
+}
+
+chk_args_of_option()
+{
+  if [ "X$2" == "X" ];then
+    echo "Option $1 required a value."
+    Usage
+    exit -1
+  fi
+}
+
+while [ "$1" != "" ];do
+  case $1 in
+    "-TR")
+        shift
+      chk_args_of_option "-TR" "$1"
+        TR_NUM=$1;;
+    "-PT")
+        shift
+      chk_args_of_option "-PT" "$1"
+        PARTITION_NAME=$1;;
+    "-ST")
+        shift
+      chk_args_of_option "-ST" "$1"
+        START_TIME=$1;;
+    "-ET")
+        shift
+      chk_args_of_option "-ET" "$1"
+        END_TIME=$1;;
+    "-CN")
+        shift
+      chk_args_of_option "-CN" "$1"
+        CSV_NAME=$1;;
+    -*) Usage "Invalid option $1";;
+    *) Usage;;
+  esac
+  shift
+done
+
+chk_args
+
+if [ "X$START_TIME" != "X" -a "X$END_TIME" != "X" ];then
+  CHECK="CHECK ( starttime >= $START_TIME AND starttime <= $END_TIME AND endtime >= $START_TIME AND endtime <= $END_TIME );"
+elif [ "X$START_TIME" != "X" ];then
+  CHECK="CHECK ( starttime >= $START_TIME AND endtime >= $START_TIME );"
+  START_TIMESTAMP_IN_DATE=`date -d @$START_TIME +%b" "%d" "%Y" "%H:%M:%S`
+elif [ "X$END_TIME" != "X" ];then
+  CHECK="CHECK ( starttime <= $END_TIME AND endtime <= $END_TIME );"
+  END_TIMESTAMP_IN_DATE=`date -d @$END_TIME +%b" "%d" "%Y" "%H:%M:%S`
+fi
+
+
+if [ "X$END_TIME" != "X" -a "X$START_TIME" == "X" ];then
+  PARTITION_START_TIME_STAMP=$PARTITION_NAME"_check_endtime"
+elif [ "X$END_TIME" == "X" -a "X$START_TIME" != "X" ];then
+  PARTITION_START_TIME_STAMP=$PARTITION_NAME"_check_starttime"
+else
+  PARTITION_START_TIME_STAMP=$PARTITION_NAME"_check"
+fi
+
+PARTITION_TABLE_NAME=$TR_NUM"_"$PARTITION_NAME
+
+FLOWPATH_CONSTRAINT="FlowPath_"$TR_NUM"_"$PARTITION_START_TIME_STAMP
+NDAPP_LOG_CONSTRAINT="NDAppLogs_"$TR_NUM"_"$PARTITION_START_TIME_STAMP
+ND_SQL_CONSTRAINT="NDSQLRecord_"$TR_NUM"_"$PARTITION_START_TIME_STAMP
+NDAUTO_SENSOR_CONSTRAINT="NDAutoSensorHotSpotThreads_"$TR_NUM"_"$PARTITION_START_TIME_STAMP
+NDEXCEPTIONS_CONSTRAINT="NDExceptions_"$TR_NUM"_"$PARTITION_START_TIME_STAMP
+NDJMS_CONSTRAINT="NDJMS_"$TR_NUM"_"$PARTITION_START_TIME_STAMP
+NDMETHOD_TIMING_CONSTRAINT="NDMethodTiming_"$TR_NUM"_"$PARTITION_START_TIME_STAMP
+
+echo 
+echo "Running Command : neu_nd_create_check_constraint -TR $TR_NUM -PT $PARTITION_NAME"
+if [ "X$CSV_NAME" == "X" -o "X$CSV_NAME" == "Xall" -o "X$CSV_NAME" == "XALL" ];then
+  #Case to add constraints on all partition table.
+  if [ "X$END_TIME" != "X" -a "X$START_TIME" == "X" ];then
+    #In case only end time is given then apply end time constriant foe all tables.
+    psql test cavisson <<+
+    alter table FlowPath_$PARTITION_TABLE_NAME add constraint $FLOWPATH_CONSTRAINT 
+      CHECK ( FlowPathBeginTimestamp <= $END_TIME AND FlowPathEndTimestamp <= $END_TIME );
+ 
+    alter table NDAppLogs_$PARTITION_TABLE_NAME add constraint $NDAPP_LOG_CONSTRAINT 
+      CHECK ( Date <= $END_TIME ); 
+
+    alter table NDSQLRecord_$PARTITION_TABLE_NAME add constraint $ND_SQL_CONSTRAINT 
+      CHECK ( SQLBeginTimestamp <= $END_TIME ); 
+
+    alter table NDAutoSensorHotSpotThreads_$PARTITION_TABLE_NAME add constraint $NDAUTO_SENSOR_CONSTRAINT 
+      CHECK ((HotSpotStartTimeStamp + (HotSpotDuration/1000)) <= $END_TIME ); 
+
+    alter table NDExceptions_$PARTITION_TABLE_NAME add constraint $NDEXCEPTIONS_CONSTRAINT 
+      CHECK ( TimeStamp <= $END_TIME );
+ 
+    alter table NDJMS_$PARTITION_TABLE_NAME add constraint $NDJMS_CONSTRAINT
+      CHECK ( TimeStamp <= $END_TIME );
+
+    alter table NDMethodTiming_$PARTITION_TABLE_NAME add constraint $NDMETHOD_TIMING_CONSTRAINT
+      CHECK ( StartTime <= $END_TIME AND EndTime <= $END_TIME );
++
+  elif [ "X$START_TIME" != "X" -a "X$END_TIME" == "X" ];then
+    #In case only start time is given then apply start time constraint for all tables.
+    psql test cavisson <<+
+    alter table FlowPath_$PARTITION_TABLE_NAME add constraint $FLOWPATH_CONSTRAINT  
+      CHECK ( FlowPathBeginTimestamp >= $START_TIME AND FlowPathEndTimestamp >= $START_TIME );
+
+    alter table NDAppLogs_$PARTITION_TABLE_NAME add constraint $NDAPP_LOG_CONSTRAINT 
+      CHECK ( Date >= $START_TIME ); 
+
+    alter table NDSQLRecord_$PARTITION_TABLE_NAME add constraint $ND_SQL_CONSTRAINT
+      CHECK ( SQLBeginTimestamp >= $START_TIME );
+
+    alter table NDAutoSensorHotSpotThreads_$PARTITION_TABLE_NAME add constraint $NDAUTO_SENSOR_CONSTRAINT
+      CHECK ((HotSpotStartTimeStamp + (HotSpotDuration/1000)) >= $START_TIME ); 
+
+    alter table NDExceptions_$PARTITION_TABLE_NAME add constraint $NDEXCEPTIONS_CONSTRAINT 
+     CHECK ( TimeStamp >= $START_TIME );
+
+    alter table NDJMS_$PARTITION_TABLE_NAME add constraint $NDJMS_CONSTRAINT
+      CHECK ( TimeStamp >= $START_TIME );
+
+    alter table NDMethodTiming_$PARTITION_TABLE_NAME add constraint $NDMETHOD_TIMING_CONSTRAINT
+      CHECK ( StartTime >= $START_TIME AND EndTime >= $START_TIME );
++
+  else
+    #In case both start time and endtime are given then apply both start time and end time constrint for all tables. 
+    psql test cavisson <<+
+      alter table FlowPath_$PARTITION_TABLE_NAME add constraint $FLOWPATH_CONSTRAINT
+        CHECK ( FlowPathBeginTimestamp >= $START_TIME AND FlowPathBeginTimestamp <= $END_TIME AND FlowPathEndTimestamp >= $START_TIME AND FlowPathEndTimestamp <= $END_TIME );
+
+      alter table NDAppLogs_$PARTITION_TABLE_NAME add constraint $NDAPP_LOG_CONSTRAINT 
+        CHECK ( Date >= $START_TIME AND Date <= $END_TIME ); 
+
+      alter table NDSQLRecord_$PARTITION_TABLE_NAME add constraint $ND_SQL_CONSTRAINT 
+        CHECK ( SQLBeginTimestamp >= $START_TIME AND SQLBeginTimestamp <= $END_TIME );
+
+      alter table NDAutoSensorHotSpotThreads_$PARTITION_TABLE_NAME add constraint $NDAUTO_SENSOR_CONSTRAINT 
+        CHECK (( HotSpotStartTimeStamp + (HotSpotDuration/1000)) >= $START_TIME AND (HotSpotStartTimeStamp + (HotSpotDuration/1000)) <= $END_TIME); 
+
+      alter table NDExceptions_$PARTITION_TABLE_NAME add constraint $NDEXCEPTIONS_CONSTRAINT 
+        CHECK ( TimeStamp >= $START_TIME AND TimeStamp <= $END_TIME );
+
+      alter table NDJMS_$PARTITION_TABLE_NAME add constraint $NDJMS_CONSTRAINT
+        CHECK ( TimeStamp >= $START_TIME AND TimeStamp <= $END_TIME );
+
+      alter table NDMethodTiming_$PARTITION_TABLE_NAME add constraint $NDMETHOD_TIMING_CONSTRAINT
+        CHECK ( StartTime >= $START_TIME AND StartTime <= $END_TIME AND EndTime >= $START_TIME AND EndTime <= $END_TIME );
++
+  fi
+else
+  #In case the particular CSV is passed then applying check constraint of that particular table.
+  if [ "$CSV_NAME" ==  "NDFlowPath.csv" ];then
+    #check if constraints already exist then don't add constraint.
+    is_constraint_present "FlowPath_$PARTITION_TABLE_NAME" "$FLOWPATH_CONSTRAINT"
+    if [ $? -eq 1 ];then 
+      echo "Constraint $FLOWPATH_CONSTRAINT already exist for Table FlowPath_$PARTITION_TABLE_NAME"
+      exit 0
+    fi
+    #else just add this constraint.
+    if [ "X$END_TIME" != "X" -a "X$START_TIME" == "X" ];then
+      psql test cavisson <<+
+      alter table FlowPath_$PARTITION_TABLE_NAME add constraint $FLOWPATH_CONSTRAINT 
+        CHECK ( FlowPathBeginTimestamp <= $END_TIME AND FlowPathEndTimestamp <= $END_TIME );
++
+    elif [ "X$START_TIME" != "X" -a "X$END_TIME" == "X" ];then
+      psql test cavisson <<+
+      alter table FlowPath_$PARTITION_TABLE_NAME add constraint $FLOWPATH_CONSTRAINT  
+        CHECK ( FlowPathBeginTimestamp >= $START_TIME AND FlowPathEndTimestamp >= $START_TIME );
++
+    else
+      psql test cavisson <<+
+      alter table FlowPath_$PARTITION_TABLE_NAME add constraint $FLOWPATH_CONSTRAINT
+        CHECK ( FlowPathBeginTimestamp >= $START_TIME AND FlowPathBeginTimestamp <= $END_TIME AND FlowPathEndTimestamp >= $START_TIME AND FlowPathEndTimestamp <= $END_TIME );
++
+    fi
+  elif [ "$CSV_NAME" == "NDAppLogs.csv" ];then
+    #check if constraints already exist then don't add constraint.
+    is_constraint_present "NDAppLogs_$PARTITION_TABLE_NAME" "$NDAPP_LOG_CONSTRAINT"
+    if [ $? -eq 1 ];then 
+      echo "Constraint $NDAPP_LOG_CONSTRAINT already exist for Table NDAppLogs_$PARTITION_TABLE_NAME"
+      exit 0
+    fi
+    if [ "X$END_TIME" != "X" -a "X$START_TIME" == "X" ];then
+      psql test cavisson <<+
+      alter table NDAppLogs_$PARTITION_TABLE_NAME add constraint $NDAPP_LOG_CONSTRAINT 
+        CHECK ( Date <= $END_TIME ); 
++
+    elif [ "X$START_TIME" != "X" -a "X$END_TIME" == "X" ];then
+      psql test cavisson <<+
+      alter table NDAppLogs_$PARTITION_TABLE_NAME add constraint $NDAPP_LOG_CONSTRAINT 
+        CHECK ( Date >= $START_TIME ); 
++
+    else
+      psql test cavisson <<+
+      alter table NDAppLogs_$PARTITION_TABLE_NAME add constraint $NDAPP_LOG_CONSTRAINT 
+        CHECK ( Date >= $START_TIME AND Date <= $END_TIME ); 
++
+    fi
+  elif [ "$CSV_NAME" == "NDSQLRecord.csv" ];then
+    #check if constraints already exist then don't add constraint.
+    is_constraint_present "NDSQLRecord_$PARTITION_TABLE_NAME" "$ND_SQL_CONSTRAINT"
+    if [ $? -eq 1 ];then 
+      echo "Constraint $ND_SQL_CONSTRAINT already exist for Table NDSQLRecord_$PARTITION_TABLE_NAME"
+      exit 0
+    fi
+    if [ "X$END_TIME" != "X" -a "X$START_TIME" == "X" ];then
+      psql test cavisson <<+
+      alter table NDSQLRecord_$PARTITION_TABLE_NAME add constraint $ND_SQL_CONSTRAINT 
+        CHECK ( SQLBeginTimestamp <= $END_TIME ); 
++
+    elif [ "X$START_TIME" != "X" -a "X$END_TIME" == "X" ];then
+      psql test cavisson <<+
+      alter table NDSQLRecord_$PARTITION_TABLE_NAME add constraint $ND_SQL_CONSTRAINT
+        CHECK ( SQLBeginTimestamp >= $START_TIME );
++
+    else
+      psql test cavisson <<+
+      alter table NDSQLRecord_$PARTITION_TABLE_NAME add constraint $ND_SQL_CONSTRAINT 
+        CHECK ( SQLBeginTimestamp >= $START_TIME AND SQLBeginTimestamp <= $END_TIME );
++
+    fi
+  elif [ "$CSV_NAME" == "NDAutoSensorHotSpotThreads.csv" ];then
+    #check if constraints already exist then don't add constraint.
+    is_constraint_present "NDAutoSensorHotSpotThreads_$PARTITION_TABLE_NAME" "$NDAUTO_SENSOR_CONSTRAINT"
+    if [ $? -eq 1 ];then 
+      echo "Constraint $NDAUTO_SENSOR_CONSTRAINT already exist for Table NDAutoSensorHotSpotThreads_$PARTITION_TABLE_NAME"
+      exit 0
+    fi
+    if [ "X$END_TIME" != "X" -a "X$START_TIME" == "X" ];then
+      psql test cavisson <<+
+      alter table NDAutoSensorHotSpotThreads_$PARTITION_TABLE_NAME add constraint $NDAUTO_SENSOR_CONSTRAINT 
+        CHECK ((HotSpotStartTimeStamp + (HotSpotDuration/1000)) <= $END_TIME ); 
++
+    elif [ "X$START_TIME" != "X" -a "X$END_TIME" == "X" ];then
+      psql test cavisson <<+
+      alter table NDAutoSensorHotSpotThreads_$PARTITION_TABLE_NAME add constraint $NDAUTO_SENSOR_CONSTRAINT
+        CHECK ((HotSpotStartTimeStamp + (HotSpotDuration/1000)) >= $START_TIME ); 
++
+    else
+      psql test cavisson <<+
+      alter table NDAutoSensorHotSpotThreads_$PARTITION_TABLE_NAME add constraint $NDAUTO_SENSOR_CONSTRAINT 
+        CHECK (( HotSpotStartTimeStamp + (HotSpotDuration/1000)) >= $START_TIME AND (HotSpotStartTimeStamp + (HotSpotDuration/1000)) <= $END_TIME); 
++
+    fi
+  elif [ "$CSV_NAME" == "NDExceptions.csv" ];then
+    #check if constraints already exist then don't add constraint.
+    is_constraint_present "NDExceptions_$PARTITION_TABLE_NAME" "$NDEXCEPTIONS_CONSTRAINT"
+    if [ $? -eq 1 ];then 
+      echo "Constraint $NDEXCEPTIONS_CONSTRAINT already exist for Table NDExceptions_$PARTITION_TABLE_NAME"
+      exit 0
+    fi
+    if [ "X$END_TIME" != "X" -a "X$START_TIME" == "X" ];then
+      psql test cavisson <<+
+      alter table NDExceptions_$PARTITION_TABLE_NAME add constraint $NDEXCEPTIONS_CONSTRAINT 
+        CHECK ( TimeStamp <= $END_TIME );
++
+    elif [ "X$START_TIME" != "X" -a "X$END_TIME" == "X" ];then
+      psql test cavisson <<+
+      alter table NDExceptions_$PARTITION_TABLE_NAME add constraint $NDEXCEPTIONS_CONSTRAINT 
+        CHECK ( TimeStamp >= $START_TIME );
++
+    else
+      psql test cavisson <<+
+      alter table NDExceptions_$PARTITION_TABLE_NAME add constraint $NDEXCEPTIONS_CONSTRAINT 
+        CHECK ( TimeStamp >= $START_TIME AND TimeStamp <= $END_TIME );
++
+    fi 
+  elif [ "$CSV_NAME" == "NDJMS.csv" ];then
+    #check if constraints already exist then don't add constraint.
+    is_constraint_present "NDJMS_$PARTITION_TABLE_NAME" "$NDJMS_CONSTRAINT"
+    if [ $? -eq 1 ];then 
+      echo "Constraint $NDJMS_CONSTRAINT already exist for Table NDJMS_$PARTITION_TABLE_NAME"
+      exit 0
+    fi
+    if [ "X$END_TIME" != "X" -a "X$START_TIME" == "X" ];then
+      psql test cavisson <<+
+      alter table NDJMS_$PARTITION_TABLE_NAME add constraint $NDJMS_CONSTRAINT 
+        CHECK ( TimeStamp <= $END_TIME );
++
+    elif [ "X$START_TIME" != "X" -a "X$END_TIME" == "X" ];then
+      psql test cavisson <<+
+      alter table NDJMS_$PARTITION_TABLE_NAME add constraint $NDJMS_CONSTRAINT 
+        CHECK ( TimeStamp >= $START_TIME );
++
+    else
+      psql test cavisson <<+
+      alter table NDJMS_$PARTITION_TABLE_NAME add constraint $NDJMS_CONSTRAINT 
+        CHECK ( TimeStamp >= $START_TIME AND TimeStamp <= $END_TIME );
++
+    fi 
+  elif [ "$CSV_NAME" == "NDMethodTiming.csv" ];then
+    #check if constraints already exist then don't add constraint.
+    is_constraint_present "NDMethodTiming_$PARTITION_TABLE_NAME" "$NDMETHOD_TIMING_CONSTRAINT"
+    if [ $? -eq 1 ];then 
+      echo "Constraint $NDMETHOD_TIMING_CONSTRAINT already exist for Table NDMethodTiming_$PARTITION_TABLE_NAME"
+      exit 0
+    fi
+    if [ "X$END_TIME" != "X" -a "X$START_TIME" == "X" ];then
+      psql test cavisson <<+
+      alter table NDMethodTiming_$PARTITION_TABLE_NAME add constraint $NDMETHOD_TIMING_CONSTRAINT 
+        CHECK ( StartTime <= $END_TIME AND EndTime <= $END_TIME );
++
+    elif [ "X$START_TIME" != "X" -a "X$END_TIME" == "X" ];then
+      psql test cavisson <<+
+      alter table NDMethodTiming_$PARTITION_TABLE_NAME add constraint $NDMETHOD_TIMING_CONSTRAINT 
+        CHECK ( StartTime >= $START_TIME AND EndTime >= $START_TIME );
++
+    else
+      psql test cavisson <<+
+      alter table NDMethodTiming_$PARTITION_TABLE_NAME add constraint $NDMETHOD_TIMING_CONSTRAINT 
+        CHECK ( StartTime >= $START_TIME AND StartTime <= $END_TIME AND EndTime >= $START_TIME AND EndTime <= $END_TIME );
++
+    fi 
+  fi
+fi
+echo "neu_nd_create_check_constraint: ... Done Adding check constraints on tables."

@@ -1,0 +1,23 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+#
+# Command to get data for this gdf on windows server : 
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# wmic path Win32_PerfFormattedData_NETFramework_NETCLRSecurity.Name='_Global_' get NumberLinkTimeChecks,PercentTimeinRTchecks,PercentTimeSigAuthenticating,StackWalkDepth,TotalRuntimeChecks /every:10
+#
+# Entry in mprof to get data through wmic :
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# CUSTOM_MONITOR 192.168.1.52 cm_win_NETCLRSecurity_stats.gdf Win_Mon_NETCLRSecurity 2 wmic path Win32_PerfFormattedData_NETFramework_NETCLRSecurity.Name='_Global_' get NumberLinkTimeChecks,PercentTimeinRTchecks,PercentTimeSigAuthenticating,StackWalkDepth,TotalRuntimeChecks /every:10
+#
+
+Info|3.1|1|-|-|-1|-1|-
+Group|.NET CLR Security Stats|10044|vector|5|0|Application Metrics|Tier>Server>Instance|.Net CLR security stats. Common language runtime (CLR) supports a security model called code access security (CAS) for managed code. In this model, permissions are granted to assemblies based on the identity of the code. The code access security mechanism supported by the CLR is based on the assumption that the runtime can host both fully trusted and partially trusted code.
+
+Graph|Link Time Checks/Sec|1|scalar|rate|-|CumToPS|0|NA|-1|-1|L|NA|Number of link time Code Access Security (CAS) checks per second. Linktime CAS checks are performed when a caller makes a call to a callee demanding a particular permission at JIT compile time.
+Graph|Time In Run Time Checks (Pct)|2|scalar|sample|-|-|0|NA|-1|-1|L|NA|Percentage of elapsed time spent in performing runtime Code Access Security (CAS) checks since the last such check. CAS allows code to be trusted to varying degrees and enforces these varying levels of trust depending on code identity.
+Graph|Time Signature Authenticating (Pct)|3|scalar|sample|-|-|0|NA|-1|-1|L|NA|Percentage of elapsed time spent in signature authenticating.
+Graph|Stack Walk Depth|4|scalar|sample|-|-|0|NA|-1|-1|L|NA|Depth of the stack during that last runtime Code Access Security check. Runtime Code Access Security check is performed by crawling the stack. 
+Graph|Total Run Time Checks|5|scalar|cumulative|-|-|0|NA|-1|-1|L|NA|Total number of runtime Code Access Security (CAS) checks performed since the start of the application. Runtime CAS checks are performed when a caller makes a call to a callee demanding a particular permission.

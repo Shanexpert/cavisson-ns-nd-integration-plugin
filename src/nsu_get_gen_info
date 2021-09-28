@@ -1,0 +1,66 @@
+#!/bin/bash
+# Name    : nsu_get_gen_info
+# Purpose : Download files of Test Init Status from generators and save them
+#           mode : 0 - Controller 1 - Generator 
+# History : created on 27th February
+# Owner   : Gaurav Sharma
+
+mode=$1
+if [ "X$mode" = "X0" ];then
+  test_run=$2
+  gen_name=$3
+  cntlr_ip=$4
+  gen_tr=""
+  scenario=$NS_WDIR/logs/TR$test_run/sorted_scenario.conf
+  gen_line=`nc_admin -o show |grep -w $gen_name`
+  gen_ip=`echo $gen_line|cut -d'|' -f2`
+  gen_work=`echo $gen_line|cut -d'|' -f5`
+  cnt_path=$NS_WDIR/logs/TR$test_run/ready_reports/TestInitStatus/Generators/$gen_name
+  netcloud_path=$NS_WDIR/logs/TR$test_run/NetCloud
+
+  [ "X$cntlr_ip" = "X" ] && cntlr_ip=`grep -w ^NSAdminIP /home/cavisson/etc/cav.conf 2>/dev/null| cut -d' ' -f2 | cut -d'/' -f1`
+  if [ -d $netcloud_path -a -f $netcloud_path/NetCloud.data ];then
+    gen_tr=`awk -F'|' -v var=$gen_name '{if (var==$2) print $1}' $netcloud_path/NetCloud.data 2>/dev/null|cut -d' ' -f2`
+  fi
+  [ -f $cnt_path/TestRunNumber ] && gen_tr=`cat $cnt_path/TestRunNumber`
+
+  TAR_FILE=`nsu_server_admin -g -s $gen_ip -c "$gen_work/bin/nsu_get_gen_info 1 $gen_name $cntlr_ip $cnt_path $gen_tr env_var:NS_WDIR=$gen_work"`
+  if [ "X$status" != "X0" ];then
+    cd $cnt_path
+    if [ -f $TAR_FILE ];then 
+      tar -xzf $TAR_FILE 2>/dev/null
+      rm -f $TAR_FILE 2>/dev/null
+    fi
+    cd - >/dev/null
+  else
+    echo "Test not yet started on generator $gen_name"
+  fi
+  exit 0
+fi
+
+#code for gen side, mode 2
+GEN_NAME=$2
+CONTROLLER_IP=$3
+CNT_PATH=$4
+GEN_TR=$5
+GEN_PATH=$NS_WDIR/logs/TR$GEN_TR
+TAR_FILE=${GEN_NAME}_${GEN_TR}.tar.gz
+if [ "X$GEN_TR" = "X" ];then
+  GEN_TR=`/home/cavisson/bin/nsu_check_health $NS_WDIR| cut -d',' -f2`
+  if [ "X$GEN_TR" = "X0" ];then
+    echo 0
+    exit
+  fi
+fi
+
+[ -f $GEN_PATH/ns_logs/sess_warning.log ] && cp $GEN_PATH/ns_logs/sess_warning.log $GEN_PATH/ready_reports/TestInitStatus/ 2>/dev/null
+cd $NS_WDIR/logs/TR$GEN_TR/ready_reports/TestInitStatus/
+tar -czf $TAR_FILE * 2>/dev/null
+if [ -f $TAR_FILE ];then
+  nsu_server_admin -g -s $CONTROLLER_IP -F $TAR_FILE -D $CNT_PATH
+  rm -f $TAR_FILE 2>/dev/null
+fi
+cd - >/dev/null
+
+echo $TAR_FILE
+exit

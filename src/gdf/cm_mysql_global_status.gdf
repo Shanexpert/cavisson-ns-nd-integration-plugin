@@ -1,0 +1,3 @@
+Info|3.1|1|-|-|-1|-1|-
+Group|MySQL Server Stats|10867|vector|1|0|MySQL Metrics|Tier>Server>Instance>MetricName|MySQL Global Stats monitors metrics related to MySQL operations, transactions, InnoDB operations,thread, traffic, Query cache etc.
+Graph|MySql Stats|1|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|MySql metric value is corresponding to metric name.

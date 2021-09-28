@@ -1,0 +1,46 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+#ObjectName :org.eclipse.jetty.server.session:context=sample,type=defaultsessioncache,id=0
+#ObjectName :org.eclipse.jetty.server.session:type=defaultsessionidmanager,id=0
+#ObjectName :org.eclipse.jetty.server.session:type=housekeeper,id=0
+#ObjectName :org.eclipse.jetty.server.session:context=sample,type=nullsessiondatastore,id=0
+#ObjectName  :org.eclipse.jetty.server.session:context=sample,type=sessionhandler,id=0
+info|3.1|1|-|-|-1|-1|-
+Group|Jetty Session Stats|14126|vector|17|0|Jetty Metrics|Tier>Server>Instance>AppName|This stats give information related to session.
+#G1
+Graph|Jetty Current Session|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Current sessions in cache.
+#G2
+Graph|Jetty Maximum Session|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Maximum sessions in cache.
+#G3
+Graph|Jetty Total Session|3|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Total sessions in cache.
+#G4
+Graph|Jetty Eviction Policy Session|4|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of session of eviction policy.
+#G5
+Graph|Jetty  Session Stop Timeout (ms)|5|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Stop timeout of sessions in cache in milliseconds.
+#G6
+Graph|Jetty Grace Period Session (sec)|6|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Interval in seconds to prevent too eager session scavenging.
+#G7
+Graph|Jetty Save Period Session (sec)|7|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Minium seconds between save period session.
+#G8
+Graph|Jetty Session Datastore Stop Time Out (ms)|8|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The stop timeout in milliseconds.
+#G9
+Graph|Jetty Maximum Cookie Age Session (sec)|9|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Time in seconds a session cookie will last for.
+#G10
+Graph|Jetty Maximum Inactive Interval Session (sec)|10|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Default maximum time a session may be idle for in seconds.
+#G11
+Graph|Jetty Refresh Cookie Age Session (sec)|11|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Time before a session cookie is reset in seconds.
+#G12
+Graph|Jetty  Created Session|12|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of sessions created by current node.
+#G13
+Graph|Jetty Maximum Time Session (sec)|13|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Maximum amount of time sessions have remained active in seconds.
+#G14
+Graph|Jetty Total Time Session|14|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Total time sessions have remained valid.
+#G15
+Graph|Jetty Mean Time Session (sec)|15|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Mean time sessions remain valid in seconds.
+#G16
+Graph|Jetty StdDev Time Session (sec)|16|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Standard deviation a session remained valid in seconds.
+#G17
+Graph|Jetty Stop Time Out Session Handler (ms)|17|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Stop timeout in milliseconds for session handler.

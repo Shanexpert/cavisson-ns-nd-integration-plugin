@@ -1,0 +1,27 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Coherence Cache Stats V2|10263|vector|19|0|Application Metrics|Tier>Server>Type>Instance>CacheName|Information related to All the attributes of a cache Managed bean for a  Coherence instance collected by coherence monitor.
+Graph|Number Of Cache Entries|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of entries in the cache.
+Graph|Cache Size (In MB, for back cache only)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The size of the cache measured in MegaBytes. It is only available for back cache.
+Graph|Write-behind Queue Size|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The size of the write-behind queue.
+Graph|Number Of Store Failures|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of CacheStore failures (load, store and erase operations); -1 if persistence type is NONE.
+Graph|Gets/Minute|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of get operations per minute.
+Graph|Average Get Time (ms)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average time in milliseconds per get operation.
+Graph|Puts/Minute|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of put operations per minute.
+Graph|Average Put Time (ms)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average time in milliseconds per put operation.
+Graph|Hits/Minute|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of hit operations per minute.
+Graph|Average Hit Time (ms)|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average time in milliseconds per Hit operation.
+Graph|Misses/Minute|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of miss operations per minute.
+Graph|Average Miss Time (ms)|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average time in milliseconds per Miss operation.
+Graph|Reads/Minute|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of read or load operations per minute.
+Graph|Average Read Time (ms)|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average time in milliseconds per read operation.
+Graph|Writes/Minute|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of write or store operations per minute.
+Graph|Average Write Time (ms)|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average time in milliseconds per write operation.
+Graph|Prunes/Minute|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of prune or recycling operations per minute.
+Graph|Average Prune Time (ms)|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average time in milliseconds per prune operation.
+Graph|Average Object Size (MB)|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average object size in MegaBytes.

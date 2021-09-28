@@ -1,0 +1,4 @@
+Info|3.1|1|-|-|-1|-1|-
+Group|MSSQL Service Stats|10677|vector|2|0|MSSQL Metrics|Tier>Server>Source>ServiceName|MSSQL Services status for configured services.
+Graph|MSSQL Service Status|1|scalar|sample|-|-|0|NA|-1|-1|H|NA|Service status. 1 means Stopped, 2: means Other (start pending), 3 means Other (stop pending), 4 means Running, 5 means Other (continue pending), 6 means Other (pause pending), 7 means Paused.
+Graph|MSSQL Service Pid|2|scalar|sample|-|-|0|NA|-1|-1|H|NA|PID of the service. PID is empty for stopped services.

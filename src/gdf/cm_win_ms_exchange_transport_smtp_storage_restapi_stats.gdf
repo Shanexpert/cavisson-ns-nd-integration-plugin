@@ -1,0 +1,6 @@
+Info|3.1|1|-|-|-1|-1|-
+Group|Windows MsExchange Transport SMTP Storage RESTAPI Stats|10934|vector|4|0|Application Metrics|Tier>Server>Instance|Windows MsExchange Transport SMTP Storage RESTAPI Stats provide information about number of requests and messages returned by the REST API.
+Graph|Total Messages|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of messages return during the currently running session. In perfmon: Storage REST Api Total Messages. Perfmon metric name: Storage REST Api Total Messages.
+Graph|Recent Messages|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of messages return during the currently running session in the last hour. In perfmon: Storage REST Api Recent Messages. Perfmon metric name: Storage REST Api Recent Messages.
+Graph|Total Requests|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of requests made to the Storage REST Api. In perfmon: Storage REST Api Total Requests. Perfmon metric name: Storage REST Api Total Requests.
+Graph|Recent Requests|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of requests made to the Storage REST Api in the last hour. In perfmon: Storage REST Api Recent Requests. Perfmon metric name: Storage REST Api Recent Requests.

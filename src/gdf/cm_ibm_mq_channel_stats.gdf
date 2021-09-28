@@ -1,0 +1,11 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+Info|3.1|1|-|-|-1|-1|-
+
+Group|IBM MQ Channel Stats|10705|vector|6|0|IBM MQ Metrics|Tier>Server>QueueManager>Channel|IBM MQ Channel Statistics
+Graph|Channel Byte Sent/Sec|1|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of message bytes sent per second over channel.
+Graph|Channel Byte Received/Sec|2|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of message bytes received per second over channel.
+Graph|Channel Buffers Sent/Sec|3|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of buffers sent per second over channel.
+Graph|Channel Buffers Received/Sec|4|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Buffers received per second over channel.
+Graph|Channel Messages/Sec|5|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of messages per second.
+Graph|Channel Status|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current state of the channel with following status. Status would be 0 = "Inactive", 1 = "Binding", 2 = "Starting", 3 = "Running", 4 = "Stopping", 5 = "Retrying", 6 = "Stopped", 7 = "Requesting", 8 = "Paused", 13 = "Initializing", 14= "Switching".

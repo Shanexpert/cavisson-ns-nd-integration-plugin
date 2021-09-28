@@ -1,0 +1,10 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+# This is developed for Kohls Batch ESK260 monitoring  
+Info|3.1|1|-|-|-1|-1|-
+
+Group|ATG Cart Stats|10418|vector|1|0|Application Metrics|Tier>Server|ATG Cart stats.
+Graph|Average Cart Size|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average cart size of orders.

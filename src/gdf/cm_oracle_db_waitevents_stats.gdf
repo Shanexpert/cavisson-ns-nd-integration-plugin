@@ -1,0 +1,20 @@
+# --- GDF Version History ---
+# # 1.0 - Initial version
+# # 2.0 - Change done for match Long_data and Long_long_data to double
+# # 3.0 - Changes done for Dynamic data in Execution GUI
+# # 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Oracle DB Waitevents Stats|10413|vector|12|0|Oracle Metrics|Tier>Server>DBName|Oracle DB Waitevents shows how much time the active sessions spent in different classes of wait event.
+Graph|Oracle Administrative Wait Time (Sec)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Time waited in Administrative wait class in last minute.
+Graph|Oracle Application Wait Time (Sec)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Time waited in Application wait class in last minute.
+Graph|Oracle Commit Wait Time (Sec)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Time waited in Commit wait class in last minute.
+Graph|Oracle Concurrency Wait Time (Sec)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Time waited in Concurrency wait class in last minute.
+Graph|Oracle Configuration Wait Time (Sec)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Time waited in Configuration wait class in last minute.
+Graph|Oracle CPU Wait Time (Sec)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Time waited in CPU wait class in last minute.
+Graph|Oracle Network Wait Time (Sec)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Time waited in Network wait class in last minute.
+Graph|Oracle Scheduler Wait Time (Sec)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Time waited in Scheduler wait class in last minute.
+Graph|Oracle System I/O Wait Time (Sec)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Time waited in System I/O wait class in last minute.
+Graph|Oracle User I/O Wait Time (Sec)|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Time waited in User I/O wait class in last minute.
+Graph|Oracle Cluster Wait Time (Sec)|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Time waited in Cluster wait class in last minute.
+Graph|Oracle Other Wait Time (Sec)|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Time waited in Other wait class in last minute.

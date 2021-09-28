@@ -1,0 +1,43 @@
+# --- GDF Version History ---
+#  1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Spring Boot Actuator Stats|10476|vector|38|0|Spring Boot Metrics|Tier>Server>Instance|Spring Boot Actuator Stats provides metrics related to garbage collection, uptime, thread details etc.
+Graph|Number of Young GC/Min|1|scalar|rate|-|None|0|AS|-1|-1|NA|NA|Number of young gc cycles occurred within a minute while scenario is running.
+Graph|Number of Tenured GC/Min|2|scalar|rate|-|None|0|AS|-1|-1|NA|NA|Number of tenured gc cycles occurred within a minute while scenario is running.
+Graph|Total number of GC/Min|3|scalar|rate|-|None|0|AS|-1|-1|NA|NA|Number of gc cycles (sum of young and tenured gc) occurred within a minute while scenario is running.
+Graph|Cumulative number of Young GC|4|scalar|cumulative|-|None|0|AS|-1|-1|NA|NA|Cummulative number of young gc cycles occurred in whole test duration.
+Graph|Cumulative number of Tenured GC|5|scalar|cumulative|-|None|0|AS|-1|-1|NA|NA|Cummulative number of tenured gc cycles occurred in whole test duration.
+Graph|Cumulative number of GC|6|scalar|cumulative|-|None|0|AS|-1|-1|NA|NA|Cummulative number of all gc cycles occurred in whole test duration.
+Graph|Time taken by Young GC (Sec)/Min|7|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Rate of young gc cycles time that is taken in a minute.
+Graph|Time taken by Tenured GC (Sec)/Min|8|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Rate of tenured gc cycles time that is taken in a minute.
+Graph|Total time taken by GC (Sec)/Min|9|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Rate of all gc cycles time that is taken in a minute.
+Graph|Cumulative time taken by Young GC (Sec)|10|scalar|cumulative|-|None|0|A|-1|-1|NA|NA|Cummulative time taken by all young gc cycles in seconds.
+Graph|Cumulative time taken by Tenured GC (Sec)|11|scalar|cumulative|-|None|0|A|-1|-1|NA|NA|Cummulative time taken by all tenured gc cycles in seconds.
+Graph|Cumulative time taken by GC (Sec)|12|scalar|cumulative|-|None|0|A|-1|-1|NA|NA|Cummulative time taken by all gc cycles in seconds.
+Graph|Time per Young GC (Sec)|13|scalar|times|-|None|0|A|-1|-1|NA|NA|Average time of young gc in seconds.
+Graph|Time per Tenured GC (Sec)|14|scalar|times|-|None|0|A|-1|-1|NA|NA|Average time of tenured gc in seconds.
+Graph|Time per GC (Sec)|15|scalar|times|-|None|0|A|-1|-1|NA|NA|Average time of all gc in seconds.
+Graph|Time used in GC (Pct)|16|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Average time used in gc in percentage.
+Graph|Cumulative time used in GC (Pct)|17|scalar|cumulative|-|None|0|AS|-1|-1|NA|NA|Cummulative time used in gc in percentage.
+Graph|JVM Heap allocated memory (MB)|18|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The overall allocated memory of java virtual machine in mega bytes.
+Graph|JVM Heap used memory (MB)|19|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The overall used memory of java virtual machine in mega bytes.
+Graph|JVM Heap used memory (Pct)|20|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The overall used memory of java virtual machine in percentage.
+Graph|JVM Non Heap allocated memory (MB)|21|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The overall allocated memory of Non java virtual machine in mega bytes.
+Graph|JVM Non Heap used memory (MB)|22|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The overall used memory of Non java virtual machine in mega bytes.
+Graph|JVM Non Heap used memory (Pct)|23|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The overall used memory of Non java virtual machine in percentage.
+Graph|Total allocated memory (MB)|24|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The overall allocated memory in mega bytes.
+Graph|Total used memory (MB)|25|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The overall used memory in mega bytes.
+Graph|Total used memory (Pct)|26|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The overall used memory in percentage.
+Graph|Processors Count|27|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of processors.
+Graph|Instance Uptime (Sec)|28|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Application context uptime in Seconds.
+Graph|Uptime (Sec)|29|scalar|sample|-|None|0|AS|-1|-1|NA|NA|System uptime in Seconds.
+Graph|System load Average|30|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Average system load.
+Graph|Peak Threads|31|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of Peak Threads.
+Graph|Daemon Threads|32|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of Daemon Threads.
+Graph|Total Started Threads|33|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Total number of Threads started.
+Graph|Total Threads|34|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of total Threads.
+Graph|Total Classes|35|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of Classes.
+Graph|Loaded Classes|36|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of Loaded classes.
+Graph|Unloaded Classes|37|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of Unloaded classes.
+Graph|Active Http Sessions|38|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of Active Http Sessions.

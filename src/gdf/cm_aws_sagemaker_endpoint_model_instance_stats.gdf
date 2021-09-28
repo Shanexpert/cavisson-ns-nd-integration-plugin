@@ -1,0 +1,10 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS SageMaker Endpoint Model Instance Stats|14083|vector|1|0|AWS Metrics|AccountName>Region>EndpointName>VariantName|Amazon SageMaker using Amazon CloudWatch, collects raw data and processes it into readable, near real-time metrics.
+
+Graph|AWS Sage Maker Loaded Model Count|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of models loaded in the containers of the multi-model endpoint and this metric is emitted per instance.
+

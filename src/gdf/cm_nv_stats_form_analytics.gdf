@@ -1,0 +1,15 @@
+# --- GDF Version History ---
+# # 1.0 - Initial version
+#
+Info|3.1|1|-|-|-1|-1|-
+#
+Group|Form Analytics|10512|vector|8|0|UX Metrics|Channel>Page>Form|NetVision Form Analytics
+#
+Graph|Form Interaction/min|1|scalar|rate|-|PM|0|A|-1|-1|NA|NA|Number of interactions per minute
+Graph|Form Submit/min|2|scalar|rate|-|PM|0|A|-1|-1|NA|NA|Number of form submissions per minute
+Graph|Unique Form Submit /Min|3|scalar|rate|-|PM|0|AS|-1|-1|NA|NA|Number of completed unique form submissions per minute
+Graph|Failed Submit/Min|4|scalar|rate|-|PM|0|AS|-1|-1|NA|NA|Number of failed form submissions per minute
+Graph|Unique Failed Submit/Min|5|scalar|rate|-|PM|0|AS|-1|-1|NA|NA|Number of unique failed form submissions per minute.
+Graph|Form Fill Duration(sec)|6|scalar|times|-|-|0|A|-1|-1|NA|NA| Form fill duration in seconds.
+Graph|Average Blank Fields|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average blank fields of form.
+Graph|Average Refilled Fields|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average refilled fields of form.

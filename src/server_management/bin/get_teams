@@ -1,0 +1,2 @@
+psql -X  -U postgres -d demo -t -c "select distinct team from clients"
+

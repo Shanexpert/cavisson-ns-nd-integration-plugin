@@ -1,0 +1,19 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-1|-|-1|-1|-
+
+Group|Java GC Stats|10008|vector|9|0|Application Metrics|Tier>Server>Instance|Information related to garbage collection of java application on specified system
+
+Graph|Number of Java GC|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of java gc, occurred in specified interval
+Graph|Total Number of Java GC|2|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total number of java gc, occurred in system while scenario is running.
+Graph|Number of Java GC/Sec|3|scalar|rate|-|DBH|0|NA|-1|-1|NA|NA|The number of java gc occurred in one second
+Graph|Time used in Java GC (Sec)|4|scalar|sample|-|SEC|0|NA|-1|-1|NA|NA|The time that is used in java gc cycle in seconds 
+Graph|Total Time used in Java GC (Sec)|5|scalar|cumulative|-|SEC|0|NA|-1|-1|NA|NA|Total time used in all java gc cycle while scenario is running in seconds
+Graph|Time used in Java GC (Pct)|6|scalar|sample|-|DBH|0|NA|-1|-1|NA|NA|The time that is used in java gc cycle in percentage
+Graph|Total Time used in Java GC (Pct)|7|scalar|cumulative|-|DBH|0|NA|-1|-1|NA|NA|Total time used in all java gc cycle while scenario is running in percentage
+Graph|Free Java JVM Memory (KB)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total available free JVM memory in kilo bytes after gc cycle completed.
+Graph|Used Java JVM Memory (KB)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total available used JVM memory in kilo bytes after gc cycle completed

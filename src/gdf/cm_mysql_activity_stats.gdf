@@ -1,0 +1,39 @@
+#LAST_MAX_ASSIGNED_GRAPH_ID = 22
+#LAST_MODIFIED_DATE = 09/01/16 01:56:09
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+ 
+Info|3.1|1|-|-|-1|-1|-
+Group|MySQL Activity Stats|10349|vector|29|0|MySQL Metrics|Tier>Server>Instance|MySQL Activity monitors metrics related to MySQL operations, transactions, InnoDB operations etc.
+Graph|MySQL Sent Bytes Between Client-Server/Sec|1|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of bytes sent to all clients per second.
+Graph|MySQL Received Bytes between Client-Server/Sec|2|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of bytes received from all clients per second.
+Graph|MySQL Total Attempts/Sec|3|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of connection attempts (successful or not) per second to the MySQL server.
+Graph|MySQL Total Failed And Aborted/Sec|4|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of aborted or failed connections that were aborted because the client died without closing the connection properly or failed attempts to connect to MySQL.
+Graph|MySQL InnoDB Bytes Read/Sec|5|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|The amount of data read per second in Bytes.
+Graph|MySQL InnoDB Bytes Written/Sec|6|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|The amount of data write per second in Bytes.
+Graph|MySQL InnoDB File Synchronization/Sec|7|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of file Synchronization operation called per second.
+Graph|MySQL InnoDB Rows Queried/Sec|8|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of rows read per second from InnoDB tables.
+Graph|MySQL InnoDB Rows Deleted/Sec|9|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of rows deleted per second from InnoDB tables.
+Graph|MySQL InnoDB Rows Updated/Sec|10|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of rows updated per second from InnoDB tables.
+Graph|MySQL InnoDB Rows Inserted/Sec|11|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of rows inserted per second from InnoDB tables.
+Graph|MySQL Requests/Sec|12|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|The number of statements executed per second by the server. This includes only statements sent to the server by clients.
+Graph|MySQL Inserts/Sec|13|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of insert and replace statements executed per second by the server.
+Graph|MySQL Queries/Sec|14|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of queries per second by the server from select command and from cache.
+Graph|MySQL Deletes/Sec|15|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of delete statements executed per second by the server.
+Graph|MySQL Updates/Sec|16|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of update statements executed per second by the server.
+Graph|MySQL Tables Opened/Sec|17|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of tables the server has opened per second by the server.
+Graph|MySQL Temporary Tables Created/Sec|18|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|The number of internal on-disk temporary tables created per second by the server while executing statements.
+Graph|MySQL Transactions/Sec|19|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of total transactions per second. 
+Graph|MySQL Rolled Back Transactions/Sec|20|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of roll back transactions per second.
+Graph|MySQL Committed Transactions/Sec|21|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of committed transactions per second.
+Graph|MySQL Total Sort/sec|22|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|The number of sorts per second that were done by scanning the table and using ranges.
+Graph|MySQL InnoDB BufferPool Reads/Sec|23|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|The number of logical reads that InnoDB could not satisfy from the buffer pool, and had to read directly from disk.
+Graph|MySQL InnoDB BufferPool Reads Requests/Sec|24|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|The number of logical read requests.
+Graph|MySQL Refused Connections/Sec|25|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|The number of connections refused because the server max connections limit was reached.
+Graph|MySQL Refused Internal Errors Connections/Sec|26|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|The number of connections refused due to internal errors in the server, such as failure to start a new thread or an out-of-memory condition.
+Graph|MySQL Selects/Sec|27|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of select statements executed per second by the server.
+Graph|MySQL Query Average RunTime (ms)|28|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Query average run time in milliseconds.
+Graph|MySQL Query Errors/Sec|29|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Total number of statements that generated errors per second by the server.

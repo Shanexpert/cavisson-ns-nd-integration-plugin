@@ -1,0 +1,3 @@
+Info|3.1|1|-|-|-1|-1|-
+Group|Consul Service Stats|10618|vector|1|0|Application Metrics|Tier>Server>Service|Consul Service Stats provides information about the services in the cluster.
+Graph|Consul members by Service|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of servers running with this service.

@@ -1,0 +1,8 @@
+# --- GDF Version History ---
+# # 1.0 - Initial version
+#
+Info|3.1|1|-|-|-1|-1|-
+#
+Group|App Start Time Carrier|14214|vector|1|0|UX Metrics|Channel>MobileCarrier|NetVision  App Start Time Carrier
+#
+Graph|App Start Time|1|scalar|times|-|-|0|A|-1|-1|NA|NA|app start time in seconds

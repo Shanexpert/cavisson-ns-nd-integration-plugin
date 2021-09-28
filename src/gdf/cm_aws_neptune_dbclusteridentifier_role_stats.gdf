@@ -1,0 +1,76 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS Neptune DBClusterIdentifier Role Stats|11381|vector|34|0|AWS Metrics|AccountName>Region>DBClusterIdentifier>Role|Amazon Neptune is a fast, reliable, fully managed graph database service that makes it easy to build and run applications that work with highly connected datasets
+
+Graph|AWS Neptune CPU Utilization(Pct)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of CPU utilization.
+
+Graph|AWS Neptune Engine Uptime(Sec)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The amount of time that the instance has been running in seconds.
+
+Graph|AWS Neptune Freeable Bytes Memory|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The amount of available random access memory in bytes.
+
+Graph|AWS Neptune Gremlin Requests/Sec|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of requests to Gremlin engine per second.
+
+Graph|AWS Neptune Gremlin Web Socket Available Connections|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of potential WebSocket connections currently available.
+
+Graph|AWS Neptune Loader Requests/Sec|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of Loader Requests per second
+
+Graph|AWS Neptune Main Request Queue Pending Requests|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of requests waiting in the input queue pending execution. Neptune starts throttling requests when they exceed the maximum queue capacity.
+
+Graph|AWS Neptune Network Receieve Throughput(Bytes/Sec)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The incoming (Receive) network traffic on the DB instance including both customer database traffic and Neptune traffic used for monitoring and replication in bytes,second.
+
+Graph|AWS Neptune Network Throughput(Bytes/Sec)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The amount of network throughput both received from and transmitted to clients by each instance in the Neptune DB cluster in bytes per second.
+
+Graph|AWS Neptune Netowrk Transmit Throughput(Bytes/Sec)|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The outgoing (Transmit) network traffic on the DB instance including both customer database traffic and Neptune traffic used for monitoring and replication in bytes,second.
+
+Graph|AWS Neptune Num Tx Committed/Sec|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of transactions successfully committed per second.
+
+Graph|AWS Neptune Num Tx Opened/Sec|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of transactions opened on the server per second.
+
+Graph|AWS Neptune Num Tx Rolled Back/Sec|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of transactions per second rolled back on the server because of errors.
+
+Graph|AWS Neptune Total Requests/Sec|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of requests per second to the server from all sources.
+
+Graph|AWS Neptune Total Client Errors/Sec|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number per second of requests that errored out because of client-side issues.
+
+Graph|AWS Neptune Total Server Errors/Sec|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number per second of requests that errored out on the server because of internal failures.
+
+Graph|AWS Neptune Free Local Storage (Bytes)|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The amount of storage available for temporary tables and logs in bytes
+
+Graph|AWS Neptune Gremlin Errors|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of errors in Gremlin traversals.
+
+Graph|AWS Neptune Gremlin Requests|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of requests to Gremlin engine.
+
+Graph|AWS Neptune Gremlin Web Socket Success/Sec|20|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of successful WebSocket connections to the Gremlin endpoint per second.
+
+Graph|AWS Netune Gremlin Web Socket Client Errors/Sec|21|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of WebSocket client errors on the Gremlin endpoint per second.
+
+Graph|AWS Neptune Gremlin Web Socket Server Errors(Bytes/Secec)|22|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of WebSocket server errors on the Gremlin endpoint per second.
+
+Graph|AWS Neptune Loader Errors|23|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of errors from Loader requests.
+
+Graph|AWS Neptune Loader Requests|24|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of Loader Requests.
+
+Graph|AWS Neptune Sparql Errors|25|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of errors in the SPARQL queries.
+
+Graph|AWS Neptune Sparql Requests|26|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of requests to the SPARQL engine.
+
+Graph|AWS Neptune Sparql Requests Per Sec|27|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of requests to the SPARQL engine per second.
+
+Graph|AWS Neptune Status Errors|28|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of errors from the status endpoint.
+
+Graph|AWS Neptune Status Requests|29|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of requests to the status endpoint.
+
+Graph|AWS Neptune Volume Bytes Left Total(Bytes)|30|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of Volume Bytes Left Total
+
+Graph|AWS Neptune CPU Credit Balance|31|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The Number of CPU Credit Balance
+
+Graph|AWS Neptune CPU Credit Usage|32|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The Number of CPU Credit Usage
+
+Graph|AWS Neptune CPU Surplus Credits Charged|33|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The Number of CPU Surplus Credits Charged
+
+Graph|AWS Neptune CPU Surplus Credit Balance|34|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The Number of CPU Surplus Credit Balance
+

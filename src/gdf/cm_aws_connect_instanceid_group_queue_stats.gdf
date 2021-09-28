@@ -1,0 +1,13 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS Connect InstanceId Group Queue Stats|14068|vector|3|0|AWS Metrics|AccountName>Region>InstanceId>MetricGroup>QueueName|Amazon connect queue holds contacts waiting to be answered by agents. You can use a single queue to handle all incoming contacts
+
+Graph|AWS Connect Queue Size|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of contacts in the queue.
+
+Graph|AWS Connect Longest Queue Wait Time (Sec)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The longest amount of time in seconds that a contact waited in a queue.
+
+Graph|AWS Connect Queue Capacity Exceeded Error|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of calls that were rejected because the queue was full.

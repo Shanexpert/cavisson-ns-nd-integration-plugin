@@ -1,0 +1,13 @@
+Group|NDP Instance Health Stats|10655|vector|11|0|Cavisson Metrics|Tier>Server>Instance|NDP Instance Health Stats
+
+Graph|NDP Entry Record Missing Errors|1|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Number of missing entry record (Applicable only for raw data record numbers 3 and 4)
+Graph|NDP Invalid Method Timestamp Errors|2|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Number of raw data errors where method timestamp is smaller than previous method
+Graph|NDP Invalid RawData Records|3|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Total number of invalid raw data records
+Graph|NDP Metadata Recovery Requests|4|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Total number of metadata recovery request sent to NDC
+Graph|NDP Large Flowpaths|5|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Number of flowpaths where method count (entry + exit + callout events) is greater than threshold (default 1000000 controlled by keyword MAX_ENTRY_EXIT_RECORDS_IN_AN_FP_DEFAULT)
+Graph|NDP Processing Lag|6|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Total number of partition to be processed, 0 if current partition
+Graph|NDP Flowpaths Belonging To Previous Partition|7|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Total number of flowpath which belong to previous partition
+Graph|NDP Flowpaths Belonging To Older Than Previous Partition|8|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Total numberof flowpath which belong to older than previous partition, thus ignored
+Graph|NDP Dead Flowpaths|9|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Total number of flowpaths marked dead
+Graph|NDP Flowpath Processed Count/Min|10|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of flowpaths processed per minute
+Graph|NDP Raw Data Processed MB/Min|11|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Raw Data processed by NDP in MB

@@ -1,0 +1,24 @@
+# --- GDF Version History ---
+#  1.0 - Initial version
+#  2.0 - Change done for match Long_data and Long_long_data to double
+#  3.0 - Changes done for Dynamic data in Execution GUI
+#  3.1 - Use future1 field of group line for Metric group name
+#
+#LAST MAX ASSIGNED GRAPH ID = 11
+#LAST MODIFIED DATE = 09/17/08 18:05:47
+
+Info|3.1|1|-|-|-1|-1|-
+Group|TCP States V3|10976|vector|13|0|Network Metrics|Tier>Server>Instance|Display number of connections in different states, send queue size and receive queue size.
+Graph|Established|1|scalar|sample|-|None|0|NA|-1|-1|H|NA|Number of connections has established.
+Graph|SynSent|2|scalar|sample|-|None|0|NA|-1|-1|M|NA|Number of connections actively attempting to establish a connection.
+Graph|SynRcvd|3|scalar|sample|-|None|0|NA|-1|-1|M|NA|Number of connection requests which have been received from the network.
+Graph|FinWait1|4|scalar|sample|-|None|0|NA|-1|-1|M|NA|Number of connections, for which sockets are closed, and the connections are shutting down.
+Graph|FinWait2|5|scalar|sample|-|None|0|NA|-1|-1|H|NA|Number of connections which have been closed, and the sockets are waiting for  a  shutdown  from the remote end.   
+Graph|TimeWait|6|scalar|sample|-|None|0|NA|-1|-1|H|NA|Number of connections for which  sockets are waiting after close to handle packets still in the network.
+Graph|Closed|7|scalar|sample|-|None|0|NA|-1|-1|L|NA|Number of connections for which  sockets are not being used.
+Graph|CloseWait|8|scalar|sample|-|None|0|NA|-1|-1|H|NA|Number of connections, for which remote end has shutdown, waiting for the socket to close.
+Graph|LastAck|9|scalar|sample|-|None|0|NA|-1|-1|L|NA|Number of connections, of which remote end has shut down, and the socket is closed.  Waiting for acknowledgement.
+Graph|Listen|10|scalar|sample|-|None|0|NA|-1|-1|L|NA|Number of connections, for which socket is listening for incoming connections.
+Graph|Closing|11|scalar|sample|-|None|0|NA|-1|-1|L|NA|Number of connections, of which both  sockets are shut down but we still do not have all our data sent.
+Graph|Send Queue Size (Bytes)|12|scalar|sample|-|None|0|NA|-1|-1|L|NA|The count of bytes not acknowledged by the remote host.
+Graph|Receive Queue Size (Bytes)|13|scalar|sample|-|None|0|NA|-1|-1|L|NA|The count of bytes not copied by the user program connected to this socket.

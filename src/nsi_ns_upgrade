@@ -1,0 +1,162 @@
+#!/bin/sh
+
+# Here we are changing permission off all the files and binaries we are delivering in build. This need to be done as we need to keep 
+# permission of files independent from its creaters permission. For binaries we are setting 775 and for other conf and data files it 
+# will be 664   
+echo "Start changing permissions"
+chmod 755 bin/*
+chmod 755 tools/*
+chmod 755 etc/netstorm.env 
+chmod 664 events/netstorm_events.dat
+chmod 664 include/*
+chmod 664 cert/*.crt cert/*.pem  cert/*.txt cert/*.crl cert/*.cer cert/*.p12 cert/*.key cert/*.dat
+chmod 775 pdf/*.sh 
+chmod 664 pdf/*.pdf
+chmod 664 sys/*.gdf
+chmod 664 templates/*
+echo "Completed changing permissions"
+
+
+#When first time Cav is installed, error comes "chmod: cannot access `sys/site.env': No such file or directory"  because sys/site.env does not exist, we are copying sys/site.env in   restore_ns_sys_files() which is called after installing bin in install.sh.This is an temporary fix, later we will bundle site.env in sample & copy from there.
+ 
+if [ -f sys/site.env ];then
+  chmod 755 sys/site.env
+fi
+
+if [ ! -f sys/svc.conf ]; then
+  cp samples/svc.conf sys/
+fi
+
+if [ ! -d ndprof ]; then
+  mkdir -p ndprof
+  chown cavisson:cavisson ndprof
+fi
+
+if [ ! -d ndprof/instrprofiles/standard ]; then
+  mkdir -p ndprof/instrprofiles/standard
+  chown cavisson:cavisson ndprof/instrprofiles/standard
+fi
+
+if [ ! -d ndprof/instrprofiles/standard/dotnet ]; then
+  mkdir -p ndprof/instrprofiles/standard/dotnet
+  chown cavisson:cavisson ndprof/instrprofiles/standard/dotnet
+fi
+
+if [ ! -d ndprof/instrprofiles/standard/php ]; then
+  mkdir -p ndprof/instrprofiles/standard/php
+  chown cavisson:cavisson ndprof/instrprofiles/standard/php
+fi
+if [ ! -d aggregate/profiles ]; then
+  mkdir -p aggregate/profiles
+  chown cavisson:cavisson aggregate/profiles
+fi
+
+if [ ! -d tsdb/conf ]; then
+  mkdir -p tsdb/conf
+  chown cavisson:cavisson tsdb/conf
+fi
+
+#copy all the parserc file and aprof file from samples and parser header file
+cp samples/nd_aggregate_reports.h include
+cp samples/nd_rtc_aggregate bin
+cp samples/ndstorewiseaggregateparser.c aggregate/profiles
+cp samples/ndstoreterminalwiseaggregateparser.c aggregate/profiles
+cp samples/ndstoreterminalassociatewiseaggregateparser.c aggregate/profiles
+cp samples/ndpercentileaggregateparser.c aggregate/profiles
+cp samples/ndpercentilewiseaggregateparser.aprof aggregate/profiles
+cp samples/ndstorewiseaggregateparser.aprof aggregate/profiles
+cp samples/ndstoreterminalwiseaggregateparser.aprof aggregate/profiles
+cp samples/ndstoreterminalassociatewiseaggregateparser.aprof aggregate/profiles
+
+cp samples/NDBCIAgentKeywordDefinition.dat ndprof/
+cp samples/NDHttpHeadersList.dat ndprof/
+cp samples/*.xml ndprof/instrprofiles/standard
+cp samples/NDEntryPointsFile.txt ndprof/instrprofiles/standard
+cp samples/BlackListForDebugSession.txt ndprof/instrprofiles/standard
+cp samples/dotnet/* ndprof/instrprofiles/standard/dotnet/
+if [ -z "$(ls -A "ndprof/instrprofiles/standard/php/")" ]; then
+cp samples/php/* ndprof/instrprofiles/standard/php/
+fi
+cp samples/DD_AI_File.txt ndprof/instrprofiles/standard
+cp samples/AsyncRule.txt ndprof/instrprofiles/standard
+cp samples/SampleAutoMprof.json mprof/
+cp samples/NDInterfaceBaseEntryPoint.txt ndprof/instrprofiles/standard
+cp samples/NDGeneric*.json ndprof/instrprofiles/standard 2>/dev/null
+
+#copy network_cache_stats_debug_headers.dat if not exist
+if [ ! -f sys/network_cache_stats_debug_headers.dat ]; then
+  cp samples/network_cache_stats_debug_headers.dat sys/
+fi
+
+#chmod 755 bin/netstorm bin/netstorm_rmi bin/nsa* bin/nsp* bin/nsu*
+#chown root bin/netstorm
+#chown root netstorm_rmi
+#chmod u+s bin/netstorm
+#chmod u+s netstorm_rmi
+#/sbin/sysctl -w net.ipv4.ip_local_port_range="1024 65000"
+#/sbin/sysctl -w fs.file-max=400000
+#/sbin/sysctl -w fs.inode-max=400000
+#/sbin/sysctl -w net.ipv4.tcp_max_syn_backlog=100000
+
+mkdir -p $NS_WDIR/logs/scheduler/
+
+if [ -d etc/tr069/schema ];then
+   cp  samples/tr069/templates/*.*  etc/tr069/templates/
+   cp  samples/tr069/samples/*.* etc/tr069/samples/
+   cp  samples/tr069/schema/*.*  etc/tr069/schema/
+   cp  samples/tr069/conf/*.*  etc/tr069/conf/
+else
+   mkdir -p etc/tr069/templates
+   mkdir -p etc/tr069/samples
+   mkdir -p etc/tr069/conf
+   mkdir -p etc/tr069/data
+   mkdir -p etc/tr069/schema
+   cp   samples/tr069/conf/*.*  etc/tr069/conf/
+   cp   samples/tr069/templates/*.*  etc/tr069/templates/
+   cp   samples/tr069/samples/*.*  etc/tr069/samples/
+   cp   samples/tr069/data/*.*  etc/tr069/data/
+   cp   samples/tr069/schema/*.*  etc/tr069/schema/
+fi
+
+#Added by Achint on September 20 2007 for Test Run AutoMation
+#if [ ! -d $NS_WDIR/testcases ]; then
+#  cp samples/testcases.tar.gz .
+#  tar xvzf testcases.tar.gz
+#fi
+#if [ ! -d $NS_WDIR/testsuites ]; then
+#  cp samples/testsuites.tar.gz .
+#  tar xvzf testsuites.tar.gz
+#fi
+#cp samples/scr_replay.tar.gz $NS_WDIR/webapps
+
+#cp samples/replay_netstorm.conf $NS_WDIR/scenarios/default/default
+
+#By Manish: Since tar scr_replay.tar.gz contain script directory so on the time of untar 
+#it overwirte previously made soft link of scripts (in $NS_WDIR dir) so to retain soft link 
+#we need to untar this tar in webapps directory.
+#cd $NS_WDIR/webapps; tar hxvzf scr_replay.tar.gz
+cd - 2>/dev/null
+
+if [ ! -f $NS_WDIR/adf/netstorm.adf ]; then
+  cp $NS_WDIR/samples/netstorm.adf $NS_WDIR/adf/
+fi
+
+
+# Copy default replay profile, if it is not present
+#DEF_PROF_PATH=$NS_WDIR/replay_profiles/default/default/default_replay_profile
+
+#if [ ! -d $DEF_PROF_PATH ]; then
+#  mkdir -p $DEF_PROF_PATH
+#  cp $NS_WDIR/samples/replay/profiles/default/*.* $DEF_PROF_PATH
+#else 
+#  cp $NS_WDIR/samples/replay/profiles/default/*.* $DEF_PROF_PATH
+#fi
+
+
+#rm -f testcases.tar.gz testsuites.tar.gz scr_replay.tar.gz
+#Execute ndi_crt_confui_tbl_def_val.sh shell that will create configui tables and insert default values in those tables
+#echo "======================================================================================="
+#echo "Going to start creating NDConfigGUI tables and insert default values in tables"
+#echo "======================================================================================="
+#$NS_WDIR/bin/ndi_crt_confui_tbl_def_val.sh
+exit 0

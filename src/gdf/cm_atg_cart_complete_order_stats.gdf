@@ -1,0 +1,16 @@
+# --- GDF Version History ---
+# # 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+Group|ATG CompleteOrder Cart Size Stats|10644|vector|9|0|Application Metrics|Tier>Server|ATG Cart Size Stats provides average cart size  related to complete and pending order followed by different cart type.
+Graph|Average Cart Size WEBSTORE CompleteOrder|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average cart size of complete order from webstore.
+Graph|Average Cart Size CSC CompleteOrder|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average cart size of complete order from csc.
+Graph|Average Cart Size KIOSK CompleteOrder|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average cart size of complete order from kiosk.
+Graph|Average Cart Size MOBILE CompleteOrder|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average cart size of complete order from mobile.
+Graph|Average Cart Size TABLET CompleteOrder|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average cart size of complete order from tablet.
+Graph|Average Cart Size IPHONE CompleteOrder|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average cart size of complete order from iphone.
+Graph|Average Cart Size IPAD CompleteOrder|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average cart size of complete order from ipad.
+Graph|Average Cart Size ANDROID CompleteOrder|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average cart size of complete order from android.
+Graph|Average Cart Size Others CompleteOrder|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average cart size of complete order from other channel.
+
+

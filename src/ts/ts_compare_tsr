@@ -1,0 +1,89 @@
+#!/bin/sh
+
+TSR_DIR=$NS_WDIR/logs/tsr
+TEMP_TEST_CASE=/tmp/testcase.$$
+SORTED_TEST_CASE=/tmp/sortedtestcase.$$
+HEADER_LINE=""
+OUTPUT_LINE=""
+NA="NA  "
+SORTED_TEST_CASE_WITH_ID=/tmp/sortedtestcase_with_id.$$
+
+if [ $# -lt 2 ];then
+  echo "Usage: ts_compare_tsr <tsr1> <tsr2>.... <tsrn>"
+  echo "At least two test suite number should be there."
+  exit 1
+fi
+
+num_inputs=$#
+
+# fill all tsr numbers into the array and get test case name from all testsuites
+for j in `seq 1 $num_inputs`
+do
+  # get test case names
+  if [ -f $NS_WDIR/logs/tsr/$1/testsuite.conf ];then
+    tsr[$j]=$1
+    # Making header line
+    HEADER_LINE=${HEADER_LINE}" "${tsr[$j]}
+    cat $NS_WDIR/logs/tsr/${tsr[$j]}/testsuite.conf | grep ^TEST_CASE_NAME | cut -d" " -f2 >>$TEMP_TEST_CASE 
+  else
+    echo "There is no TSR ($1) or testsuite configuration file."
+    exit 1
+  fi
+  shift
+done
+
+# sort all test case names uniquely
+sort -u $TEMP_TEST_CASE >$SORTED_TEST_CASE
+#SORTED_TEST_CASE_WITH_ID=""
+while read line
+do
+  for j in `seq 1 $num_inputs`
+  do
+  #we have cut here field 2 because there is one space in summary.repore before testcasename
+  cat $NS_WDIR/logs/tsr/${tsr[$j]}/summary.report | grep -F " $line<" | cut -d" " -f2 >>$SORTED_TEST_CASE_WITH_ID
+  done
+done < $SORTED_TEST_CASE
+
+sort -u $SORTED_TEST_CASE_WITH_ID -o $SORTED_TEST_CASE_WITH_ID  
+show_header()
+{
+  echo "  Test Suite Compare Report "  
+  echo "    Test Case Name        $*"
+}
+
+show_output()
+{
+  printf "  %-22s %s\n" $1 "$OUTPUT_LINE"
+}
+
+# compare tsrs
+compare_tsr ()
+{
+  while read line
+  do
+    # make it empty on every testcase entry otherwise it will append with old values
+    OUTPUT_LINE=""
+    for j in `seq 1 $num_inputs`
+    do
+      out=0
+      if [ -f $NS_WDIR/logs/tsr/${tsr[$j]}/summary.report ];then
+        out=`cat $NS_WDIR/logs/tsr/${tsr[$j]}/summary.report | grep -c -w $line`
+        if [ $out != 0 ];then
+          out_put=`cat $NS_WDIR/logs/tsr/${tsr[$j]}/summary.report | grep -w $line | awk '{print $7}'`
+          OUTPUT_LINE=${OUTPUT_LINE}" "$out_put
+        else
+          OUTPUT_LINE=${OUTPUT_LINE}" "$NA  
+        fi
+      fi
+    done
+    show_output $line 
+    #done < $SORTED_TEST_CASE
+  done < $SORTED_TEST_CASE_WITH_ID
+}
+
+show_header $HEADER_LINE
+compare_tsr
+ 
+rm -f $TEMP_TEST_CASE $SORTED_TEST_CASE $SORTED_TEST_CASE_WITH_ID
+
+exit 0

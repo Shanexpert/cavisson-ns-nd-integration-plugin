@@ -1,0 +1,10 @@
+# --- GDF Version History ---
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS Lex BotNameVersion Operation Stats|11255|vector|3|0|AWS Metrics|AccountName>Region>BotName>BotVersion>Operation|Amazon Lex is an AWS service for building conversational interfaces for applications using voice and text
+
+Graph|AWS Lex Missed Utterance|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of utterances that were not recognized in the specified period.
+Graph|AWS Lex Runtime Request|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of runtime requests in the specified period.
+Graph|AWS Lex Runtime Sucessful Request Latency (ms)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The latency for successful requests between the time that the request was made and the response was passed back.

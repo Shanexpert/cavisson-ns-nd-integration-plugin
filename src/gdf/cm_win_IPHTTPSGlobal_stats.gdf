@@ -1,0 +1,29 @@
+# --- GDF Version History ---
+# # 1.0 - Initial version
+# # 2.0 - Change done for match Long_data and Long_long_data to double
+# # 3.0 - Changes done for Dynamic data in Execution GUI
+# # 3.1 - Use future1 field of group line for Metric group name
+#
+# Command to get data for this gdf on windows server : 
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# wmic path Win32_PerfFormattedData_Counters_IPHTTPSGlobal.Name='_Global_' get DropsNeighborresolutiontimeouts, ErrorsAuthenticationErrors, ErrorsReceiveerrorsontheserver, ErrorsTransmiterrorsontheserver, InTotalbytesreceived, InTotalpacketsreceived, OutTotalbytesforwarde, OutTotalbytessent, OutTotalpacketssent, SessionsTotalsessions/every:10
+#
+#
+# Entry in mprof to get data :
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# CUSTOM_MONITOR 192.168.1.52 cm_win_IPHTTPSGlobal_stats.gdf wmi_IPHTTPS_Global wmic path Win32_PerfFormattedData_Counters_IPHTTPSGlobal.Name='_Global_' get DropsNeighborresolutiontimeouts, ErrorsAuthenticationErrors, ErrorsReceiveerrorsontheserver, ErrorsTransmiterrorsontheserver, InTotalbytesreceived, InTotalpacketsreceived, OutTotalbytesforwarde, OutTotalbytessent, OutTotalpacketssent, SessionsTotalsessions/every:10
+#
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Windows IPHTTPS Global Stats|10092|vector|10|0|System Metrics|Tier>Server>Instance|Windows IPHTTPS Global Stats monitor metrics of IPHTTPS server on windows machine.
+Graph|IPHTTPS Packet Dropped Due To Neighbor Resolution|1|scalar|sample|-|-|0|NA|-1|-1|L|NA|Total packets dropped waiting for neighbor resolution.
+Graph|IPHTTPS Authentication Errors/Sec|2|scalar|rate|-|CumToPS|0|NA|-1|-1|L|NA|Number of authenticated errors per second on the server.
+Graph|IPHTTPS Received Errors/Sec|3|scalar|rate|-|CumToPS|0|NA|-1|-1|L|NA|Number of received errors per second on the server.
+Graph|IPHTTPS Transmitted Errors/Sec|4|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of transmitted errors per second on the server.
+Graph|IPHTTPS Bytes Received/Sec|5|scalar|rate|-|CumToPS|0|NA|-1|-1|M|NA|Number of bytes received per second on the IPHTTPS server.
+Graph|IPHTTPS Packets Received/Sec|6|scalar|rate|-|CumToPS|0|NA|-1|-1|M|NA|Number of packets received per second on the server.
+Graph|IPHTTPS Bytes Forwarded/Sec|7|scalar|rate|-|CumToPS|0|NA|-1|-1|M|NA|Number of bytes forwarded per second at link layer.
+Graph|IPHTTPS Bytes sent/Sec|8|scalar|rate|-|CumToPS|0|NA|-1|-1|M|NA|Number of bytes sent per second on the IPHTTPS server.
+Graph|IPHTTPS Packets Sent/Sec|9|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of packets sent per second on the IPHTTPS server.
+Graph|IPHTTPS Sessions Created/Sec|10|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of sessions created on the server per second.
+

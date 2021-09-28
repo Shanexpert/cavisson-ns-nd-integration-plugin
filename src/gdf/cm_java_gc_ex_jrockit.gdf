@@ -1,0 +1,53 @@
+# --- GDF Version History ---
+#  1.0 - Initial version
+#  2.0 - Change done for match Long_data and Long_long_data to double
+#  3.0 - Changes done for Dynamic data in Execution GUI
+#  3.1 - Use future1 field of group line for Metric group name
+#
+#LAST_MAX_ASSIGNED_GRAPH_ID = 42
+#LAST_MODIFIED_DATE = 12/18/08 17:09:30
+
+Info|3.1|1|-|-|-1|-1|-
+Group|JRockit Java GC Stats|10162|vector|29|0|Application Metrics|Tier>Server>Instance|Information related to JRockit garbage collection of java application on specified system
+Graph|Number of Young GC/Min|1|scalar|rate|-|None|0|AS|-1|-1|NA|NA|Number of young gc cycles occurred with in a minute while scenario is running.
+Graph|Number of Tenured GC/Min|2|scalar|rate|-|None|0|AS|-1|-1|NA|NA|Number of tenured gc cycles occurred with in a minute while scenario is running.
+Graph|Total number of GC/Min|3|scalar|rate|-|None|0|AS|-1|-1|NA|NA|Number of gc cycles (sum of young and tenured gc) occurred with in a minute while scenario is running.
+Graph|Cumulative number of Young GC|4|scalar|cumulative|-|None|0|AS|-1|-1|NA|NA|Cummulative number of young gc cycles occurred in whole test duration.
+Graph|Cumulative number of Tenured GC|5|scalar|cumulative|-|None|0|AS|-1|-1|NA|NA|Cummulative number of tenured gc cycles occurred in whole test duration.
+Graph|Cumulative number of GC|6|scalar|cumulative|-|None|0|AS|-1|-1|NA|NA|Cummulative number of all gc cycles occurred in whole test duration.
+Graph|Time taken by Young GC (Sec)/Min|7|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Rate of young gc cycles time that is taken in a minute
+Graph|Time taken by Tenured GC (Sec)/Min|8|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Rate of tenured gc cycles time that is taken in a minute
+Graph|Total time taken by GC (Sec)/Min|9|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Rate of all gc cycles time that is taken in a minute
+Graph|Cumulative time taken by Young GC (Sec)|10|scalar|cumulative|-|None|0|A|-1|-1|NA|NA|Cummulative time taken by all young gc cycles in seconds
+Graph|Cumulative time taken by Tenured GC (Sec)|11|scalar|cumulative|-|None|0|A|-1|-1|NA|NA|Cummulative time taken by all tenured gc cycles in seconds
+Graph|Cumulative time taken by GC (Sec)|12|scalar|cumulative|-|None|0|A|-1|-1|NA|NA|Cummulative time taken by all gc cycles in seconds
+Graph|Time per Young GC (Sec)|13|scalar|times|-|None|0|A|-1|-1|NA|NA|Average time of young gc in seconds
+Graph|Time per Tenured GC (Sec)|14|scalar|times|-|None|0|A|-1|-1|NA|NA|Average time of tenured gc in seconds
+Graph|Time per GC (Sec)|15|scalar|times|-|None|0|A|-1|-1|NA|NA|Average time of all gc in seconds
+Graph|Time used in GC (Pct)|16|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Average time used in gc in percentage
+Graph|Cumulative time used in GC (Pct)|17|scalar|cumulative|-|None|0|AS|-1|-1|NA|NA|Cummulative time used in gc in percentage
+Graph|Freed memory by Young GC (KB)|18|scalar|sample|-|None|0|A|-1|-1|NA|NA|Freed memory by young gc cycles in kilo byte
+Graph|Freed memory by Tenured GC (KB)|19|scalar|sample|-|None|0|A|-1|-1|NA|NA|Freed memory by tenured gc cycles in kilo byte
+Graph|Total freed memory by GC (KB)|20|scalar|sample|-|None|0|A|-1|-1|NA|NA|Freed memory by all gc cycles in kilo byte
+Graph|Cumulative freed memory by Young GC (KB)|21|scalar|cumulative|-|None|0|A|-1|-1|NA|NA|Cummulative freed memory by young gc cycles in kilo bytes
+Graph|Cumulative freed memory by Tenured GC (KB)|22|scalar|cumulative|-|None|0|A|-1|-1|NA|NA|Cummulative freed memory by tenured gc cycles in kilo bytes
+Graph|Cumulative freed memory by GC (KB)|23|scalar|cumulative|-|None|0|A|-1|-1|NA|NA|Cummulative freed memory by all gc cycles in kilo bytes
+Graph|Cumulative Average freed memory/GC (KB)|24|scalar|cumulative|-|None|0|A|-1|-1|NA|NA|Cummulative average freed memory per gc in kilo bytes.
+Graph|Young generation allocated memory (KB)|25|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The young generation allocated memory in kilo bytes
+#Graph|Young generation used memory (KB)|26|scalar|sample|-|None|0|A|-1|-1|NA|NA|The young generation used memory in kilo bytes
+#Graph|Young generation used memory (Pct)|27|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The young generation used memory in percentage
+#Graph|Eden space allocated memory (KB)|28|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The eden space allocated memory in kilo bytes
+#Graph|Eden space used memory (Pct)|29|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The eden space used memory in percentage
+#Graph|Survivor Space1 allocated memory (KB)|30|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The survivur space - 1 allocated memory in kilo bytes
+#Graph|Survivor Space1 used memory (Pct)|31|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The survivur space - 1 used memory in percentage
+#Graph|Survivor Space2 allocated memory (KB)|32|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The survivur space - 2 allocated memory in kilo bytes
+#Graph|Survivor Space2 used memory (Pct)|33|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The survivur space - 2 used memory in percentage
+Graph|Tenured generation allocated memory (KB)|34|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The tenured generation allocated memory in kilo bytes
+#Graph|Tenured generation used memory (KB)|35|scalar|sample|-|None|0|A|-1|-1|NA|NA|The tenured generation used memory in kilo bytes
+#Graph|Tenured generation used memory (Pct)|36|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The tenured generation used memory in percentage
+#Graph|Permanent generation allocated memory (KB)|37|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The permanent generation allocated memory in kilo bytes
+#Graph|Permanent generation used memory (KB)|38|scalar|sample|-|None|0|A|-1|-1|NA|NA|The permanent generation used memory in kilo bytes
+#Graph|Permanent generation used memory (Pct)|39|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The permanent generation used memory in percentage
+Graph|JVM Heap allocated memory (KB)|40|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The overall allocated memory of java virtual machine in kilo bytes
+Graph|JVM Heap used memory (KB)|41|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The overall used memory After GC of java virtual machine's Heap in kilo bytes
+Graph|JVM Heap used memory (Pct)|42|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The overall used memory After GC of java virtual machine's Heap in percentage

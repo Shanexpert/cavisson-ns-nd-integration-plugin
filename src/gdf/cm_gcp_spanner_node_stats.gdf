@@ -1,0 +1,7 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP Spanner Node Stats|10810|vector|1|0|GCP Metrics|Tier>Server>ProjectID>InstanceConfig>InstanceId>Location|Spanner node stats provided merics related to spanner nodes.
+Graph|Spanner Nodes|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of nodes in spanner instance.

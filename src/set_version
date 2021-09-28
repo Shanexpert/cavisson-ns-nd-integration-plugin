@@ -1,0 +1,1 @@
+echo -e "VERSION $1\nBUILD 0" | tee etc/version hpdd/etc/version gui/etc/version cavmon/etc/version  netdiagnostics/core/ndc/lps/etc/version gui/help/etc/version thirdparty/etc/version netdiagnostics/etc/version netdiagnostics/core/ndc/etc/version netchannel/core/etc/version

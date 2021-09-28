@@ -1,0 +1,9 @@
+#!/bin/bash
+
+TR_LIST=(`ls -d $NS_WDIR/logs/TR*|cut -d '/' -f 6 | cut -d 'R' -f 2`)
+
+
+for ((i=0;i<${#TR_LIST[@]}; i++))
+do
+  nsi_update_usages_report  ${TR_LIST[i]}
+done

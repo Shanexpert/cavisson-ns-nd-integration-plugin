@@ -1,0 +1,10 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Jetty Session Stats|10611|vector|3|0|Jetty Metrics|Tier>Server>Instance>AppName|Jetty Session Stats  metrics related to Application Session.
+Graph|Jetty Current Sessions|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of current sessions in application.
+Graph|Jetty Max Sessions|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of Maximum sessions in application.
+Graph|Jetty Sessions/Minute|3|scalar|rate|-|CumToPM|0|NA|-1|-1|NA|NA|Number of application sessions per minute.
+

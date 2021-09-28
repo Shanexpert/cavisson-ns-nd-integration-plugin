@@ -1,0 +1,19 @@
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP Cloud Run Stats|11526|vector|16|0|GCP Metrics|ProjectID>Location>ServiceName|It provides metrics related to managed cloud run.
+Graph|GCP Cloud Run Billable Instance Time (Sec)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Billable time aggregated from all container instances of the revision in second.
+Graph|GCP Cloud Run Container CPU Allocation (Sec)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Container CPU allocation of the revision in second.
+Graph|GCP Cloud Run Container CPU Utilization 5thPercentile (Pct)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|5th percentile of container CPU utilization distribution across all container instances of the revision.
+Graph|GCP Cloud Run Container CPU Utilization 50thPercentile (Pct)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|50th percentile of container CPU utilization distribution across all container instances of the revision.
+Graph|GCP Cloud Run Container CPU Utilization 95thPercentile (Pct)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|95th percentile of container CPU utilization distribution across all container instances of the revision.
+Graph|GCP Cloud Run Container CPU Utilization 99thPercentile (Pct)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|99th percentile of container CPU utilization distribution across all container instances of the revision.
+Graph|GCP Cloud Run Container Memory Allocation (GB.sec)|7|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Container memory allocation of the revision in gigabytes-seconds. 
+Graph|GCP Cloud Run Container Memory Utilization 5thPercentile (Pct)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|5th percentile of container memory utilization distribution across all container instances of the revision.
+Graph|GCP Cloud Run Container Memory Utilization 50thPercentile (Pct)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|50th percentile of container memory utilization distribution across all container instances of the revision.
+Graph|GCP Cloud Run Container Memory Utilization 95thPercentile (Pct)|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|95th percentile of container memory utilization distribution across all container instances of the revision.
+Graph|GCP Cloud Run Container Memory Utilization 99thPercentile (Pct)|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|99th percentile of container memory utilization distribution across all container instances of the revision.
+Graph|GCP Cloud Run Request Count/Sec|12|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of requests reaching the revision per second.
+Graph|GCP Cloud Run Request Latency 5thPercentile (Sec)|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|5th percentile of distribution of request latency in second reaching the revision.
+Graph|GCP Cloud Run Request Latency 50thPercentile (Sec)|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|50th percentile of distribution of request latency in second reaching the revision.
+Graph|GCP Cloud Run Request Latency 95thPercentile (Sec)|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|95th percentile of distribution of request latency in second reaching the revision.
+Graph|GCP Cloud Run Request Latency 99thPercentile (Sec)|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|99th percentile of distribution of request latency in second reaching the revision.

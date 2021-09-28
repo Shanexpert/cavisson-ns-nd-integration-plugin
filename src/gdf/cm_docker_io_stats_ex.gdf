@@ -1,0 +1,20 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Docker Container IO Stats|10983|vector|10|0|Docker Container Metrics|Tier>Server>Container|Docker Container CPU stats provide metrics related to input output operation.
+Graph|Read Operations/Sec|1|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of read operations performed per second. 
+Graph|Write Operations/Sec|2|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of write operations performed per second. 
+Graph|Sync Operations/Sec|3|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of sync operations performed per second. 
+Graph|Async Operations/Sec|4|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of async operations performed per second. 
+Graph|Total Operations/Sec|5|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of total operations performed per second. 
+Graph|Read Operations Bytes/Sec|6|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of bytes reported to read operations per second. 
+Graph|Write Operations Bytes/Sec|7|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of bytes reported to write operations per second. 
+Graph|Sync Operations Bytes/Sec|8|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of bytes reported to Sync operations per second. 
+Graph|Async Operations Bytes/Sec|9|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of bytes reported to async operations per second. 
+Graph|Total Operations Bytes/Sec|10|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of bytes reported to total operations per second. 
+
+
+
+ 

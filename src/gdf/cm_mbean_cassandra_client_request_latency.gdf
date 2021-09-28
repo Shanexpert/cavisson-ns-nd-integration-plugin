@@ -1,0 +1,24 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+#ObjectName :org.apache.cassandra.metrics:type=ClientRequest,scope=*,name=Latency
+info|3.1|1|-|-|-1|-1|-
+Group|Apache Cassandra Client Request Latency|14105|vector|15|0|Apache Cassandra Metrics|Tier>Server>Instance>scope|This stats related to transactional read requests.
+#Graphs
+Graph|Apache Cassandra Count Latency|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA| Number of transactional read or write latency request.
+Graph|Apache Cassandra Client Request Maximum Latency|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Maximum transactional read or write latency request.
+Graph|Apache Cassandra Client Request Minimum Latency|3|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Minimum transactional read or write latency request.
+Graph|Apache Cassandra Client Request Mean Latency|4|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Mean transactional read or write latency request.
+Graph|Apache Cassandra Client Mean Rate Latency|5|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Mean transactional read or write latency rate request.
+Graph|Apache Cassandra Client Std Dev Latency|6|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Standard deviation transactional read or write latency request.
+Graph|Apache Cassandra Client Request Latency/One Minute|7|scalar|sample|-|None|0|AS|-1|-1|NA|NA|One minute transactional or write read latency rate request.
+Graph|Apache Cassandra Client Request Latency/Five Minute|8|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Five minutes transactional read or write latency rate request.
+Graph|Apache Cassandra Client Request Latency/Fifteen Minute|9|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Fifteen minutes transactional read or write latency rate request.
+Graph|Apache Cassandra Client Request 50th Percentile Latency|10|scalar|sample|-|None|0|AS|-1|-1|NA|NA|50th percentile transactional read or write latency request.
+Graph|Apache Cassandra Client Request 75th Percentile Latency|11|scalar|sample|-|None|0|AS|-1|-1|NA|NA|75th percentile transactional read or write latency request.
+Graph|Apache Cassandra Client Request 95th Percentile Latency|12|scalar|sample|-|None|0|AS|-1|-1|NA|NA|95th percentile transactional read or write latency request.
+Graph|Apache Cassandra Client Request 98th Percentile Latency|13|scalar|sample|-|None|0|AS|-1|-1|NA|NA|98th percentile transactional read or write latency request.
+Graph|Apache Cassandra Client Request 99th Percentile Latency|14|scalar|sample|-|None|0|AS|-1|-1|NA|NA|99th percentile transactional read or write latency request.
+Graph|Apache Cassandra Client Request 999th Percentile Latency|15|scalar|sample|-|None|0|AS|-1|-1|NA|NA|999th percentile transactional read or write latency request.

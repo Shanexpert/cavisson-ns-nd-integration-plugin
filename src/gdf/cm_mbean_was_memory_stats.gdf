@@ -1,0 +1,28 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+# ---  Mbean Reference Link :https://www.ibm.com/support/knowledgecenter/SSYKE2_7.1.0/com.ibm.java.api.71.doc/com.ibm.lang.management/com/ibm/lang/management/MemoryMXBean.html?view=embed#method_detail --- #
+# This Mbean is applicable to IBM JVM only #
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Websphere Memory Stats|11033|vector|6|0|WebSphere Metrics|Tier>Server>Instance>Monitor>Vector|Websphere Memory Stats
+
+#G1
+Graph|Shared Class Cache Max Aot Unstored Bytes|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|SharedClassCacheMaxAotUnstoredBytes
+
+#G2
+Graph|Max Heap Size (Bytes)|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The current maximum heap size in bytes.
+
+#G3
+Graph|Shared Class Cache Free Space (Bytes)|3|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The free space in bytes of the cache that the JVM is currently connectedto.
+
+#G4
+Graph|Shared Class Cache Max Aot Bytes|4|scalar|sample|-|None|0|AS|-1|-1|NA|NA|SharedClassCacheMaxAotBytes
+
+#G5
+Graph|GC Slave Threads CPU Used (msec)|5|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The amount of CPU time spent in the GC by the slave threads, in milliseconds.
+
+#G6
+Graph|Shared Class Cache Soft mx Unstored Bytes|6|scalar|sample|-|None|0|AS|-1|-1|NA|NA|SharedClassCacheSoftmxUnstoredBytes

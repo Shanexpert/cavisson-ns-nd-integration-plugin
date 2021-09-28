@@ -1,0 +1,65 @@
+#!/bin/bash
+#header for printing header in output
+TMP_CONTROLLER_FILE=/tmp/contrller_file.txt.$$
+OUTPUT_FILE=/tmp/final_running_test_file.txt.$$
+INPUT_RUNNING_TEST_FILE=/tmp/running_test.txt.$$
+
+if [ "XX" = "XX$NS_WDIR" ];then
+  export NS_WDIR=/home/cavisson/work
+fi
+
+Usage()
+{
+  echo "Usage:"
+  echo "nsu_show_all_netstorm"
+  echo "  This command is used for getting list of all running test runs on all the controllers"
+  exit 1
+}
+
+
+$NS_WDIR/bin/nsi_get_controller_name > $TMP_CONTROLLER_FILE
+if [ $? -ne 0 ];then
+  echo "Error in running command nsi_get_controller_name"
+  exit 1
+fi
+
+echo "ControllerName|Project|Subproject|Test Run|Test Name|Scenario Name|Start Time|Run Time|Virtual Users|Report Summary|Report Progress|Report Detail|Report User|Report Fail|Report Page Break Down|WAN_ENV|REPORTING|Test Mode|Page Dump|Notes|Started By|Tomcat Port|Product Name"
+
+while read line
+do
+  CONTROLLER_NAME=`echo $line` 
+  export NS_WDIR=/home/cavisson/$CONTROLLER_NAME 
+  nsu_show_test_logs -rlRC
+done < $TMP_CONTROLLER_FILE
+<<'COMMENT'
+  nsu_show_netstorm > $INPUT_RUNNING_TEST_FILE
+  if [ $? -ne 0 ];then
+    continue
+  fi
+  CMD="cat $INPUT_RUNNING_TEST_FILE | sed -e 's/^/$CONTROLLER_NAME\"   \"/' -e 's/\"/ /g' >>$OUTPUT_FILE"
+  eval $CMD
+  if [ $? -ne 0 ];then
+    echo "Error: Coudn't insert Controller name." 
+    exit 1
+  fi
+done < $TMP_CONTROLLER_FILE
+
+if [ ! -f $OUTPUT_FILE ];then
+ exit 1
+fi
+
+printf "%-30s%-11s%-10s%-20s%-20s%-s\n" "Controller" "TestRun" "Status" "Owner" "Project/Subproject/Scenario"
+sed -i '/TestRun/d' $OUTPUT_FILE 
+while read line
+do
+  CN=`echo $line | cut -d " " -f 1`
+  TR=`echo $line | cut -d " " -f 2`
+  ST=`echo $line | cut -d " " -f 3`
+  OW=`echo $line | cut -d " " -f 4`
+  PR=`echo $line | cut -d " " -f 5`
+  printf "%-30s%-11s%-10s%-20s%-20s%-s\n" "$CN" "$TR" "$ST" "$OW" "$PR"
+done < $OUTPUT_FILE
+COMMENT
+rm -f $TMP_CONTROLLER_FILE $OUTPUT_FILE $INPUT_RUNNING_TEST_FILE
+
+exit 0

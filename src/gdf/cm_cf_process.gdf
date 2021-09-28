@@ -1,0 +1,13 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Cloud Foundry Process Stats|14255|vector|6|0|Cloud Foundry Metrics|Tier>Server>AppName>Index|Cloud Foundary Process metrics.
+
+Graph|Process CPU Usage|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|CPU usage process wise.
+Graph|Process Memory Usage|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memory usage process wise.
+Graph|Process Disk Usage|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Disk usage process wise.
+Graph|Process Memory Quota|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memory Quota process wise.
+Graph|Process Disk Quota|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Disk Quota process wise.
+Graph|Process State|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|process state. Possible states are DOWN-0, STARTING-1, RUNNING-2 and CRASHED-3.

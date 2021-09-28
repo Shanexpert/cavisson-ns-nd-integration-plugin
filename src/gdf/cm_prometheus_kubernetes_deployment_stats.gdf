@@ -1,0 +1,8 @@
+#Author : Dharmendra Singh
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Prometheus Kubernetes Deployment Stats|10870|vector|2|0|Kubernetes Metrics|Tier>Server>Region>Zone>Namespace>Deployment|Prometheus Kubernetes Container Deployment Summary Stats.
+
+Graph|Prometheus Kubernetes Pods Count|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of Pods in Kubernetes Deployment.
+Graph|Prometheus Kubernetes Container Count|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of Containers in Kubernetes Deployment.

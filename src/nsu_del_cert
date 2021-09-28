@@ -1,0 +1,49 @@
+#!/bin/bash
+
+FILE_NAME_WITH_PATH=$1
+CERT_PATH="$NS_WDIR/cert"
+CERT_LIST_FILE=$CERT_PATH/cert_list.dat
+
+if [ "XX$#" == "XX0" ]; then
+  echo "Error: Atleast 1 argument is neccessary"
+  echo "Usage: nsu_del_cert <cert_file>"
+  exit -1
+fi 
+
+FILE_NAME=`basename $FILE_NAME_WITH_PATH`
+
+if [ ! -f $CERT_LIST_FILE ];then
+  echo "cert_list.dat file not found"
+  exit -1
+fi
+
+function del_cert() {
+ FOUND=0
+ for i in `awk -F "|" '{print NR":"$1}' $CERT_LIST_FILE | grep -v "#"` 
+ do
+    LINE_NO=`echo $i| cut -d ":" -f1`
+    F_NAME=`echo $i |cut -d ":" -f2`
+    #echo "$LINE_NO | $F_NAME"
+    if [ "XX$F_NAME" == "XX$FILE_NAME" ];then
+       FOUND=1
+       sed -i".bak" "$LINE_NO d" $CERT_LIST_FILE 
+       echo "Certificate List Updated!"
+       if [ ! -f $CERT_PATH/$FILE_NAME ];then 
+         echo "Unable to delete $FILE_NAME . It may have been moved or already deleted!"
+         exit -1 
+       else
+         rm -f $CERT_PATH/$FILE_NAME
+         echo "$FILE_NAME Certificate deleted"
+         exit 0
+       fi
+    else
+      FOUND=0
+    fi
+ done
+ if [ "XX$FOUND" == "XX0" ];then
+   echo "NO entries found for $FILE_NAME in $CERT_LIST_FILE"
+ fi 
+}
+
+del_cert 
+exit 0

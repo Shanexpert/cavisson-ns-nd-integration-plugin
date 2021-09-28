@@ -1,0 +1,140 @@
+#!/bin/bash
+
+##########################
+# Name  : 
+# Usage :
+# Purpose:
+# Output :
+#
+# Initial version : 
+# Modification    :
+# Author Name     : Prachi Kumari
+##########################
+
+DEBUG=0
+
+set_error_log_file()
+{
+  DEBUG_LOG_FILE="tmp/nsi_restart_proxy_debug.log"
+  ERROR_LOG_FILE="tmp/nsi_restart_proxy_error.log"
+}
+
+set_error_log_file
+
+debug_log()
+{
+  if [ "X$DEBUG" == "X0" ]; then
+    return
+  else
+    echo "`date +"%F %X"`|$*" >> $DEBUG_LOG_FILE
+  fi
+}
+
+error_log()
+{
+  ns_log_event "Major" "$*"
+  echo "`date +"%F %X"`|$*" >> $ERROR_LOG_FILE
+}
+
+error_log_and_exit()
+{
+  error_log "$*"
+  exit -1
+}
+
+
+Usage()
+{
+  error_log "$*"
+
+  error_log "Usage: nsi_restart_proxy -w <WAN> -D <debug_level 0/1>]"
+
+  exit -1
+}
+
+chk_proxy_status()
+{
+   nsu_server_admin --ignore_server_entry -s 127.0.0.1 -c 'ps -ef' >/tmp/proc_list 2>/dev/null
+   cat /tmp/proc_list | grep tinyproxy | grep -v colour >/dev/null 2>&1
+   if [ $? == 0 ];then
+     ret=0
+   else
+     ret=1
+   fi
+}
+
+stop_ns_proxy_server()
+{
+  nsu_server_admin --ignore_server_entry -s 127.0.0.1 -c "/etc/init.d/tinyproxy stop $WAN_OPTIONS" >/dev/null 2>&1
+  chk_proxy_status
+  #echo "ret = $ret"
+  if [ $ret == 1 ];then
+    echo "NS proxy server successully stoped"
+    exit 0
+  else
+    echo "NS proxy server stop failed"
+    exit -1;
+  fi
+}
+
+start_ns_proxy_server()
+{
+  nsu_server_admin --ignore_server_entry -s 127.0.0.1 -c "/etc/init.d/tinyproxy start $WAN_OPTIONS" >/dev/null 2>&1
+  sleep 1
+  chk_proxy_status
+  #echo "ret = $ret"
+  if [ $ret == 0 ];then
+    echo "NS proxy server successully started" 
+    exit 0
+  else
+    echo "NS proxy server start failed"  
+  fi 
+}
+
+
+restart_ns_proxy_server()
+{
+  nsu_server_admin --ignore_server_entry -s 127.0.0.1 -c "/etc/init.d/tinyproxy restart $WAN_OPTIONS" >/dev/null 2>&1
+  sleep 1
+  chk_proxy_status
+  #echo "ret = $ret"
+  if [ $ret == 0 ];then
+    echo "NS proxy server successully restarted" 
+    exit 0
+  else
+    echo "NS proxy server restart failed"  
+  fi 
+}
+
+
+#############################################################################################################
+
+
+while getopts w:o:D? C  2>/dev/null
+do
+  case $C in
+    o) OPERATION=$OPTARG;;
+    w) WAN_OPTIONS=$OPTARG;;
+    D) DEBUG=1;;         #has default debug_level 0
+    ?) Usage "Invalid arguments";;
+    *) Usage "Invalid arguments";;
+  esac
+done
+
+#echo "OPERATION = $OPERATION, WAN_OPTIONS = $WAN_OPTIONS"
+
+#if [ "X$WAN_OPTIONS" == "X" ]; then
+#  error_log_and_exit "Mandatory argument -w <WAN> is missing"
+#fi
+
+if [ "X$OPERATION" == "Xstart" ]; then
+  start_ns_proxy_server
+elif [ "X$OPERATION" == "Xstop" ]; then 
+  stop_ns_proxy_server
+elif [ "X$OPERATION" == "Xrestart" ]; then 
+  restart_ns_proxy_server
+else
+  echo "Unrecognised option."
+fi
+
+exit 0

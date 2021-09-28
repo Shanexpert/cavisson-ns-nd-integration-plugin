@@ -1,0 +1,26 @@
+# 1.0 - Initial version
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP PubSub Subscribe Stats|10662|vector|22|0|GCP Metrics|Tier>Server>ProjectID>SubscriptionID|GCP PubSub Subscription Stats provide metrics details related to message subscription.
+Graph|PubSub Subscription Backlog Size (KB)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total size of the unacknowledged messages (backlog messages) in a subscription in Kilobytes.
+Graph|PubSub Subscription Cost (KB)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Cost of operations per subscription, measured in Kilobytes. This is used to measure utilization for quotas.
+Graph|PubSub Subscription Updates/Sec|3|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of configuration changes per subscription,grouped by operation type and result.
+Graph|PubSub Subscription ModifyAckDeadline Message Operations/Sec|4|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of modify acknowledgment deadline message operations per second,grouped by result.
+Graph|PubSub Subscription ModifyAckDeadline Requests/Sec|5|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of Modify Acknowledgment Deadline requests,grouped by result.
+Graph|PubSub Subscription Outstanding Push Messages|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of messages delivered to a subscription's push endpoint,but not yet acknowledged.
+Graph|PubSub Subscription Retained Acknowledged Messages|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of acknowledged messages retained in a subscription.
+Graph|PubSub Subscription Unacknowledged Messages|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of unacknowledged messages (backlog messages) in a subscription.
+Graph|PubSub Subscription Average Oldest Retained Acknowledged Message Age (Sec)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average Age (in seconds) of the oldest acknowledged message retained in a subscription.
+Graph|PubSub Subscription Average Oldest Unacknowledged Message Age (Sec)|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average Age (in seconds) of the oldest unacknowledged message (backlog message) in a subscription.
+Graph|PubSub Subscription Acknowledged Message Operations/Sec|11|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of acknowledge message operations per second,grouped by result.
+Graph|PubSub Subscription Acknowledge Requests/Sec|12|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of acknowledge requests per second,grouped by result.
+Graph|PubSub Subscription Pull Operations/Sec|13|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of pull message operations per second,grouped by result.
+Graph|PubSub Subscription Pull Requests/Sec|14|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of pull requests per second,grouped by result.
+Graph|PubSub Subscription Push Requests/Sec|15|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of push attempts per second,grouped by result.
+Graph|PubSub Subscription Average Retained Acknowledged Size (Bytes)|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average byte size of the acknowledged messages retained in a subscription.
+Graph|PubSub Subscription Streaming Pull Acknowledge Message Operations/Sec|17|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of streaming Pull acknowledge message operations per second,grouped by result.
+Graph|PubSub Subscription Streaming Pull Acknowledge Requests/Sec|18|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of streaming pull requests per second with non-empty acknowledge ids,grouped by result.
+Graph|PubSub Subscription Streaming Pull Message Operations/Sec|19|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of streaming pull message operations per second,grouped by result.
+Graph|PubSub Subscription Streaming Pull Modify Acknowledged Deadline Message Operations/Sec|20|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of streaming Pull Modify acknowledged Deadline operations per second,grouped by result.
+Graph|PubSub Subscription Streaming Pull Modify Acknowledged Deadline Requests/Sec|21|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of streaming pull requests per second with non-empty Modify acknowledged Deadline fields,grouped by result.
+Graph|PubSub Subscription Streaming Pull Responses/Sec|22|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of streaming pull responses per second,grouped by result.

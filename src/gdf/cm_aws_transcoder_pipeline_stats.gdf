@@ -1,0 +1,15 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS Transcoder PipelineId Stats|11295|vector|7|0|AWS Metrics|AccountName>Region>PipelineId|Amazon Elastic Transcoder Pipelines are queues that manage your transcoding jobs in the cloud. 
+
+Graph|AWS Transcoder Billed HD Output (Sec)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of billable seconds of HD output for a pipeline.
+Graph|AWS Transcoder Billed SD Output (Sec)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of billable seconds of SD output for a pipeline.
+Graph|AWS Transcoder Jobs Completed|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of jobs completed by this pipeline.
+Graph|AWS Transcoder Stand by Time (Sec)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of seconds before Elastic Transcoder started transcoding a job.
+Graph|AWS Transcoder Jobs Errored|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of jobs that failed because of invalid inputs, such as a request to transcode a file that is not in the given input bucket.
+Graph|AWS Transcoder Billed Audio Output (Sec)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of billable seconds of audio output for a pipeline.
+Graph|AWS Transcoder Outputs per Job|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of outputs Elastic Transcoder created for a job.

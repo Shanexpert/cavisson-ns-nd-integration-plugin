@@ -1,0 +1,18 @@
+# General information line
+# Info|msgVersion|numGroups|startIndex|testRun|sizeOfMsgData|interval|testRunStartDate/Time
+# --- GDF Version History ---
+# 1.0 - Initial version
+#
+# Group information line
+# Group|groupName|rptGrpId|groupType|numGraphs|numVectors|future1|future2|Group_Description
+#
+# Graph information line
+# Graph|graphName|rptId|graphType|dataType|graphDataIndex|formula|numVectors|future1|PDF_ID|Percentile_Data_Idx|future2|future3|GRAPH_DESCRIPTION
+
+# Numeric data is filled as -1 in the infoline
+
+Info|1.0|1|-1|-|-1|-1|-
+
+Group|User Flow|10469|vector|1|0|Test Metrics|Group>FlowPath|Number of Vusers running a particular path.
+
+Graph|Vuser running flow|1|scalar|sum|-|-|0|AS|-1|-1|NA|NA|Vuser running particular flow.

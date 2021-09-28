@@ -1,0 +1,20 @@
+# General information line
+# Info|msgVersion|numGroups|startIndex|testRun|sizeOfMsgData|interval|testRunStartDate/Time
+# --- GDF Version History ---
+# 1.0 - Initial version
+#
+# Group information line
+# Group|groupName|rptGrpId|groupType|numGraphs|numVectors|future1|future2|Group_Description
+#
+# Graph information line
+# Graph|graphName|rptId|graphType|dataType|graphDataIndex|formula|numVectors|future1|PDF_ID|Percentile_Data_Idx|future2|future3|GRAPH_DESCRIPTION
+
+# Numeric data is filled as -1 in the infoline
+
+Info|1.0|1|-1|-|-1|-1|-
+
+Group|Timer Stats|106|vector|3|0|Test Metrics|Group|Scenario Group Stats
+
+Graph|Session Pacing Time(Sec)|1|scalar|times|-|-|0|NA|-1|-1|NA|NA|Session pacing time in seconds.It will not include delay introduced before first session. 
+Graph|Keep Alive Time Out(Sec)|2|scalar|times|-|-|0|NA|-1|-1|NA|NA|Keep alive time in seconds.
+Graph|Page Think Time(Sec)|3|scalar|times|-|-|0|NA|-1|-1|NA|NA|Page think time in seconds.

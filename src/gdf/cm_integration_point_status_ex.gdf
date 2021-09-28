@@ -1,0 +1,12 @@
+# --- GDF Version History ---
+# # 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Integration Point Status Ex|10386|vector|5|0|Application Metrics|Tier>Server>IntegrationPoint|Integration point status.
+
+Graph|Accessible|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Available.
+Graph|Response Time(msecs)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Response time (msecs).
+Graph|DNS LookUp Time(msecs)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|DNS LookUp time (msecs).
+Graph|Connect Time(msecs)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Connect time (msecs).
+Graph|Start Transfer Time(msecs)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Start Transfer time (msecs).

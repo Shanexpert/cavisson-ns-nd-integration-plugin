@@ -1,0 +1,36 @@
+# General information line
+# Info|msgVersion|numGroups|startIndex|testRun|sizeOfMsgData|interval|testRunStartDate/Time
+# 
+# Group information line
+# Group|groupName|rptGrpId|groupType|numGraphs|numVectors|future1|future2|Group_Description 
+#
+# Graph information line
+# Graph|graphName|rptId|graphType|dataType|graphDataIndex|formula|numVectors|future1|PDF_ID|Percentile_Data_Idx|future2|future3|GRAPH_DESCRIPTION
+#
+# Numeric data is filled as -1 in the infoline
+
+Info|3.1|3|-1|-|-1|-1|-
+
+Group|Cavisson Diagnostics|28|scalar|20|0|Cavisson Metrics|NA|Cavisson Diagnosis Information
+Graph|Total memory allocated by parent (MB)|1|scalar|cumulative|-|-|0|A|-1|-1|NA|NA|Total memory (in MB) allocated by parent since start of the test. 
+Graph|Memory allocated by parent (MB)|2|scalar|sample|-|-|0|A|-1|-1|NA|NA|Memory allocated (in MB) by parent process during sample period.
+Graph|Total memory freed by parent (MB)|3|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total memory (in MB) freed by parent since start of the test.
+Graph|Memory freed by parent (MB)|4|scalar|sample|-|-|0|A|-1|-1|NA|NA|Memory freed (in MB) by parent process during sampleperiod.
+Graph|Total Shared memory allocated by parent (MB)|5|scalar|cumulative|-|-|0|A|-1|-1|NA|NA|Total Shared Memory allocated(in MB) by parent since start of the test.
+Graph|Total malloc calls by parent|6|scalar|cumulative|-|-|0|A|-1|-1|NA|NA|Total number of malloc (in MB) called by parentsince start of the test.
+Graph|Total free calls by parent|7|scalar|cumulative|-|-|0|A|-1|-1|NA|NA|Total number of free (in MB)called by parent since start of the test.
+Graph|Total shared memory calls by parent|8|scalar|cumulative|-|-|0|A|-1|-1|NA|NA|Total number of shared memory (in MB) called by parent process.
+#
+Graph|Total memory allocated by child (MB)|9|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total memory allocated by child since start of the test.
+Graph|Memory allocated by child (MB)|10|scalar|sample|-|-|0|A|-1|-1|NA|NA|Memory allocated(in MB) by child process
+Graph|Total memory freed by child (MB)|11|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total memory freed by child since start of the test.
+Graph|Memory freed by child (MB)|12|scalar|sample|-|-|0|A|-1|-1|NA|NA|Memory freed (in MB) by child process
+Graph|Total Shared memory allocated by child (MB)|13|scalar|cumulative|-|-|0|A|-1|-1|NA|NA|Memory allocated(in MB) by child process
+Graph|Total malloc calls by child|14|scalar|cumulative|-|-|0|A|-1|-1|NA|NA|Total number of malloc called by child process
+Graph|Total free calls by child|15|scalar|cumulative|-|-|0|A|-1|-1|NA|NA|Total number of free called by child process
+Graph|Total shared memory calls by child|16|scalar|cumulative|-|-|0|A|-1|-1|NA|NA|Total number of free called by child process
+#
+Graph|Total Vuser Threads|17|scalar|sample|-|-|0|A|-1|-1|NA|NA|Total number of virtual user threads in the thread pool. It include both busy and idle threads. If there is any error in session, then thread is move to Dead Vuser thread pool. Dead thread is not a thread but has connection with NVM.
+Graph|Busy Vuser Threads|18|scalar|sample|-|-|0|A|-1|-1|NA|NA|Total number of busy virtual user threads (which are in session).
+Graph|Dead Vuser Threads|19|scalar|sample|-|-|0|A|-1|-1|NA|NA|Total number of dead virtual user threads. These threads are not threads but have connection with NVM.
+Graph|Stack memory used by all Vuser threads (MB)|20|scalar|cumulative|-|-|0|A|-1|-1|NA|NA|Total stack memory used by all Vuser threads in MB

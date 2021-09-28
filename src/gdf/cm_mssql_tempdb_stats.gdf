@@ -1,0 +1,7 @@
+Info|3.1|1|-|-|-1|-1|-
+Group|MSSQL Temp DB Stats|10725|vector|4|0|MSSQL Metrics|Tier>Server>Source|MSSQL Temp DB File Status.
+Graph|MSSQL Free Space (MB)|1|scalar|sample|-|-|0|NA|-1|-1|H|NA|Total unallocated file space in Megabytes.
+Graph|MSSQL Internal Objects Space (MB)|2|scalar|sample|-|-|0|NA|-1|-1|H|NA|Total allocated space for internal objects in the file in Megabytes.
+Graph|MSSQL User Objects Space (MB)|3|scalar|sample|-|-|0|NA|-1|-1|H|NA|Total allocated space for user objects in the file in Megabytes.
+Graph|MSSQL Version Store Space (MB)|4|scalar|sample|-|-|0|NA|-1|-1|H|NA|Total allocated space for version store in the file in Megabytes.
+

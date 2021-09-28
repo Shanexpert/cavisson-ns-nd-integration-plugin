@@ -1,0 +1,14 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Apache Nifi Connection Stats|10379|vector|6|0|Application Metrics|Tier>Server>Instance>ProcessGroup>NameSourceDestination|Apache Nifi Connection Stats.
+Graph|Nifi Input Flow Files|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of flowfiles that transferred from this connection.
+Graph|Nifi Input Flow Files (KB)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total Size of all flowfiles that transferred from this connection in kilo bytes.
+Graph|Nifi Out Flow Files|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of flowfiles that pulled from this connection.
+Graph|Nifi Out Flow Files (KB)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total Size of all flowfiles that pulled from this connection.
+Graph|Nifi Flow Files In Queue|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of flowfiles queued in this connection.
+Graph|Nifi Queued Flow Files (KB)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total size of flowfiles which are queued in this connection in kilo bytes.

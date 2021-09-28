@@ -1,0 +1,5 @@
+Info|3.1|1|-|-|-1|-1|-
+Group|Alert Log Stats|10464|vector|2|0|Application Metrics|Tier>Server>Rule|Active Alert Log Stats provides metrics related to count and count per second.
+Graph|Count|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Alert count for Rule in progress interval.
+Graph|Count/Min|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Alert Count per minute.
+

@@ -1,0 +1,24 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Azure Network LoadBalancer Stats|11285|vector|8|0|Azure Metrics|AccountName>Region>ResourceGroup>LoadBalancer|The Network Load Balancing (NLB) feature distributes traffic across several servers by using the TCP/IP networking protocol. 
+
+Graph|Azure LoadBalancer Data Path Availability|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average Load Balancer data path availability per time duration.
+
+Graph|Azure LoadBalancer Health Probe Status|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average Load Balancer health probe status per time duration.
+
+Graph|Azure LoadBalancer Transmitted Byte Count|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of Bytes transmitted within time period.
+
+Graph|Azure LoadBalancer Transmitted Packet Count|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of Packets transmitted within time period.
+
+Graph|Azure LoadBalancer Transmitted SYN Packet Count|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of SYN Packets transmitted within time period.
+
+Graph|Azure LoadBalancer SNAT Connection Count|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of new SNAT connections created within time period.
+
+Graph|Azure LoadBalancer Allocated SNAT Ports Count|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of SNAT ports allocated within time period.
+
+Graph|Azure LoadBalancer Used SNAT Ports Count|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of SNAT ports used within time period.
+

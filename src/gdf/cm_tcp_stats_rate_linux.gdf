@@ -1,0 +1,16 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+Group|TCP Stats Rate (Linux)|10187|vector|10|0|Network Metrics|Tier>Server|TCP Stats for Linux
+
+Graph|Active opens/Sec|1|scalar|rate|-|-|0|NA|-1|-1|H|NA|Active connections openings per second
+Graph|Passive opens/Sec|2|scalar|rate|-|-|0|NA|-1|-1|M|NA|Passive connection openings per second
+Graph|Failed attempt/Sec|3|scalar|rate|-|-|0|NA|-1|-1|M|NA|Failed connection attempts per second
+Graph|Reset recieved/Sec|4|scalar|rate|-|-|0|NA|-1|-1|H|NA|Connection resets received per second
+Graph|Segments received/Sec|5|scalar|rate|-|-|0|NA|-1|-1|L|NA|Segments received per second
+Graph|Segments send out/Sec|6|scalar|rate|-|-|0|NA|-1|-1|L|NA|Segments send out per second
+Graph|Segments retransmitted/Sec|7|scalar|rate|-|-|0|NA|-1|-1|L|NA|Segments retransmitted per second
+Graph|Bad segments received/Sec|8|scalar|rate|-|-|0|NA|-1|-1|L|NA|bad segments received per second
+Graph|Resets sent/Sec|9|scalar|rate|-|-|0|NA|-1|-1|H|NA|Resets sent per second
+Graph|SYNs To LISTEN Sockets Dropped/Sec|10|scalar|rate|-|-|0|NA|-1|-1|L|NA|SYNs to LISTEN sockets dropped per second

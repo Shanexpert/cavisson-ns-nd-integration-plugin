@@ -1,0 +1,11 @@
+# --- GDF Version History ---
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Kafka Mirror Topic Fetcher Manager Stats|10482|vector|5|0|Kafka Mirror Maker Metrics|Tier>Server>Instance>Consumer>Topic|Kafka Mirror Topic Fetcher Manager Stats provides topic level metrices. 
+Graph|Kafka Mirror Byte Consumed/Sec|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average number of bytes consumed per second for a specific topic.
+Graph|Kafka Mirror Record Consumed/Sec|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average number of records consumed per second for a specific topic.
+Graph|Kafka Mirror Maximum Fetch Size (Bytes)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum number of bytes fetched per request for a specific topic.
+Graph|Kafka Mirror Average Fetch Size (Bytes)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average number of bytes fetched per request for a specific topic.
+Graph|Kafka Mirror Record/Request|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average number of records in each request for a specific topic.

@@ -1,0 +1,21 @@
+# --- GDF Version History ---
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS CodeBuild Stats|11250|vector|14|0|AWS Metrics|AccountName>Region>ProjectName|AWS CodeBuild is a fully managed build service in the cloud
+
+Graph|AWS Codebuild Upload Artifacts Duration (Sec)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Measures the duration of the build's UPLOAD_ARTIFACTS phase.
+Graph|AWS Codebuild Succeeded Builds|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Measures the number of successful builds.
+Graph|AWS Codebuild Submitted duration (Sec)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Measures the duration of the build's SUBMITTED phase.
+Graph|AWS Codebuild Queued duration (Sec)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Measures the duration of the build's QUEUED phase.
+Graph|AWS Codebuild Provisioning duration (Sec)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Measures the duration of the build's PROVISIONING phase.
+Graph|AWS Codebuild Pre build duration (Sec)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Measures the duration of the build's PRE_BUILD phase.
+Graph|AWS Codebuild Post build duration (Sec)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Measures the duration of the build's POST_BUILD phase
+Graph|AWS Codebuild Install duration (Sec)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Measures the duration of the build's INSTALL phase.
+Graph|AWS Codebuild Finalizing duration (Sec)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Measures the duration of the build's FINALIZING phase.
+Graph|AWS Codebuild Failed Builds|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Measures the number of failed builds because of client error or timeouts.
+Graph|AWS Codebuild All Builds Duration (Sec)|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Measures the total duration of all builds over time.
+Graph|AWS Codebuild Download Source Duration (Sec)|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Measures the duration of the build's DOWNLOAD_SOURCE phase.
+Graph|AWS Codebuild Triggered Builds|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Measures the number of builds triggered.
+Graph|AWS Codebuild Build duration (Sec)|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Measures the duration of the build's BUILD phase.

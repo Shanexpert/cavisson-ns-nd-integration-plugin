@@ -1,0 +1,25 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Spring DM Server Threading Data|10049|vector|6|0|Application Metrics|Tier>Server>Instance|Information related to Spring DM Server Threading
+
+Graph|Number of daemon thread|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of daemon thread
+Graph|Number of Peak thread|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of Peak thread
+Graph|CpuTime taken by CurrentThread|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|CpuTime taken by CurrentThread
+Graph|UserTime taken by CurrentThread|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|UserTime taken by CurrentThread
+Graph|Number of thread|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of Thread
+Graph|Total Started Thread Count|6|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Started Thread Count
+
+
+
+
+
+
+
+    
+    

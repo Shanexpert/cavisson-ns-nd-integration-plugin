@@ -1,0 +1,26 @@
+
+# --- GDF Version History ---
+# # 1.0 - Initial version
+# # 2.0 - Change done for match Long_data and Long_long_data to double
+# # 3.0 - Changes done for Dynamic data in Execution GUI
+# # 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Cloudant Cluster Stats|10416|vector|17|0|Application Metrics|Tier>Server>Instance|Cloudant cluster stats shows data about how cloudant cluster is performing and details such as the number of HTTP requests processed per second, or how many documents are processed per second etc.
+Graph|Cloudant Used Disk Space (GB)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Used disk space in gigabytes.
+Graph|Cloudant Free Disk Space (GB)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Free disk space in gigabytes.
+Graph|Cloudant Key Value Pair Emitted/Sec|3|scalar|times|-|-|0|NA|-1|-1|NA|NA|Key Value pairs emitted per second from map functions.
+Graph|Cloudant Documents Processed/Sec|4|scalar|times|-|-|0|NA|-1|-1|NA|NA|Documents processed per second through map functions.
+Graph|Cloudant 2xx Requests|5|scalar|times|-|-|0|NA|-1|-1|NA|NA|Number of requests with HTTP status code of 2xx series.
+Graph|Cloudant 3xx Requests|6|scalar|times|-|-|0|NA|-1|-1|NA|NA|Number of requests with HTTP status code of 3xx series.
+Graph|Cloudant 4XX Requests|7|scalar|times|-|-|0|NA|-1|-1|NA|NA|Number of requests with HTTP status code of 4xx series.
+Graph|Cloudant 5XX Requests|8|scalar|times|-|-|0|NA|-1|-1|NA|NA|Number of requests with HTTP status code of 5xx series.
+Graph|Cloudant Get Requests|9|scalar|times|-|-|0|NA|-1|-1|NA|NA|Number of requests with HTTP GET.
+Graph|Cloudant Post Requests POST|10|scalar|times|-|-|0|NA|-1|-1|NA|NA|Number of requests with HTTP POST.
+Graph|Cloudant Put Requests|11|scalar|times|-|-|0|NA|-1|-1|NA|NA|Number of requests with HTTP PUT.
+Graph|Cloudant Delete Requests|12|scalar|times|-|-|0|NA|-1|-1|NA|NA|Number of requests with HTTP DELETE.
+Graph|Cloudant Copy Requests|13|scalar|times|-|-|0|NA|-1|-1|NA|NA|Number of requests with HTTP COPY.
+Graph|Cloudant Head Requests|14|scalar|times|-|-|0|NA|-1|-1|NA|NA|Number of requests with HTTP HEAD.
+Graph|Cloudant Average Response Time (ms)|15|scalar|times|-|-|0|NA|-1|-1|NA|NA|Average response time in millisecond.
+Graph|Cloudant Reads/Sec|16|scalar|times|-|-|0|NA|-1|-1|NA|NA|Number Of document reads per second.
+Graph|Cloudant Writes/Sec|17|scalar|times|-|-|0|NA|-1|-1|NA|NA|Number Of document writes per second.   

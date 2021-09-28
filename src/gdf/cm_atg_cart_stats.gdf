@@ -1,0 +1,25 @@
+# --- GDF Version History ---
+# # 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+Group|ATG Cart Size Stats|10598|vector|18|0|Application Metrics|Tier>Server|ATG Cart Size Stats provides average cart size  related to complete and pending order followed by different cart type.
+Graph|Average Cart Size WEBSTORE CompleteOrder|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average cart size of complete order from webstore.
+Graph|Average Cart Size WEBSTORE PendingOrder|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average cart size of pending order from webstore.
+Graph|Average Cart Size CSC CompleteOrder|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average cart size of complete order from csc.
+Graph|Average Cart Size CSC PendingOrder|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average cart size of pending order from csc.
+Graph|Average Cart Size KIOSK CompleteOrder|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average cart size of complete order from kiosk.
+Graph|Average Cart Size KIOSK PendingOrder|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average cart size of pending order from kiosk.
+Graph|Average Cart Size MOBILE CompleteOrder|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average cart size of complete order from mobile.
+Graph|Average Cart Size MOBILE PendingOrder|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average cart size of pending order from mobile.
+Graph|Average Cart Size TABLET CompleteOrder|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average cart size of complete order from tablet.
+Graph|Average Cart Size TABLET PendingOrder|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average cart size of pending order from tablet.
+Graph|Average Cart Size IPHONE CompleteOrder|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average cart size of complete order from iphone.
+Graph|Average Cart Size IPHONE PendingOrder|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average cart size of pending order from iphone.
+Graph|Average Cart Size IPAD CompleteOrder|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average cart size of complete order from ipad.
+Graph|Average Cart Size IPAD PendingOrder|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average cart size of pending order from ipad.
+Graph|Average Cart Size ANDROID CompleteOrder|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average cart size of complete order from android.
+Graph|Average Cart Size ANDROID PendingOrder|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average cart size of pending order from android.
+Graph|Average Cart Size Others CompleteOrder|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average cart size of complete order from other channel.
+Graph|Average Cart Size Others PendingOrder|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average cart size of pending order from other channel.
+
+

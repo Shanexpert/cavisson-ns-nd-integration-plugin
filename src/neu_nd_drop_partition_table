@@ -1,0 +1,62 @@
+#! /bin/sh
+
+usage()
+{
+  echo $*
+  echo "Usage: neu_nd_drop_partition_table <Test Run Number> <Partition Name> <all/Particular csv>"
+  echo "Example:"
+  echo "  neu_nd_drop_partition_table 1234 201402201000 all/flowpath.csv"
+  exit -1
+}
+
+if [ $# -lt 2 ]; then
+  usage "INVALID ARGUMENTS"
+fi
+
+if [ -d $PWD/TR$1 ]; then
+  BASE_DIR=$PWD
+elif [ -d $NS_WDIR/logs/TR$1 ]; then
+  BASE_DIR=$NS_WDIR/logs
+else
+  usage "Error: Test run number $1 is not a valid test run number"
+  exit -1
+fi
+
+echo "neu_nd_drop_partition_table: Please wait table will be dropped ..."
+START=`date +%s`
+
+if [ "X$3" == "X" -o "X$3" == "Xall" -o "X$3" == "XALL" ];then
+  psql test cavisson <<+
+  drop table if exists FlowPath_$1_$2;
+  drop table if exists NDAppLogs_$1_$2;
+  drop table if exists NDSQLRecord_$1_$2;
+  drop table if exists NDAutoSensorHotSpotThreads_$1_$2;
+  drop table if exists NDHTTPCaptureHeader_$1_$2;
+  drop table if exists NDExceptions_$1_$2;
+  drop table if exists NDJMS_$1_$2;
+  drop table if exists NDMethodTiming_$1_$2;
+  drop table if exists NDBCIArg_$1_$2;
+  drop table if exists NDSqltiming_$1_$2;
+  drop table if exists ndipresourcetiming_$1_$2;
+  drop table if exists ndcustomdata_$1_$2;
++
+else
+  count=0
+  ND_PARTITION_ARRAY=("flowpath_" "ndapplogs_" "ndsqlrecord_" "ndautosensorhotspotthreads_" "ndhttpcaptureheader_" "ndexceptions_" "ndbciarg", "urlrecord_" "ndmethodtiming_" "ndjms_" "ndsqltiming_" "ndipresourcetiming_" "ndcustomdata_")
+
+  ND_CSV_NAMES_ARRAY=("NDFlowPath.csv" "NDAppLogs.csv" "NDSQLRecord.csv" "NDAutoSensorHotSpotThreads.csv" "NDHTTPCaptureHeader.csv" "NDExceptions.csv" "NDBCIArg.csv", "NDURLRecord.csv" "NDMethodTiming.csv" "NDJMS.csv" "NDSQLTiming.csv" "NDIPResourceTiming.csv" "NDCustomData.csv")
+
+  while [ $count -le ${#ND_CSV_NAMES_ARRAY[@]} ] ; do
+    if [ "X${ND_CSV_NAMES_ARRAY[$count]}" == "X$3" ] ; then
+      ND_PARTITION_TABLE_NAME=`echo ${ND_PARTITION_ARRAY[$count]}`"$1_$2"
+      psql test cavisson <<+
+      drop table if exists $ND_PARTITION_TABLE_NAME;
++
+    fi
+  count=`expr $count + 1`
+  done
+fi
+
+END=`date +%s`
+DIFF=`expr $END - $START`
+echo "neu_nd_drop_partition_table: Deletion of table took $DIFF seconds"

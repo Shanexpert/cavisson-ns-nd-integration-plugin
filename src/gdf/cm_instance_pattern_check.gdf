@@ -1,0 +1,20 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+# General information line
+# Info|msgVersion|numGroups|startIndex|testRun|sizeOfMsgData|interval|testRunStartDate/Time
+#
+# Group information line
+# Group|groupName|rptGrpId|groupType|numGraphs|numVectors
+#
+# Graph information line
+# Graph|graphName|rptId|graphType|dataType|graphDataIndex|formula|numVectors
+#
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Instance Running Check|10491|vector|1|0|System Metrics|Tier>Server>Instance|Instance pattern check 
+
+Graph|Instance Running Status|1|scalar|sample|-|None|0|NA|-1|-1|H|NA|Instance running status.

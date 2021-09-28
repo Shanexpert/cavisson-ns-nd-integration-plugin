@@ -1,0 +1,486 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Prometheus Kafka Stats|11414|vector|239|0|Kafka Metrics|Tier>Server>Instance>BrokerId>Name|Kafka Prometheus Stats 
+
+Graph|Kafka Controller Channel Manager 50thPercentile|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.controller<type=ControllerChannel Manager, name=RequestRateAndQueueTimeMs, broker-id=1><>50thPercentile)
+
+Graph|Kafka Controller Channel Manager 75thPercentile|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.controller<type=ControllerChannel Manager, name=RequestRateAndQueueTimeMs, broker-id=1><>75thPercentile)
+
+Graph|Kafka Controller Channel Manager 95thPercentile|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.controller<type=ControllerChannel Manager, name=RequestRateAndQueueTimeMs, broker-id=1><>95thPercentile)
+
+Graph|Kafka Controller Channel Manager 98thPercentile|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.controller<type=ControllerChannel Manager, name=RequestRateAndQueueTimeMs, broker-id=1><>98thPercentile)
+
+Graph|Kafka Controller Channel Manager 999thPercentile|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.controller<type=ControllerChannel Manager, name=RequestRateAndQueueTimeMs, broker-id=1><>999thPercentile)
+
+Graph|Kafka Controller Channel Manager 99thPercentile|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.controller<type=ControllerChannel Manager, name=RequestRateAndQueueTimeMs, broker-id=1><>99thPercentile)
+
+Graph|Kafka Controller Channel Manager Count|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.controller<type=ControllerChannel Manager, name=RequestRateAndQueueTimeMs, broker-id=1><>Count)
+
+Graph|Kafka Controller Channel Manager FifteenMinuteRate|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.controller<type=ControllerChannel Manager, name=RequestRateAndQueueTimeMs, broker-id=1><>FifteenMinuteRate)
+
+Graph|Kafka Controller Channel Manager FiveMinuteRate|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.controller<type=ControllerChannel Manager, name=RequestRateAndQueueTimeMs, broker-id=1><>FiveMinuteRate)
+
+Graph|Kafka Controller Channel Manager Max|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.controller<type=ControllerChannel Manager, name=RequestRateAndQueueTimeMs, broker-id=1><>Max)
+
+Graph|Kafka Controller Channel Manager Mean|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.controller<type=ControllerChannel Manager, name=RequestRateAndQueueTimeMs, broker-id=1><>Mean)
+
+Graph|Kafka Controller Channel Manager MeanRate|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.controller<type=ControllerChannel Manager, name=RequestRateAndQueueTimeMs, broker-id=1><>MeanRate)
+
+Graph|Kafka Controller Channel Manager Min|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.controller<type=ControllerChannel Manager, name=RequestRateAndQueueTimeMs, broker-id=1><>Min)
+
+Graph|Kafka Controller Channel Manager OneMinuteRate|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.controller<type=ControllerChannel Manager, name=RequestRateAndQueueTimeMs, broker-id=1><>OneMinuteRate)
+
+Graph|Kafka Controller Channel Manager StdDev|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.controller<type=ControllerChannel Manager, name=RequestRateAndQueueTimeMs, broker-id=1><>StdDev)
+
+Graph|Kafka Controller Channel Manager Value|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.controller<type=ControllerChannel Manager, name=TotalQueueSize><>Value)
+
+Graph|Kafka Controller EventManager 50thPercentile|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.controller<type=ControllerEventManager, name=EventQueueTimeMs><>50thPercentile)
+
+Graph|Kafka Controller EventManager 75thPercentile|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.controller<type=ControllerEventManager, name=EventQueueTimeMs><>75thPercentile)
+
+Graph|Kafka Controller EventManager 95thPercentile|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.controller<type=ControllerEventManager, name=EventQueueTimeMs><>95thPercentile)
+
+Graph|Kafka Controller EventManager 98thPercentile|20|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.controller<type=ControllerEventManager, name=EventQueueTimeMs><>98thPercentile)
+
+Graph|Kafka Controller EventManager 999thPercentile|21|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.controller<type=ControllerEventManager, name=EventQueueTimeMs><>999thPercentile)
+
+Graph|Kafka Controller EventManager 99thPercentile|22|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.controller<type=ControllerEventManager, name=EventQueueTimeMs><>99thPercentile)
+
+Graph|Kafka Controller EventManager Count|23|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.controller<type=ControllerEventManager, name=EventQueueTimeMs><>Count)
+
+Graph|Kafka Controller EventManager Max|24|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.controller<type=ControllerEventManager, name=EventQueueTimeMs><>Max)
+
+Graph|Kafka Controller EventManager Mean|25|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.controller<type=ControllerEventManager, name=EventQueueTimeMs><>Mean)
+
+Graph|Kafka Controller EventManager Min|26|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.controller<type=ControllerEventManager, name=EventQueueTimeMs><>Min)
+
+Graph|Kafka Controller EventManager StdDev|27|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.controller<type=ControllerEventManager, name=EventQueueTimeMs><>StdDev)
+
+Graph|Kafka Controller EventManager Value|28|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.controller<type=ControllerEventManager, name=EventQueueSize><>Value)
+
+Graph|Kafka Controller Stats 50thPercentile|29|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.controller<type=ControllerStats, name=ControlledShutdownRateAndTimeMs><>50thPercentile)
+
+Graph|Kafka Controller Stats 75thPercentile|30|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.controller<type=ControllerStats, name=ControlledShutdownRateAndTimeMs><>75thPercentile)
+
+Graph|Kafka Controller Stats 95thPercentile|31|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.controller<type=ControllerStats, name=ControlledShutdownRateAndTimeMs><>95thPercentile)
+
+Graph|Kafka Controller Stats 98thPercentile|32|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.controller<type=ControllerStats, name=ControlledShutdownRateAndTimeMs><>98thPercentile)
+
+Graph|Kafka Controller Stats 999thPercentile|33|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.controller<type=ControllerStats, name=ControlledShutdownRateAndTimeMs><>999thPercentile)
+
+Graph|Kafka Controller Stats 99thPercentile|34|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.controller<type=ControllerStats, name=ControlledShutdownRateAndTimeMs><>99thPercentile)
+
+Graph|Kafka Controller Stats Count|35|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.controller<type=ControllerStats, name=ControlledShutdownRateAndTimeMs><>Count)
+
+Graph|Kafka Controller Stats FifteenMinuteRate|36|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.controller<type=ControllerStats, name=ControlledShutdownRateAndTimeMs><>FifteenMinuteRate)
+
+Graph|Kafka Controller Stats FiveMinuteRate|37|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.controller<type=ControllerStats, name=ControlledShutdownRateAndTimeMs><>FiveMinuteRate)
+
+Graph|Kafka Controller Stats Max|38|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.controller<type=ControllerStats, name=ControlledShutdownRateAndTimeMs><>Max)
+
+Graph|Kafka Controller Stats Mean|39|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.controller<type=ControllerStats, name=ControlledShutdownRateAndTimeMs><>Mean)
+
+Graph|Kafka Controller Stats MeanRate|40|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.controller<type=ControllerStats, name=ControlledShutdownRateAndTimeMs><>MeanRate)
+
+Graph|Kafka Controller Stats Min|41|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.controller<type=ControllerStats, name=ControlledShutdownRateAndTimeMs><>Min)
+
+Graph|Kafka Controller Stats OneMinuteRate|42|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.controller<type=ControllerStats, name=ControlledShutdownRateAndTimeMs><>OneMinuteRate)
+
+Graph|Kafka Controller Stats StdDev|43|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.controller<type=ControllerStats, name=ControlledShutdownRateAndTimeMs><>StdDev)
+
+Graph|Kafka Controller KafkaController Value|44|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.controller<type=KafkaController, name=GlobalPartitionCount><>Value)
+
+Graph|Kafka Coordinator Group GroupMetadataManager Value|45|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.coordinator.group<type=GroupMetadataManager, name=NumGroupsDead><>Value)
+
+Graph|Kafka Coordinator Transaction TransactionMarkerChannel Manager Value|46|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.coordinator.transaction<type=TransactionMarkerChannel Manager, name=LogAppendRetryQueueSize><>Value)
+
+Graph|Kafka Log LogCleaner Value|47|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.log<type=LogCleaner, name=cleaner-recopy-percent><>Value)
+
+Graph|Kafka Log LogCleanerManager Value|48|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.log<type=LogCleanerManager, name=max-dirty-percent><>Value)
+
+Graph|Kafka Log LogManager Value|49|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.log<type=LogManager, name=OfflineLogDirectoryCount><>Value)
+
+Graph|Kafka Network Acceptor Count|50|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.network<type=Acceptor, name=AcceptorBlockedPercent, listener=CLIENT><>Count)
+
+Graph|Kafka Network Acceptor FifteenMinuteRate|51|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.network<type=Acceptor, name=AcceptorBlockedPercent, listener=CLIENT><>FifteenMinuteRate)
+
+Graph|Kafka Network Acceptor FiveMinuteRate|52|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.network<type=Acceptor, name=AcceptorBlockedPercent, listener=CLIENT><>FiveMinuteRate)
+
+Graph|Kafka Network Acceptor MeanRate|53|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.network<type=Acceptor, name=AcceptorBlockedPercent, listener=CLIENT><>MeanRate)
+
+Graph|Kafka Network Acceptor OneMinuteRate|54|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.network<type=Acceptor, name=AcceptorBlockedPercent, listener=CLIENT><>OneMinuteRate)
+
+Graph|Kafka Network Processor Value|55|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.network<type=Processor, name=IdlePercent, networkProcessor=8><>Value)
+
+Graph|Kafka Network Request Channel Value|56|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.network<type=Request Channel, name=ResponseQueueSize, processor=8><>Value)
+
+Graph|Kafka Network Request Metrics 50thPercentile|57|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.network<type=Request Metrics, name=ResponseQueueTimeMs, request=ListGroups><>50thPercentile)
+
+Graph|Kafka Network Request Metrics 75thPercentile|58|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.network<type=Request Metrics, name=ResponseQueueTimeMs, request=ListGroups><>75thPercentile)
+
+Graph|Kafka Network Request Metrics 95thPercentile|59|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.network<type=Request Metrics, name=ResponseQueueTimeMs, request=ListGroups><>95thPercentile)
+
+Graph|Kafka Network Request Metrics 98thPercentile|60|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.network<type=Request Metrics, name=ResponseQueueTimeMs, request=ListGroups><>98thPercentile)
+
+Graph|Kafka Network Request Metrics 999thPercentile|61|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.network<type=Request Metrics, name=ResponseQueueTimeMs, request=ListGroups><>999thPercentile)
+
+Graph|Kafka Network Request Metrics 99thPercentile|62|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.network<type=Request Metrics, name=ResponseQueueTimeMs, request=ListGroups><>99thPercentile)
+
+Graph|Kafka Network Request Metrics Count|63|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.network<type=Request Metrics, name=ResponseQueueTimeMs, request=ListGroups><>Count)
+
+Graph|Kafka Network Request Metrics FifteenMinuteRate|64|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.network<type=Request Metrics, name=ErrorsPerSec, request=UpdateMetadata, error=NONE><>FifteenMinuteRate)
+
+Graph|Kafka Network Request Metrics FiveMinuteRate|65|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.network<type=Request Metrics, name=ErrorsPerSec, request=UpdateMetadata, error=NONE><>FiveMinuteRate)
+
+Graph|Kafka Network Request Metrics Max|66|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.network<type=Request Metrics, name=ResponseQueueTimeMs, request=ListGroups><>Max)
+
+Graph|Kafka Network Request Metrics Mean|67|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.network<type=Request Metrics, name=ResponseQueueTimeMs, request=ListGroups><>Mean)
+
+Graph|Kafka Network Request Metrics MeanRate|68|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.network<type=Request Metrics, name=ErrorsPerSec, request=UpdateMetadata, error=NONE><>MeanRate)
+
+Graph|Kafka Network Request Metrics Min|69|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.network<type=Request Metrics, name=ResponseQueueTimeMs, request=ListGroups><>Min)
+
+Graph|Kafka Network Request Metrics OneMinuteRate|70|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.network<type=Request Metrics, name=ErrorsPerSec, request=UpdateMetadata, error=NONE><>OneMinuteRate)
+
+Graph|Kafka Network Request Metrics StdDev|71|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.network<type=Request Metrics, name=ResponseQueueTimeMs, request=ListGroups><>StdDev)
+
+Graph|Kafka Network SocketServer Value|72|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.network<type=SocketServer, name=ExpiredConnectionsKilledCount><>Value)
+
+Graph|Kafka Security Simple Acl Authorizer Count|73|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.security<type=Simple Acl Authorizer, name=ZooKeeperExpiresPerSec><>Count)
+
+Graph|Kafka Security Simple Acl Authorizer FifteenMinuteRate|74|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.security<type=Simple Acl Authorizer, name=ZooKeeperExpiresPerSec><>FifteenMinuteRate)
+
+Graph|Kafka Security Simple Acl Authorizer FiveMinuteRate|75|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.security<type=Simple Acl Authorizer, name=ZooKeeperExpiresPerSec><>FiveMinuteRate)
+
+Graph|Kafka Security Simple Acl Authorizer MeanRate|76|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.security<type=Simple Acl Authorizer, name=ZooKeeperExpiresPerSec><>MeanRate)
+
+Graph|Kafka Security Simple Acl Authorizer OneMinuteRate|77|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.security<type=Simple Acl Authorizer, name=ZooKeeperExpiresPerSec><>OneMinuteRate)
+
+Graph|Kafka Server Broker Topic Metrics Count|78|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.server<type=Broker Topic Metrics, name=BytesInPerSec><>Count)
+
+Graph|Kafka Server Broker Topic Metrics FifteenMinuteRate|79|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.server<type=Broker Topic Metrics, name=BytesInPerSec><>FifteenMinuteRate)
+
+Graph|Kafka Server Broker Topic Metrics FiveMinuteRate|80|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.server<type=Broker Topic Metrics, name=BytesInPerSec><>FiveMinuteRate)
+
+Graph|Kafka Server Broker Topic Metrics MeanRate|81|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.server<type=Broker Topic Metrics, name=BytesInPerSec><>MeanRate)
+
+Graph|Kafka Server Broker Topic Metrics OneMinuteRate|82|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.server<type=Broker Topic Metrics, name=BytesInPerSec><>OneMinuteRate)
+
+Graph|Kafka Server Delayed Operation Purgatory Value|83|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.server<type=DelayedOperationPurgatory, name=PurgatorySize, delayedOperation=topic><>Value)
+
+Graph|Kafka Server Fetch Session Cache Count|84|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.server<type=Fetch Session Cache, name=IncrementalFetchSessionEvictionsPerSec><>Count)
+
+Graph|Kafka Server Fetch Session Cache FifteenMinuteRate|85|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.server<type=Fetch Session Cache, name=IncrementalFetchSessionEvictionsPerSec><>FifteenMinuteRate)
+
+Graph|Kafka Server Fetch Session Cache FiveMinuteRate|86|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.server<type=Fetch Session Cache, name=IncrementalFetchSessionEvictionsPerSec><>FiveMinuteRate)
+
+Graph|Kafka Server Fetch Session Cache MeanRate|87|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.server<type=Fetch Session Cache, name=IncrementalFetchSessionEvictionsPerSec><>MeanRate)
+
+Graph|Kafka Server Fetch Session Cache OneMinuteRate|88|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.server<type=Fetch Session Cache, name=IncrementalFetchSessionEvictionsPerSec><>OneMinuteRate)
+
+Graph|Kafka Server Fetch Session Cache Value|89|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.server<type=Fetch Session Cache, name=NumIncrementalFetchPartitionsCached><>Value)
+
+Graph|Kafka Server Kafka Metrics Count Count|90|scalar|sample|-|-|0|NA|-1|-1|NA|NA|total number of registered metrics (kafka.server<type=kafka-metrics-count><>count)
+
+Graph|Kafka Server Kafka Request Handler Pool Count|91|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.server<type=Kafka Request Handler Pool, name=RequestHandlerAvgIdlePercent><>Count)
+
+Graph|Kafka Server Kafka Request Handler Pool FifteenMinuteRate|92|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.server<type=Kafka Request Handler Pool, name=RequestHandlerAvgIdlePercent><>FifteenMinuteRate)
+
+Graph|Kafka Server Kafka Request Handler Pool FiveMinuteRate|93|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.server<type=Kafka Request Handler Pool, name=RequestHandlerAvgIdlePercent><>FiveMinuteRate)
+
+Graph|Kafka Server Kafka Request Handler Pool MeanRate|94|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.server<type=Kafka Request Handler Pool, name=RequestHandlerAvgIdlePercent><>MeanRate)
+
+Graph|Kafka Server Kafka Request Handler Pool OneMinuteRate|95|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.server<type=Kafka Request Handler Pool, name=RequestHandlerAvgIdlePercent><>OneMinuteRate)
+
+Graph|Kafka Server Kafka Server Value|96|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.server<type=KafkaServer, name=BrokerState><>Value)
+
+Graph|Kafka Server Produce Queue Size|97|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Tracks the size of the delay queue (kafka.server<type=Produce><>queue-size)
+
+Graph|Kafka Server Replica Alter Log Dirs Manager Value|98|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.server<type=ReplicaAlterLogDirsManager, name=MaxLag, clientId=ReplicaAlterLogDirs><>Value)
+
+Graph|Kafka Server Replica Fetcher Manager Value|99|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.server<type=ReplicaFetcherManager, name=MinFetchRate, clientId=Replica><>Value)
+
+Graph|Kafka Server Replica Manager Count|100|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.server<type=Replica Manager, name=IsrShrinksPerSec><>Count)
+
+Graph|Kafka Server Replica Manager FifteenMinuteRate|101|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.server<type=Replica Manager, name=IsrShrinksPerSec><>FifteenMinuteRate)
+
+Graph|Kafka Server Replica Manager FiveMinuteRate|102|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.server<type=Replica Manager, name=IsrShrinksPerSec><>FiveMinuteRate)
+
+Graph|Kafka Server Replica Manager MeanRate|103|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.server<type=Replica Manager, name=IsrShrinksPerSec><>MeanRate)
+
+Graph|Kafka Server Replica Manager OneMinuteRate|104|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.server<type=Replica Manager, name=IsrShrinksPerSec><>OneMinuteRate)
+
+Graph|Kafka Server Replica Manager Value|105|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.server<type=Replica Manager, name=OfflineReplicaCount><>Value)
+
+Graph|Kafka Server Request Queue Size|106|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Tracks the size of the delay queue (kafka.server<type=Request><>queue-size)
+
+Graph|Kafka Server Session Expire Listener Count|107|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.server<type=Session Expire Listener, name=ZooKeeperSaslAuthenticationsPerSec><>Count)
+
+Graph|Kafka Server Session Expire Listener FifteenMinuteRate|108|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.server<type=Session Expire Listener, name=ZooKeeperSaslAuthenticationsPerSec><>FifteenMinuteRate)
+
+Graph|Kafka Server Session Expire Listener FiveMinuteRate|109|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.server<type=Session Expire Listener, name=ZooKeeperSaslAuthenticationsPerSec><>FiveMinuteRate)
+
+Graph|Kafka Server Session Expire Listener MeanRate|110|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.server<type=Session Expire Listener, name=ZooKeeperSaslAuthenticationsPerSec><>MeanRate)
+
+Graph|Kafka Server Session Expire Listener OneMinuteRate|111|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.server<type=Session Expire Listener, name=ZooKeeperSaslAuthenticationsPerSec><>OneMinuteRate)
+
+Graph|Kafka Server Zoo Keeper Client Metrics 50thPercentile|112|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.server<type=Zoo Keeper Client Metrics, name=ZooKeeperRequestLatencyMs><>50thPercentile)
+
+Graph|Kafka Server Zoo Keeper Client Metrics 75thPercentile|113|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.server<type=Zoo Keeper Client Metrics, name=ZooKeeperRequestLatencyMs><>75thPercentile)
+
+Graph|Kafka Server Zoo Keeper Client Metrics 95thPercentile|114|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.server<type=Zoo Keeper Client Metrics, name=ZooKeeperRequestLatencyMs><>95thPercentile)
+
+Graph|Kafka Server Zoo Keeper Client Metrics 98thPercentile|115|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.server<type=Zoo Keeper Client Metrics, name=ZooKeeperRequestLatencyMs><>98thPercentile)
+
+Graph|Kafka Server Zoo Keeper Client Metrics 999thPercentile|116|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.server<type=Zoo Keeper Client Metrics, name=ZooKeeperRequestLatencyMs><>999thPercentile)
+
+Graph|Kafka Server Zoo Keeper Client Metrics 99thPercentile|117|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.server<type=Zoo Keeper Client Metrics, name=ZooKeeperRequestLatencyMs><>99thPercentile)
+
+Graph|Kafka Server Zoo Keeper Client Metrics Count|118|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.server<type=Zoo Keeper Client Metrics, name=ZooKeeperRequestLatencyMs><>Count)
+
+Graph|Kafka Server Zoo Keeper Client Metrics Max|119|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.server<type=Zoo Keeper Client Metrics, name=ZooKeeperRequestLatencyMs><>Max)
+
+Graph|Kafka Server Zoo Keeper Client Metrics Mean|120|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.server<type=Zoo Keeper Client Metrics, name=ZooKeeperRequestLatencyMs><>Mean)
+
+Graph|Kafka Server Zoo Keeper Client Metrics Min|121|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.server<type=Zoo Keeper Client Metrics, name=ZooKeeperRequestLatencyMs><>Min)
+
+Graph|Kafka Server Zoo Keeper Client Metrics StdDev|122|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.server<type=Zoo Keeper Client Metrics, name=ZooKeeperRequestLatencyMs><>StdDev)
+
+Graph|Kafka Server Controller Channel Metrics Connection Close Rate|123|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of connections closed per second (kafka.server<type=controller-channel-metrics, broker-id=3><>connection-close-rate)
+
+Graph|Kafka Server Controller Channel Metrics Connection Close Total|124|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of connections closed (kafka.server<type=controller-channel-metrics, broker-id=3><>connection-close-total)
+
+Graph|Kafka Server Controller Channel Metrics Connection Count|125|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The current number of active connections. (kafka.server<type=controller-channel-metrics, broker-id=3><>connection-count)
+
+Graph|Kafka Server Controller Channel Metrics Connection Creation Rate|126|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of new connections established per second (kafka.server<type=controller-channel-metrics, broker-id=3><>connection-creation-rate)
+
+Graph|Kafka Server Controller Channel Metrics Connection Creation Total|127|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of new connections established (kafka.server<type=controller-channel-metrics, broker-id=3><>connection-creation-total)
+
+Graph|Kafka Server Controller Channel Metrics Failed Authentication Rate|128|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of connections with failed authentication per second (kafka.server<type=controller-channel-metrics, broker-id=3><>failed-authentication-rate)
+
+Graph|Kafka Server Controller Channel Metrics Failed Authentication Total|129|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of connections with failed authentication (kafka.server<type=controller-channel-metrics, broker-id=3><>failed-authentication-total)
+
+Graph|Kafka Server Controller Channel Metrics Failed Reauthentication Rate|130|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of failed re-authentication of connections per second (kafka.server<type=controller-channel-metrics, broker-id=3><>failed-reauthentication-rate)
+
+Graph|Kafka Server Controller Channel Metrics Failed Reauthentication Total|131|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of failed re-authentication of connections (kafka.server<type=controller-channel-metrics, broker-id=3><>failed-reauthentication-total)
+
+Graph|Kafka Server Controller Channel Metrics Incoming Byte Rate|132|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of bytes read off all sockets per second (kafka.server<type=controller-channel-metrics, broker-id=3><>incoming-byte-rate)
+
+Graph|Kafka Server Controller Channel Metrics Incoming Byte Total|133|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of bytes read off all sockets (kafka.server<type=controller-channel-metrics, broker-id=3><>incoming-byte-total)
+
+Graph|Kafka Server Controller Channel Metrics Io Ratio|134|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The fraction of time the I,O thread spent doing I,O (kafka.server<type=controller-channel-metrics, broker-id=3><>io-ratio)
+
+Graph|Kafka Server Controller Channel Metrics Io Time Ns Avg|135|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average length of time for I,O per select call in nanoseconds. (kafka.server<type=controller-channel-metrics, broker-id=3><>io-time-ns-avg)
+
+Graph|Kafka Server Controller Channel Metrics Io Wait Ratio|136|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The fraction of time the I,O thread spent waiting (kafka.server<type=controller-channel-metrics, broker-id=3><>io-wait-ratio)
+
+Graph|Kafka Server Controller Channel Metrics Io Wait Time Ns Avg|137|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average length of time the I,O thread spent waiting for a socket ready for reads or writes in nanoseconds. (kafka.server<type=controller-channel-metrics, broker-id=3><>io-wait-time-ns-avg)
+
+Graph|Kafka Server Controller Channel Metrics Io Waittime Total|138|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total time the I,O thread spent waiting (kafka.server<type=controller-channel-metrics, broker-id=3><>io-waittime-total)
+
+Graph|Kafka Server Controller Channel Metrics Iotime Total|139|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total time the I,O thread spent doing I,O (kafka.server<type=controller-channel-metrics, broker-id=3><>iotime-total)
+
+Graph|Kafka Server Controller Channel Metrics Network Io Rate|140|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of network operations (reads or writes) on all connections per second (kafka.server<type=controller-channel-metrics, broker-id=3><>network-io-rate)
+
+Graph|Kafka Server Controller Channel Metrics Network Io Total|141|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of network operations (reads or writes) on all connections (kafka.server<type=controller-channel-metrics, broker-id=3><>network-io-total)
+
+Graph|Kafka Server Controller Channel Metrics Outgoing Byte Rate|142|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of outgoing bytes sent to all servers per second (kafka.server<type=controller-channel-metrics, broker-id=3><>outgoing-byte-rate)
+
+Graph|Kafka Server Controller Channel Metrics Outgoing Byte Total|143|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of outgoing bytes sent to all servers (kafka.server<type=controller-channel-metrics, broker-id=3><>outgoing-byte-total)
+
+Graph|Kafka Server Controller Channel Metrics Reauthentication Latency Avg|144|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average latency observed due to re-authentication (kafka.server<type=controller-channel-metrics, broker-id=3><>reauthentication-latency-avg)
+
+Graph|Kafka Server Controller Channel Metrics Reauthentication Latency Max|145|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The max latency observed due to re-authentication (kafka.server<type=controller-channel-metrics, broker-id=3><>reauthentication-latency-max)
+
+Graph|Kafka Server Controller Channel Metrics Request Rate|146|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of requests sent per second (kafka.server<type=controller-channel-metrics, broker-id=3><>request-rate)
+
+Graph|Kafka Server Controller Channel Metrics Request Size Avg|147|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average size of requests sent. (kafka.server<type=controller-channel-metrics, broker-id=3><>request-size-avg)
+
+Graph|Kafka Server Controller Channel Metrics Request Size Max|148|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The maximum size of any request sent. (kafka.server<type=controller-channel-metrics, broker-id=3><>request-size-max)
+
+Graph|Kafka Server Controller Channel Metrics Request Total|149|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of requests sent (kafka.server<type=controller-channel-metrics, broker-id=3><>request-total)
+
+Graph|Kafka Server Controller Channel Metrics Response Rate|150|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of responses received per second (kafka.server<type=controller-channel-metrics, broker-id=3><>response-rate)
+
+Graph|Kafka Server Controller Channel Metrics Response Total|151|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of responses received (kafka.server<type=controller-channel-metrics, broker-id=3><>response-total)
+
+Graph|Kafka Server Controller Channel Metrics Select Rate|152|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of times the I,O layer checked for new I,O to perform per second (kafka.server<type=controller-channel-metrics, broker-id=3><>select-rate)
+
+Graph|Kafka Server Controller Channel Metrics Select Total|153|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of times the I,O layer checked for new I,O to perform (kafka.server<type=controller-channel-metrics, broker-id=3><>select-total)
+
+Graph|Kafka Server Controller Channel Metrics Successful Authentication No Reauth Total|154|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of connections with successful authentication where the client does not support re-authentication (kafka.server<type=controller-channel-metrics, broker-id=3><>successful-authentication-no-reauth-total)
+
+Graph|Kafka Server Controller Channel Metrics Successful Authentication Rate|155|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of connections with successful authentication per second (kafka.server<type=controller-channel-metrics, broker-id=3><>successful-authentication-rate)
+
+Graph|Kafka Server Controller Channel Metrics Successful Authentication Total|156|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of connections with successful authentication (kafka.server<type=controller-channel-metrics, broker-id=3><>successful-authentication-total)
+
+Graph|Kafka Server Controller Channel Metrics Successful Reauthentication Rate|157|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of successful re-authentication of connections per second (kafka.server<type=controller-channel-metrics, broker-id=3><>successful-reauthentication-rate)
+
+Graph|Kafka Server Controller Channel Metrics Successful Reauthentication Total|158|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of successful re-authentication of connections (kafka.server<type=controller-channel-metrics, broker-id=3><>successful-reauthentication-total)
+
+Graph|Kafka Server Kafka Metrics Count Count|159|scalar|sample|-|-|0|NA|-1|-1|NA|NA|total number of registered metrics (kafka.server<type=kafka-metrics-count><>count)
+
+Graph|Kafka Server Socket Server Metrics MemoryPoolAvgDepletedPercent|160|scalar|sample|-|-|0|NA|-1|-1|NA|NA|(kafka.server<type=socket-server-metrics><>MemoryPoolAvgDepletedPercent)
+
+Graph|Kafka Server Socket Server Metrics MemoryPoolDepletedTimeTotal|161|scalar|sample|-|-|0|NA|-1|-1|NA|NA|(kafka.server<type=socket-server-metrics><>MemoryPoolDepletedTimeTotal)
+
+Graph|Kafka Server Socket Server Metrics Connection Close Rate|162|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of connections closed per second (kafka.server<type=socket-server-metrics, listener=CLIENT, networkProcessor=4><>connection-close-rate)
+
+Graph|Kafka Server Socket Server Metrics Connection Close Total|163|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of connections closed (kafka.server<type=socket-server-metrics, listener=CLIENT, networkProcessor=4><>connection-close-total)
+
+Graph|Kafka Server Socket Server Metrics Connection Count|164|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The current number of active connections. (kafka.server<type=socket-server-metrics, listener=CLIENT, networkProcessor=4><>connection-count)
+
+Graph|Kafka Server Socket Server Metrics Connection Creation Rate|165|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of new connections established per second (kafka.server<type=socket-server-metrics, listener=CLIENT, networkProcessor=4><>connection-creation-rate)
+
+Graph|Kafka Server Socket Server Metrics Connection Creation Total|166|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of new connections established (kafka.server<type=socket-server-metrics, listener=CLIENT, networkProcessor=4><>connection-creation-total)
+
+Graph|Kafka Server Socket Server Metrics Expired Connections Killed Count|167|scalar|sample|-|-|0|NA|-1|-1|NA|NA|(kafka.server<type=socket-server-metrics, listener=CLIENT, networkProcessor=4><>expired-connections-killed-count)
+
+Graph|Kafka Server Socket Server Metrics Failed Authentication Rate|168|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of connections with failed authentication per second (kafka.server<type=socket-server-metrics, listener=CLIENT, networkProcessor=4><>failed-authentication-rate)
+
+Graph|Kafka Server Socket Server Metrics Failed Authentication Total|169|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of connections with failed authentication (kafka.server<type=socket-server-metrics, listener=CLIENT, networkProcessor=4><>failed-authentication-total)
+
+Graph|Kafka Server Socket Server Metrics Failed Reauthentication Rate|170|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of failed re-authentication of connections per second (kafka.server<type=socket-server-metrics, listener=CLIENT, networkProcessor=4><>failed-reauthentication-rate)
+
+Graph|Kafka Server Socket Server Metrics Failed Reauthentication Total|171|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of failed re-authentication of connections (kafka.server<type=socket-server-metrics, listener=CLIENT, networkProcessor=4><>failed-reauthentication-total)
+
+Graph|Kafka Server Socket Server Metrics Incoming Byte Rate|172|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of bytes read off all sockets per second (kafka.server<type=socket-server-metrics, listener=CLIENT, networkProcessor=4><>incoming-byte-rate)
+
+Graph|Kafka Server Socket Server Metrics Incoming Byte Total|173|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of bytes read off all sockets (kafka.server<type=socket-server-metrics, listener=CLIENT, networkProcessor=4><>incoming-byte-total)
+
+Graph|Kafka Server Socket Server Metrics Io Ratio|174|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The fraction of time the I,O thread spent doing I,O (kafka.server<type=socket-server-metrics, listener=CLIENT, networkProcessor=4><>io-ratio)
+
+Graph|Kafka Server Socket Server Metrics Io Time Ns Avg|175|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average length of time for I,O per select call in nanoseconds. (kafka.server<type=socket-server-metrics, listener=CLIENT, networkProcessor=4><>io-time-ns-avg)
+
+Graph|Kafka Server Socket Server Metrics Io Wait Ratio|176|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The fraction of time the I,O thread spent waiting (kafka.server<type=socket-server-metrics, listener=CLIENT, networkProcessor=4><>io-wait-ratio)
+
+Graph|Kafka Server Socket Server Metrics Io Wait Time Ns Avg|177|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average length of time the I,O thread spent waiting for a socket ready for reads or writes in nanoseconds. (kafka.server<type=socket-server-metrics, listener=CLIENT, networkProcessor=4><>io-wait-time-ns-avg)
+
+Graph|Kafka Server Socket Server Metrics Io Waittime Total|178|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total time the I,O thread spent waiting (kafka.server<type=socket-server-metrics, listener=CLIENT, networkProcessor=4><>io-waittime-total)
+
+Graph|Kafka Server Socket Server Metrics Iotime Total|179|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total time the I,O thread spent doing I,O (kafka.server<type=socket-server-metrics, listener=CLIENT, networkProcessor=4><>iotime-total)
+
+Graph|Kafka Server Socket Server Metrics Network Io Rate|180|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of network operations (reads or writes) on all connections per second (kafka.server<type=socket-server-metrics, listener=CLIENT, networkProcessor=4><>network-io-rate)
+
+Graph|Kafka Server Socket Server Metrics Network Io Total|181|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of network operations (reads or writes) on all connections (kafka.server<type=socket-server-metrics, listener=CLIENT, networkProcessor=4><>network-io-total)
+
+Graph|Kafka Server Socket Server Metrics Outgoing Byte Rate|182|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of outgoing bytes sent to all servers per second (kafka.server<type=socket-server-metrics, listener=CLIENT, networkProcessor=4><>outgoing-byte-rate)
+
+Graph|Kafka Server Socket Server Metrics Outgoing Byte Total|183|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of outgoing bytes sent to all servers (kafka.server<type=socket-server-metrics, listener=CLIENT, networkProcessor=4><>outgoing-byte-total)
+
+Graph|Kafka Server Socket Server Metrics Reauthentication Latency Avg|184|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average latency observed due to re-authentication (kafka.server<type=socket-server-metrics, listener=CLIENT, networkProcessor=4><>reauthentication-latency-avg)
+
+Graph|Kafka Server Socket Server Metrics Reauthentication Latency Max|185|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The max latency observed due to re-authentication (kafka.server<type=socket-server-metrics, listener=CLIENT, networkProcessor=4><>reauthentication-latency-max)
+
+Graph|Kafka Server Socket Server Metrics Request Rate|186|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of requests sent per second (kafka.server<type=socket-server-metrics, listener=CLIENT, networkProcessor=4><>request-rate)
+
+Graph|Kafka Server Socket Server Metrics Request Size Avg|187|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average size of requests sent. (kafka.server<type=socket-server-metrics, listener=CLIENT, networkProcessor=4><>request-size-avg)
+
+Graph|Kafka Server Socket Server Metrics Request Size Max|188|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The maximum size of any request sent. (kafka.server<type=socket-server-metrics, listener=CLIENT, networkProcessor=4><>request-size-max)
+
+Graph|Kafka Server Socket Server Metrics Request Total|189|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of requests sent (kafka.server<type=socket-server-metrics, listener=CLIENT, networkProcessor=4><>request-total)
+
+Graph|Kafka Server Socket Server Metrics Response Rate|190|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of responses received per second (kafka.server<type=socket-server-metrics, listener=CLIENT, networkProcessor=4><>response-rate)
+
+Graph|Kafka Server Socket Server Metrics Response Total|191|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of responses received (kafka.server<type=socket-server-metrics, listener=CLIENT, networkProcessor=4><>response-total)
+
+Graph|Kafka Server Socket Server Metrics Select Rate|192|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of times the I,O layer checked for new I,O to perform per second (kafka.server<type=socket-server-metrics, listener=CLIENT, networkProcessor=4><>select-rate)
+
+Graph|Kafka Server Socket Server Metrics Select Total|193|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of times the I,O layer checked for new I,O to perform (kafka.server<type=socket-server-metrics, listener=CLIENT, networkProcessor=4><>select-total)
+
+Graph|Kafka Server Socket Server Metrics Successful Authentication No Reauth Total|194|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of connections with successful authentication where the client does not support re-authentication (kafka.server<type=socket-server-metrics, listener=CLIENT, networkProcessor=4><>successful-authentication-no-reauth-total)
+
+Graph|Kafka Server Socket Server Metrics Successful Authentication Rate|195|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of connections with successful authentication per second (kafka.server<type=socket-server-metrics, listener=CLIENT, networkProcessor=4><>successful-authentication-rate)
+
+Graph|Kafka Server Socket Server Metrics Successful Authentication Total|196|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of connections with successful authentication (kafka.server<type=socket-server-metrics, listener=CLIENT, networkProcessor=4><>successful-authentication-total)
+
+Graph|Kafka Server Socket Server Metrics Successful Reauthentication Rate|197|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of successful re-authentication of connections per second (kafka.server<type=socket-server-metrics, listener=CLIENT, networkProcessor=4><>successful-reauthentication-rate)
+
+Graph|Kafka Server Socket Server Metrics Successful Reauthentication Total|198|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of successful re-authentication of connections (kafka.server<type=socket-server-metrics, listener=CLIENT, networkProcessor=4><>successful-reauthentication-total)
+
+Graph|Kafka Server Txn Marker Channel Metrics Connection Close Rate|199|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of connections closed per second (kafka.server<type=txn-marker-channel-metrics><>connection-close-rate)
+
+Graph|Kafka Server Txn Marker Channel Metrics Connection Close Total|200|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of connections closed (kafka.server<type=txn-marker-channel-metrics><>connection-close-total)
+
+Graph|Kafka Server Txn Marker Channel Metrics Connection Count|201|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The current number of active connections. (kafka.server<type=txn-marker-channel-metrics><>connection-count)
+
+Graph|Kafka Server Txn Marker Channel Metrics Connection Creation Rate|202|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of new connections established per second (kafka.server<type=txn-marker-channel-metrics><>connection-creation-rate)
+
+Graph|Kafka Server Txn Marker Channel Metrics Connection Creation Total|203|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of new connections established (kafka.server<type=txn-marker-channel-metrics><>connection-creation-total)
+
+Graph|Kafka Server Txn Marker Channel Metrics Failed Authentication Rate|204|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of connections with failed authentication per second (kafka.server<type=txn-marker-channel-metrics><>failed-authentication-rate)
+
+Graph|Kafka Server Txn Marker Channel Metrics Failed Authentication Total|205|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of connections with failed authentication (kafka.server<type=txn-marker-channel-metrics><>failed-authentication-total)
+
+Graph|Kafka Server Txn Marker Channel Metrics Failed Reauthentication Rate|206|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of failed re-authentication of connections per second (kafka.server<type=txn-marker-channel-metrics><>failed-reauthentication-rate)
+
+Graph|Kafka Server Txn Marker Channel Metrics Failed Reauthentication Total|207|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of failed re-authentication of connections (kafka.server<type=txn-marker-channel-metrics><>failed-reauthentication-total)
+
+Graph|Kafka Server Txn Marker Channel Metrics Incoming Byte Rate|208|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of bytes read off all sockets per second (kafka.server<type=txn-marker-channel-metrics><>incoming-byte-rate)
+
+Graph|Kafka Server Txn Marker Channel Metrics Incoming Byte Total|209|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of bytes read off all sockets (kafka.server<type=txn-marker-channel-metrics><>incoming-byte-total)
+
+Graph|Kafka Server Txn Marker Channel Metrics Io Ratio|210|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The fraction of time the I,O thread spent doing I,O (kafka.server<type=txn-marker-channel-metrics><>io-ratio)
+
+Graph|Kafka Server Txn Marker Channel Metrics Io Time Ns Avg|211|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average length of time for I,O per select call in nanoseconds. (kafka.server<type=txn-marker-channel-metrics><>io-time-ns-avg)
+
+Graph|Kafka Server Txn Marker Channel Metrics Io Wait Ratio|212|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The fraction of time the I,O thread spent waiting (kafka.server<type=txn-marker-channel-metrics><>io-wait-ratio)
+
+Graph|Kafka Server Txn Marker Channel Metrics Io Wait Time Ns Avg|213|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average length of time the I,O thread spent waiting for a socket ready for reads or writes in nanoseconds. (kafka.server<type=txn-marker-channel-metrics><>io-wait-time-ns-avg)
+
+Graph|Kafka Server Txn Marker Channel Metrics Io Waittime Total|214|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total time the I,O thread spent waiting (kafka.server<type=txn-marker-channel-metrics><>io-waittime-total)
+
+Graph|Kafka Server Txn Marker Channel Metrics Iotime Total|215|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total time the I,O thread spent doing I,O (kafka.server<type=txn-marker-channel-metrics><>iotime-total)
+
+Graph|Kafka Server Txn Marker Channel Metrics Network Io Rate|216|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of network operations (reads or writes) on all connections per second (kafka.server<type=txn-marker-channel-metrics><>network-io-rate)
+
+Graph|Kafka Server Txn Marker Channel Metrics Network Io Total|217|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of network operations (reads or writes) on all connections (kafka.server<type=txn-marker-channel-metrics><>network-io-total)
+
+Graph|Kafka Server Txn Marker Channel Metrics Outgoing Byte Rate|218|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of outgoing bytes sent to all servers per second (kafka.server<type=txn-marker-channel-metrics><>outgoing-byte-rate)
+
+Graph|Kafka Server Txn Marker Channel Metrics Outgoing Byte Total|219|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of outgoing bytes sent to all servers (kafka.server<type=txn-marker-channel-metrics><>outgoing-byte-total)
+
+Graph|Kafka Server Txn Marker Channel Metrics Reauthentication Latency Avg|220|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average latency observed due to re-authentication (kafka.server<type=txn-marker-channel-metrics><>reauthentication-latency-avg)
+
+Graph|Kafka Server Txn Marker Channel Metrics Reauthentication Latency Max|221|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The max latency observed due to re-authentication (kafka.server<type=txn-marker-channel-metrics><>reauthentication-latency-max)
+
+Graph|Kafka Server Txn Marker Channel Metrics Request Rate|222|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of requests sent per second (kafka.server<type=txn-marker-channel-metrics><>request-rate)
+
+Graph|Kafka Server Txn Marker Channel Metrics Request Size Avg|223|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average size of requests sent. (kafka.server<type=txn-marker-channel-metrics><>request-size-avg)
+
+Graph|Kafka Server Txn Marker Channel Metrics Request Size Max|224|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The maximum size of any request sent. (kafka.server<type=txn-marker-channel-metrics><>request-size-max)
+
+Graph|Kafka Server Txn Marker Channel Metrics Request Total|225|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of requests sent (kafka.server<type=txn-marker-channel-metrics><>request-total)
+
+Graph|Kafka Server Txn Marker Channel Metrics Response Rate|226|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of responses received per second (kafka.server<type=txn-marker-channel-metrics><>response-rate)
+
+Graph|Kafka Server Txn Marker Channel Metrics Response Total|227|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of responses received (kafka.server<type=txn-marker-channel-metrics><>response-total)
+
+Graph|Kafka Server Txn Marker Channel Metrics Select Rate|228|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of times the I,O layer checked for new I,O to perform per second (kafka.server<type=txn-marker-channel-metrics><>select-rate)
+
+Graph|Kafka Server Txn Marker Channel Metrics Select Total|229|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of times the I,O layer checked for new I,O to perform (kafka.server<type=txn-marker-channel-metrics><>select-total)
+
+Graph|Kafka Server Txn Marker Channel Metrics Successful Authentication No Reauth Total|230|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of connections with successful authentication where the client does not support re-authentication (kafka.server<type=txn-marker-channel-metrics><>successful-authentication-no-reauth-total)
+
+Graph|Kafka Server Txn Marker Channel Metrics Successful Authentication Rate|231|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of connections with successful authentication per second (kafka.server<type=txn-marker-channel-metrics><>successful-authentication-rate)
+
+Graph|Kafka Server Txn Marker Channel Metrics Successful Authentication Total|232|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of connections with successful authentication (kafka.server<type=txn-marker-channel-metrics><>successful-authentication-total)
+
+Graph|Kafka Server Txn Marker Channel Metrics Successful Reauthentication Rate|233|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of successful re-authentication of connections per second (kafka.server<type=txn-marker-channel-metrics><>successful-reauthentication-rate)
+
+Graph|Kafka Server Txn Marker Channel Metrics Successful Reauthentication Total|234|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of successful re-authentication of connections (kafka.server<type=txn-marker-channel-metrics><>successful-reauthentication-total)
+
+Graph|Kafka Utils Throttler Count|235|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.utils<type=Throttler, name=cleaner-io><>Count)
+
+Graph|Kafka Utils Throttler Fifteen Minute Rate|236|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.utils<type=Throttler, name=cleaner-io><>FifteenMinuteRate)
+
+Graph|Kafka Utils Throttler Five Minute Rate|237|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.utils<type=Throttler, name=cleaner-io><>FiveMinuteRate)
+
+Graph|Kafka Utils Throttler Mean Rate|238|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.utils<type=Throttler, name=cleaner-io><>MeanRate)
+
+Graph|Kafka Utils Throttler One Minute Rate|239|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Attribute exposed for management (kafka.utils<type=Throttler, name=cleaner-io><>OneMinuteRate)
+

@@ -1,0 +1,10 @@
+
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS Connect InstanceId Stats|14064|vector|1|0|AWS Metrics|AccountName>Region>InstanceId|Amazon Connect enables customer service representatives to respond to phone calls or chat inquiries from end customers
+
+Graph|AWS Connect Exceeded Quota Voice Calls|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of voice calls that exceeded the concurrent calls quota for the instance.

@@ -1,0 +1,8 @@
+# --- GDF Version History ---
+# # 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Instance health|10593|vector|1|0|Application Metrics|Tier>Server>Instance|Check health of an instance.
+
+Graph|Instance Running Status|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Status of the Instance, whether running or not.

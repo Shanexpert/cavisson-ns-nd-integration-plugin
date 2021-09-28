@@ -1,0 +1,26 @@
+Info|3.1|1|-|-|-1|-1|-
+
+Group|NGINX Plus Stream Upstream Stats|11001|vector|16|0|NGINX Metrics|Tier>Server>Instance>StreamUpstream>Server|NGINX Plus Upstream Stats provides metrics related to connections and client's requests and responses with HTTP status(1xx, 2xx, 3xx, 4xx, 5xx), network throughput ans sever health status.
+Graph|NGNIX Server ID|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of active connections in NGNIX.
+Graph|NGINX Backup Status|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Indicates whether the server is a backup server with following status. Status would be 1 = It is backup server, 2 = It is not backup server.
+Graph|NGNIX Server Weight|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of active connections in NGNIX.
+Graph|NGINX Server Status|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current state of the server with following status. Status would be 1 = "up", 2 = "draining", 3 = "down", 4 = "unavail", 5= "unhealthy".
+Graph|NGNIX Active Connections|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of active connections in NGNIX.
+Graph|NGNIX Forwarded Connections|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of client connections forwarded to this server.
+Graph|NGNIX Server Connection Time|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average time to connect to the upstream server
+Graph|NGNIX Response Time|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average time to receive the last byte of data.
+Graph|NGINX Transmitted Throughput (KBps)|9|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Transmitted throughput in Kilobytes per second.
+Graph|NGINX Received Throughput (KBps)|10|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Received throughput in Kilobytes per second.
+Graph|NGINX Failed Requests/Sec|11|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of unsuccessful attempts to communicate with the server per second.
+Graph|NGINX Server Unavailable/Sec|12|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of times the server became unavailable for client requests (state "unavail") due to the number of unsuccessful attempts reaching the max_fails threshold per second.
+Graph|NGINX Health Check Requests/Sec|13|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of health check requests made per second.
+Graph|NGINX Failed Health Check Requests/Sec|14|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of  failed health check per second.
+Graph|NGINX Unhealthy Server Occurrences/Sec|15|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of times the server became unhealthy (state "unhealthy").
+Graph|NGINX Downtime|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total time the server was in the “unavail”, “checking”, and “unhealthy” states.
+
+
+
+
+
+
+

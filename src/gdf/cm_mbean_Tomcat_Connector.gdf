@@ -1,0 +1,62 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Tomcat Connector|14130|vector|18|0|Application Metrics|Tier>Server>Instance>Port|This stats provide information about what Server the specified port is located on, what Service the connector is a part of, and what Engine connections should be passed to is provided to the Connector by its location Tomcat's nested element hierarchy.
+
+#G1
+Graph|Tomcat Max Post Size|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Maximum size in bytes of a POST which will be handled by the servlet API provided features.
+
+#G2
+Graph|Tomcat Accept Count|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The accept count for this Connector.
+
+#G3
+Graph|Tomcat Thread Priority|3|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The thread priority for processors.
+
+#G4
+Graph|Tomcat Max Swallow Size|4|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The maximum number of request body bytes to be swallowed by Tomcat for an aborted upload.
+
+#G5
+Graph|Tomcat Max Save Post Size|5|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Maximum size of a POST which will be saved by the container during authentication.
+
+#G6
+Graph|Tomcat Proxy Port|6|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The Server port to which we should pretend requests to this Connector.
+
+#G7
+Graph|Tomcat Max Parameter Count|7|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The maximum number of parameters (GET plus POST) which will be automatically parsed by the container. 10000 by default. A value of less than 0 means no limit.
+
+#G8
+Graph|Tomcat Redirect Port|8|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The redirect port for non-SSL to SSL redirects.
+
+#G9
+Graph|Tomcat Max Threads|9|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The maximum number of request processing threads to be created.
+
+#G10
+Graph|Tomcat Connection Timeout|10|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Timeout value on the incoming connection.
+
+#G11
+Graph|Tomcat Connection Linger|11|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Linger value on the incoming connection.
+
+#G12
+Graph|Tomcat Processor Cache|12|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The processor cache size.
+
+#G13
+Graph|Tomcat Keep Alive Timeout|13|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The number of seconds Tomcat will wait for a subsequent request before closing the connection.
+
+#G14
+Graph|Tomcat Max Keep Alive Requests|14|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Maximum number of Keep-Alive requests to honor per connection.
+
+#G15
+Graph|Tomcat Local Port|15|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The port number on which this connector is listening to requests. If the special value for port of zero is used then this method will report the actual port bound.
+
+#G16
+Graph|Tomcat Min Spare Threads|16|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The number of request processing threads that will be created.
+
+#G17
+Graph|Tomcat Max Header Count|17|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The maximum number of headers that are allowed by the container. 100 by default. A value of less than 0 means no limit.
+
+#G18
+Graph|Tomcat Port|18|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The port number on which this connector is configured to listen for requests. The special value of 0 means select a random free port when the socket is bound.

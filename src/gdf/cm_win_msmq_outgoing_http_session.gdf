@@ -1,0 +1,9 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Windows MSMQ Outgoing HTTP Session Stats|10847|vector|4|0|MSMQ Metrics|Tier>Server>Instance|Windows MSMQ Outgoing HTTP Session Stats provides information about active HTTP sessions between two computers running Message Queuing.
+Graph|MSMQ Outgoing HTTP Bytes|1|scalar|sample|-|-|0|NA|-1|-1|L|NA|Total number of message bytes that were sent from the computer in the selected outgoing HTTP session.
+Graph|MSMQ Outgoing HTTP Bytes/sec|2|scalar|sample|-|-|0|NA|-1|-1|L|NA|Rate at which message bytes are being sent from the computer in the selected outgoing HTTP session.
+Graph|MSMQ Outgoing HTTP Messages|3|scalar|sample|-|-|0|NA|-1|-1|L|NA|Total number of Message Queuing messages that were sent from the computer in the selected outgoing HTTP session.
+Graph|MSMQ Outgoing HTTP Messages/sec|4|scalar|sample|-|-|0|NA|-1|-1|L|NA|Rate at which Message Queuing messages are being sent from the computer in the selected outgoing HTTP session.

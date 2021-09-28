@@ -1,0 +1,9 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Spanner System Stats|10823|vector|3|0|GCP Metrics|Tier>Server>ProjectId>InstanceConfig>InstanceId>Location>DataBase|Spanner node stats provided metrics related to spanner nodes.
+Graph|Spanner CPU Utilization (%)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|CPU Utilization  percentage.
+Graph|Spanner Session Count|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of sessions in use.
+Graph|Spanner Used Size (MB)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Storage used in mega bytes.

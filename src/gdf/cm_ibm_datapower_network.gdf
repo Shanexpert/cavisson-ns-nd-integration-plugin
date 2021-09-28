@@ -1,0 +1,6 @@
+Info|3.1|1|-|-|-1|-1|-
+Group|IBM DataPower Network Stats|10862|vector|4|0|Application Metrics|Tier>Server>Domain>Interface|IBM DataPower Network Statistics.
+Graph|IBM DataPower Incoming Data (Bytes) per sec|1|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|The amount of data successfully received on the interface, which includes MAC framing overhead.
+Graph|IBM DataPower Incoming Data Packets Per Sec|2|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|The number of packets successfully received on the interface that were passed up to the network layer for processing.
+Graph|IBM DataPower Outgoing Data (Bytes) Per Sec|3|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|The amount of data successfully transmitted on the interface, which includes MAC framing overhead.
+Graph|IBM DataPower Outgoing Data Packets Per Sec |4|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|The number of packets successfully transmitted on the interface.

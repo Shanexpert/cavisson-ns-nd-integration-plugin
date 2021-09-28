@@ -1,0 +1,19 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+# ---  Mbean Reference Link : ://docs.oracle.com/javase/7/docs/api/java/lang/management/ClassLoadingMXBean.html --- #
+# This Mbean is applicable to all JVM #
+
+Info|3.1|1|-|-|-1|-1|-
+Group|JVM ClassLoading Stats|11027|vector|3|0|JVM Metrics|Tier>Server>Instance|This stats provides information about loaded and unloaded classes.
+
+#G1
+Graph|JVM Total Loaded Class Count|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Total number of classes that have been loaded since the Java virtual machine has started execution.
+
+#G2
+Graph|JVM Loaded Class Count|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of classes that are currently loaded in the Java virtual machine.
+
+#G3
+Graph|JVM Unloaded Class Count|3|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Total number of classes unloaded since the Java virtual machine has started execution.

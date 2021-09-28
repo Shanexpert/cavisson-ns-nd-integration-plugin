@@ -1,0 +1,117 @@
+#! /bin/sh
+
+RELEASE_CMD="nsi_get_linux_release_ex"
+DISTRO=`$RELEASE_CMD -d`
+
+if [ -f /etc/init.d/cmon ];then
+  msgout_both "Stopping CavMonAgent"
+  /etc/init.d/cmon stop
+fi
+HOME_DIR=/home/cavisson
+mkdir -p $HOME_DIR/monitors
+cd $HOME_DIR/monitors
+
+PERMISSON_GROUP=`ls -l $NS_WDIR/bin/nsi_cmon_upgrade | cut -d ' ' -f 4`
+PERMISSON_CAV_MON_GROUP=`ls -ld $HOME_DIR/monitors | cut -d ' ' -f 4`
+if [ "$PERMISSON" != "$PERMISSON_CAV_MON_GROUP" ];then
+ msgout_both "CMON installed with  Group = $PERMISSON_CAV_MON_GROUP. CMON upgrade with Group = $PERMISSON_GROUP . Permisson mismatch. CMON build is not upgraded"
+fi
+
+#msgout_both "Removing directories of old version and uncompressing tar file - $GZ"
+rm -f cmon.*.gz
+rm -f tcpmon linmon createserver cm_remote_data
+rm -rf logs conf thirdparty common
+rm -rf bin lib samples etc
+
+cp $NS_WDIR/.rel/$GZ .
+msgout_both "Uncompressing tar file - $GZ"
+tar xvzf $GZ >> $LOG_FILE_NAME
+
+. $HOME_DIR/monitors/bin/set_session_limit
+
+CMON_ENV_FILE=$HOME_DIR/monitors/sys/cmon.env
+
+if [ -f $CMON_ENV_FILE ];then
+
+  #Checking CMON_USER in CMON_ENV_FILE file
+  is_cmon_user=`grep "CMON_USER" $CMON_ENV_FILE | sed -e 's/ //g' | grep -v ^\# | cut -d '=' -f 2`
+  if [ "X$is_cmon_user" == "X" ];then
+    sed -i '/CMON_USER/d' $CMON_ENV_FILE
+    echo "CMON_USER=cavisson" >> $CMON_ENV_FILE
+  fi
+ 
+  # Check and set Xms, Xmx value in CMON_OPTS
+  is_cmon_opt=`grep ^CMON_OPTS $CMON_ENV_FILE`
+  if [ "X$is_cmon_opt" != "X" ];then
+    Xms_val=`awk -F'-Xms' '/^CMON_OPTS/{print $2}' $CMON_ENV_FILE |awk -F'm' '{print $1}'`
+    Xmx_val=`awk -F'-Xmx' '/^CMON_OPTS/{print $2}' $CMON_ENV_FILE |awk -F'm' '{print $1}'`
+
+    if [ "X$Xms_val" == "X" ];then
+      XMS=-Xms512m
+    elif [ "$Xms_val" -lt 512 ];then
+      sed -i "s/Xms${Xms_val}m/Xms512m/g" $CMON_ENV_FILE
+    fi
+
+    if [  "X$Xmx_val" == "X" ];then
+      XMX="$XMS -Xmx512m"
+    elif [ "$Xmx_val" -lt 512 ];then
+      sed -i "s/Xmx${Xmx_val}m/Xmx512m/g" $CMON_ENV_FILE
+    fi
+
+    # Set JMX_PORT in CMON_OPTS
+    CMON_OPTS=`grep ^CMON_OPTS $CMON_ENV_FILE`
+    FILE_JMX_PORT=`grep ^CMON_OPTS $CMON_ENV_FILE | grep "com.sun.management.jmxremote.port" |awk -F'com.sun.management.jmxremote.port=' '{printf $2}'|cut -d' ' -f1`
+    if [ "X$CMON_JMX_PORT" == "X0" ];then
+      JMX_OPTS=""
+    else
+      if [ "X$CMON_JMX_PORT" == "X" ];then
+        if [ "X$FILE_JMX_PORT" == "X" ];then
+          JMX_PORT=7899
+        else
+          JMX_PORT=$FILE_JMX_PORT
+        fi
+      else
+        JMX_PORT=$CMON_JMX_PORT
+      fi
+      JMX_OPTS="-Dcom.sun.management.jmxremote.port=$JMX_PORT -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false "
+    fi
+    # Append Xms, Xmx and JMX_PORT in CMON_OPTS
+    CMON_OPTS=`echo $CMON_OPTS | cut -d'"' -f1-2`
+    if [ "x$XMX" != "x" ];then
+      CMON_OPTS=$CMON_OPTS $XMX
+    fi
+
+    grep "Dcom.sun.management.jmxremote.port=" $CMON_ENV_FILE >/dev/null 2>&1
+    if [ $? -eq 0 ];then
+      sed -i "s/Dcom.sun.management.jmxremote.port=$FILE_JMX_PORT/Dcom.sun.management.jmxremote.port=$JMX_PORT/g" $CMON_ENV_FILE
+    else
+      sed -i "/CMON_OPTS=.*/d" $CMON_ENV_FILE
+      CMON_OPTS="$CMON_OPTS $JMX_OPTS\""
+      echo "$CMON_OPTS" >> $CMON_ENV_FILE
+    fi
+  fi
+else
+   msgout_both "$CMON_ENV_FILE is missing. So creating $CMON_ENV_FILE"
+   touch $CMON_ENV_FILE
+   chown cavisson $CMON_ENV_FILE
+   chmod 666 $CMON_ENV_FILE
+fi
+
+
+#Change perm to 777 so that custom monitor (remote) can open log files if not running as root
+# DO it after untar as tar also has logs dir
+mkdir -p logs custom
+chmod 777 logs custom
+
+chmod +x bin/cm_remote_data
+
+sudo $CavService $BASENAME 5 cmon 
+#echo "CAV_MON_AGENT_OPTS=\"-p 7899\"" >>$HOME_DIR/monitors/sys/cmon.env
+if [ -f /etc/init.d/cmon ];then
+  #This function checked & set -m option in CAV_MON_AGENT_OPTS in $CMON_ENV_FILE
+  check_and_set_session_limit
+  msgout_both "Starting CavMonAgent"
+  /etc/init.d/cmon start
+fi
+
+exit 0

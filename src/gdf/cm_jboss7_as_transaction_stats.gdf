@@ -1,0 +1,17 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# JBoss7AS Transaction Stats: number-of-aborted-transactions, number-of-application-rollbacks, number-of-committed-transactions, number-of-heuristics, number-of-inflight-transactions, number-of-nested-transactions, number-of-resource-rollbacks, number-of-timed-out-transactions, number-of-transactions
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|JBoss7 Transaction Stats|10628|vector|9|0|Application Metrics|Tier>Server>TransactionStats|JBoss7 AS Transaction Stats shows metrics for aborted transactions, committed transactions etc.
+
+Graph|JBoss7 Aborted Transactions/Sec|1|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of aborted transactions per second.
+Graph|JBoss7 Application Rollbacks/Sec|2|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of transactions that have been rolled back by application request per second.
+Graph|JBoss7 Committed Transactions/Sec|3|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of committed transactions per second.
+Graph|JBoss7 Heuristics/Sec|4|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|number of transactions which have terminated with heuristic outcomes per second.
+Graph|JBoss7 Inflight Transactions|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of transactions that have begun but not yet terminated.
+Graph|JBoss7 Nested Transactions/Sec|6|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Total number of nested (sub) transactions created per second.
+Graph|JBoss7 Resource Rollbacks/Sec|7|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of transactions that rolled back due to resource (participant) failure per second. 
+Graph|JBoss7 TimedOut Transactions/Sec|8|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of transactions that have rolled back due to timeout per second. 
+Graph|JBoss7 Total Transactions/Sec|9|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Total number of transactions (top-level and nested) created per second.

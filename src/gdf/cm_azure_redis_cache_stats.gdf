@@ -1,0 +1,47 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Azure Redis Cache Stats|11274|vector|20|0|Azure Metrics|AccountName>Region>ResourceGroup>RedisCache|Azure cache for redis can be used as a distributed data cache, a session store, and a message broker.
+
+Graph|Azure Redis Cache Connected Clients|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of client connections to the cache.
+
+Graph|Azure Redis Cache Total Commands Processed|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of commands processed by the cache.
+
+Graph|Azure Redis Cache Hits|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of successful key lookups.
+
+Graph|Azure Redis Cache Misses|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of failed key lookups.
+
+Graph|Azure Redis Cache Miss (pct)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Cache miss percent.
+
+Graph|Azure Redis Cache Get Commands|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of get operations from the cache.
+
+Graph|Azure Redis Cache Set Commands|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of set operations to the cache.
+
+Graph|Azure Redis Cache Operations Per Second|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of commands processed per second by the cache server.
+
+Graph|Azure Redis Cache Evicted Keys|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of items evicted from the cache due to the max memory limit.
+
+Graph|Azure Redis Cache Total Keys|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum number of keys in the cache for a given time period.
+
+Graph|Azure Redis Cache Expired Keys|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of items expired from the cache.
+
+Graph|Azure Redis Cache Used Memory(MB)|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of cache memory used for key/value pairs in the cache, in megabytes.
+
+Graph|Azure Redis Cache Used Memory (pct)|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of cache memory used.
+
+Graph|Azure Redis Cache Used Memory Rss (MB)|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of cache memory used, including fragmentation and metadata, in megabytes.
+
+Graph|Azure Redis Cache Server Load (pct)|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percentage of cycles in which the redis server is busy processing and not waiting idle for messages.
+
+Graph|Azure Redis Cache Write (KB/Sec)|16|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Amount of data written to the cache in kilobytes per second.
+
+Graph|Azure Redis Cache Read (KB/Sec)|17|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Amount of data read from the cache in kilobytes per second.
+
+Graph|Azure Redis Cache Percent Processor Time(pct)|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The CPU utilization of the azure redis Cache server as a percentage.
+
+Graph|Azure Redis Cache Latency|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The latency of the cache calculated based off the inter-node latency of the cache.
+
+Graph|Azure Redis Cache Erros|20|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Specific failures and performance issues that the cache could be experiencing during a specified reporting interval.

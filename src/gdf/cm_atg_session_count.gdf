@@ -1,0 +1,13 @@
+# Group information line
+# Group|groupName|rptGrpId|groupType|numGraphs|numVectors
+#
+# Graph information line
+# Graph|graphName|rptId|graphType|dataType|graphDataIndex|formula|numVectors
+#
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|SessionCount|10419|vector|2|0|System Metrics|Tier>Server>Instance|Session stats and global Proxy stats for ATG
+
+Graph|Session Count|1|scalar|sample|-|None|0|NA|-1|-1|NA|NA|ATG Session Count
+Graph|Global Proxy Count|2|scalar|sample|-|None|0|NA|-1|-1|NA|NA|ATG Global Proxy Count

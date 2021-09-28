@@ -1,0 +1,198 @@
+#!/bin/sh
+
+# Name   : nii_genrate_compare_report
+# Purpose: 
+# Takes input in the format 
+#  nii_genrate_compare_report <templae_name> <report_name> <time option>
+
+# This is to set CLASSPATH for PC
+#export CLASSPATH=$CLASSPATH:$NS_WDIR/webapps/netstorm/WEB-INF/lib/chart1.5.jar:$NS_WDIR/webapps/netstorm/WEB-INF/lib/itext-paulo-154.jar:$NS_WDIR/webapps/netstorm/WEB-INF/lib/jcommon-0.9.5.jar:$NS_WDIR/webapps/netstorm/WEB-INF/lib/poi.jar:$NS_WDIR/webapps/netstorm/WEB-INF/lib/netstorm_bean.jar
+
+
+msgout ()
+{
+  echo "$*"
+}
+
+Usage()
+{
+  msgout "$*"
+  msgout "Usage: NETCLOUD_COMPARE_REPORT <controller_mode> <template_name> <report_name> <time_option>i <time_option_args>"
+  msgout "Where:"
+  msgout " controller mode will be 0/1"
+  msgout " template name will be template name"
+  msgout " report name will be report name."
+  msgout " <time_option> if specific"
+  msgout " <time_option> can have followinf values:" 
+  msgout " 1. SpecifiedTime <StartTime> <EndTime>"
+  msgout " SpecifiedTime Example:"
+  msgout " NETCLOUD_COMPARE_REPORT <controller_mode> <template_name> <report_name> ScpecifiedTime 00:09:00 00:00:40"
+  msgout " 2. TotalRun"
+  msgout " TotalRun Example:"
+  msgout " NETCLOUD_COMPARE_REPORT  <controller_mode> <template_name> <report_name> TotalRun"
+  msgout " Phase Example:"
+  msgout " NETCLOUD_COMPARE_REPORT <template_name> <report_name> Phase RampupGrp1"
+  exit 1
+}
+
+
+if [ "XX$NS_WDIR" == "XX" ];then
+  echo "NS_WDIR must be defined"
+  exit 1
+fi
+
+if [ ! -d $NS_WDIR/logs/TR$1 ];then 
+  echo "Given Test Run number $1 does not exist."
+  exit 1
+fi
+
+TEST_RUN_NUM=$1
+ENABLE_CONTROLLER=1
+TEST_RUN=$NS_WDIR/logs/TR$TEST_RUN_NUM
+SCENARIO_FILE=$NS_WDIR/logs/TR$TEST_RUN_NUM/scenario
+GLOBAL_DAT_FILE=$NS_WDIR/logs/TR$TEST_RUN_NUM/global.dat
+NETCLOUD_DATA=$NS_WDIR/logs/TR$TEST_RUN_NUM/NetCloud/NetCloud.data
+PROFILE_FILE=$NS_WDIR/logs/TR$TEST_RUN_NUM/NetCloud/netcloud_profile.dat
+
+check ()
+{
+  if [ "XX$2" == "XXNA" ]; then 
+    msgout "$1 can not be NA"
+  fi
+}
+
+get_fields ()
+{
+  START_TIME="NA"
+  END_TIME="NA"
+
+  NO_OF_FIELD=$#
+  KEYWORD=$1;shift
+  ENABLE_CONTROLLER=$1;shift
+  TEMPLATE_NAME=$1;shift
+  REPORT_SET_NAME=$1;shift
+  TIME_OPTION=$1;shift
+  #Checking for time option
+  if [ "$TIME_OPTION" == "SpecifiedTime" ];then
+    if [ $NO_OF_FIELD == 7 ]; then
+      START_TIME=$1;shift
+      END_TIME=$1;shift
+      check "START_TIME" $START_TIME
+      check "END_TIME" $END_TIME
+    else
+      Usage "For Specified Time option argument is not correct it should be start time and end time"
+    fi
+  elif [ "$TIME_OPTION" == "TotalRun" ];then
+    if [ $NO_OF_FIELD == 5 ]; then
+      START_TIME="NA"
+      END_TIME="NA"
+    else 
+      Usage "TotalRun Argument is not correcrt. It should have 5 argument"
+    fi
+  elif [ "$TIME_OPTION" == "Phase" ];then
+    if [ $NO_OF_FIELD == 6 ]; then
+      PhaseName=$1;shift
+      PHASE_TMP=`grep "^SCHEDULE" $SCENARIO_FILE | awk -v "req_phase=$PhaseName" '{if($3 == req_phase)print $3}'`
+      if [ -z $PHASE_TMP ]; then
+        Usage "Phase name $PhaseName is not found in the scenario"
+      fi     
+      # check has been put , so that if at the runtime phase is not created in the global.dat file , then it will give error message
+      grep -w "^PHASE_START_TIME" $GLOBAL_DAT_FILE | grep -w "$PhaseName" >/dev/null
+      start_ret=$?
+      grep -w "^PHASE_END_TIME" $GLOBAL_DAT_FILE | grep -w "$PhaseName" >/dev/null
+      end_ret=$?
+      # Case1: If phase name not created for start and end time, throw error
+      if [ $start_ret -ne 0 -a $end_ret -ne 0 ]; then 
+        Usage "$PhaseName is not executed, hence compare report will not be created for the $REPORT_SET_NAME"
+      fi 
+      # Case2: Phase name for start time found, but end time not found, then set END_TIME to NA
+      if [ $start_ret -eq 0 -a $end_ret -ne 0 ]; then
+        START_TIME=`egrep -w PHASE_START_TIME $GLOBAL_DAT_FILE|grep $PhaseName |cut -d " " -f4`
+        END_TIME="NA"
+        msgout "END_TIME for $PhaseName is not present, hence putting END_TIME=NA"
+      fi
+      # Case3: Phase name found for start and end time
+      if [ $start_ret -eq 0 -a $end_ret -eq 0 ]; then
+        START_TIME=`egrep -w PHASE_START_TIME $GLOBAL_DAT_FILE|grep $PhaseName |cut -d " " -f4`
+        END_TIME=`egrep -w PHASE_END_TIME $GLOBAL_DAT_FILE |grep $PhaseName |cut -d " " -f4`
+      fi
+      #if [ "XX$END_TIME" == "XX" ];then
+       # END_TIME="NA"
+      #fi
+      check "START_TIME" $START_TIME
+      #check "END_TIME" $END_TIME
+    else 
+      Usage "For Phase Argument is not correct. It should have 6 argument"
+    fi
+  else 
+      Usage "Phase Type given is invalid"
+  fi
+  return 0          
+}
+TEST_RUN_START_DATE=`cat $TEST_RUN/summary.top|cut -d "|" -f3`         
+
+NetcloudCompareReport=`egrep -w ^NETCLOUD_COMPARE_REPORT $SCENARIO_FILE` 
+if [ "XX$NetcloudCompareReport" = "XX" ];then
+  #echo "Keyword NETCLOUD_COMPARE_REPORT not found in $TEST_RUN_NUM test run."
+  #If no keyword is given then no error
+  exit 0
+fi 
+
+#In order to fix bug 7814, if NETCLOUD_COMPARE_REPORT keyword is present then print following message on console 
+echo "Generating compare report"
+
+get_fields $NetcloudCompareReport
+
+# Check been put , so that compare report genearion with same report name will give error
+if [ -d $TEST_RUN/reports/reportSet/$REPORT_SET_NAME/ ] ; then
+    Usage "Report Name $REPORT_SET_NAME already exist, Use different Report Name"
+fi
+
+#if [ ! -f $PROFILE_FILE ];then
+#  echo "Measurement Name|TestRun|Time|Time_Format|Start Date|Start Time|End Date|End Time" >$PROFILE_FILE
+#fi
+
+
+tr_name_list=(`cut -d " " -f2 $NETCLOUD_DATA|cut -d"|" -f1`)
+gen_name_list=(`awk -F "|" '{print $2"|"NR-1 }' $NETCLOUD_DATA |sort`)
+tr_count=${#tr_name_list[*]};
+
+# Make profile file empty
+>$PROFILE_FILE
+
+
+# Time oprtion have diffrent format in profile file
+if [ "$TIME_OPTION" == "SpecifiedTime" ];then
+  TIME_OPTION="Specified Time"
+elif [ "$TIME_OPTION" == "Phase" ];then
+  TIME_OPTION="Specified Time"
+elif [ "$TIME_OPTION" == "TotalRun" ];then
+  TIME_OPTION="Total Run"
+fi
+
+#Currenlty we are keeping start date/time of controller test in all
+for (( i=0; i < $tr_count; i++ ))
+do
+  #if [! -d $NS_WDIR/logs/{tr_name_list[$i]} ]; then
+   # usage "TR not found"
+ # fi
+   
+    gen_name=`echo ${gen_name_list[$i]}|cut -d"|" -f1`
+    tr_name_idx=`echo ${gen_name_list[$i]}|cut -d"|" -f2`
+    tr_name=${tr_name_list[$tr_name_idx]}
+    echo "$gen_name|$tr_name|$TEST_RUN_START_DATE|1|Elapsed|$TIME_OPTION|Elapsed|NA|$START_TIME|NA|$END_TIME" >>$PROFILE_FILE
+    #echo "${gen_name_list[$i]}|${tr_name_list[$i]}|$TEST_RUN_START_DATE|1|Elapsed|$TIME_OPTION|Elapsed|NA|$START_TIME|NA|$END_TIME" >>$PROFILE_FILE
+done
+
+# if controler option is given, add hardcoded line for controller at then end 
+# Controller is added at the end as we cannot compare generator data like throughput with controller
+# So controller cannot be baseline
+if [ $ENABLE_CONTROLLER == 1 ]; then
+  echo "Controller|$TEST_RUN_NUM|$TEST_RUN_START_DATE|1|Elapsed|$TIME_OPTION|Elapsed|NA|$START_TIME|NA|$END_TIME" >>$PROFILE_FILE
+fi
+
+#if [ $FIELD_FOUND -ne 0 ];then
+ # echo "error"
+#fi
+nsi_gen_cmp_rep_set -t $TEST_RUN_NUM  -T $TEMPLATE_NAME -r $REPORT_SET_NAME -n 1 -f $PROFILE_FILE
+exit 0

@@ -1,0 +1,7 @@
+#Author - DHARMENDRA SINGH
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Consul Service Health Stats|10792|vector|1|0|Application Metrics|Tier>Server>Service>Node>HealthCheck|Consul Agent service health stats.
+
+Graph|Consul Health Check Status|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Consul agent health check status captured by configured service.

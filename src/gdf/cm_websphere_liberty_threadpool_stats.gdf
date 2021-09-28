@@ -1,0 +1,6 @@
+#LAST_MAX_ASSIGNED_GRAPH_ID = 2
+#LAST_MODIFIED_DATE = 10/18/14 20:49:31
+Info|3.1|1|-|-|-1|-1|-
+Group|Websphere Liberty Thread Pool Stats|10219|vector|2|0|WebSphere Metrics|Tier>Server>Instance>ThreadPool|Websphere Liberty Thread Pool Stats
+Graph|ActiveThreads|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Active threads that are serving requests.
+Graph|PoolSize|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Threads in the pool that represents the pool size.

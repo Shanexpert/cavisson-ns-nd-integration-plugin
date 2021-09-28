@@ -1,0 +1,5 @@
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP Storage Total Stats|11514|vector|1|0|GCP Metrics|ProjectID>Location>BucketName>StorageClass|GCP Storage Total stats provided metrics related to client requests on cloud storage bucket.
+
+Graph|GCP Storage Total Daily Data (MB*Sec)|1|scalar|sample|-|-|0|D|-1|-1|NA|DIV(G1,1048576)|Total daily storage in megabytes*seconds used by the bucket, grouped by storage class.

@@ -1,0 +1,31 @@
+# Name      : nsu_gen_script
+# Author    : Atul
+# Purpsose  : To generate script from url and from file. This is java version of nsu_gen_script.c file with
+#             SMTP support.
+#
+# Usage     : nsu_gen_script
+#
+#             nsu_gen_script -s <scriptname> [ -f <url file name> | -u URL1,URL2,... ]
+#             nsu_gen_script -s <scriptname> [ -f <url file name> | -u URL1,URL2,... -u URL3]
+# 
+#             e.g.  nsu_gen_script -s project/subproject/hpd_tours -f /tmp/urlFile
+#
+#             e.g.  nsu_gen_script -s project/subproject/hpd_tours -u http://www.google.com/index.html,http://www.yahoomail.com/index.html -u http://www.gmail.com/test.htm
+#
+# Modification History:
+#   18/01/10: Atul - Initial Version
+#
+#!/bin/sh
+
+#Check and get login user name
+USER_NAME=`whoami 2>/dev/null`
+if [ $? != 0 ];then
+  echo "Error: Unable to get the real user name"
+  exit 1
+fi
+if [ -d /home/cavisson/monitors ];then
+  java -cp $NS_WDIR/webapps/netstorm/WEB-INF/lib/netstorm_bean.jar:$NS_WDIR/webapps/netstorm/WEB-INF/lib/jmimemagic-0.1.0.jar:$NS_WDIR/webapps/netstorm/WEB-INF/lib/apache-jakarta-oro.jar:$NS_WDIR/webapps/netstorm/WEB-INF/lib/commons-logging-1.1.1.jar:/home/cavisson/monitors/lib/java-getopt-1.0.9.jar -DNS_WDIR=$NS_WDIR pac1.Bean.GenerateScript $* -U $USER_NAME 
+else  
+  java -cp $NS_WDIR/webapps/netstorm/WEB-INF/lib/netstorm_bean.jar:$NS_WDIR/webapps/netstorm/WEB-INF/lib/jmimemagic-0.1.0.jar:$NS_WDIR/webapps/netstorm/WEB-INF/lib/apache-jakarta-oro.jar:$NS_WDIR/webapps/netstorm/WEB-INF/lib/commons-logging-1.1.1.jar:/opt/cavisson/monitors/lib/java-getopt-1.0.9.jar -DNS_WDIR=$NS_WDIR pac1.Bean.GenerateScript $* -U $USER_NAME 
+fi
+exit $?

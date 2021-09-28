@@ -1,0 +1,9 @@
+Info|3.1|1|-|-|-1|-1|-
+Group|NGINX Plus Resource Stats|10457|vector|6|0|NGINX Metrics|Tier>Server>Instance|NGINX Plus Resource Stats provides metrics related to connections and user's requests.
+Graph|NGNIX Active Connections|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of active connections in NGNIX.
+Graph|NGNIX Requests/Sec|2|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of requests per second.
+Graph|NGNIX Accepted Connections/Sec|3|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of client connections accepted by NGINX per second.
+Graph|NGINX Dropped Connections/Sec|4|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of dropped connections by NGINX per second.
+Graph|NGINX Requests/Connection|5|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of requests per connection handled by NGINX.
+Graph|NGINX Idle Connections|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of keep-alive connections waiting for request.
+

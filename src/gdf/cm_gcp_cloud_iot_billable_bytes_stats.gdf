@@ -1,0 +1,5 @@
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP Cloud IOT Billable Bytes|14041|vector|1|0|GCP Metrics|ProjectID>LocationID>RegstryID>DataTrafficDirection>DeviceProtocol|It provides metrics related to billable bytes stats for cloud iot.
+
+Graph|GCP Cloud IOT Billable Transferred Bytes(KB)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of billable bytes transferred by devices in kilobytes.

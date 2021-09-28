@@ -1,0 +1,2896 @@
+# Makefile proxy to Makefile.common
+# Abbreviation used in this file:
+# B  ==> Build,   Eg: BDIR - Build directory
+# I  ==> Include, Eg: BIDIR - Build Include Directory
+# O  ==> Object
+# L  ==> Library
+# MK ==> Make  
+
+# ------------------ || Include || -----------------------
+include ../../../../.cav.build
+include .cflags.mk
+
+OBJ_CFLAGS += $(__obj_cflags) 
+BIN_CFLAGS += $(__bin_cflags)
+LIB_CFLAGS += $(__lib_cflags)
+
+# ------------------ || Build Related Dirs || -----------------------
+CDIR=$(shell pwd)
+LIBNSCORE=$(CDIR)/../../base/libnscore/
+BDIR=$(CDIR)/build
+BIDIR=$(BDIR)/include
+BODIR=${BDIR}/obj/${BUILD_MODE}
+BBDIR=$(BDIR)/bin
+BLDIR=$(BDIR)/lib
+BTDIR=$(BDIR)/tools
+BSDIR=$(BDIR)/samples
+BMKDIR=$(BDIR)/mk
+
+#Added for compiling netstorm binary.
+#Netstorm binary save the path of ns_string_api.so path during compiling and search so file at same path 
+#while running. So need to compile netstorm binary with bin path instead of ../bin. For this tahken
+#LOCAL_BIN_DIR variable
+LOCAL_BIN_DIR=./bin
+LOCAL_BIN=./aggregator
+
+# ------------------ || Top Level Dirs || -----------------------
+# Cavisson Top Level directories
+LDIR=$(__lib_dir)
+IDIR=$(__include_dir)
+TDIR=$(__tool_dir)
+
+# ------------------ || Machine Info || -----------------------
+DISTRO=$(__distro)
+RELEASE=$(__release)
+#NS_RELEASE=$(__ns_release)
+
+# ------------------ || Source Dirs || -----------------------
+SVC_DB=svcreports/db
+SVC_CORE=svcreports/core
+NETOMNI_SRC=netomni/src/core
+NETOMNI_SHELL=netomni/src/shell_scripts
+TOOL_SRC=$(__core_dir)/netstorm/tools
+SAMPLE_DIR=$(__core_dir)/netstorm/samples
+JMS_OLD_DIR=jms_old/src
+
+RSYNC_SYNCFILES_DIR=../../rsync/syncFiles/
+
+# ------------------ || Library Related Settings || -----------------------
+R_PATH="-Wl,-rpath,thirdparty/lib"
+
+LDAP_LIBS=$(__ldap_libs) $(__openssl_libs) $(PROD_LIBS) -lcrypt -DLDAP_DEPRECATED
+
+#TSDB_LINKING_LIB=-L$(LDIR) -ltsdb -lpthread -lglog -lgflags -lunwind -ldl
+
+# ------------------ || Deliverable executable scripts(shell/py) || -----------------------
+EXPORT_BINFILES =                                     \
+  nsu_show_trun                                       \
+  nsu_delete_url_based_script                         \
+  nsu_reboot_eth                                      \
+  nsu_show_ipv6                                       \
+  nsu_resync_ip                                       \
+  nsu_git_service.sh                                  \
+  nsu_reserve_port                                    \
+  nsu_git_service_ex                                  \
+  nsu_page_dump_post_proc                             \
+  nsu_get_page                                        \
+  nsu_migrate_script                                  \
+  nsu_get_host                                        \
+  nsu_archive_trun                                    \
+  nsu_unarchive_trun                                  \
+  nsu_unarchive_partition                             \
+  nsu_cmon_upgrade                                    \
+  nsu_check_pg                                        \
+  nsu_ip_bonding                                      \
+  nsu_maximize_eth_perf                               \
+  nsu_show_address                                    \
+  nsu_script_tool                                     \
+  nsu_configure                                       \
+  saas.conf                                           \
+  nsu_check_config                                    \
+  nsu_merge_page                                      \
+  nsu_split_page                                      \
+  nsu_migrate_jmeter_script                           \
+  nsu_split_video                                     \
+  nsu_split_video_to_img                              \
+  nsu_split_flow                                      \
+  nsu_connect_with_BS_RDT                             \
+  nsi_gen_script_manager_exe                          \
+  nsu_gen_avro_schema_file                            \
+  ns_verify_okta_user                                 \
+  nsu_db_test_connection                              \
+  nsu_har_to_cav_script                               \
+  nsu_postman_to_cav_script                           \
+  nsu_yaml_to_cav_script                              \
+  nsu_append_page                                     \
+  nsu_change_page_name                                \
+  nsu_alias_ip_addr                                   \
+  nsu_copy_scenario                                   \
+  nsu_backup nsu_add_server                           \
+  nsu_del_server                                      \
+  nsu_show_server                                     \
+  nsu_stop_netstorm                                   \
+  nsu_copy_script nsu_tomcat_restart                  \
+  nsu_check_health_monitor                            \
+  nsu_check_dns_masq_setup                            \
+  nsu_copy_flow                                       \
+  nsu_set_max_modems                                  \
+  nsu_delete_script                                   \
+  nsu_delete_page                                     \
+  nsu_rm_dbinfo                                       \
+  nsu_import nsu_create_table                         \
+  nsu_import_and_gen_rep                              \
+  nsu_drop_table                                      \
+  nsu_drop_index                                      \
+  nsu_import_static_table                             \
+  nsu_create_index                                    \
+  nsu_post_proc                                       \
+  nsu_post_proc_always                                \
+  nsu_capture                                         \
+  nsu_gen_rep                                         \
+  nsu_get_version                                     \
+  nsu_gen_script nsu_gen_cscript                      \
+  nsu_cache_db_data                                   \
+  nsu_cavsecs_to_formatted_time                       \
+  nsu_get_jmeter_version                              \
+  nsu_get_gen_info                                    \
+  nsu_add_cert                                        \
+  nsu_del_cert                                        \
+  nsu_show_cert                                       \
+  nsu_gen_cert                                        \
+  nsu_import_file                                     \
+  nsu_export_file                                     \
+  nsu_remote_exec                                     \
+  nsu_services show_postgres_logs                     \
+  nsu_access_control_mig                              \
+  nsu_import_access_log                               \
+  nsu_show_all_netstorm                               \
+  nsu_restore_testrun                                 \
+  nsu_show_recycle_bin_testlog                        \
+  nsu_show_tr_in_given_duration                       \
+  nsu_import_csv                                      \
+  nsu_check_cont_test                                 \
+  nsu_check_perf_test                                 \
+  nsi_get_usages_report_data                          \
+  nsi_update_usages_report_first_time                 \
+  nsi_update_usages_report                            \
+  nsu_validate_script                                 \
+  nsu_orl_create_index                                \
+  nsu_orl_create_table                                \
+  nsu_orl_drop_index                                  \
+  nsu_orl_drop_table                                  \
+  nsu_upgrade_build                                   \
+  nsi_add_ip                                          \
+  nsi_add_ipv6                                        \
+  nsi_add_ip_all                                      \
+  nsi_on_reboot                                       \
+  nsi_sync_netocean                                   \
+  nsi_check_ip                                        \
+  nsi_show_config                                     \
+  nsi_har_to_webcoach                                 \
+  nsi_test_ip                                         \
+  nsi_get_primary                                     \
+  nsi_route_exist                                     \
+  nsi_del_ip                                          \
+  nsi_set_password_less                               \
+  nsi_del_ipv6                                        \
+  nsi_del_ip_all                                      \
+  nsi_validate_ip                                     \
+  nsi_set_test_mode                                   \
+  nsi_remove_blanks nsi_page_log                      \
+  nsi_start_monitor                                   \
+  nsi_start_rpr					      \
+  nsi_status_rpr 				      \
+  nsi_stop_rpr					      \
+  nsi_proc_gui1_data                                  \
+  nsi_work_setup                                      \
+  nsi_set_test_name                                   \
+  nsi_get_cmpresult                                   \
+  nsi_get_trans_list                                  \
+  nsi_change_perm                                     \
+  nsi_get_test_run_du                                 \
+  nsi_get_page                                        \
+  nsi_get_3x nsi_get_3xx nsi_get_4x                   \
+  nsi_get_5a                                          \
+  nsi_get_5a1                                         \
+  nsi_get_5p                                          \
+  nsi_get_5u1                                         \
+  nsi_get_5u2                                         \
+  nsi_get_6x                                          \
+  nsi_get_7x                                          \
+  nsi_get_8x                                          \
+  nsi_capture_dump                                    \
+  nsi_get_objects                                     \
+  nsi_get_location                                    \
+  nsi_get_access                                      \
+  nsi_decode_amf                                      \
+  nsi_get_host                                        \
+  nsi_set_test_notes                                  \
+  nsi_ns_upgrade                                      \
+  nsi_hpd_upgrade                                     \
+  nsi_api_gateway_upgrade                         	\
+  nsi_nch_upgrade                                     \
+  nsi_havoc_upgrade                                   \
+  nsi_cmon_upgrade                                    \
+  nsi_netdiagnostics_upgrade                          \
+  nsi_lps_upgrade                                     \
+  nsi_statsc_upgrade                                  \
+  nsi_ndc_upgrade                                     \
+  nsi_ndp_upgrade                                     \
+  nsi_data_ret_upgrade                                \
+  nsi_merge_sort_scen                                 \
+  nsi_migrate_scen                                    \
+  nsi_migrate_cshm_conf                               \
+  nsi_update_runlogic                                 \
+  nsi_pg_upgrade                                      \
+  nsi_post_proc_scen                                  \
+  nsi_clean_files                                     \
+  nsi_get_ip_properties                               \
+  nsi_get_load_interfaces                             \
+  nsi_is_display_gateway_column                       \
+  nsi_is_gateway_config_button                        \
+  nsi_is_ip_interface_displayed                       \
+  nsi_set_ip_properties                               \
+  nsi_show_gateway_config                             \
+  nsi_get_tx_status_count                             \
+  nsi_on_upgrade_and_reboot                           \
+  nsi_install_utils                                   \
+  nsi_change_url_in_main_page                         \
+  nsi_get_dump_filelist_bypattern                     \
+  nsi_cmon_remote_start                               \
+  nsi_db_analyze                                      \
+  nsi_upload_tmp_table                                \
+  nsi_create_error_codes_csv                          \
+  nsi_chk_db_table                                    \
+  nsi_db_get_pagedump_data                            \
+  nsi_trans_timing_report                             \
+  nsi_orl_get_*                                       \
+  nsi_gen_rep_set                                     \
+  nsi_excel_report_creator                            \
+  nsi_gen_cmp_rep_set                                 \
+  nsi_nsobject_manager                                \
+  nsi_java_object_convertor                           \
+  nsi_gen_cmp_rep_set_data                            \
+  nsi_favoriteConverter                               \
+  nsi_access_control                                  \
+  nsi_create_alert_db                                  \
+  nsi_create_saas_project_table                       \
+  nsi_gui_tool                                        \
+  nsi_migrate_alert_history_table                     \
+  nsi_get_client                                      \
+  nsi_remove_comments.sed                             \
+  nsi_db_get_obj_timing_detail                        \
+  nsi_db_get_page_status                              \
+  nsi_chk_file_fmt_and_chg_to_unix                    \
+  nsi_create_test_scen                                \
+  nsi_status_monitor                                  \
+  nsi_sort_file                                       \
+  nsi_stop_monitor                                    \
+  nsi_check_tr_using_profile                          \
+  nsi_check_parent_pid_and_clean_file                 \
+  nsi_get_cipher_list                                 \
+  nsi_attach_jmeter_listener.sh                       \
+  nsi_get_jmx_port                                    \
+  nsi_db_get_pg_comp_data                             \
+  nsi_db_get_url_comp_data                            \
+  nsi_db_get_page_extended_report                     \
+  nsi_db_get_obj_data                                 \
+  generic_db_mon_views_creation                       \
+  nsi_db_get_obj_data_ex                              \
+  nsi_db_get_agg_obj_data                             \
+  nsi_db_get_failure_data                             \
+  nsi_db_get_user_session_data                        \
+  nsi_db_get_user_profile_data                        \
+  nsi_migrate_tr_data nsi_migrate_csv                 \
+  nsi_db_get_think_time_data                          \
+  nsi_db_get_obj_instance_data                        \
+  nsi_db_get_tx_sess_data nsi_db_get_obj_name_ids     \
+  nsi_db_get_error_codes                              \
+  nsi_db_get_tr_error_codes                           \
+  nsi_restart_proxy                                   \
+  nsi_compile_script                                  \
+  nsi_get_controller_name                             \
+  nsi_get_controller_type                             \
+  nsi_get_ext_controller                              \
+  nsi_db_get_phase_list                               \
+  nsi_db_tr_status                                    \
+  nsi_get_df_data                                     \
+  nsi_create_netcloud_archive                         \
+  nsi_rename_test_number                              \
+  nsi_install_pct                                     \
+  nsi_ldap_config                                     \
+  nsi_db_utils                                        \
+  nsi_extract_tr                                      \
+  $(TDIR)/nsi_upgrade.sh                              \
+  noi_get_url                                         \
+  ns_db_replay_create_script                          \
+  get_user_stats.sh                                   \
+  rbuReportGenerate                                   \
+  ns*_*_old_tr                                        \
+  nii_ship_gen_tr                                     \
+  sendmail_utils                                      \
+  normalized_db_plan_v1.sh                            \
+  normalized_db_plan_v2                               \
+  system_health.sh                                    \
+  NSStart.sh                                          \
+  gui3cmd.sh                                          \
+  install_NCP.sh                                      \
+  nsi_get_work_space_path.sh                          \
+  neu_*                                               \
+  $/nii_cat_gen_csv_files                             \
+  $/nii_cat_page_dump_files                           \
+  $(NETOMNI_SHELL)/nii_create_generator_data          \
+  $(NETOMNI_SHELL)/nii_extract_generator_data         \
+  $(NETOMNI_SHELL)/nii_generate_compare_report        \
+  $(NETOMNI_SHELL)/nii_call_compare_report_gen        \
+  $(NETOMNI_SHELL)/nii_untar_req_rep                  \
+  $(NETOMNI_SHELL)/nii_start_test                     \
+  $(SVC_DB)/nsu_svc_import                            \
+  $(SVC_DB)/nsu_svc_drop_table                        \
+  $(SVC_DB)/nsu_svc_drop_index                        \
+  $(SVC_DB)/nsu_svc_create_table                      \
+  $(SVC_DB)/nsi_db_svc_get_instance_data              \
+  $(SVC_DB)/nsi_db_svc_get_data                       \
+  $(SVC_DB)/nsi_db_svc_get_critical_path              \
+  $(SVC_DB)/nsi_db_svc_get_comp_timing_details_sh     \
+  $(SVC_DB)/nsi_db_svc_utils                          \
+  $(SVC_DB)/nsi_db_svc_get_comp_data                  \
+  $(SVC_DB)/nsi_db_svc_get_id_name_metadata           \
+  core/scheduler/nsu_add_test_schedule                \
+  core/scheduler/nsu_delete_test_schedule             \
+  core/scheduler/nsu_show_test_schedule               \
+  core/scheduler/nsu_start_test                       \
+  core/user_admin/nsi_check_perm                      \
+  core/user_admin/nsi_update_user_test_times          \
+  core/user_admin/nsi_user_login_profile              \
+  core/user_admin/nsu_add_group                       \
+  core/user_admin/nsu_add_project                     \
+  core/user_admin/nsu_add_user                        \
+  core/user_admin/nsu_check_user                      \
+  core/user_admin/nsu_delete_project                  \
+  core/user_admin/nsu_del_group                       \
+  core/user_admin/nsu_del_user                        \
+  core/user_admin/nsu_mod_user                        \
+  core/user_admin/nsu_rename_project                  \
+  core/user_admin/ns_user_admin_lib                   \
+  core/user_admin/nsu_show_group                      \
+  core/user_admin/nsu_show_projects                   \
+  core/user_admin/nsi_add_passwd.py                   \
+  core/user_admin/nsu_show_used_profiles_in_scenarios \
+  core/user_admin/nsu_delete_scenario_profile         \
+  core/user_admin/nsu_show_user                       \
+  core/user_admin/nsu_show_user_group                 \
+  core/user_admin/nsu_show_user_type                  \
+  core/user_admin/nsi_controller_selection_profile    \
+  $(TOOL_SRC)/nsu_cav_drive                           \
+  $(TOOL_SRC)/nsi_repo_utils                          \
+  $(TOOL_SRC)/nsi_repo_download                       \
+  $(TOOL_SRC)/nsi_repo_upload                         \
+  $(TOOL_SRC)/nsi_repo_sync                           \
+  $(TOOL_SRC)/nsi_repo_lib                            \
+  $(TOOL_SRC)/nsi_import_db                           \
+  $(TOOL_SRC)/nsu_update_trun                         \
+  $(TOOL_SRC)/get_cav_mon_home                        \
+  $(TOOL_SRC)/nsu_export_objects                      \
+  $(TOOL_SRC)/nsi_har_to_harp                         \
+  $(TOOL_SRC)/nsu_auto_gen_csv                        \
+  $(TOOL_SRC)/nsu_gen_video                           \
+  $(TOOL_SRC)/nsu_gen_rbu_report                      \
+  $(TOOL_SRC)/nsu_gen_tar                             \
+  $(TOOL_SRC)/nsu_auto_adj_clips                      \
+  $(TOOL_SRC)/nsu_rbu_page_speed                      \
+  $(TOOL_SRC)/vncpswd nsu_cmon_auto_upgrade           \
+  $(TOOL_SRC)/nsu_firefox_profile_manager             \
+  $(TOOL_SRC)/nsu_auto_gen_prof_and_vnc               \
+  $(TOOL_SRC)/nsu_chrome_profile_manager              \
+  $(TOOL_SRC)/change_profile                          \
+  $(TOOL_SRC)/nsu_rbu_post_proc                       \
+  $(TOOL_SRC)/nsi_update_web_config.sh                \
+  $(TOOL_SRC)/ndi_get_instrumentation_status          \
+  $(TOOL_SRC)/ndi_send_jad_file                       \
+  $(TOOL_SRC)/nsu_migrate_controller.sh               \
+  $(TOOL_SRC)/nsi_take_java_thread_dump               \
+  $(TOOL_SRC)/nsi_take_java_heap_dump                 \
+  $(TOOL_SRC)/nsi_test_monitor                        \
+  $(TOOL_SRC)/nsi_take_tcp_dump                       \
+  $(TOOL_SRC)/nsi_create_nde_public_trs               \
+  $(TOOL_SRC)/nsi_switch_partition                    \
+  $(TOOL_SRC)/nsu_validate_testrungdf                 \
+  $(TOOL_SRC)/nsu_testrun_diff.sh                     \
+  $(TOOL_SRC)/war_version                             \
+  $(TOOL_SRC)/ndi_add_instance_csv.sh                 \
+  $(TOOL_SRC)/ndi_crt_confui_tbl_def_val.sh           \
+  $(TOOL_SRC)/ndi_db_get_fp_grp_by_url_search_pattern \
+  $(TOOL_SRC)/ndi_download_file                       \
+  $(TOOL_SRC)/ndi_get_bt_per_sec_count                \
+  $(TOOL_SRC)/ndi_make_mct_tree_from_sqb              \
+  $(TOOL_SRC)/ndi_migrate_tsa_csv_and_db.sh           \
+  $(TOOL_SRC)/ndi_reroute_control_connection          \
+  $(TOOL_SRC)/ndi_take_heap_dump                      \
+  $(TOOL_SRC)/ndi_take_thread_dump                    \
+  $(TOOL_SRC)/ndi_upload_file                         \
+  $(TOOL_SRC)/nsu_show_test_logs                      \
+  $(TOOL_SRC)/nsi_import_trun                         \
+  $(TOOL_SRC)/rm_wrapper.sh                           \
+  ndu_create_index                                    \
+  ndu_drop_index                                      \
+  ndu_drop_table                                      \
+  ndu_import ndu_create_table                         \
+  snmp/ns*                                            \
+  ndi_runtime_change                                  \
+  ndi_runtime_change_ex                               \
+  ndi_db_get_percentile                               \
+  nsu_generate_core                                   \
+  cavgen_service                                      \
+  nsu_cavgen						\
+  cavgen.ssp						\
+  nsi_cavgen_control                                  \
+  site_page_dump_post_proc                            \
+  nsu_wp_mgr                                             \
+  nsu_ssh_key_gen                                        \
+  $(RSYNC_SYNCFILES_DIR)/cav_rsync_flocking_logging_func \
+  $(RSYNC_SYNCFILES_DIR)/cav_rsync_internal              \
+  $(RSYNC_SYNCFILES_DIR)/rsync_failure_cmd_handle        \
+  ts/ts*[^.][^ch]
+
+# ------------------ || Deliverable etc files || -----------------------
+EXPORT_ETCFILES =                                     \
+  KeywordDefinition.dat                               \
+  region.dat                                          \
+  vendor.dat                                          \
+  Cavisson.dat                                        \
+  GCP.dat                                             \
+  percentile_gdf_mapping.txt                          \
+  rte3270KeyMap.dat                                   \
+  etc/system_health_monitor.conf                      \
+  etc/system_health_monitor_sample.conf               \
+  ns_config/ns_http_hdr_state_model.txt               \
+  ns_config/ns_bootstrap.js                           \
+  standard_monitors.dat mssql_monitors.conf           \
+  saas_sample.conf                                    \
+  longlat.default schema.sql                          \
+  gdf/netstorm.gdf                                    \
+  gdf/dns.gdf gdf/smtp.gdf                            \
+  gdf/pop3.gdf                                        \
+  gdf/ftp.gdf                                         \
+  gdf/http_cache.gdf                                  \
+  gdf/misc.gdf                                        \
+  gdf/dos_attack.gdf                                  \
+  gdf/ns_diag.gdf                                     \
+  netstorm.env                                        \
+  netstorm_tomcat.env                                 \
+  $(TOOL_SRC)/node gdf/http_proxy.gdf                 \
+  gdf/http_network_cache_stats.gdf                    \
+  gdf/dns_lookup_stats.gdf                            \
+  run_command.dat                                     \
+  rbu_parameter.csv                                   \
+  .registrations.spec                                 \
+  gdf/ns_grp_data.gdf                                 \
+  gdf/ldap.gdf                                        \
+  gdf/imap.gdf                                        \
+  gdf/jrmi.gdf                                        \
+  gdf/ns_ip_data.gdf                                  \
+  gdf/ns_runtime_runlogic_progress.gdf                \
+  gdf/ns_srv_ip_data.gdf                              \
+  gdf/ns_xmpp.gdf                                     \
+  gdf/ns_trans_stats.gdf                              \
+  gdf/ns_trans_cumulative_stats.gdf                   \
+  gdf/websocket.gdf                                   \
+  $(TOOL_SRC)/cavisson_service.native_host.json       \
+  gdf/ns_http_response_codes.gdf                      \
+  octave_files/*.m                                    \
+  gdf/ns_socket_tcp_client.gdf                        \
+  gdf/ns_socket_tcp_client_failure_stats.gdf          \
+  gdf/ns_socket_udp_client.gdf                        \
+  gdf/ns_socket_udp_client_failure_stats.gdf
+
+# ------------------ || Deliverable include files || -----------------------
+EXPORT_INCFILES =                                     \
+  ns_string.h                                         \
+  ns_string.h.gui                                     \
+  ns_log.h                                            \
+  ns_data_types.h                                     \
+  user_tables.h                                       \
+  runlogic.h                                          \
+  VendorData.default                                  \
+  ns_socket_api.h                                     \
+  njvm_simulator_api.h                                \
+  ReplayDbScript.tar.gz                               \
+  $(JMS_OLD_DIR)/ns_tibco_api.[ch]                    \
+  $(JMS_OLD_DIR)/ns_kafka_api.[ch]                    \
+  $(JMS_OLD_DIR)/ns_ibmmq_api.[ch]                    \
+  $(LIBNSCORE)/nslb_uservar_table.h 
+
+# ------------------ || Deliverable tool files || -----------------------
+EXPORT_TOOLFILES =                                    \
+  $(TOOL_SRC)/ndi_list_segmented_fp                   \
+  $(TOOL_SRC)/coherence_vector_and_data_stub          \
+  $(TOOL_SRC)/coherence_stub.config                   \
+  $(TOOL_SRC)/coherence_service_stats_stub            \
+  $(TOOL_SRC)/coherence_cluster_stats_stub            \
+  $(TOOL_SRC)/coherence_cache_stats_stub              \
+  $(LIBNSCORE)/nslb_get_tcpdump                       \
+  $(TOOL_SRC)/ns*[^.][^ch]                            \
+  $(TOOL_SRC)/nt*[^.][^ch]                            \
+  $(TDIR)/makeself.1                                  \
+  $(TDIR)/makeself-header.sh                          \
+  $(TDIR)/makeself.lsm                                \
+  $(TDIR)/makeself.sh                                 \
+  $(TOOL_SRC)/nsi_outbound_setting                    \
+  $(TOOL_SRC)/upgrade_shell                           \
+  $(TOOL_SRC)/nsi_gen_health_check                    \
+  $(TOOL_SRC)/nsi_trigger_remote_upgrade              \
+  $(TOOL_SRC)/neu_*                                   \
+  $(TOOL_SRC)/nsu_validate_urc                        \
+  $(TOOL_SRC)/nsu_set_backup                          \
+  $(TOOL_SRC)/nsu_ip_config                           \
+  $(TOOL_SRC)/nsu_iptables                            \
+  $(TOOL_SRC)/tomcat_cleanup_backup.sh                \
+  $(TOOL_SRC)/nsu_sql_manager                         \
+  $(TOOL_SRC)/nde_purge_config_sample.json            \
+  $(TOOL_SRC)/nde_purge_config_ex.json                \
+  $(TOOL_SRC)/cav_docker_config                       \
+  $(TOOL_SRC)/nsu_testassest_migration                \
+  $(TDIR)/nsi_get_linux_release_ex                    \
+  $(TOOL_SRC)/nsu_drsync
+
+# ------------------ || Deliverable sample files || -----------------------
+EXPORT_SAMPLEFILES =                                  \
+  NSConf hpd_tours.conf                               \
+  hpd_concurrency.conf                                \
+  hpd_hits.conf                                       \
+  hpd_cps.conf                                        \
+  hpd_testpg.conf                                     \
+  hpd_throughput.conf                                 \
+  replay_netstorm.conf                                \
+  tr069_cpe_test.conf                                 \
+  bh1Xml.conf                                         \
+  scr*gz                                              \
+  ts/*gz                                              \
+  svcreports/core/svc.conf                            \
+  network_cache_stats_debug_headers.dat               \
+  cav_ns_bkp.conf                                     \
+  cav_no_bkp.conf                                     \
+  smtp_test.conf                                      \
+  RunCommandList.dat                                  \
+  bh_data_specs.conf                                  \
+  core/user_admin/nsi_workdir_profile                 \
+  $(SAMPLE_DIR)/cavgen.conf
+
+
+# ------------------ || Deliverable binaries which need to compiled || -----------------------
+NS_BINS =                                             \
+  $(BBDIR)/netstorm                                   \
+  $(BBDIR)/nsu_monitor                                \
+  $(BBDIR)/nsu_rpr				      \
+  $(BBDIR)/nsp_runq                                   \
+  $(BBDIR)/nsp_cpu                                    \
+  $(BBDIR)/nsu_show_netstorm                          \
+  $(BBDIR)/nsu_rstat_client                           \
+  $(BBDIR)/nsu_bh_read_conf                           \
+  $(BBDIR)/nsu_assign_ip                              \
+  $(BBDIR)/nsu_check_ip                               \
+  $(BBDIR)/nsu_ip_auto_fill                           \
+  $(BBDIR)/nsu_del_ip                                 \
+  $(BBDIR)/nsu_seq_ip                                 \
+  $(BBDIR)/nsi_check_format                           \
+  $(BBDIR)/nsu_seq_ipv6                               \
+  $(BBDIR)/nsu_check_ipv6_format                      \
+  $(BBDIR)/nsi_tx_summary                             \
+  $(BBDIR)/nsi_cmp_test_runs                          \
+  $(BBDIR)/nsi_gen_scr8                               \
+  $(BBDIR)/nsi_show_test_logs                         \
+  $(BBDIR)/nsi_tr_duration                            \
+  $(BBDIR)/nsi_amf                                    \
+  $(BBDIR)/nsi_get_pagedump                           \
+  $(BBDIR)/nsi_gui_upgrade                            \
+  $(BBDIR)/cpu_bind                                   \
+  $(BBDIR)/nsi_get_tcp_stats                          \
+  $(BBDIR)/nsu_authenticate_user                      \
+  $(BBDIR)/nsu_show_scripts                           \
+  $(BBDIR)/nsu_show_check_profiles                    \
+  $(BBDIR)/nsu_show_replay_profiles                   \
+  $(BBDIR)/nsu_show_scenarios                         \
+  $(BBDIR)/nsu_show_scenarios_profile                 \
+  $(BBDIR)/tsi_show_tsr                               \
+  $(BBDIR)/nsu_pause_test                             \
+  $(BBDIR)/nsu_resume_test                            \
+  $(BBDIR)/nsu_vuser_trace                            \
+  $(BBDIR)/nsu_get_errors                             \
+  $(BBDIR)/nsu_tr069_post_process                     \
+  $(BBDIR)/nsu_bh_data                                \
+  $(BBDIR)/ip_based_on_loc                            \
+  $(BBDIR)/pronto_gen_nasid                           \
+  $(BBDIR)/pronto_gen_config                          \
+  $(BBDIR)/nsa_logger                                 \
+  $(BBDIR)/nsu_logging_reader                         \
+  $(BBDIR)/nsu_rm_trun                                \
+  $(BBDIR)/nsi_embd_objects                           \
+  $(BBDIR)/nsa_log_mgr                                \
+  $(BBDIR)/ntp_replay_gen                             \
+  $(BBDIR)/nsi_replay_gen_data                        \
+  $(BBDIR)/_nsu_generate_licence                      \
+  $(BBDIR)/ntp_al_gen_data                            \
+  $(BBDIR)/nsu_cb_handler                             \
+  $(BBDIR)/ntp_al_gen_url_list                        \
+  $(BBDIR)/ntp_gen_error_file                         \
+  $(BBDIR)/ntp_show_flow                              \
+  $(BBDIR)/ndu_gen_data_report_ex                     \
+  $(BBDIR)/ns_backup                                  \
+  $(BBDIR)/no_backup                                  \
+  $(BBDIR)/_nsu_generate_hpd_license                  \
+  $(BBDIR)/nsi_build_upgrade_tool                     \
+  $(BBDIR)/nsu_encrypt                                \
+  $(BBDIR)/nsu_decrypt                                \
+  $(BBDIR)/nsu_two_step_encrypt                       \
+  $(BBDIR)/nsu_two_step_auth                          \
+  $(BBDIR)/cavdebug                                   \
+  $(BBDIR)/cavdebug_cli                               \
+  $(BBDIR)/nsu_show_licence                           \
+  $(BBDIR)/nsu_lookup                                 \
+  $(BBDIR)/nsu_tr069_cpe_gen_data                     \
+  $(BBDIR)/nii_norm_gen_url_id                        \
+  $(BBDIR)/nii_get_pct_data                           \
+  $(BBDIR)/nsu_db_upload                              \
+  $(BBDIR)/nsu_system_health_check                    \
+  $(BBDIR)/db_tbl_mgr                                 \
+  $(BBDIR)/nsu_multidisk_test                         \
+  $(BBDIR)/nsu_write_offset_file                      \
+  $(BBDIR)/nsu_svc_process_data                       \
+  $(BBDIR)/nsi_db_svc_get_comp_timing_details         \
+  $(BBDIR)/nsi_db_svc_compare_comp_screen_data        \
+  $(BBDIR)/nsi_db_svc_compare_main_screen_data        \
+  $(BBDIR)/nsi_hessian                                \
+  $(BBDIR)/nsi_get_next_test_run_id                   \
+  $(BBDIR)/nsi_repo_get_product_key                   \
+  $(BBDIR)/nsi_check_gen_health                       \
+  $(BBDIR)/nsi_har_to_page_speed                      \
+  $(BBDIR)/nsu_show_generator_data                    \
+  $(BBDIR)/nsi_gen_server_api                         \
+  $(BBDIR)/nsi_get_product_key                        \
+  $(BBDIR)/nsi_allocate_instances                     \
+  $(BBDIR)/nsi_release_instances                      \
+  $(BBDIR)/nsu_ntlm_decoder                           \
+  $(BBDIR)/nsi_collect_logs                           \
+  $(BBDIR)/nsu_get_gen_data                           \
+  $(BBDIR)/nsu_check_test_running_on_generator        \
+  $(BBDIR)/netcloud_utils                             \
+  $(BBDIR)/nsu_make_script_tar                        \
+  $(BBDIR)/nsu_make_script_untar                      \
+  $(BBDIR)/ts_show_testsuites                         \
+  $(BBDIR)/ts_show_testcases                          \
+  $(BBDIR)/tsi_show_testsuit_content                  \
+  $(BBDIR)/nsi_get_wl_thread_details                  \
+  $(BBDIR)/nsi_ns_sim_for_dashboard                   \
+  $(BBDIR)/nsi_send_alert                             \
+  $(BBDIR)/nsu_lr_to_ns_script_converter              \
+  $(BBDIR)/nsi_ns_make_tr_running                     \
+  $(BBDIR)/njvm_simulator_tool                        \
+  $(BBDIR)/nsi_ns_replay_test_for_dashboard           \
+  $(BBDIR)/nsi_ns_replay_test                         \
+  $(BBDIR)/validate_fpi_fields                        \
+  $(BBDIR)/ndu_aggregate_percentiles                  \
+  $(BBDIR)/tsdb_aggregate_percentiles                 \
+  $(BBDIR)/get_all_percentiles                        \
+  $(BBDIR)/nsi_migrate_to_partition_mode              \
+  $(BBDIR)/nia_req_rep_uploader                       \
+  $(BBDIR)/nsi_show_tr_info_shm                       \
+  $(BBDIR)/nia_file_aggregator                        \
+  $(BBDIR)/nsu_gen_percentiles                        \
+  $(BBDIR)/nsi_get_interfaces                         \
+  $(BBDIR)/nsu_show_partition_detail                  \
+  $(BBDIR)/nsu_rbu_migrate_tr                         \
+  $(BBDIR)/nsu_update_rtg_nan                         \
+  $(BBDIR)/nsu_rm_har                                 \
+  $(BBDIR)/nsi_stop_generator                         \
+  $(BBDIR)/nsi_rtc_invoker                            \
+  $(BBDIR)/nc_admin                                   \
+  $(BBDIR)/nsu_get_packet_size                        \
+  $(BBDIR)/nsu_check_health                           \
+  $(BBDIR)/cav_service                                \
+  $(BBDIR)/cm_test_traffic_stats                      \
+  $(BBDIR)/nsu_update_rtg_time                        \
+  $(BBDIR)/ndi_send_msg                               \
+  $(BBDIR)/ndi_send_msg_ex                            \
+  $(BBDIR)/ndi_communicate_with_ndc                   \
+  $(BBDIR)/ndi_comp_ctrl                              \
+  $(BBDIR)/ndi_send_partial_msg_ndc                   \
+  $(BBDIR)/ndi_send_partial_msg_bci                   \
+  $(BBDIR)/debug_agg_file                             \
+  $(BBDIR)/merge_tdigests                             \
+  $(BBDIR)/ndu_debug_tdigests                         \
+  $(BBDIR)/tsdb_debug_tdigests                        \
+  $(BBDIR)/tdigest_simulator                          \
+  $(BBDIR)/nsi_comp_ctrl                              \
+  $(BBDIR)/nsi_import_db                              \
+  $(BBDIR)/nd_aggregate_reports                       \
+  $(BBDIR)/nsu_xml_reader                             \
+  $(BBDIR)/nsu_get_cavmain_port
+
+# ------------------ || Object Files || -----------------------
+NS_OBJS =                                             \
+  $(BODIR)/ns_keep_alive.o                            \
+  $(BODIR)/ns_http_pipelining.o                       \
+  $(BODIR)/ns_http_status_codes.o                     \
+  $(BODIR)/ns_ftp.o                                   \
+  $(BODIR)/ns_sync_point_parse.o                      \
+  $(BODIR)/ns_sync_point_api_parse.o                  \
+  $(BODIR)/ns_sync_point.o                            \
+  $(BODIR)/ns_ftp_send.o                              \
+  $(BODIR)/ns_ftp_parse.o                             \
+  $(BODIR)/ns_jrmi.o                                  \
+  $(BODIR)/ns_pop3_parse.o                            \
+  $(BODIR)/ns_pop3.o                                  \
+  $(BODIR)/ns_pop3_send.o                             \
+  $(BODIR)/ns_smtp.o                                  \
+  $(BODIR)/ns_smtp_send.o                             \
+  $(BODIR)/ns_dns.o                                   \
+  $(BODIR)/ns_dns_req.o                               \
+  $(BODIR)/b64.o                                      \
+  $(BODIR)/ns_schedule_phases.o                       \
+  $(BODIR)/ns_global_dat.o                            \
+  $(BODIR)/ns_schedule_phases_dat.o                   \
+  $(BODIR)/ns_schedule_phases_parse.o                 \
+  $(BODIR)/ns_schedule_divide_over_nvm.o              \
+  $(BODIR)/ns_schedule_phases_parse_validations.o     \
+  $(BODIR)/ns_parent_msg_com.o                        \
+  $(BODIR)/ns_kw_set_non_rtc.o                        \
+  $(BODIR)/JSON_checker.o                             \
+  $(BODIR)/ns_parse_scen_conf.o                       \
+  $(BODIR)/ns_sock_com.o                              \
+  $(BODIR)/ns_sock_listen.o                           \
+  $(BODIR)/netstorm.o                                 \
+  $(BODIR)/ns_vuser.o                                 \
+  $(BODIR)/ns_session.o                               \
+  $(BODIR)/ns_page.o                                  \
+  $(BODIR)/trans_util.o                               \
+  $(BODIR)/deliver_report.o                           \
+  $(BODIR)/ns_write_rtg_data_in_db_or_csv.o           \
+  $(BODIR)/wait_forever.o                             \
+  $(BODIR)/ns_master.o                                \
+  $(BODIR)/uids.o                                     \
+  $(BODIR)/cookies.o                                  \
+  $(BODIR)/ns_smtp_parse.o                            \
+  $(BODIR)/ns_dns_parse.o                             \
+  $(BODIR)/url.o                                      \
+  $(BODIR)/ns_cookie.o                                \
+  $(BODIR)/ns_body_encrypt.o                          \
+  $(BODIR)/ns_auto_cookie.o                           \
+  $(BODIR)/util.o                                     \
+  $(BODIR)/src_ip.o                                   \
+  $(BODIR)/ns_parse_src_ip.o                          \
+  $(BODIR)/ns_server.o                                \
+  $(BODIR)/output.o                                   \
+  $(BODIR)/divide_users.o                             \
+  $(BODIR)/divide_values.o                            \
+  $(BODIR)/child_init.o                               \
+  $(BODIR)/unique_vals.o                              \
+  $(BODIR)/poi.o                                      \
+  $(BODIR)/timing.o                                   \
+  $(BODIR)/weib_think.o                               \
+  $(BODIR)/logging.o                                  \
+  $(BODIR)/ns_fdset.o                                 \
+  $(BODIR)/ns_log_static_tables.o                     \
+  $(BODIR)/tmr.o                                      \
+  $(BODIR)/ns_schedule_fcs.o                          \
+  $(BODIR)/decomp.o                                   \
+  $(BODIR)/sock.o                                     \
+  $(BODIR)/err_exit.o                                 \
+  $(BODIR)/ns_search_vars.o                           \
+  $(BODIR)/ns_random_vars.o                           \
+  $(BODIR)/ns_random_string.o                         \
+  $(BODIR)/ns_date_vars.o                             \
+  $(BODIR)/ns_unique_numbers.o                        \
+  $(BODIR)/ns_check_point_vars.o                      \
+  $(BODIR)/ns_check_replysize_vars.o                  \
+  $(BODIR)/ns_unique_range_var.o                      \
+  $(BODIR)/ns_json_vars.o                             \
+  $(BODIR)/ns_amf_encode.o                            \
+  $(BODIR)/ns_amf_decode.o                            \
+  $(BODIR)/ns_amf_common.o                            \
+  $(BODIR)/ns_amf_ext_object.o                        \
+  $(BODIR)/eth.o                                      \
+  $(BODIR)/rstat_client.o                             \
+  $(BODIR)/rstat_clnt.o                               \
+  $(BODIR)/rstat_xdr.o                                \
+  $(BODIR)/ns_ip_based_on_loc.o                       \
+  $(BODIR)/ipmgmt_utils.o                             \
+  $(BODIR)/nsu_ipv6_utils.o                           \
+  $(BODIR)/ns_gdf.o                                   \
+  $(BODIR)/ns_trans.o                                 \
+  $(BODIR)/ns_trans_parse.o                           \
+  $(BODIR)/ns_custom_monitor.o                        \
+  $(BODIR)/ns_custom_monitor_redesign.o               \
+  $(BODIR)/ns_dynamic_vector_monitor.o                \
+  $(BODIR)/ns_monitor_init.o                          \
+  $(BODIR)/ns_pre_test_check.o                        \
+  $(BODIR)/ns_post_test_check.o                       \
+  $(BODIR)/ns_coherence_nid_table.o                   \
+  $(BODIR)/ns_tier_group.o                            \
+  $(BODIR)/ns_nv_tbl.o                                \
+  $(BODIR)/ns_monitor_2d_table.o                      \
+  $(BODIR)/ns_compress_idx.o                          \
+  $(BODIR)/ns_nd_monitor.o                            \
+  $(BODIR)/ns_check_monitor.o                         \
+  $(BODIR)/ns_sock_list.o                             \
+  $(BODIR)/ns_parent.o                                \
+  $(BODIR)/ns_child.o                                 \
+  $(BODIR)/ns_child_msg_com.o                         \
+  $(BODIR)/ns_log.o                                   \
+  $(BODIR)/ns_ssl.o                                   \
+  $(BODIR)/ns_vuser_trace.o                           \
+  $(BODIR)/runlogic.o                                 \
+  $(BODIR)/ns_cpu_affinity.o                          \
+  $(BODIR)/ns_msg_com_util.o                          \
+  $(BODIR)/ns_http_process_resp.o                     \
+  $(BODIR)/ns_url_resp.o                              \
+  $(BODIR)/ns_url_req.o                               \
+  $(BODIR)/ns_h2_req.o                                \
+  $(BODIR)/ns_http_version.o                          \
+  $(BODIR)/ns_goal_based_sla.o                        \
+  $(BODIR)/ns_health_monitor.o                        \
+  $(BODIR)/ns_goal_based_run.o                        \
+  $(BODIR)/ns_static_files.o                          \
+  $(BODIR)/ns_static_vars.o                           \
+  $(BODIR)/ns_static_use_once.o                       \
+  $(BODIR)/ns_index_vars.o                            \
+  $(BODIR)/ns_vars.o                                  \
+  $(BODIR)/ns_tag_vars.o                              \
+  $(BODIR)/ns_embd_objects.o                          \
+  $(BODIR)/ns_auto_fetch_embd.o                       \
+  $(BODIR)/ns_auto_redirect.o                         \
+  $(BODIR)/ns_monitor_profiles.o                      \
+  $(BODIR)/ns_parallel_fetch.o                        \
+  $(BODIR)/ns_runtime_changes.o                       \
+  $(BODIR)/ns_runtime_changes_quantity.o              \
+  $(BODIR)/ns_child_runtime_changes.o                 \
+  $(BODIR)/ns_runtime_changes_monitor.o               \
+  $(BODIR)/ns_page_think_time.o                       \
+  $(BODIR)/ns_wan_env.o                               \
+  $(BODIR)/ns_schedule_ramp_up_fcu.o                  \
+  $(BODIR)/ns_schedule_ramp_up_fsr.o                  \
+  $(BODIR)/ns_debug_trace.o                           \
+  $(BODIR)/ns_user_monitor.o                          \
+  $(BODIR)/ns_schedule_ramp_down_fcu.o                \
+  $(BODIR)/ns_schedule_ramp_down_fsr.o                \
+  $(BODIR)/ns_percentile.o                            \
+  $(BODIR)/ns_pdf_parse.o                             \
+  $(BODIR)/ns_event_log.o                             \
+  $(BODIR)/ns_tr_duration.o                           \
+  $(BODIR)/ns_event_filter.o                          \
+  $(BODIR)/ns_mon_log.o                               \
+  $(BODIR)/ns_server_admin_utils.o                    \
+  $(BODIR)/ns_replay_access_logs_parse.o              \
+  $(BODIR)/ns_replay_access_logs.o                    \
+  $(BODIR)/ns_replay_db_query.o                       \
+  $(BODIR)/ns_schedule_start_group.o                  \
+  $(BODIR)/ns_schedule_stabilize.o                    \
+  $(BODIR)/ns_schedule_duration.o                     \
+  $(BODIR)/ns_schedule_pause_and_resume.o             \
+  $(BODIR)/ns_standard_monitors.o                     \
+  $(BODIR)/ns_error_codes.o                           \
+  $(BODIR)/ns_trace_log.o                             \
+  $(BODIR)/rc4.o                                      \
+  $(BODIR)/ns_server_mapping.o                        \
+  $(BODIR)/ns_http_cache.o                            \
+  $(BODIR)/ns_http_cache_table.o                      \
+  $(BODIR)/ns_http_cache_store.o                      \
+  $(BODIR)/ns_http_cache_util.o                       \
+  $(BODIR)/ns_http_cache_hdr.o                        \
+  $(BODIR)/ns_http_cache_reporting.o                  \
+  $(BODIR)/ns_ftp_reporting.o                         \
+  $(BODIR)/ns_log_req_rep.o                           \
+  $(BODIR)/ns_js_init.o                               \
+  $(BODIR)/ns_js_engine.o                             \
+  $(BODIR)/ns_js_events.o                             \
+  $(BODIR)/ns_vuser_tasks.o                           \
+  $(BODIR)/ns_vuser_ctx.o                             \
+  $(BODIR)/ns_http_script_parse.o                     \
+  $(BODIR)/ns_script_parse.o                          \
+  $(BODIR)/ns_tr069_lib.o                             \
+  $(BODIR)/ns_tr069_script_parse.o                    \
+  $(BODIR)/ns_tr069_acs_rpc.o                         \
+  $(BODIR)/ns_tr069_cpe_rpc_param.o                   \
+  $(BODIR)/ns_tr069_cpe_rpc_object.o                  \
+  $(BODIR)/ns_tr069_cpe_rpc_others.o                  \
+  $(BODIR)/ns_tr069_http_read_req.o                   \
+  $(BODIR)/ns_tr069_acs_con.o                         \
+  $(BODIR)/ns_tr069_load_data.o                       \
+  $(BODIR)/ns_tr069_fetch_data.o                      \
+  $(BODIR)/ns_tr069_data_file.o                       \
+  $(BODIR)/ns_url_hash.o                              \
+  $(BODIR)/ns_http_auth.o                             \
+  $(BODIR)/ns_iovec.o                                 \
+  $(BODIR)/ns_socket.o                                \
+  $(BODIR)/ns_socket_io.o                             \
+  $(BODIR)/ns_lps.o                                   \
+  $(BODIR)/ns_dos_syn_attack.o                        \
+  $(BODIR)/ns_dos_attack_reporting.o                  \
+  $(BODIR)/ns_auto_fetch_parse.o                      \
+  $(BODIR)/ns_netstorm_diagnostics.o                  \
+  $(BODIR)/ns_click_script.o                          \
+  $(BODIR)/ns_click_script_parse.o                    \
+  $(BODIR)/ns_session_pacing.o                        \
+  $(BODIR)/ns_user_profile.o                          \
+  $(BODIR)/ns_page_think_time_parse.o                 \
+  $(BODIR)/ns_inline_delay.o                          \
+  $(BODIR)/ns_nd_kw_parse.o                           \
+  $(BODIR)/ns_dynamic_hosts.o                         \
+  $(BODIR)/ns_continue_on_page.o                      \
+  $(BODIR)/ns_vuser_thread.o                          \
+  $(BODIR)/ns_child_thread_util.o                     \
+  $(BODIR)/ni_user_distribution.o                     \
+  $(BODIR)/ni_scenario_distribution.o                 \
+  $(BODIR)/ns_batch_jobs.o                            \
+  $(BODIR)/ns_page_dump.o                             \
+  $(BODIR)/ni_schedule_phases_parse_validations.o     \
+  $(BODIR)/ni_schedule_phases_parse.o                 \
+  $(BODIR)/ns_proxy_server.o                          \
+  $(BODIR)/ns_proxy_server_reporting.o                \
+  $(BODIR)/ns_connection_pool.o                       \
+  $(BODIR)/ns_monitoring.o                            \
+  $(BODIR)/ns_network_cache_reporting.o               \
+  $(BODIR)/ns_dns_reporting.o                         \
+  $(BODIR)/ns_trace_level.o                           \
+  $(BODIR)/ns_parse_netcloud_keyword.o                \
+  $(BODIR)/ns_nsl_vars.o                              \
+  $(BODIR)/ns_license.o                               \
+  $(BODIR)/ns_monitor_server_ctrl_conn.o              \
+  $(BODIR)/ns_get_log_file_monitor.o                  \
+  $(BODIR)/ns_ndc.o                                   \
+  $(BODIR)/ns_ldap.o                                  \
+  $(BODIR)/ns_ldap_reporting.o                        \
+  $(BODIR)/ns_h2_reporting.o                          \
+  $(BODIR)/ns_fc2.o                                   \
+  $(BODIR)/ns_ldap_request.o                          \
+  $(BODIR)/ns_jrmi_reporting.o                        \
+  $(BODIR)/ns_ldap_decode.o                           \
+  $(BODIR)/ns_java_obj_mgr.o                          \
+  $(BODIR)/ns_page_based_stats.o                      \
+  $(BODIR)/ns_nvm_msg_def.pb-c.o                      \
+  $(BODIR)/ns_java_string_api.o                       \
+  $(BODIR)/ns_nvm_njvm_msg_com.o                      \
+  $(BODIR)/ns_param_override.o                        \
+  $(BODIR)/ns_njvm.o                                  \
+  $(BODIR)/ns_uri_encode.o                            \
+  $(BODIR)/ns_rbu.o                                   \
+  $(BODIR)/ni_runtime_changes.o                       \
+  $(BODIR)/ns_comp_ctrl.o                             \
+  $(BODIR)/nia_fa_function.o                          \
+  $(BODIR)/db_aggregator.o                            \
+  $(BODIR)/ni_script_parse.o                          \
+  $(BODIR)/ns_send_mail.o                             \
+  $(BODIR)/ns_group_data.o                            \
+  $(BODIR)/ns_imap_parse.o                            \
+  $(BODIR)/ns_imap_send.o                             \
+  $(BODIR)/ns_imap_reporting.o                        \
+  $(BODIR)/ns_dt_integration.o                        \
+  $(BODIR)/ns_ip_data.o                               \
+  $(BODIR)/ns_parent_normalization.o                  \
+  $(BODIR)/ns_static_vars_rtc.o                       \
+  $(BODIR)/ns_xmpp_parse.o                            \
+  $(BODIR)/ns_xmpp.o                                  \
+  $(BODIR)/ns_xmpp_stats.o                            \
+  $(BODIR)/ns_user_define_headers.o                   \
+  $(BODIR)/ns_nd_integration.o                        \
+  $(BODIR)/ns_rbu_page_stat.o                         \
+  $(BODIR)/ns_sockjs.o                                \
+  $(BODIR)/ns_websocket.o                             \
+  $(BODIR)/websocket_callback.o                       \
+  $(BODIR)/ns_soap_api.o                              \
+  $(BODIR)/ns_m3u8_parser.o                           \
+  $(BODIR)/ns_rbu_domain_stat.o                       \
+  $(BODIR)/ns_h2_frames.o                             \
+  $(BODIR)/ns_h2_read_write.o                         \
+  $(BODIR)/ns_h2_stream.o                             \
+  $(BODIR)/ns_h2_process_resp.o                       \
+  $(BODIR)/ns_runtime_runlogic_progress.o             \
+  $(BODIR)/ns_h2_flow_control.o                       \
+  $(BODIR)/ns_ndc_outbound.o                          \
+  $(BODIR)/ns_auto_scale.o                            \
+  $(BODIR)/ns_svr_ip_normalization.o                  \
+  $(BODIR)/ns_server_ip_data.o                        \
+  $(BODIR)/ns_db_upload.o                             \
+  $(BODIR)/ns_dbu_monitor.o                           \
+  $(BODIR)/ns_rbu_access_log.o                        \
+  $(BODIR)/ns_dynamic_avg_time.o                      \
+  $(BODIR)/ns_trans_normalization.o                   \
+  $(BODIR)/ns_appliance_health_monitor.o              \
+  $(BODIR)/ns_sql_vars.o                              \
+  $(BODIR)/ns_cmd_vars.o                              \
+  $(BODIR)/ns_websocket_reporting.o                   \
+  $(BODIR)/ni_sql_vars.o                              \
+  $(BODIR)/ns_progress_report.o                       \
+  $(BODIR)/ns_jmeter.o                                \
+  $(BODIR)/ns_vuser_runtime_control.o                 \
+  $(BODIR)/ns_monitor_metric_priority.o               \
+  $(BODIR)/ns_handle_alert.o                          \
+  $(BODIR)/ns_test_init_stat.o                        \
+  $(BODIR)/ns_tls_utils.o                             \
+  $(BODIR)/ns_protobuf.o                              \
+  $(BODIR)/ns_jms_conn_pool.o                         \
+  $(BODIR)/ns_data_handler_thread.o                   \
+  $(BODIR)/ns_nethavoc_handler.o                      \
+  $(BODIR)/nslb_netcloud_util.o                       \
+  $(BODIR)/ns_tsdb.o                                  \
+  $(BODIR)/nslb_static_var_use_once.o                 \
+  $(BODIR)/ns_socket_tcp_client_rpt.o                 \
+  $(BODIR)/ns_socket_tcp_client_failures_rpt.o        \
+  $(BODIR)/ns_socket_udp_client_rpt.o                 \
+  $(BODIR)/ns_socket_udp_client_failures_rpt.o        \
+  $(BODIR)/ns_test_monitor.o                          \
+  $(BODIR)/ns_file_upload.o                           \
+  $(BODIR)/ns_cavmain_proc.o                          \
+  $(BODIR)/ns_cavmain_child.o                         \
+  $(BODIR)/ns_cavmain.o                               \
+  $(BODIR)/ns_cavmain_child_thread.o
+
+# ------------------ || Targets for compilation || -----------------------
+
+$(BBDIR)/netstorm:  $(NS_OBJS) $(BBDIR)/${NS_STRING_API_SO_NAME} 
+	mkdir -p $(LOCAL_BIN_DIR)
+	cp  $(BBDIR)/${NS_STRING_API_SO_NAME} $(LOCAL_BIN_DIR)/${NS_STRING_API_SO_NAME}
+	cc -o $(BBDIR)/${NS_BIN} $(BIN_CFLAGS) $(NS_OBJS) $(LOCAL_BIN_DIR)/${NS_STRING_API_SO_NAME} $(ALL_LIBS) 
+	rm -rf $(LOCAL_BIN_DIR)
+
+$(BBDIR)/nsu_monitor: $(BODIR)/monitor.o $(BODIR)/hash.o $(BODIR)/decomp.o  $(BODIR)/ns_amf_encode_for_nsi_amf.o \
+	$(BODIR)/ns_amf_decode_for_nsi_amf.o $(BODIR)/ns_amf_common_for_nsi_amf.o \
+	$(BODIR)/ns_amf_ext_object_for_nsi_amf.o $(BODIR)/monitor_utils.o 
+	gcc -o $(BBDIR)/nsu_monitor $(BODIR)/monitor.o $(BODIR)/hash.o $(BODIR)/decomp.o \
+		$(BODIR)/ns_amf_encode_for_nsi_amf.o $(BODIR)/ns_amf_decode_for_nsi_amf.o \
+		$(BODIR)/ns_amf_common_for_nsi_amf.o $(BODIR)/ns_amf_ext_object_for_nsi_amf.o \
+		$(BODIR)/monitor_utils.o $(R_PATH) $(BIN_CFLAGS) $(ALL_LIBS)
+
+$(BBDIR)/nsu_rpr: $(BODIR)/ns_rpr.o $(BODIR)/hash.o $(BODIR)/decomp.o  $(BODIR)/ns_amf_encode_for_nsi_amf.o \
+	$(BODIR)/ns_amf_decode_for_nsi_amf.o $(BODIR)/ns_amf_common_for_nsi_amf.o \
+	$(BODIR)/ns_amf_ext_object_for_nsi_amf.o $(BODIR)/ns_rpr_util.o 
+	gcc -o $(BBDIR)/nsu_rpr $(BODIR)/ns_rpr.o $(BODIR)/hash.o $(BODIR)/decomp.o \
+		$(BODIR)/ns_amf_encode_for_nsi_amf.o $(BODIR)/ns_amf_decode_for_nsi_amf.o \
+		$(BODIR)/ns_amf_common_for_nsi_amf.o $(BODIR)/ns_amf_ext_object_for_nsi_amf.o \
+		$(BODIR)/ns_rpr_util.o $(R_PATH) $(BIN_CFLAGS) $(ALL_LIBS)
+
+$(BBDIR)/nsu_proxy: $(BODIR)/proxy.o $(BODIR)/hash.o $(BODIR)/decomp.o 
+	gcc -o $(BBDIR)/nsu_proxy $(BODIR)/proxy.o $(BODIR)/hash.o $(BODIR)/decomp.o $(BIN_CFLAGS) $(ALL_LIBS)
+
+$(BBDIR)/ns_test_gdf: $(BODIR)/ns_test_gdf.o $(BODIR)/ns_gdf.o $(BODIR)/ns_custom_monitor.o $(BODIR)/err_exit.o $(BODIR)/util.o
+	gcc -g $(LDFLAGS) $(BODIR)/ns_gdf.o $(BODIR)/ns_custom_monitor.o $(BODIR)/ns_test_gdf.o \
+	$(BODIR)/err_exit.o $(BODIR)/util.o  -o $(BBDIR)/ns_test_gdf $(ALL_LIBS)
+
+$(BODIR)/wait_forever.o: wait_forever.h wait_forever.c 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/wait_forever.o wait_forever.c
+
+$(BODIR)/ns_data_handler_thread.o: ns_data_handler_thread.h ns_data_handler_thread.c 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_data_handler_thread.o ns_data_handler_thread.c
+
+$(BODIR)/ns_nethavoc_handler.o: ns_nethavoc_handler.h ns_nethavoc_handler.c 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_nethavoc_handler.o ns_nethavoc_handler.c $(PROD_LIBS)
+
+$(BODIR)/deliver_report.o: deliver_report.h ns_gdf.h ns_fill_gdf.c deliver_report.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/deliver_report.o deliver_report.c 
+
+$(BODIR)/ns_write_rtg_data_in_db_or_csv.o: ns_write_rtg_data_in_db_or_csv.c ns_write_rtg_data_in_db_or_csv.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_write_rtg_data_in_db_or_csv.o ns_write_rtg_data_in_db_or_csv.c
+
+
+$(BODIR)/netstorm.o: netstorm.c tmr.h url.h util.h netstorm.h user_tables.h ns_tag_vars.h smon.h wait_forever.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/netstorm.o netstorm.c
+
+$(BODIR)/ns_parent_normalization.o: ns_parent_normalization.c 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_parent_normalization.o ns_parent_normalization.c
+
+$(BODIR)/ns_sock_com.o: ns_sock_com.c ns_sock_com.h 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_sock_com.o ns_sock_com.c 
+
+$(BODIR)/ns_soap_api.o: ns_soap_api.c ns_soap_api.h 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_soap_api.o ns_soap_api.c 
+
+$(BODIR)/ns_rte_api.o: ns_rte_api.c ns_rte_api.h 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_rte_api.o ns_rte_api.c 
+
+$(BODIR)/ns_m3u8_parser.o: ns_m3u8_parser.c ns_embd_objects.h 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_m3u8_parser.o ns_m3u8_parser.c
+
+$(BODIR)/ns_sock_listen.o: ns_sock_listen.c ns_sock_listen.h 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_sock_listen.o ns_sock_listen.c 
+
+$(BODIR)/uids.o: uids.h uids.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/uids.o uids.c
+
+$(BODIR)/cookies.o: cookies.h cookies.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/cookies.o cookies.c
+
+$(BODIR)/ns_dns_parse.o: ns_dns_parse.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_dns_parse.o ns_dns_parse.c
+
+$(BODIR)/ns_group_data.o: ns_group_data.c ns_group_data.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_group_data.o ns_group_data.c
+
+$(BODIR)/ns_ip_data.o: ns_ip_data.c ns_ip_data.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_ip_data.o ns_ip_data.c
+
+$(BODIR)/ns_svr_ip_normalization.o: ns_svr_ip_normalization.c ns_svr_ip_normalization.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_svr_ip_normalization.o ns_svr_ip_normalization.c
+
+$(BODIR)/ns_server_ip_data.o: ns_server_ip_data.c ns_server_ip_data.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_server_ip_data.o ns_server_ip_data.c
+
+$(BODIR)/ns_dynamic_avg_time.o: ns_dynamic_avg_time.c ns_dynamic_avg_time.h 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_dynamic_avg_time.o ns_dynamic_avg_time.c
+
+$(BODIR)/ns_trans_normalization.o: ns_trans_normalization.c ns_trans_normalization.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_trans_normalization.o ns_trans_normalization.c
+
+$(BODIR)/ns_runtime_runlogic_progress.o: ns_runtime_runlogic_progress.c ns_runtime_runlogic_progress.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_runtime_runlogic_progress.o ns_runtime_runlogic_progress.c
+
+#for RBU Page Stat
+$(BODIR)/ns_rbu_page_stat.o: ns_rbu_page_stat.h ns_rbu_page_stat.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_rbu_page_stat.o ns_rbu_page_stat.c
+
+#for RBU/NVSM Domain Stat
+$(BODIR)/ns_rbu_domain_stat.o: ns_rbu_domain_stat.h ns_rbu_domain_stat.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_rbu_domain_stat.o ns_rbu_domain_stat.c
+
+$(BODIR)/ns_db_upload.o: ns_db_upload.c ns_db_upload.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_db_upload.o ns_db_upload.c
+
+$(BODIR)/ns_dbu_monitor.o: ns_dbu_monitor.c ns_dbu_monitor.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_dbu_monitor.o ns_dbu_monitor.c
+
+$(BODIR)/ns_page_based_stats.o: ns_page_based_stats.h ns_page_based_stats.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_page_based_stats.o ns_page_based_stats.c
+
+$(BODIR)/ns_smtp_parse.o: ns_smtp_parse.h ns_smtp_parse.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_smtp_parse.o ns_smtp_parse.c
+
+$(BODIR)/url.o: url.h url.c util.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/url.o url.c
+
+$(BODIR)/ns_cookie.o: ns_cookie.h ns_cookie.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_cookie.o ns_cookie.c
+
+$(BODIR)/ns_auto_cookie.o: ns_auto_cookie.h ns_alloc.h ns_auto_cookie.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_auto_cookie.o ns_auto_cookie.c
+
+$(BODIR)/ns_search_vars.o: ns_search_vars.c ns_search_vars.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_search_vars.o ns_search_vars.c
+
+$(BODIR)/ns_json_vars.o: ns_json_vars.c ns_json_vars.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_json_vars.o ns_json_vars.c
+
+$(BODIR)/ns_random_vars.o: ns_random_vars.c ns_random_vars.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_random_vars.o ns_random_vars.c
+
+$(BODIR)/ns_random_string.o: ns_random_string.c ns_random_string.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_random_string.o ns_random_string.c
+
+$(BODIR)/ns_date_vars.o: ns_date_vars.c ns_date_vars.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_date_vars.o ns_date_vars.c
+
+$(BODIR)/ns_unique_numbers.o: ns_unique_numbers.c ns_unique_numbers.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_unique_numbers.o  ns_unique_numbers.c
+
+$(BODIR)/ns_unique_range_var.o: ns_unique_range_var.c ns_unique_range_var.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_unique_range_var.o ns_unique_range_var.c
+
+$(BODIR)/ns_check_point_vars.o: ns_check_point_vars.c ns_check_point_vars.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_check_point_vars.o ns_check_point_vars.c
+
+$(BODIR)/ns_check_replysize_vars.o: ns_check_replysize_vars.c ns_check_replysize_vars.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_check_replysize_vars.o ns_check_replysize_vars.c
+
+$(BODIR)/ns_child.o: ns_child.h ns_child.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_child.o ns_child.c
+
+$(BODIR)/ns_parent.o: ns_parent.h ns_parent.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_parent.o ns_parent.c
+
+$(BODIR)/ns_child_msg_com.o: ns_child_msg_com.h ns_child_msg_com.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_child_msg_com.o ns_child_msg_com.c
+
+$(BODIR)/util.o: util.h util.c ns_tag_vars.h url.h smon.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/util.o util.c
+
+$(BODIR)/ns_test_gdf.o: ns_test_gdf.h ns_gdf.h ns_custom_monitor.h ns_test_gdf.c  
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_test_gdf.o ns_test_gdf.c 
+
+$(BODIR)/ns_gdf.o: ns_gdf.h ns_gdf.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_gdf.o ns_gdf.c
+
+$(BODIR)/ns_custom_monitor.o: ns_custom_monitor.h err_exit.h ns_custom_monitor.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_custom_monitor.o ns_custom_monitor.c 
+
+$(BODIR)/ns_custom_monitor_redesign.o: ns_custom_monitor_RDnew.h err_exit.h ns_custom_monitor_RDnew.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_custom_monitor_redesign.o ns_custom_monitor_RDnew.c
+
+$(BODIR)/ns_monitor_metric_priority.o: ns_monitor_metric_priority.h ns_monitor_metric_priority.c 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_monitor_metric_priority.o ns_monitor_metric_priority.c
+
+$(BODIR)/ns_tsdb.o: ns_tsdb.h err_exit.h ns_tsdb.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_tsdb.o ns_tsdb.c
+
+$(BODIR)/ns_tier_group.o: ns_tier_group.h ns_tier_group.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_tier_group.o ns_tier_group.c
+
+$(BODIR)/ns_ndc_outbound.o: ns_ndc_outbound.h ns_ndc_outbound.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_ndc_outbound.o ns_ndc_outbound.c
+
+$(BODIR)/ns_appliance_health_monitor.o: ns_appliance_health_monitor.h ns_appliance_health_monitor.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_appliance_health_monitor.o ns_appliance_health_monitor.c
+
+$(BODIR)/ns_auto_scale.o: ns_auto_scale.h ns_auto_scale.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_auto_scale.o ns_auto_scale.c
+
+$(BODIR)/ns_monitor_2d_table.o: ns_monitor_2d_table.h  ns_monitor_2d_table.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_monitor_2d_table.o ns_monitor_2d_table.c
+
+$(BODIR)/ns_nd_monitor.o: ns_nd_monitor.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_nd_monitor.o ns_nd_monitor.c
+
+$(BODIR)/ns_compress_idx.o: ns_compress_idx.h ns_compress_idx.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_compress_idx.o ns_compress_idx.c
+
+$(BODIR)/ns_coherence_nid_table.o: ns_coherence_nid_table.h ns_coherence_nid_table.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_coherence_nid_table.o ns_coherence_nid_table.c 
+
+$(BODIR)/ns_dynamic_vector_monitor.o: ns_dynamic_vector_monitor.h ns_alloc.h err_exit.h ns_dynamic_vector_monitor.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_dynamic_vector_monitor.o ns_dynamic_vector_monitor.c
+
+$(BODIR)/ns_monitor_init.o: ns_monitor_init.h ns_alloc.h err_exit.h ns_monitor_init.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_monitor_init.o ns_monitor_init.c
+
+$(BODIR)/ns_nv_tbl.o: ns_nv_tbl.h ns_nv_tbl.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_nv_tbl.o ns_nv_tbl.c
+
+$(BODIR)/ns_standard_monitors.o: ns_standard_monitors.h ns_standard_monitors.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_standard_monitors.o ns_standard_monitors.c
+
+$(BODIR)/ns_pre_test_check.o: ns_pre_test_check.h ns_alloc.h err_exit.h ns_pre_test_check.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_pre_test_check.o ns_pre_test_check.c
+
+$(BODIR)/ns_post_test_check.o: ns_pre_test_check.h ns_alloc.h err_exit.h ns_post_test_check.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_post_test_check.o ns_post_test_check.c
+
+$(BODIR)/ns_check_monitor.o: ns_check_monitor.h ns_alloc.h err_exit.h ns_check_monitor.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_check_monitor.o ns_check_monitor.c
+
+$(BODIR)/ns_batch_jobs.o: ns_batch_jobs.h ns_alloc.h err_exit.h ns_batch_jobs.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_batch_jobs.o ns_batch_jobs.c
+
+$(BODIR)/ns_get_log_file_monitor.o: ns_get_log_file_monitor.h ns_get_log_file_monitor.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_get_log_file_monitor.o ns_get_log_file_monitor.c
+
+$(BODIR)/ns_trans_parse.o: ns_trans_parse.h ns_trans_parse.c netstorm.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_trans_parse.o ns_trans_parse.c
+
+$(BODIR)/ns_trans.o: ns_trans.h ns_trans.c netstorm.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_trans.o ns_trans.c
+
+$(BODIR)/runlogic.o: runlogic.h runlogic.c netstorm.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/runlogic.o runlogic.c
+
+$(BODIR)/ns_cpu_affinity.o: ns_cpu_affinity.h ns_cpu_affinity.c netstorm.h util.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_cpu_affinity.o ns_cpu_affinity.c
+
+$(BODIR)/ns_http_version.o: ns_http_version.h ns_http_version.c netstorm.h util.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_http_version.o ns_http_version.c
+
+$(BODIR)/ns_log.o: ns_log.h ns_log.c netstorm.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_log.o ns_log.c
+
+$(BODIR)/ns_tr_duration.o:ns_tr_duration.h ns_tr_duration.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_tr_duration.o ns_tr_duration.c
+
+$(BODIR)/ns_event_log.o: ns_event_log.h ns_event_log.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_event_log.o ns_event_log.c
+
+$(BODIR)/ns_event_filter.o: ns_event_filter.h ns_event_filter.c 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_event_filter.o ns_event_filter.c
+
+$(BODIR)/ns_mon_log.o: ns_mon_log.h ns_mon_log.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_mon_log.o ns_mon_log.c
+
+$(BODIR)/ns_ssl.o: ns_ssl.h ns_ssl.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_ssl.o ns_ssl.c
+
+$(BODIR)/ns_vuser_trace.o: ns_vuser_trace.h ns_vuser_trace.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_vuser_trace.o ns_vuser_trace.c
+
+$(BODIR)/ns_goal_based_sla.o: ns_goal_based_sla.h ns_goal_based_sla.c util.c deliver_report.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_goal_based_sla.o ns_goal_based_sla.c
+
+$(BODIR)/ns_goal_based_run.o: ns_goal_based_run.c ns_goal_based_run.h ns_parent.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_goal_based_run.o ns_goal_based_run.c
+
+$(BODIR)/ns_health_monitor.o: ns_health_monitor.c ns_health_monitor.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_health_monitor.o ns_health_monitor.c
+
+$(BODIR)/ns_sock_list.o: ns_sock_list.c ns_sock_list.h util.h netstorm.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_sock_list.o ns_sock_list.c
+
+$(BODIR)/src_ip.o: src_ip.h src_ip.c util.h poi.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/src_ip.o src_ip.c
+
+$(BODIR)/ns_parse_src_ip.o: ns_parse_src_ip.c ns_parse_src_ip.h util.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_parse_src_ip.o ns_parse_src_ip.c
+
+$(BODIR)/output.o: output.h output.c util.h poi.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/output.o output.c -lm
+
+$(BODIR)/ns_debug_trace.o: ns_debug_trace.h ns_debug_trace.c 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_debug_trace.o ns_debug_trace.c
+
+$(BODIR)/divide_users.o: divide_users.h divide_users.c util.h poi.h netstorm.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/divide_users.o divide_users.c
+
+$(BODIR)/divide_values.o: divide_users.h divide_values.c util.h poi.h netstorm.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/divide_values.o divide_values.c
+
+$(BODIR)/child_init.o: child_init.c child_init.h divide_values.h util.h poi.h netstorm.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/child_init.o child_init.c
+
+$(BODIR)/unique_vals.o: unique_vals.c unique_vals.h util.h poi.h netstorm.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/unique_vals.o unique_vals.c
+
+$(BODIR)/poi.o: poi.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/poi.o poi.c
+
+$(BODIR)/timing.o: timing.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/timing.o timing.c
+
+$(BODIR)/weib_think.o: weib_think.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/weib_think.o weib_think.c
+
+$(BODIR)/logging.o: logging.c util.h logging.h netstorm.h url.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/logging.o logging.c
+
+$(BODIR)/ns_log_static_tables.o: ns_log_static_tables.c logging.h 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_log_static_tables.o ns_log_static_tables.c
+
+$(BODIR)/ns_fdset.o: ns_fdset.h ns_fdset.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_fdset.o ns_fdset.c
+
+$(BODIR)/tmr.o: tmr.c tmr.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/tmr.o tmr.c
+
+$(BODIR)/decomp.o: decomp.h decomp.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/decomp.o decomp.c
+
+$(BODIR)/sock.o: sock.h sock.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/sock.o sock.c
+
+#$(BODIR)/IOLib.o: IOLib.c IOLib.h
+#	gcc $(OBJ_CFLAGS) -o $(BODIR)/IOLib.o IOLib.c
+
+$(BODIR)/ns_amf_encode.o: ns_amf_encode.c  amf.h
+	gcc $(OBJ_CFLAGS) -D USE_WITH_NS -o $(BODIR)/ns_amf_encode.o ns_amf_encode.c
+
+$(BODIR)/ns_protobuf.o: ns_protobuf.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_protobuf.o ns_protobuf.c
+
+$(BODIR)/ns_amf_decode.o: ns_amf_decode.c amf.h 
+	gcc $(OBJ_CFLAGS) -D USE_WITH_NS -o $(BODIR)/ns_amf_decode.o ns_amf_decode.c
+
+$(BODIR)/ns_amf_common.o: ns_amf_common.c  amf.h
+	gcc $(OBJ_CFLAGS) -D USE_WITH_NS -o $(BODIR)/ns_amf_common.o ns_amf_common.c
+
+$(BODIR)/ns_amf_ext_object.o: ns_amf_ext_object.c  amf.h
+	gcc $(OBJ_CFLAGS) -D USE_WITH_NS -o $(BODIR)/ns_amf_ext_object.o ns_amf_ext_object.c
+
+$(BODIR)/ns_amf_encode_for_nsi_amf.o: ns_amf_encode.c  amf.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_amf_encode_for_nsi_amf.o ns_amf_encode.c
+
+$(BODIR)/ns_amf_decode_for_nsi_amf.o: ns_amf_decode.c amf.h 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_amf_decode_for_nsi_amf.o ns_amf_decode.c
+
+$(BODIR)/ns_amf_common_for_nsi_amf.o: ns_amf_common.c  amf.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_amf_common_for_nsi_amf.o ns_amf_common.c
+
+$(BODIR)/ns_amf_ext_object_for_nsi_amf.o: ns_amf_ext_object.c  amf.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_amf_ext_object_for_nsi_amf.o ns_amf_ext_object.c 
+
+$(BODIR)/eth.o: eth.c eth.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/eth.o eth.c
+
+#$(BODIR)/common.o: common.c common.h
+#	gcc  $(OBJ_CFLAGS) -o $(BODIR)/common.o common.c
+
+$(BODIR)/rstat_xdr.o: rstat_xdr.c rstat.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/rstat_xdr.o rstat_xdr.c
+
+$(BODIR)/rstat_clnt.o: rstat_clnt.c rstat.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/rstat_clnt.o rstat_clnt.c
+
+$(BODIR)/bh_read_conf.o: bh_read_conf.c bh_read_conf.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/bh_read_conf.o bh_read_conf.c
+
+$(BODIR)/rstat_client.o: rstat_client.c rstat.h 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/rstat_client.o rstat_client.c 
+
+$(BODIR)/nsu_rstat_client.o: rstat_client.c rstat.h
+	gcc $(OBJ_CFLAGS) -DRSTAT_TEST -o $(BODIR)/nsu_rstat_client.o rstat_client.c
+
+$(BODIR)/ns_static_files.o: ns_static_files.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_static_files.o ns_static_files.c
+
+$(BODIR)/ns_static_vars.o: ns_static_vars.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_static_vars.o ns_static_vars.c
+
+$(BODIR)/nslb_static_var_use_once.o: nslb_static_var_use_once.h nslb_static_var_use_once.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/nslb_static_var_use_once.o nslb_static_var_use_once.c
+
+$(BODIR)/ns_sql_vars.o: ns_sql_vars.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_sql_vars.o ns_sql_vars.c -I /usr/local/include/ -L /usr/lib/ -lodbc 
+
+$(BODIR)/ns_cmd_vars.o: ns_cmd_vars.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_cmd_vars.o ns_cmd_vars.c
+
+$(BODIR)/ns_static_use_once.o: ns_static_use_once.c ns_static_use_once.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_static_use_once.o ns_static_use_once.c
+
+$(BODIR)/ns_index_vars.o: ns_index_vars.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_index_vars.o ns_index_vars.c
+
+$(BODIR)/ns_nsl_vars.o: ns_nsl_vars.c ns_nsl_vars.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_nsl_vars.o ns_nsl_vars.c
+
+$(BODIR)/ns_vars.o: ns_vars.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_vars.o ns_vars.c
+
+$(BODIR)/ns_rbu.o: ns_rbu.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_rbu.o ns_rbu.c -lcurl
+
+$(BODIR)/ns_rbu_api.o: ns_rbu_api.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_rbu_api.o ns_rbu_api.c -lcurl
+
+$(BODIR)/ns_rbu_access_log.o: ns_rbu_access_log.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_rbu_access_log.o ns_rbu_access_log.c
+
+$(BODIR)/ns_mongodb_api.o: ns_mongodb_api.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_mongodb_api.o ns_mongodb_api.c 
+
+$(BODIR)/ns_cassandra_api.o: ns_cassandra_api.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_cassandra_api.o ns_cassandra_api.c
+
+$(BODIR)/ns_rbu_chrome_api.o: ns_rbu_chrome_api.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_rbu_chrome_api.o ns_rbu_chrome_api.c
+
+$(BODIR)/ns_license.o: ns_license.c ns_license.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_license.o ns_license.c
+
+$(BODIR)/nia_fa_function.o: nia_fa_function.c nia_fa_function.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/nia_fa_function.o nia_fa_function.c
+
+$(BODIR)/db_aggregator.o: db_aggregator.c db_aggregator.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/db_aggregator.o db_aggregator.c
+
+$(BODIR)/ns_send_mail.o: ns_send_mail.c ns_send_mail.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_send_mail.o ns_send_mail.c
+
+$(BODIR)/ns_njvm.o: ns_njvm.c ns_njvm.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_njvm.o ns_njvm.c
+
+$(BODIR)/ns_uri_encode.o: ns_uri_encode.c ns_uri_encode.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_uri_encode.o ns_uri_encode.c
+
+$(BODIR)/ns_ldap.o: ns_ldap.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_ldap.o ns_ldap.c
+
+$(BODIR)/ns_ldap_reporting.o: ns_ldap_reporting.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_ldap_reporting.o ns_ldap_reporting.c
+
+$(BODIR)/ns_ldap_request.o: ns_ldap_request.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_ldap_request.o ns_ldap_request.c
+
+$(BODIR)/ns_ldap_decode.o: ns_ldap_decode.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_ldap_decode.o ns_ldap_decode.c
+
+$(BODIR)/ns_imap_reporting.o: ns_imap_reporting.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_imap_reporting.o ns_imap_reporting.c
+
+$(BODIR)/ns_imap_parse.o: ns_imap_parse.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_imap_parse.o ns_imap_parse.c
+
+$(BODIR)/ns_imap_send.o: ns_imap_send.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_imap_send.o ns_imap_send.c
+
+$(BODIR)/ns_java_obj_mgr.o: ns_java_obj_mgr.c ns_java_obj_mgr.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_java_obj_mgr.o ns_java_obj_mgr.c
+
+$(BODIR)/ns_comp_ctrl.o: ns_comp_ctrl.c ns_comp_ctrl.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_comp_ctrl.o ns_comp_ctrl.c
+
+$(BODIR)/ns_tag_vars.o: ns_tag_vars.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_tag_vars.o ns_tag_vars.c
+
+$(BODIR)/ns_embd_objects.o: ns_embd_objects.c 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_embd_objects.o ns_embd_objects.c 
+
+$(BODIR)/ns_auto_fetch_embd.o: ns_auto_fetch_embd.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_auto_fetch_embd.o ns_auto_fetch_embd.c
+
+$(BODIR)/ns_auto_redirect.o: ns_auto_redirect.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_auto_redirect.o ns_auto_redirect.c
+
+$(BODIR)/ns_parallel_fetch.o: ns_parallel_fetch.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_parallel_fetch.o ns_parallel_fetch.c
+
+$(BODIR)/ns_dns.o: ns_dns.c ns_dns.h 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_dns.o ns_dns.c
+
+$(BODIR)/rc4.o: rc4.c rc4.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/rc4.o rc4.c
+
+$(BODIR)/ns_smtp.o: ns_smtp.c ns_smtp.h 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_smtp.o ns_smtp.c
+
+$(BODIR)/ns_pop3_parse.o: ns_pop3_parse.c ns_pop3_parse.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_pop3_parse.o ns_pop3_parse.c
+
+$(BODIR)/ns_pop3.o: ns_pop3.c ns_pop3.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_pop3.o ns_pop3.c
+
+$(BODIR)/ns_pop3_send.o: ns_pop3_send.c ns_pop3_send.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_pop3_send.o ns_pop3_send.c
+
+$(BODIR)/ns_dns_req.o: ns_dns_req.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_dns_req.o ns_dns_req.c
+
+$(BODIR)/ns_smtp_send.o: ns_smtp_send.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_smtp_send.o ns_smtp_send.c
+
+$(BODIR)/ns_ftp_parse.o: ns_ftp_parse.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_ftp_parse.o ns_ftp_parse.c
+
+$(BODIR)/ns_ftp.o: ns_ftp.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_ftp.o ns_ftp.c
+
+$(BODIR)/ns_ftp_send.o: ns_ftp_send.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_ftp_send.o ns_ftp_send.c
+
+$(BODIR)/ns_jrmi.o: ns_jrmi.c ns_jrmi.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_jrmi.o ns_jrmi.c
+
+$(BODIR)/ns_jrmi_reporting.o: ns_jrmi_reporting.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_jrmi_reporting.o ns_jrmi_reporting.c
+
+$(BODIR)/ns_sockjs.o: ns_sockjs.c ns_sockjs.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_sockjs.o ns_sockjs.c
+
+$(BODIR)/ns_websocket.o: ns_websocket.c ns_websocket.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_websocket.o ns_websocket.c
+
+$(BODIR)/ns_xmpp_parse.o: ns_xmpp_parse.c 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_xmpp_parse.o ns_xmpp_parse.c
+
+$(BODIR)/ns_socket_tcp_client_rpt.o: ns_socket_tcp_client_rpt.c ns_socket_tcp_client_rpt.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_socket_tcp_client_rpt.o ns_socket_tcp_client_rpt.c
+
+$(BODIR)/ns_socket_tcp_client_failures_rpt.o: ns_socket_tcp_client_failures_rpt.c ns_socket_tcp_client_failures_rpt.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_socket_tcp_client_failures_rpt.o ns_socket_tcp_client_failures_rpt.c
+
+$(BODIR)/ns_socket_udp_client_rpt.o: ns_socket_udp_client_rpt.c ns_socket_udp_client_rpt.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_socket_udp_client_rpt.o ns_socket_udp_client_rpt.c
+
+$(BODIR)/ns_socket_udp_client_failures_rpt.o: ns_socket_udp_client_failures_rpt.c ns_socket_udp_client_failures_rpt.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_socket_udp_client_failures_rpt.o ns_socket_udp_client_failures_rpt.c
+
+$(BODIR)/ns_xmpp.o: ns_xmpp.c ns_xmpp.h 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_xmpp.o ns_xmpp.c
+
+$(BODIR)/ns_xmpp_stats.o: ns_xmpp_stats.c 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_xmpp_stats.o ns_xmpp_stats.c
+
+$(BODIR)/websocket_callback.o: websocket_callback.c ns_websocket.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/websocket_callback.o websocket_callback.c
+
+$(BODIR)/ns_http_pipelining.o: ns_http_pipelining.c ns_http_pipelining.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_http_pipelining.o ns_http_pipelining.c
+
+$(BODIR)/ns_keep_alive.o: ns_keep_alive.c ns_keep_alive.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_keep_alive.o ns_keep_alive.c
+
+$(BODIR)/ns_http_status_codes.o: ns_http_status_codes.c ns_http_status_codes.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_http_status_codes.o ns_http_status_codes.c
+
+$(BODIR)/b64.o: b64.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/b64.o b64.c
+
+$(BODIR)/ns_runtime_changes.o: ns_runtime_changes.c ns_runtime_changes.h ns_runtime.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_runtime_changes.o ns_runtime_changes.c
+
+$(BODIR)/ns_body_encrypt.o: ns_body_encrypt.h ns_body_encrypt.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_body_encrypt.o ns_body_encrypt.c
+
+#changes shakti
+$(BODIR)/ns_runtime_changes_quantity.o: ns_runtime_changes_quantity.c ns_runtime_changes_quantity.h ns_runtime.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_runtime_changes_quantity.o ns_runtime_changes_quantity.c
+
+$(BODIR)/ns_child_runtime_changes.o: ns_child_runtime_changes.c 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_child_runtime_changes.o ns_child_runtime_changes.c 
+
+$(BODIR)/ns_runtime_changes_monitor.o: ns_runtime_changes_monitor.c ns_runtime_changes_monitor.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_runtime_changes_monitor.o ns_runtime_changes_monitor.c
+
+$(BODIR)/ns_static_vars_rtc.o: ns_static_vars_rtc.c ns_runtime.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_static_vars_rtc.o ns_static_vars_rtc.c
+
+$(BODIR)/ns_page_think_time.o: ns_page_think_time.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_page_think_time.o ns_page_think_time.c
+
+$(BODIR)/ns_http_cache.o: ns_http_cache.c ns_http_cache.h ns_cache_include.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_http_cache.o ns_http_cache.c 
+
+$(BODIR)/ns_http_cache_store.o: ns_http_cache_store.c ns_http_cache_store.h ns_cache_include.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_http_cache_store.o ns_http_cache_store.c
+
+$(BODIR)/ns_http_cache_util.o: ns_http_cache_util.c ns_http_cache.h ns_cache_include.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_http_cache_util.o ns_http_cache_util.c
+
+$(BODIR)/ns_http_cache_hdr.o: ns_http_cache_hdr.c ns_cache_include.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_http_cache_hdr.o ns_http_cache_hdr.c
+
+$(BODIR)/ns_http_cache_reporting.o: ns_http_cache_reporting.c ns_http_cache_reporting.h 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_http_cache_reporting.o ns_http_cache_reporting.c 
+
+$(BODIR)/ns_ftp_reporting.o: ns_ftp_reporting.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_ftp_reporting.o ns_ftp_reporting.c 
+
+$(BODIR)/ns_websocket_reporting.o: ns_websocket_reporting.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_websocket_reporting.o ns_websocket_reporting.c
+
+$(BODIR)/ns_jmeter_api.o: ns_jmeter_api.c ns_jmeter_api.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_jmeter_api.o ns_jmeter_api.c
+
+$(BODIR)/ns_jmeter.o: ns_jmeter.c ns_jmeter.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_jmeter.o ns_jmeter.c
+
+$(BODIR)/ns_vuser_runtime_control.o: ns_vuser_runtime_control.c ns_vuser_runtime_control.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_vuser_runtime_control.o ns_vuser_runtime_control.c
+
+$(BODIR)/ns_test_init_stat.o: ns_test_init_stat.c ns_test_init_stat.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_test_init_stat.o ns_test_init_stat.c
+
+$(BODIR)/ns_http_cache_table.o: ns_http_cache_table.c ns_http_cache_table.h 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_http_cache_table.o ns_http_cache_table.c 
+
+$(BODIR)/ns_netstorm_diagnostics.o: ns_netstorm_diagnostics.c ns_netstorm_diagnostics.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_netstorm_diagnostics.o ns_netstorm_diagnostics.c
+
+$(BODIR)/ns_session_pacing.o: ns_session_pacing.c ns_session_pacing.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_session_pacing.o ns_session_pacing.c
+
+$(BODIR)/ns_user_profile.o: ns_user_profile.c ns_user_profile.h 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_user_profile.o ns_user_profile.c
+
+$(BODIR)/ns_sync_point_parse.o: ns_sync_point_parse.c ns_sync_point.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_sync_point_parse.o ns_sync_point_parse.c
+
+$(BODIR)/ns_sync_point_api_parse.o: ns_sync_point_api_parse.c ns_sync_point.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_sync_point_api_parse.o ns_sync_point_api_parse.c
+
+$(BODIR)/ns_sync_point.o: ns_sync_point.c ns_sync_point.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_sync_point.o ns_sync_point.c
+
+$(BODIR)/ns_log_req_rep.o: ns_log_req_rep.c ns_log_req_rep.h 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_log_req_rep.o ns_log_req_rep.c 
+
+$(BODIR)/ns_js_init.o: ns_js_init.c ns_js.h 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_js_init.o ns_js_init.c
+
+$(BODIR)/ns_js_events.o: ns_js_events.c ns_js_events.h 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_js_events.o ns_js_events.c
+
+$(BODIR)/ns_vuser_tasks.o: ns_vuser_tasks.c ns_vuser_tasks.h 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_vuser_tasks.o ns_vuser_tasks.c
+
+$(BODIR)/ns_vuser_ctx.o: ns_vuser_ctx.c ns_vuser_ctx.h 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_vuser_ctx.o ns_vuser_ctx.c
+
+$(BODIR)/ns_js_engine.o: ns_js_engine.c ns_js.h ns_js_events.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_js_engine.o ns_js_engine.c
+
+$(BODIR)/ns_url_hash.o: ns_url_hash.c ns_url_hash.h 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_url_hash.o ns_url_hash.c
+
+$(BODIR)/ns_iovec.o: ns_iovec.c ns_iovec.h 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_iovec.o ns_iovec.c
+
+$(BODIR)/ns_socket.o: ns_socket.c ns_socket.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_socket.o ns_socket.c
+
+$(BODIR)/ns_socket_io.o: ns_socket_io.c ns_socket_io.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_socket_io.o ns_socket_io.c
+
+$(BODIR)/ns_objects_normalization.o: ns_objects_normalization.c ns_objects_normalization.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_objects_normalization.o  ns_objects_normalization.c
+
+$(BBDIR)/nii_norm_gen_url_id: $(NETOMNI_SRC)/ni_gen_url_id_normalization.c ns_objects_normalization.h $(BODIR)/ns_objects_normalization.o 
+	gcc -o $(BBDIR)/nii_norm_gen_url_id $(NETOMNI_SRC)/ni_gen_url_id_normalization.c $(BIN_CFLAGS) \
+	$(BODIR)/ns_objects_normalization.o $(ALL_LIBS)
+
+$(BBDIR)/nia_req_rep_uploader: $(NETOMNI_SRC)/nia_req_rep_uploader.c 
+	gcc -o $(BBDIR)/nia_req_rep_uploader $(NETOMNI_SRC)/nia_req_rep_uploader.c $(BIN_CFLAGS) $(ALL_LIBS)
+
+$(BBDIR)/nii_get_pct_data: $(NETOMNI_SRC)/nii_get_pct_data.c 
+	gcc -o $(BBDIR)/nii_get_pct_data $(NETOMNI_SRC)/nii_get_pct_data.c $(BIN_CFLAGS) $(ALL_LIBS)
+
+$(BODIR)/ns_http_auth.o: ns_http_auth.c ns_http_auth.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_http_auth.o ns_http_auth.c 
+
+$(BODIR)/ns_lps.o: ns_lps.c ns_lps.h 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_lps.o ns_lps.c
+
+$(BODIR)/ns_user_define_headers.o: ns_user_define_headers.c ns_user_define_headers.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_user_define_headers.o ns_user_define_headers.c
+
+#Netomni Scenario Distribution tool
+$(BODIR)/ni_user_distribution.o: $(NETOMNI_SRC)/ni_user_distribution.c $(NETOMNI_SRC)/ni_user_distribution.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ni_user_distribution.o $(NETOMNI_SRC)/ni_user_distribution.c
+
+$(BODIR)/ni_scenario_distribution.o: $(NETOMNI_SRC)/ni_scenario_distribution.c \
+	$(NETOMNI_SRC)/ni_scenario_distribution.h $(NETOMNI_SRC)/ni_user_distribution.h
+	gcc  $(OBJ_CFLAGS) -o $(BODIR)/ni_scenario_distribution.o -c $(NETOMNI_SRC)/ni_scenario_distribution.c
+
+$(BODIR)/ni_schedule_phases_parse.o: $(NETOMNI_SRC)/ni_schedule_phases_parse.c $(NETOMNI_SRC)/ni_schedule_phases_parse.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ni_schedule_phases_parse.o $(NETOMNI_SRC)/ni_schedule_phases_parse.c
+
+$(BODIR)/ni_schedule_phases_parse_validations.o: $(NETOMNI_SRC)/ni_schedule_phases_parse_validations.c \
+	$(NETOMNI_SRC)/ni_schedule_phases_parse.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ni_schedule_phases_parse_validations.o $(NETOMNI_SRC)/ni_schedule_phases_parse_validations.c
+
+$(BODIR)/ni_runtime_changes.o: $(NETOMNI_SRC)/ni_runtime_changes.c $(NETOMNI_SRC)/ni_schedule_phases_parse.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ni_runtime_changes.o $(NETOMNI_SRC)/ni_runtime_changes.c
+
+$(BODIR)/ni_script_parse.o: $(NETOMNI_SRC)/ni_script_parse.c $(NETOMNI_SRC)/ni_script_parse.h 
+	gcc -o $(BODIR)/ni_script_parse.o $(NETOMNI_SRC)/ni_script_parse.c $(OBJ_CFLAGS)
+
+$(BODIR)/ni_sql_vars.o: $(NETOMNI_SRC)/ni_sql_vars.c $(NETOMNI_SRC)/ni_sql_vars.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ni_sql_vars.o $(NETOMNI_SRC)/ni_sql_vars.c -I /usr/local/include/ -L /usr/lib/ -lodbc 
+
+$(BBDIR)/nsu_rstat_client: $(BODIR)/nsu_rstat_client.o $(BODIR)/rstat_clnt.o $(BODIR)/rstat_xdr.o 
+	gcc -o $(BBDIR)/nsu_rstat_client $(BODIR)/nsu_rstat_client.o $(BODIR)/rstat_clnt.o \
+	$(BODIR)/rstat_xdr.o $(BIN_CFLAGS) $(PROD_LIBS)
+
+$(BBDIR)/nsu_bh_read_conf: bh_read_conf.c bh_read_conf.h
+	gcc -o $(BBDIR)/nsu_bh_read_conf bh_read_conf.c $(BIN_CFLAGS) -DTEST
+
+$(BBDIR)/$(NS_STRING_API_SO_NAME): ns_string_api.c ns_string.h ns_click_api.c ns_save_data_api.c \
+	ns_param_api.c ns_form_api.c ns_socket_api.c ns_socket_api_int.h ns_rbu_api.c \
+	ns_enc_dec_api.c ns_rbu_chrome_api.c ns_soap_api.c ns_rte_api.c jms/src/ns_ibmmq_api.c \
+	jms/src/ns_kafka_api.c jms/src/ns_tibco_api.c ns_js_api.c
+	gcc -o $(BBDIR)/${NS_STRING_API_SO_NAME} ns_string_api.c $(LIB_CFLAGS) -D_GNU_SOURCE -L$(__lib_dir) -lcrypto
+
+#$(BIN_DIR)/percentile.so: percentile.c
+#	gcc -I /usr/include/pgsql/server $(BIN_CFLAGS) -fpic -shared -o $(BIN_DIR)/percentile.so percentile.c
+
+$(BBDIR)/pronto_gen_nasid: pronto_gen_nasid.c
+	gcc -o $(BBDIR)/pronto_gen_nasid pronto_gen_nasid.c $(BIN_CFLAGS)
+
+$(BBDIR)/pronto_gen_config: pronto_gen_config.c
+	gcc -o $(BBDIR)/pronto_gen_config pronto_gen_config.c $(BIN_CFLAGS)
+
+$(BBDIR)/nsa_logger: logging_writer.c logging.h
+	gcc -o $(BBDIR)/nsa_logger logging_writer.c $(BIN_CFLAGS) ${PROD_LIBS} -lpthread
+
+$(BBDIR)/nsa_log_mgr: ns_log_mgr.c ns_log_mgr.h ns_event_log.h
+	gcc ns_log_mgr.c -o $(BBDIR)/nsa_log_mgr $(BODIR)/ns_event_filter.o $(BIN_CFLAGS) ${PROD_LIBS} -ldl
+
+$(BBDIR)/nsi_tr_duration: nsi_tr_duration.c ns_tr_duration.h $(BODIR)/ns_tr_duration.o
+	gcc nsi_tr_duration.c -o $(BBDIR)/nsi_tr_duration $(BODIR)/ns_tr_duration.o $(BIN_CFLAGS) $(PROD_LIBS)
+
+$(BBDIR)/nsi_amf: nsi_amf.c amf.h $(BODIR)/ns_amf_encode_for_nsi_amf.o $(BODIR)/ns_amf_decode_for_nsi_amf.o \
+	$(BODIR)/ns_amf_common_for_nsi_amf.o $(BODIR)/ns_amf_ext_object_for_nsi_amf.o
+	gcc -o $(BBDIR)/nsi_amf nsi_amf.c $(BODIR)/ns_amf_encode_for_nsi_amf.o \
+		$(BODIR)/ns_amf_decode_for_nsi_amf.o $(BODIR)/ns_amf_common_for_nsi_amf.o \
+		$(BODIR)/ns_amf_ext_object_for_nsi_amf.o $(BIN_CFLAGS)
+
+$(BBDIR)/nsi_hessian: nsi_hessian.c
+	gcc -o $(BBDIR)/nsi_hessian nsi_hessian.c libxml2_error.c $(BIN_CFLAGS) $(PROD_LIBS) -lxml2_cav -z muldefs
+
+$(BBDIR)/nsu_logging_reader: util.h logging_reader.c logging.h logging_reader.h url.h ns_objects_normalization.h \
+	$(BODIR)/ns_objects_normalization.o
+	gcc -o $(BBDIR)/nsu_logging_reader logging_reader.c $(BODIR)/ns_objects_normalization.o $(BIN_CFLAGS) $(ALL_LIBS) -lpq
+
+$(BBDIR)/nsu_rm_trun: nsu_rm_trun.c
+	gcc -o $(BBDIR)/nsu_rm_trun nsu_rm_trun.c $(BIN_CFLAGS) $(PROD_LIBS) -lcrypto
+
+$(BBDIR)/nsi_get_next_test_run_id: nsi_get_next_test_run_id.c
+	gcc -o $(BBDIR)/nsi_get_next_test_run_id nsi_get_next_test_run_id.c \
+		$(BIN_CFLAGS) -DTEST $(PROD_LIBS) -lxml2_cav
+
+$(BBDIR)/nsi_embd_objects: ns_embd_objects.c
+	gcc -o $(BBDIR)/nsi_embd_objects ns_embd_objects.c $(BIN_CFLAGS) -DTEST $(PROD_LIBS) -lxml2_cav
+
+#In build 3.9.0 we are commenting this because currently it is not used in NS
+#$(BBDIR)/nsi_ymsg_client: ymsg/ns_ymsg_client.c 
+	#gcc -o $(BBDIR)/nsi_ymsg_client $(YMSG_LIB_PATH) $(YMSG_LIB_DIR) $(BIN_CFLAGS) -DTEST ymsg/ns_ymsg_client.c $(YMSG_LIB_NAME)
+#	gcc -o $(BBDIR)/nsi_ymsg_client ${INCLUDE} $(BIN_CFLAGS) -DTEST ymsg/ns_ymsg_client.c $(ALL_LIBS)
+
+#$(BBDIR)/ni_scenario_distribution: $(NETOMNI_SRC)/ni_scenario_distribution.c $(BODIR)/ni_user_distribution.o
+#	gcc -o $(BBDIR)/ni_scenario_distribution $(BIN_CFLAGS) -DTEST $(NETOMNI_SRC)/ni_scenario_distribution.c $(BODIR)/ni_user_distribution.o 
+
+$(BODIR)/hash.o: hash.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/hash.o hash.c
+ 
+$(BODIR)/monitor.o: monitor.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/monitor.o monitor.c
+
+$(BODIR)/monitor_utils.o: monitor_utils.c monitor_utils.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/monitor_utils.o monitor_utils.c
+
+$(BODIR)/ns_rpr.o: ns_rpr.c ns_rpr.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_rpr.o ns_rpr.c
+
+$(BODIR)/ns_rpr_util.o: ns_rpr_util.c ns_rpr_util.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_rpr_util.o ns_rpr_util.c
+
+$(BODIR)/proxy.o: proxy.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/proxy.o proxy.c
+
+$(BODIR)/err_exit.o: err_exit.c err_exit.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/err_exit.o err_exit.c
+
+$(BODIR)/nsu_assign_ip.o: nsu_assign_ip.c ipmgmt_utils.h nsu_ipv6_utils.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/nsu_assign_ip.o nsu_assign_ip.c -g
+
+$(BODIR)/cpu_bind.o: cpu_bind.c 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/cpu_bind.o cpu_bind.c
+
+$(BODIR)/nsu_check_ip.o: nsu_check_ip.c ipmgmt_utils.h 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/nsu_check_ip.o nsu_check_ip.c
+
+$(BODIR)/nsu_ip_auto_fill.o: nsu_ip_auto_fill.c ipmgmt_utils.h nsu_ipv6_utils.h 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/nsu_ip_auto_fill.o  nsu_ip_auto_fill.c
+
+$(BODIR)/nsu_del_ip.o: nsu_del_ip.c ipmgmt_utils.h nsu_ipv6_utils.h 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/nsu_del_ip.o nsu_del_ip.c 
+
+$(BODIR)/nsu_ipv6_utils.o: nsu_ipv6_utils.c nsu_ipv6_utils.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/nsu_ipv6_utils.o nsu_ipv6_utils.c
+
+$(BODIR)/ipmgmt_utils.o: ipmgmt_utils.c ipmgmt_utils.h nsu_ipv6_utils.h 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ipmgmt_utils.o ipmgmt_utils.c
+
+$(BODIR)/ns_ip_based_on_loc.o: ip_based_on_loc.c
+	gcc $(OBJ_CFLAGS) -DUSE_SHM -o $(BODIR)/ns_ip_based_on_loc.o ip_based_on_loc.c
+
+$(BODIR)/ip_based_on_loc.o: ip_based_on_loc.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ip_based_on_loc.o ip_based_on_loc.c
+
+$(BODIR)/bh_data.o: bh_data.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/bh_data.o bh_data.c
+
+$(BODIR)/ns_master.o: ns_master_agent.h ns_master.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_master.o ns_master.c
+
+$(BODIR)/trans_util.o: trans_util.c util.h smon.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/trans_util.o trans_util.c
+
+$(BODIR)/ns_msg_com_util.o: ns_msg_com_util.c ns_msg_com_util.h ns_struct_con_type.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_msg_com_util.o  ns_msg_com_util.c
+
+$(BODIR)/ns_http_process_resp.o: ns_http_process_resp.c ns_http_process_resp.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_http_process_resp.o  ns_http_process_resp.c
+
+$(BODIR)/ns_url_resp.o: ns_url_resp.c ns_url_resp.h 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_url_resp.o ns_url_resp.c
+
+$(BODIR)/ns_h2_req.o: ns_h2_req.c ns_h2_req.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_h2_req.o ns_h2_req.c -lnghttp2
+
+$(BODIR)/ns_h2_stream.o: ns_h2_stream.c ns_h2_stream.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_h2_stream.o ns_h2_stream.c -lnghttp2
+
+$(BODIR)/ns_h2_flow_control.o: ns_h2_flow_control.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_h2_flow_control.o ns_h2_flow_control.c -lnghttp2
+
+$(BODIR)/ns_trace_log.o: ns_trace_log.c ns_trace_log.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_trace_log.o ns_trace_log.c
+
+$(BODIR)/ns_trace_level.o: ns_trace_level.c ns_trace_level.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_trace_level.o ns_trace_level.c
+
+$(BODIR)/ns_parse_netcloud_keyword.o: ns_parse_netcloud_keyword.c ns_parse_netcloud_keyword.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_parse_netcloud_keyword.o ns_parse_netcloud_keyword.c
+
+$(BODIR)/nslb_netcloud_util.o: nslb_netcloud_util.c nslb_netcloud_util.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/nslb_netcloud_util.o nslb_netcloud_util.c
+
+$(BODIR)/ns_url_req.o: ns_url_req.c ns_url_req.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_url_req.o  ns_url_req.c
+
+$(BODIR)/ns_h2_frames.o: ns_h2_frames.c ns_h2_frames.h 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_h2_frames.o  ns_h2_frames.c -lnghttp2
+
+$(BODIR)/ns_h2_read_write.o: ns_h2_read_write.c ns_h2_req.h ns_h2_frames.h 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_h2_read_write.o ns_h2_read_write.c -lnghttp2
+
+$(BODIR)/ns_h2_process_resp.o: ns_h2_process_resp.c  
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_h2_process_resp.o ns_h2_process_resp.c -lnghttp2
+
+$(BODIR)/ns_h2_reporting.o: ns_h2_reporting.c ns_h2_reporting.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_h2_reporting.o ns_h2_reporting.c
+
+$(BODIR)/ns_fc2.o: ns_fc2.c ns_fc2.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_fc2.o ns_fc2.c
+
+$(BODIR)/ns_server.o: ns_server.c ns_server.h 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_server.o ns_server.c
+
+$(BODIR)/ns_monitor_profiles.o: ns_monitor_profiles.h ns_monitor_profiles.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_monitor_profiles.o ns_monitor_profiles.c
+
+$(BODIR)/ns_wan_env.o: ns_wan_env.c ns_wan_env.h 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_wan_env.o ns_wan_env.c 
+
+$(BODIR)/ns_schedule_ramp_up_fcu.o: ns_schedule_ramp_up_fcu.c ns_schedule_ramp_up_fcu.h 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_schedule_ramp_up_fcu.o -c ns_schedule_ramp_up_fcu.c 
+
+$(BODIR)/ns_schedule_ramp_up_fsr.o: ns_schedule_ramp_up_fsr.c ns_schedule_ramp_up_fsr.h 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_schedule_ramp_up_fsr.o -c ns_schedule_ramp_up_fsr.c 
+
+$(BODIR)/ns_schedule_ramp_down_fcu.o: ns_schedule_ramp_down_fcu.c ns_schedule_ramp_down_fcu.h 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_schedule_ramp_down_fcu.o -c ns_schedule_ramp_down_fcu.c 
+
+$(BODIR)/ns_schedule_ramp_down_fsr.o: ns_schedule_ramp_down_fsr.c ns_schedule_ramp_down_fsr.h 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_schedule_ramp_down_fsr.o -c ns_schedule_ramp_down_fsr.c 
+
+$(BODIR)/ns_kw_set_non_rtc.o: ns_kw_set_non_rtc.c ns_kw_set_non_rtc.h 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_kw_set_non_rtc.o -c ns_kw_set_non_rtc.c 
+
+$(BODIR)/JSON_checker.o: JSON_checker.c JSON_checker.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/JSON_checker.o -c JSON_checker.c 
+$(BODIR)/ns_parse_scen_conf.o: ns_parse_scen_conf.c ns_parse_scen_conf.h 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_parse_scen_conf.o -c ns_parse_scen_conf.c  
+
+$(BODIR)/ns_user_monitor.o: ns_user_monitor.c ns_user_monitor.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_user_monitor.o -c ns_user_monitor.c 
+
+$(BODIR)/ns_percentile.o: ns_percentile.c ns_percentile.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_percentile.o -c ns_percentile.c
+
+$(BODIR)/ns_pdf_parse.o: ns_pdf_parse.c ns_pdf_parse.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_pdf_parse.o -c ns_pdf_parse.c
+
+$(BODIR)/ns_schedule_phases.o: ns_schedule_phases.c ns_schedule_phases.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_schedule_phases.o -c ns_schedule_phases.c
+
+$(BODIR)/ns_global_dat.o: ns_global_dat.c ns_global_dat.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_global_dat.o -c ns_global_dat.c
+
+$(BODIR)/ns_schedule_phases_dat.o: ns_schedule_phases_dat.c ns_schedule_phases_dat.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_schedule_phases_dat.o -c ns_schedule_phases_dat.c
+
+$(BODIR)/ns_schedule_phases_parse.o: ns_schedule_phases_parse.c ns_schedule_phases_parse.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_schedule_phases_parse.o -c ns_schedule_phases_parse.c
+
+$(BODIR)/ns_schedule_start_group.o: ns_schedule_start_group.c ns_schedule_start_group.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_schedule_start_group.o -c ns_schedule_start_group.c
+
+$(BODIR)/ns_schedule_stabilize.o: ns_schedule_stabilize.c ns_schedule_stabilize.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_schedule_stabilize.o -c ns_schedule_stabilize.c
+
+$(BODIR)/ns_schedule_duration.o: ns_schedule_duration.c ns_schedule_duration.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_schedule_duration.o -c ns_schedule_duration.c
+
+$(BODIR)/ns_schedule_pause_and_resume.o: ns_schedule_pause_and_resume.c ns_schedule_pause_and_resume.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_schedule_pause_and_resume.o -c ns_schedule_pause_and_resume.c
+
+$(BODIR)/ns_schedule_phases_parse_validations.o: ns_schedule_phases_parse_validations.c ns_schedule_phases_parse_validations.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_schedule_phases_parse_validations.o -c ns_schedule_phases_parse_validations.c
+
+$(BODIR)/ns_parent_msg_com.o: ns_parent_msg_com.c ns_parent_msg_com.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_parent_msg_com.o -c ns_parent_msg_com.c
+
+$(BODIR)/ns_schedule_divide_over_nvm.o: ns_schedule_divide_over_nvm.c ns_schedule_divide_over_nvm.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_schedule_divide_over_nvm.o -c ns_schedule_divide_over_nvm.c
+
+$(BODIR)/ns_vuser.o: ns_vuser.c ns_vuser.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_vuser.o -c ns_vuser.c
+
+$(BODIR)/ns_session.o: ns_session.c ns_session.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_session.o -c ns_session.c
+
+$(BODIR)/ns_schedule_fcs.o: ns_schedule_fcs.c	ns_schedule_fcs.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_schedule_fcs.o -c ns_schedule_fcs.c
+
+$(BODIR)/ns_page.o: ns_page.c ns_page.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_page.o -c ns_page.c
+
+$(BODIR)/ns_error_codes.o: ns_error_codes.c ns_error_codes.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_error_codes.o -c ns_error_codes.c
+
+$(BODIR)/ns_server_mapping.o: ns_server_mapping.c ns_server_mapping.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_server_mapping.o -c ns_server_mapping.c
+
+$(BODIR)/ns_http_script_parse.o: ns_http_script_parse.c ns_http_script_parse.h util.h url.h 
+	 gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_http_script_parse.o -c ns_http_script_parse.c
+
+$(BODIR)/ns_script_parse.o: ns_script_parse.c ns_script_parse.h util.h url.h 
+	 gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_script_parse.o -c ns_script_parse.c
+
+$(BODIR)/ns_tr069_lib.o: tr069/src/ns_tr069_lib.c tr069/src/ns_tr069_lib.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_tr069_lib.o -c tr069/src/ns_tr069_lib.c
+	
+$(BODIR)/ns_tr069_script_parse.o:  tr069/src/ns_tr069_script_parse.c  tr069/src/ns_tr069_script_parse.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_tr069_script_parse.o -c tr069/src/ns_tr069_script_parse.c
+	
+$(BODIR)/ns_tr069_acs_rpc.o:  tr069/src/ns_tr069_acs_rpc.c  tr069/src/ns_tr069_acs_rpc.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_tr069_acs_rpc.o -c tr069/src/ns_tr069_acs_rpc.c
+	
+$(BODIR)/ns_tr069_cpe_rpc_param.o:  tr069/src/ns_tr069_cpe_rpc_param.c  tr069/src/ns_tr069_cpe_rpc_param.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_tr069_cpe_rpc_param.o -c tr069/src/ns_tr069_cpe_rpc_param.c
+	
+$(BODIR)/ns_tr069_cpe_rpc_object.o:  tr069/src/ns_tr069_cpe_rpc_object.c  tr069/src/ns_tr069_cpe_rpc_object.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_tr069_cpe_rpc_object.o -c tr069/src/ns_tr069_cpe_rpc_object.c
+	
+$(BODIR)/ns_tr069_cpe_rpc_others.o:  tr069/src/ns_tr069_cpe_rpc_others.c  tr069/src/ns_tr069_cpe_rpc_others.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_tr069_cpe_rpc_others.o -c tr069/src/ns_tr069_cpe_rpc_others.c
+
+$(BODIR)/ns_tr069_http_read_req.o:  tr069/src/ns_tr069_http_read_req.c  tr069/src/ns_tr069_http_read_req.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_tr069_http_read_req.o -c tr069/src/ns_tr069_http_read_req.c
+
+$(BODIR)/ns_tr069_acs_con.o:  tr069/src/ns_tr069_acs_con.c  tr069/src/ns_tr069_acs_con.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_tr069_acs_con.o -c tr069/src/ns_tr069_acs_con.c
+
+$(BODIR)/ns_tr069_load_data.o:  tr069/src/ns_tr069_load_data.c  tr069/src/ns_tr069_load_data.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_tr069_load_data.o -c tr069/src/ns_tr069_load_data.c
+
+$(BODIR)/ns_tr069_fetch_data.o:  tr069/src/ns_tr069_fetch_data.c  tr069/src/ns_tr069_load_data.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_tr069_fetch_data.o -c tr069/src/ns_tr069_fetch_data.c
+
+$(BODIR)/ns_tr069_data_file.o:  tr069/src/ns_tr069_data_file.c  tr069/src/ns_tr069_data_file.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_tr069_data_file.o -c tr069/src/ns_tr069_data_file.c
+
+
+$(BODIR)/ns_tr069_cpe_gen_data.o:  tr069/src/ns_tr069_cpe_gen_data.c  tr069/src/ns_tr069_cpe_gen_data.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_tr069_cpe_gen_data.o -c tr069/src/ns_tr069_cpe_gen_data.c
+
+$(BODIR)/ns_dos_syn_attack.o:	dos_attack/ns_dos_syn_attack.c  
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_dos_syn_attack.o -c dos_attack/ns_dos_syn_attack.c
+
+$(BODIR)/ns_click_script.o: ns_click_script.c ns_click_script.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_click_script.o -c ns_click_script.c
+
+$(BODIR)/ns_dos_attack_reporting.o: dos_attack/ns_dos_attack_reporting.c  
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_dos_attack_reporting.o -c dos_attack/ns_dos_attack_reporting.c
+
+# Currentely Yahoo is not used to commenting its compilation
+#$(BODIR)/ns_ymsg_client.o: ymsg/ns_ymsg_client.c ymsg/ns_ymsg_client.h
+#	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_ymsg_client.o -c ymsg/ns_ymsg_client.c
+
+$(BODIR)/ns_proxy_server.o: ns_proxy_server.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_proxy_server.o ns_proxy_server.c
+
+$(BODIR)/ns_proxy_server_reporting.o: ns_proxy_server_reporting.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_proxy_server_reporting.o ns_proxy_server_reporting.c
+
+$(BODIR)/ns_network_cache_reporting.o: ns_network_cache_reporting.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_network_cache_reporting.o ns_network_cache_reporting.c
+
+$(BODIR)/ns_dns_reporting.o: ns_dns_reporting.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_dns_reporting.o ns_dns_reporting.c
+
+$(BODIR)/ns_dt_integration.o: ns_dt_integration.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_dt_integration.o ns_dt_integration.c
+
+$(BODIR)/ns_nd_integration.o: ns_nd_integration.h ns_nd_integration.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_nd_integration.o ns_nd_integration.c
+
+$(BODIR)/ns_auto_fetch_parse.o: ns_auto_fetch_parse.c ns_auto_fetch_parse.h
+	 gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_auto_fetch_parse.o -c ns_auto_fetch_parse.c
+
+$(BODIR)/ns_click_script_parse.o: ns_click_script_parse.c   ns_click_script_parse.h
+	 gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_click_script_parse.o -c ns_click_script_parse.c
+
+$(BODIR)/ns_page_think_time_parse.o: ns_page_think_time_parse.c ns_page_think_time_parse.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_page_think_time_parse.o -c ns_page_think_time_parse.c
+
+$(BODIR)/ns_inline_delay.o: ns_inline_delay.c ns_inline_delay.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_inline_delay.o -c ns_inline_delay.c
+
+$(BODIR)/ns_continue_on_page.o: ns_continue_on_page.c ns_continue_on_page.h 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_continue_on_page.o -c ns_continue_on_page.c      
+
+$(BODIR)/ns_nd_kw_parse.o: ns_nd_kw_parse.c ns_nd_kw_parse.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_nd_kw_parse.o -c ns_nd_kw_parse.c
+
+$(BODIR)/ns_dynamic_hosts.o: ns_dynamic_hosts.c ns_dynamic_hosts.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_dynamic_hosts.o -c ns_dynamic_hosts.c
+
+$(BODIR)/ns_page_dump.o: ns_page_dump.c ns_page_dump.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_page_dump.o ns_page_dump.c
+
+$(BODIR)/ns_ndc.o: ns_ndc.c ns_ndc.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_ndc.o ns_ndc.c
+
+$(BODIR)/ns_test_monitor.o: ns_test_monitor.c ns_test_monitor.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_test_monitor.o ns_test_monitor.c
+
+$(BODIR)/ns_file_upload.o: ns_file_upload.c ns_file_upload.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_file_upload.o ns_file_upload.c
+
+$(BODIR)/ns_cavmain.o: ns_cavmain.c ns_cavmain.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_cavmain.o ns_cavmain.c
+
+$(BODIR)/ns_cavmain_proc.o: ns_cavmain_proc.c ns_cavmain.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_cavmain_proc.o ns_cavmain_proc.c
+
+$(BODIR)/ns_cavmain_child.o: ns_cavmain_child.c ns_cavmain_child.h ns_cavmain.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_cavmain_child.o  ns_cavmain_child.c
+
+$(BODIR)/ns_cavmain_child_thread.o: ns_cavmain_child_thread.c ns_cavmain_child_thread.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_cavmain_child_thread.o  ns_cavmain_child_thread.c
+
+$(BBDIR)/nsu_tr069_cpe_gen_data: $(BODIR)/ns_tr069_cpe_gen_data.o
+	gcc -o $(BBDIR)/nsu_tr069_cpe_gen_data $(BODIR)/ns_tr069_cpe_gen_data.o $(BIN_CFLAGS) $(ALL_LIBS) 
+
+$(BBDIR)/nsu_bh_data: $(BODIR)/bh_data.o $(BODIR)/ip_based_on_loc.o $(BODIR)/bh_read_conf.o
+	gcc -o $(BBDIR)/nsu_bh_data $(BODIR)/bh_data.o $(BODIR)/ip_based_on_loc.o $(BODIR)/bh_read_conf.o $(BIN_CFLAGS)
+
+$(BBDIR)/nsp_runq: 
+	gcc -o $(BBDIR)/nsp_runq sender_runq.c $(BIN_CFLAGS)
+
+$(BBDIR)/nsp_cpu: 
+	gcc -o $(BBDIR)/nsp_cpu sender_cpu.c $(BIN_CFLAGS)
+
+$(BBDIR)/nsu_assign_ip: $(BODIR)/nsu_assign_ip.o $(BODIR)/ipmgmt_utils.o $(BODIR)/nsu_ipv6_utils.o
+	gcc -o $(BBDIR)/nsu_assign_ip $(BODIR)/nsu_assign_ip.o $(BODIR)/ipmgmt_utils.o $(BODIR)/nsu_ipv6_utils.o $(BIN_CFLAGS) $(PROD_LIBS)
+
+$(BBDIR)/cpu_bind: $(BODIR)/cpu_bind.o
+	gcc -o $(BBDIR)/cpu_bind $(BODIR)/cpu_bind.o $(BIN_CFLAGS)
+
+$(BBDIR)/nsu_check_ip: $(BODIR)/nsu_check_ip.o $(BODIR)/ipmgmt_utils.o $(BODIR)/nsu_ipv6_utils.o
+	gcc -o $(BBDIR)/nsu_check_ip $(BODIR)/nsu_check_ip.o $(BODIR)/ipmgmt_utils.o $(BODIR)/nsu_ipv6_utils.o $(BIN_CFLAGS) $(PROD_LIBS)
+
+$(BBDIR)/nsu_ip_auto_fill: $(BODIR)/nsu_ip_auto_fill.o $(BODIR)/ipmgmt_utils.o $(BODIR)/nsu_ipv6_utils.o
+	gcc -o $(BBDIR)/nsu_ip_auto_fill $(BODIR)/nsu_ip_auto_fill.o $(BODIR)/ipmgmt_utils.o $(BODIR)/nsu_ipv6_utils.o $(BIN_CFLAGS) $(PROD_LIBS)
+
+$(BBDIR)/nsu_del_ip: $(BODIR)/nsu_del_ip.o $(BODIR)/ipmgmt_utils.o $(BODIR)/nsu_ipv6_utils.o
+	gcc -o $(BBDIR)/nsu_del_ip $(BODIR)/nsu_del_ip.o $(BODIR)/ipmgmt_utils.o $(PROD_LIBS) $(BODIR)/nsu_ipv6_utils.o $(BIN_CFLAGS) $(PROD_LIBS)
+
+#$(BBDIR)/ip_based_on_loc: ip_based_on_loc.c $(BODIR)/ipmgmt_utils.o
+#	gcc -DTEST -g -o $(BBDIR)/ip_based_on_loc ip_based_on_loc.c $(BODIR)/ipmgmt_utils.o
+
+$(BBDIR)/ip_based_on_loc: ip_based_on_loc.c
+	gcc -o $(BBDIR)/ip_based_on_loc ip_based_on_loc.c $(BIN_CFLAGS) -DTEST
+
+$(BBDIR)/nsu_seq_ip: nsu_seq_ip.c
+	gcc -o $(BBDIR)/nsu_seq_ip nsu_seq_ip.c $(BIN_CFLAGS)
+
+$(BBDIR)/nsu_seq_ipv6: nsu_seq_ipv6.c
+	gcc $(BIN_CFLAGS) -o $(BBDIR)/nsu_seq_ipv6 nsu_seq_ipv6.c
+
+$(BBDIR)/nsi_check_format: nsi_check_format.c
+	gcc $(BIN_CFLAGS) -o $(BBDIR)/nsi_check_format nsi_check_format.c
+
+$(BBDIR)/nsu_check_ipv6_format: nsu_check_ipv6_format.c
+	gcc $(BIN_CFLAGS) -o $(BBDIR)/nsu_check_ipv6_format nsu_check_ipv6_format.c
+
+$(BODIR)/ns_connection_pool.o: ns_connection_pool.c ns_connection_pool.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_connection_pool.o -c ns_connection_pool.c
+
+$(BODIR)/ns_monitoring.o: ns_monitoring.c ns_monitoring.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_monitoring.o -c ns_monitoring.c
+
+$(BBDIR)/nsu_show_netstorm: nsu_show_netstorm nsi_gen_msr_info
+	cp nsu_show_netstorm $(BBDIR) 
+	cp nsi_gen_msr_info $(BBDIR) 
+
+$(BBDIR)/nsi_allocate_instances: nsi_allocate_gen_instances nsi_allocate_gcp_instances nsi_allocate_cav_instances nsi_get_gen_instances
+	cp nsi_allocate_gen_instances $(BBDIR)
+	cp nsi_allocate_gcp_instances $(BBDIR)
+	cp nsi_allocate_cav_instances $(BBDIR)
+	cp nsi_get_gen_instances $(BBDIR)
+
+$(BBDIR)/nsi_release_instances: nsi_check_and_stop_gen_instances nsi_release_gen_instances nsi_release_gcp_instances nsi_release_cav_instances
+	cp nsi_check_and_stop_gen_instances $(BBDIR)
+	cp nsi_release_gen_instances $(BBDIR)
+	cp nsi_release_gcp_instances $(BBDIR)
+	cp nsi_release_cav_instances $(BBDIR)
+
+$(BBDIR)/nsu_ntlm_decoder: nsu_ntlm_decoder ntlmdecoder.py
+	cp nsu_ntlm_decoder $(BBDIR)
+	cp ntlmdecoder.py $(BBDIR)
+
+$(BBDIR)/nsu_show_generator_data: nsu_show_generator_data
+	cp nsu_show_generator_data $(BBDIR)
+
+$(BBDIR)/nsi_get_product_key: nsi_get_product_key
+	cp nsi_get_product_key $(BBDIR)
+
+$(BBDIR)/nsi_gen_server_api: nsi_gen_server_api
+	cp nsi_gen_server_api $(BBDIR)
+
+$(BBDIR)/nsu_check_health: nsu_check_health
+	cp nsu_check_health $(BBDIR)
+
+$(BBDIR)/netcloud_utils: netcloud_utils
+	cp netcloud_utils $(BBDIR)
+
+$(BBDIR)/nsu_make_script_tar: nsu_make_script_tar
+	cp nsu_make_script_tar $(BBDIR)
+
+$(BBDIR)/nsu_make_script_untar: nsu_make_script_untar
+	cp nsu_make_script_untar $(BBDIR)
+
+$(BBDIR)/nsi_collect_logs: nsi_collect_logs
+	cp nsi_collect_logs $(BBDIR)
+
+$(BBDIR)/nsu_get_gen_data: nsu_get_gen_data
+	cp nsu_get_gen_data $(BBDIR)
+
+$(BBDIR)/nsu_check_test_running_on_generator: nsu_check_test_running_on_generator
+	cp nsu_check_test_running_on_generator $(BBDIR)
+
+$(BBDIR)/nsi_get_wl_thread_details: nsi_get_wl_thread_details
+	cp nsi_get_wl_thread_details $(BBDIR) 
+
+$(BBDIR)/nsi_har_to_page_speed: nsi_har_to_page_speed 
+	cp nsi_har_to_page_speed $(BBDIR) 
+
+#$(BBDIR)/nsi_start_netstorm: nsi_start_netstorm
+#	cp nsi_start_netstorm $(BBDIR) 
+
+#$(BBDIR)/nsi_stop_netstorm: nsi_stop_netstorm
+#	cp nsi_stop_netstorm $(BBDIR) 
+
+#$(BBDIR)/nsi_status_netstorm: nsi_status_netstorm
+#	cp nsi_status_netstorm $(BBDIR) 
+
+$(BBDIR)/nsi_get_pagedump: nsi_get_pagedump.c
+	gcc $(BIN_CFLAGS) -o $(BBDIR)/nsi_get_pagedump -ggdb nsi_get_pagedump.c -g $(PROD_LIBS)
+
+$(BBDIR)/nsi_gen_scr8: nsi_gen_scr8.c nsi_gen_scr8.h
+	gcc nsi_gen_scr8.c $(BIN_CFLAGS) -o $(BBDIR)/nsi_gen_scr8 -lm
+
+$(BBDIR)/nsi_tx_summary: nsi_tx_summary.c util.h
+	gcc nsi_tx_summary.c $(BIN_CFLAGS) -o $(BBDIR)/nsi_tx_summary $(PROD_LIBS)
+
+$(BBDIR)/nsi_stop_generator: nsi_stop_generator.c
+	gcc nsi_stop_generator.c $(BIN_CFLAGS) -o $(BBDIR)/nsi_stop_generator $(PROD_LIBS)
+
+$(BBDIR)/nc_admin: nc_admin.h nc_admin.c
+	gcc nc_admin.c $(BIN_CFLAGS) -o $(BBDIR)/nc_admin $(BODIR)/nslb_netcloud_util.o $(PROD_LIBS)
+
+$(BBDIR)/nsi_rtc_invoker: nsi_rtc_invoker.c
+	gcc nsi_rtc_invoker.c $(BIN_CFLAGS) -o $(BBDIR)/nsi_rtc_invoker $(PROD_LIBS)
+
+$(BBDIR)/cm_test_traffic_stats: cm_test_traffic_stats.c
+	gcc cm_test_traffic_stats.c -g $(BIN_CFLAGS) -o $(BBDIR)/cm_test_traffic_stats $(PROD_LIBS)
+
+$(BBDIR)/nsu_update_rtg_time: $(TOOL_SRC)/nsu_update_rtg_time.c
+	gcc $(TOOL_SRC)/nsu_update_rtg_time.c -o $(BBDIR)/nsu_update_rtg_time $(BIN_CFLAGS)
+
+$(BBDIR)/tdigest_simulator: $(TOOL_SRC)/tdigest_simulator.c
+	gcc $(TOOL_SRC)/tdigest_simulator.c -o $(BBDIR)/tdigest_simulator $(BIN_CFLAGS) $(PROD_LIBS) -lpthread
+
+$(BBDIR)/nsu_update_rtg_nan: $(TOOL_SRC)/nsu_update_rtg_nan.c
+	gcc $(TOOL_SRC)/nsu_update_rtg_nan.c -o $(BBDIR)/nsu_update_rtg_nan $(BIN_CFLAGS)
+
+#TODO: need take care
+$(BBDIR)/nsi_comp_ctrl: nsi_comp_ctrl.c util.h
+	gcc nsi_comp_ctrl.c $(BIN_CFLAGS) -o $(BBDIR)/nsi_comp_ctrl $(PROD_LIBS)
+
+$(BBDIR)/nia_file_aggregator: nia_file_aggregator.c nia_file_aggregator.h
+	gcc nia_file_aggregator.c $(BIN_CFLAGS) -g -o $(BBDIR)/nia_file_aggregator $(ALL_LIBS)
+
+$(BBDIR)/nsi_show_tr_info_shm: nsi_show_tr_info_shm.c
+	gcc nsi_show_tr_info_shm.c $(BIN_CFLAGS) -o $(BBDIR)/nsi_show_tr_info_shm $(PROD_LIBS)
+
+$(BBDIR)/nsu_rbu_migrate_tr: $(TOOL_SRC)/nsu_rbu_migrate_tr.c
+	gcc $(TOOL_SRC)/nsu_rbu_migrate_tr.c $(BIN_CFLAGS) -o $(BBDIR)/nsu_rbu_migrate_tr -g $(PROD_LIBS) -lm
+
+$(BBDIR)/nsu_rm_har: $(TOOL_SRC)/nsu_rm_har.c
+	gcc $(TOOL_SRC)/nsu_rm_har.c $(BIN_CFLAGS) -o $(BBDIR)/nsu_rm_har -g $(PROD_LIBS) -lm
+
+$(BBDIR)/nsi_repo_get_product_key: $(TOOL_SRC)/nsi_repo_get_product_key.c
+	gcc $(TOOL_SRC)/nsi_repo_get_product_key.c $(BIN_CFLAGS) -o $(BBDIR)/nsi_repo_get_product_key $(ALL_LIBS) -lcurl
+
+$(BBDIR)/nsi_check_gen_health: nsi_check_gen_health.c
+	gcc nsi_check_gen_health.c $(BIN_CFLAGS) -o $(BBDIR)/nsi_check_gen_health $(ALL_LIBS)
+
+$(BBDIR)/nsi_get_tcp_stats: nsi_get_tcp_stats.c
+	gcc nsi_get_tcp_stats.c $(BIN_CFLAGS) -o $(BBDIR)/nsi_get_tcp_stats $(PROD_LIBS)
+
+$(BBDIR)/nsi_cmp_test_runs: nsi_cmp_test.c
+	gcc nsi_cmp_test.c $(BIN_CFLAGS) -o $(BBDIR)/nsi_cmp_test_runs
+
+$(BBDIR)/nsi_show_test_logs: nsu_show_test_logs.c netstorm.h
+	gcc nsu_show_test_logs.c cav_data_ret/cdr_main.c cav_data_ret/cdr_main.h cav_data_ret/cdr_log.c cav_data_ret/cdr_log.h cav_data_ret/cdr_cache.c cav_data_ret/cdr_cmt_handler.c cav_data_ret/cdr_config.h  cav_data_ret/cdr_cmt_handler.h cav_data_ret/cdr_file_handler.c cav_data_ret/cdr_dir_operation.c cav_data_ret/cdr_dir_operation.h cav_data_ret/cdr_cleanup.c cav_data_ret/cdr_nv_handler.c cav_data_ret/cdr_utils.c cav_data_ret/cdr_config.c cav_data_ret/cdr_components.c cav_data_ret/cdr_components.h cav_data_ret/cdr_drop_tables.c  $(BIN_CFLAGS) -o $(BBDIR)/nsi_show_test_logs $(BODIR)/ns_tr_duration.o -g $(PROD_LIBS) -lpq -lpthread
+
+$(BBDIR)/nsu_show_partition_detail: nsu_show_partition_detail.c
+	gcc nsu_show_partition_detail.c $(BIN_CFLAGS) -lpq -o $(BBDIR)/nsu_show_partition_detail $(BODIR)/ns_tr_duration.o -g $(PROD_LIBS) 
+
+$(BBDIR)/nsu_get_errors: nsu_get_errors.c ns_error_codes.h
+	gcc nsu_get_errors.c $(BIN_CFLAGS) -o $(BBDIR)/nsu_get_errors -g $(PROD_LIBS)
+
+$(BBDIR)/nsu_pause_test: nsu_pause_test.c 
+	gcc nsu_pause_test.c $(BIN_CFLAGS) -o $(BBDIR)/nsu_pause_test -g $(PROD_LIBS)
+
+$(BBDIR)/nsu_resume_test: nsu_resume_test.c
+	gcc nsu_resume_test.c $(BIN_CFLAGS) -o $(BBDIR)/nsu_resume_test -g $(PROD_LIBS)
+
+$(BBDIR)/nsu_vuser_trace : nsu_vuser_trace.c 
+	gcc nsu_vuser_trace.c $(BIN_CFLAGS) -o $(BBDIR)/nsu_vuser_trace -g $(PROD_LIBS)
+
+$(BBDIR)/nsu_tr069_post_process : tr069/src/nsu_tr069_post_process.c 
+	gcc tr069/src/nsu_tr069_post_process.c $(BIN_CFLAGS) -o $(BBDIR)/nsu_tr069_post_process  -g $(PROD_LIBS)
+
+$(BBDIR)/ntp_replay_gen: $(TOOL_SRC)/ntp_replay_gen.c 
+	gcc -o $(BBDIR)/ntp_replay_gen $(TOOL_SRC)/ntp_replay_gen.c $(BIN_CFLAGS) $(PROD_LIBS) -ldl -lpthread
+
+$(BBDIR)/ntp_al_gen_data: $(TOOL_SRC)/ntp_access_log_replay_gen.c 
+	gcc -o $(BBDIR)/ntp_al_gen_data $(TOOL_SRC)/ntp_access_log_replay_gen.c $(BIN_CFLAGS) $(PROD_LIBS) -ldl -lpthread
+
+$(BBDIR)/nsu_cb_handler: $(TOOL_SRC)/nsu_cb_handler.c 
+	gcc -o $(BBDIR)/nsu_cb_handler $(TOOL_SRC)/nsu_cb_handler.c $(BIN_CFLAGS) $(PROD_LIBS) -ldl -lpthread
+
+$(BBDIR)/ntp_gen_error_file: $(TOOL_SRC)/ntp_gen_error_file.c
+	gcc -o $(BBDIR)/ntp_gen_error_file $(TOOL_SRC)/ntp_gen_error_file.c $(BIN_CFLAGS) 
+
+$(BBDIR)/ntp_al_gen_url_list: $(TOOL_SRC)/ntp_al_gen_url_list.c 
+	gcc -o $(BBDIR)/ntp_al_gen_url_list $(TOOL_SRC)/ntp_al_gen_url_list.c $(BIN_CFLAGS) $(PROD_LIBS) -ldl -lpthread
+
+$(BBDIR)/nsi_send_alert: $(TOOL_SRC)/nsi_send_alert.c
+	gcc -o $(BBDIR)/nsi_send_alert $(TOOL_SRC)/nsi_send_alert.c $(BIN_CFLAGS) $(ALL_LIBS) 
+
+$(BBDIR)/ntp_show_flow: $(TOOL_SRC)/ntp_show_flow.c 
+	gcc -o $(BBDIR)/ntp_show_flow $(TOOL_SRC)/ntp_show_flow.c $(BIN_CFLAGS) 
+
+$(BBDIR)/ndu_gen_data_report_ex: $(TOOL_SRC)/ndu_gen_data_report.c 
+	gcc -o $(BBDIR)/ndu_gen_data_report_ex $(TOOL_SRC)/ndu_gen_data_report.c $(BIN_CFLAGS) -L/usr/lib64 -lpq
+
+$(BBDIR)/ns_backup: $(TOOL_SRC)/ns_backup.c $(TOOL_SRC)/ns_backup_common.c $(TOOL_SRC)/ns_backup.h
+	gcc -o $(BBDIR)/ns_backup $(TOOL_SRC)/ns_backup.c $(TOOL_SRC)/ns_backup_common.c $(BIN_CFLAGS) $(PROD_LIBS) 
+
+$(BBDIR)/no_backup: $(TOOL_SRC)/no_backup.c $(TOOL_SRC)/ns_backup_common.c $(TOOL_SRC)/ns_backup.h
+	gcc -o $(BBDIR)/no_backup $(TOOL_SRC)/no_backup.c $(TOOL_SRC)/ns_backup_common.c $(BIN_CFLAGS) $(PROD_LIBS) 
+
+$(BBDIR)/nsi_replay_gen_data: $(TOOL_SRC)/nsi_replay_gen_data.c 
+	gcc -o $(BBDIR)/nsi_replay_gen_data $(TOOL_SRC)/nsi_replay_gen_data.c $(BIN_CFLAGS)
+
+$(BBDIR)/_nsu_generate_licence: $(TOOL_SRC)/nsu_generate_licence.c 
+	gcc -o $(BBDIR)/_nsu_generate_licence $(TOOL_SRC)/nsu_generate_licence.c $(BIN_CFLAGS) $(PROD_LIBS) -lcrypto
+
+$(BBDIR)/_nsu_generate_hpd_license: $(TOOL_SRC)/nsu_generate_hpd_license.c 
+	gcc -o $(BBDIR)/_nsu_generate_hpd_license $(TOOL_SRC)/nsu_generate_hpd_license.c $(BIN_CFLAGS)  $(PROD_LIBS) -lcrypto
+
+$(BBDIR)/nsu_gen_percentiles: $(TOOL_SRC)/nsu_gen_percentiles.c
+	gcc -o $(BBDIR)/nsu_gen_percentiles $(TOOL_SRC)/nsu_gen_percentiles.c $(BIN_CFLAGS) -DTEST
+
+$(BBDIR)/nsi_get_interfaces: $(TOOL_SRC)/nsi_get_interfaces.c
+	gcc -o $(BBDIR)/nsi_get_interfaces $(TOOL_SRC)/nsi_get_interfaces.c $(BIN_CFLAGS) -DTEST
+
+$(BBDIR)/nsi_build_upgrade_tool: $(TOOL_SRC)/nsi_build_upgrade.c
+	gcc -o $(BBDIR)/nsi_build_upgrade_tool $(TOOL_SRC)/nsi_build_upgrade.c $(BIN_CFLAGS) $(PROD_LIBS) -lpthread -lcrypto
+
+$(BBDIR)/nsu_get_packet_size: $(TOOL_SRC)/nsu_get_packet_size.c
+	gcc -o $(BBDIR)/nsu_get_packet_size $(TOOL_SRC)/nsu_get_packet_size.c $(BIN_CFLAGS) $(PROD_LIBS) -lpthread -lcrypto
+
+$(BBDIR)/nsu_encrypt: $(TOOL_SRC)/nsu_encrypt.c
+	gcc  -o $(BBDIR)/nsu_encrypt $(TOOL_SRC)/nsu_encrypt.c $(BIN_CFLAGS) $(ALL_LIBS)
+
+$(BBDIR)/nsu_decrypt: $(TOOL_SRC)/nsu_decrypt.c
+	gcc  -o $(BBDIR)/nsu_decrypt $(TOOL_SRC)/nsu_decrypt.c $(BIN_CFLAGS) $(ALL_LIBS)
+
+$(BBDIR)/nsu_two_step_encrypt: $(TOOL_SRC)/ns_two_step_auth.c
+	gcc -o $(BBDIR)/nsu_two_step_encrypt $(TOOL_SRC)/ns_two_step_auth.c -DNSU_AES_ENCRYPT $(BIN_CFLAGS) $(ALL_LIBS)
+
+$(BBDIR)/nsu_two_step_auth: $(TOOL_SRC)/ns_two_step_auth.c
+	gcc -o $(BBDIR)/nsu_two_step_auth $(TOOL_SRC)/ns_two_step_auth.c $(BIN_CFLAGS) $(ALL_LIBS)
+
+$(BBDIR)/cavdebug: $(TOOL_SRC)/cav_debug.c
+	gcc -o $(BBDIR)/cavdebug $(TOOL_SRC)/cav_debug.c $(BIN_CFLAGS) $(PROD_LIBS) -lrt
+
+$(BBDIR)/cavdebug_cli: $(TOOL_SRC)/cav_debug_cli.c
+	gcc -o $(BBDIR)/cavdebug_cli $(TOOL_SRC)/cav_debug_cli.c $(BIN_CFLAGS)
+
+$(BBDIR)/nsu_show_licence: $(TOOL_SRC)/nsu_show_licence.c 
+	gcc $(TOOL_SRC)/nsu_show_licence.c $(BIN_CFLAGS) -o $(BBDIR)/nsu_show_licence $(PROD_LIBS) -lcrypto
+
+$(BBDIR)/nsu_lookup: $(TOOL_SRC)/nsu_lookup.c 
+	gcc $(TOOL_SRC)/nsu_lookup.c $(BIN_CFLAGS) -o $(BBDIR)/nsu_lookup $(PROD_LIBS) 
+
+$(BBDIR)/nsu_get_cavmain_port: $(TOOL_SRC)/nsu_get_cavmain_port.c
+	gcc $(TOOL_SRC)/nsu_get_cavmain_port.c $(BIN_CFLAGS) -o $(BBDIR)/nsu_get_cavmain_port -g $(PROD_LIBS)
+
+$(BBDIR)/nsi_import_db: $(LIBNSCORE)/nslb_db_util.c $(LIBNSCORE)/nslb_util.h
+	gcc $(BIN_CFLAGS) -DNSI_IMPORT_DB  -o $(BBDIR)/nsi_import_db $(LIBNSCORE)/nslb_db_util.c $(LIBNSCORE)/nslb_util.h $(ALL_LIBS)
+
+$(BBDIR)/nd_aggregate_reports: $(BBDIR)/ND_AGGREGATOR_SO
+	mkdir -p $(LOCAL_BIN)
+	cp $(BBDIR)/${ND_AGGREGATOR_SO_NAME} $(LOCAL_BIN)/${ND_AGGREGATOR_SO_NAME}
+	gcc -ggdb $(BIN_CFLAGS) $(LDFLAGS) -o $(BBDIR)/nd_aggregate_reports core/dbaggregator/nd_aggregate_reports.c $(LOCAL_BIN)/${ND_AGGREGATOR_SO_NAME} -lpq -lcprops $(ALL_LIBS) 
+	rm -rf $(LOCAL_BIN)
+
+$(BBDIR)/ND_AGGREGATOR_SO: core/dbaggregator/nd_aggregate_api.c core/dbaggregator/nd_aggregate_reports.h
+	#gcc  $(OBJ_CFLAGS) -ggdb  -lodbc  -DPG_BULKLOAD  -fpic -shared -o $(BBDIR)/${ND_AGGREGATOR_SO_NAME} core/dbaggregator/nd_aggregate_api.c -lcurl -L/usr/lib64 -lm -L /usr/lib/x86_64-linux-gnu/ -lz -lpthread -lm -ldl -lxml2_cav -lgsl -lgslcblas -lm -lpq -lcurl $(ALL_LIBS)  
+	gcc -o $(BBDIR)/${ND_AGGREGATOR_SO_NAME} core/dbaggregator/nd_aggregate_api.c $(LIB_CFLAGS) -DPG_BULKLOAD $(ALL_LIBS)
+
+$(BBDIR)/tsi_show_tsr: ts/nsu_show_testsuite_logs.c
+	gcc ts/nsu_show_testsuite_logs.c -o $(BBDIR)/tsi_show_tsr $(BIN_CFLAGS) 
+
+$(BBDIR)/ts_show_testsuites: ts/ts_show_test_suite.c
+	gcc ts/ts_show_test_suite.c -o $(BBDIR)/ts_show_testsuites $(BIN_CFLAGS) $(PROD_LIBS)
+
+$(BBDIR)/ts_show_testcases: ts/ts_show_test_cases.c
+	gcc ts/ts_show_test_cases.c -o $(BBDIR)/ts_show_testcases $(BIN_CFLAGS) $(PROD_LIBS)
+
+$(BBDIR)/tsi_show_testsuit_content: ts/ts_show_testsuit_content.c
+	gcc ts/ts_show_testsuit_content.c -o $(BBDIR)/ts_show_testsuit_content $(BIN_CFLAGS) $(PROD_LIBS)
+
+$(BODIR)/ns_server_admin_utils.o: ns_server_admin_utils.c ns_server_admin_utils.h ns_struct_con_type.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_server_admin_utils.o ns_server_admin_utils.c 
+
+$(BODIR)/ns_monitor_server_ctrl_conn.o: ns_monitor_server_ctrl_conn.c ns_server_admin_utils.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_monitor_server_ctrl_conn.o ns_monitor_server_ctrl_conn.c 
+
+$(BODIR)/ns_replay_access_logs_parse.o: ns_replay_access_logs_parse.c ns_replay_access_logs_parse.h 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_replay_access_logs_parse.o -c ns_replay_access_logs_parse.c 
+
+$(BODIR)/ns_replay_access_logs.o: ns_replay_access_logs.c ns_replay_access_logs.h 
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_replay_access_logs.o -c ns_replay_access_logs.c 
+
+$(BODIR)/ns_replay_db_query.o: ns_replay_db_query.c ns_replay_db_query.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_replay_db_query.o -c ns_replay_db_query.c
+
+$(BODIR)/ns_red_client.o: ns_red_client.c ns_string.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_red_client.o -c ns_red_client.c
+
+$(BODIR)/ns_vuser_thread.o: ns_vuser_thread.h ns_vuser_thread.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_vuser_thread.o ns_vuser_thread.c -lpthread
+
+$(BODIR)/ns_child_thread_util.o: ns_child_thread_util.h ns_child_thread_util.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_child_thread_util.o ns_child_thread_util.c
+
+$(BBDIR)/nsu_lr_to_ns_script_converter: nsu_lr_to_ns_script_converter.c
+	gcc nsu_lr_to_ns_script_converter.c $(BIN_CFLAGS) -o $(BBDIR)/nsu_lr_to_ns_script_converter $(PROD_LIBS) -lpthread
+
+$(BBDIR)/nsi_ns_sim_for_dashboard: $(TOOL_SRC)/nsi_ns_sim_for_dashboard.c 
+	gcc $(TOOL_SRC)/nsi_ns_sim_for_dashboard.c $(BIN_CFLAGS) -o $(BBDIR)/nsi_ns_sim_for_dashboard $(PROD_LIBS) -lpthread
+
+$(BBDIR)/nsi_ns_replay_test_for_dashboard: $(TOOL_SRC)/nsi_ns_replay_test_for_dashboard.c 
+	gcc $(TOOL_SRC)/nsi_ns_replay_test_for_dashboard.c $(BIN_CFLAGS) -o $(BBDIR)/nsi_ns_replay_test_for_dashboard $(PROD_LIBS) -lpthread
+
+$(BBDIR)/nsi_ns_replay_test: $(TOOL_SRC)/nsi_ns_replay_test.c 
+	gcc $(TOOL_SRC)/nsi_ns_replay_test.c $(BIN_CFLAGS) -o $(BBDIR)/nsi_ns_replay_test $(PROD_LIBS) -lpthread
+
+$(BBDIR)/nsi_migrate_to_partition_mode: $(TOOL_SRC)/nsi_migrate_to_partition_mode.c 
+	gcc $(TOOL_SRC)/nsi_migrate_to_partition_mode.c $(BIN_CFLAGS) -o $(BBDIR)/nsi_migrate_to_partition_mode $(PROD_LIBS) -lpthread
+
+$(BBDIR)/nsi_ns_make_tr_running: $(TOOL_SRC)/nsi_ns_make_tr_running.c
+	gcc $(TOOL_SRC)/nsi_ns_make_tr_running.c $(BIN_CFLAGS) -o $(BBDIR)/nsi_ns_make_tr_running 
+
+$(BBDIR)/validate_fpi_fields: $(TOOL_SRC)/validate_fpi_fields.c
+	gcc $(TOOL_SRC)/validate_fpi_fields.c $(BIN_CFLAGS) -o $(BBDIR)/validate_fpi_fields 
+
+$(BBDIR)/ndu_aggregate_percentiles: $(TOOL_SRC)/ndu_aggregate_percentiles.c
+	gcc -o $(BBDIR)/ndu_aggregate_percentiles $(TOOL_SRC)/ndu_aggregate_percentiles.c $(BIN_CFLAGS) $(PROD_LIBS) 
+
+$(BBDIR)/tsdb_aggregate_percentiles: $(TOOL_SRC)/tsdb_aggregate_percentiles.c
+	gcc -o $(BBDIR)/tsdb_aggregate_percentiles $(TOOL_SRC)/tsdb_aggregate_percentiles.c $(BIN_CFLAGS) $(PROD_LIBS) -lpthread 
+
+$(BBDIR)/get_all_percentiles: $(TOOL_SRC)/get_all_percentiles.c
+	gcc -o $(BBDIR)/get_all_percentiles $(TOOL_SRC)/get_all_percentiles.c $(BIN_CFLAGS) $(PROD_LIBS) 
+
+#used internally in nsu_server_admin
+$(BBDIR)/nsi_gui_upgrade: nsi_gui_upgrade
+	cp nsi_gui_upgrade $(BBDIR) 
+	cp nsi_gui_tomcat_restart $(BBDIR) 
+
+poi_test: poi.o
+	gcc -g $(LDFLAGS) poi.o \
+		-o poitest -lpthread $(ALL_LIBS)
+
+util_test: util_test.o
+	gcc -g $(LDFLAGS) util_test.o url.o ns_tag_vars.o \
+		-DTEST -o util_test -lpthread $(ALL_LIBS)
+
+rm_proc: rm_proc.o
+	gcc -g $(LDFLAGS) -pg rm_proc.o \
+		-o rm_proc -lpthread $(ALL_LIBS)
+
+serv: serv.o poi.o util.o
+	gcc -g $(LDFLAGS) serv.o poi.o util.o \
+		-o serv -lpthread $(ALL_LIBS)
+test_hash: hash.c
+	gcc -o test_hash hash.c $(BIN_CFLAGS) -DTEST
+
+$(BBDIR)/nsu_authenticate_user: core/user_admin/nsu_authenticate_user.c
+	$(CC) -o $(BBDIR)/nsu_authenticate_user core/user_admin/nsu_authenticate_user.c $(BIN_CFLAGS) $(LDAP_LIBS) 
+
+$(BBDIR)/nsu_show_scripts: core/user_admin/nsu_show_scripts.c
+	$(CC) -o $(BBDIR)/nsu_show_scripts core/user_admin/nsu_show_scripts.c $(BIN_CFLAGS) $(PROD_LIBS) -lcrypt 
+
+$(BBDIR)/nsu_show_check_profiles: core/user_admin/nsu_show_check_profiles.c
+	$(CC) -o $(BBDIR)/nsu_show_check_profiles core/user_admin/nsu_show_check_profiles.c $(BIN_CFLAGS) $(PROD_LIBS) -lcrypt
+
+$(BBDIR)/nsu_show_replay_profiles: core/user_admin/nsu_show_replay_profiles.c
+	$(CC) -o $(BBDIR)/nsu_show_replay_profiles core/user_admin/nsu_show_replay_profiles.c $(BIN_CFLAGS) $(PROD_LIBS) -lcrypt
+
+$(BBDIR)/nsu_show_scenarios: core/user_admin/nsu_show_scenarios.c
+	$(CC) -o $(BBDIR)/nsu_show_scenarios core/user_admin/nsu_show_scenarios.c $(BIN_CFLAGS) $(PROD_LIBS)
+
+$(BBDIR)/nsu_show_scenarios_profile: core/user_admin/nsu_show_scenarios_profile.c
+	$(CC) -o $(BBDIR)/nsu_show_scenarios_profile core/user_admin/nsu_show_scenarios_profile.c $(BIN_CFLAGS) $(PROD_LIBS) 
+
+$(BBDIR)/nsu_db_upload: ns_db_upload.c  
+	gcc -o $(BBDIR)/${NS_DB_UPLOAD_BIN_NAME} -DNSU_DB_UPLOAD ns_db_upload.c ns_dbu_monitor.c $(BIN_CFLAGS) $(ALL_LIBS) 
+
+$(BBDIR)/db_tbl_mgr: db_tbl_mgr.c  
+	gcc -o $(BBDIR)/db_tbl_mgr db_tbl_mgr.c $(BIN_CFLAGS) $(ALL_LIBS)
+
+$(BBDIR)/nsu_system_health_check: nsu_system_health_check.c  
+	gcc -o $(BBDIR)/nsu_system_health_check nsu_system_health_check.c $(BIN_CFLAGS) $(ALL_LIBS)
+
+$(BBDIR)/nsu_multidisk_test: $(TOOL_SRC)/nsu_multidisk_test.c
+	gcc -o $(BBDIR)/nsu_multidisk_test $(TOOL_SRC)/nsu_multidisk_test.c $(BIN_CFLAGS)
+
+$(BBDIR)/ndi_send_partial_msg_ndc: $(TOOL_SRC)/ndi_send_partial_msg_ndc.c
+	gcc -o $(BBDIR)/ndi_send_partial_msg_ndc $(TOOL_SRC)/ndi_send_partial_msg_ndc.c $(BIN_CFLAGS) $(PROD_LIBS) -lpthread 
+
+$(BBDIR)/ndi_send_partial_msg_bci: $(TOOL_SRC)/ndi_send_partial_msg_bci.c
+	gcc -o $(BBDIR)/ndi_send_partial_msg_bci $(TOOL_SRC)/ndi_send_partial_msg_bci.c $(BIN_CFLAGS) $(PROD_LIBS) -lpthread 
+
+$(BBDIR)/debug_agg_file: $(TOOL_SRC)/debug_agg_file.c
+	gcc -o $(BBDIR)/debug_agg_file $(TOOL_SRC)/debug_agg_file.c $(BIN_CFLAGS) $(PROD_LIBS) 
+
+$(BBDIR)/merge_tdigests: $(TOOL_SRC)/merge_tdigests.c
+	gcc -o $(BBDIR)/merge_tdigests $(TOOL_SRC)/merge_tdigests.c $(BIN_CFLAGS) $(PROD_LIBS) 
+
+$(BBDIR)/ndu_debug_tdigests: $(TOOL_SRC)/ndu_debug_tdigests.c 
+	gcc -o $(BBDIR)/ndu_debug_tdigests $(TOOL_SRC)/ndu_debug_tdigests.c $(BIN_CFLAGS) $(PROD_LIBS) 
+
+$(BBDIR)/tsdb_debug_tdigests: $(TOOL_SRC)/tsdb_debug_tdigests.c 
+	gcc -o $(BBDIR)/tsdb_debug_tdigests $(TOOL_SRC)/tsdb_debug_tdigests.c $(BIN_CFLAGS) $(PROD_LIBS) 
+
+$(BBDIR)/nsu_write_offset_file: nsu_write_offset_file.c
+	gcc -o $(BBDIR)/nsu_write_offset_file nsu_write_offset_file.c $(BIN_CFLAGS) $(ALL_LIBS)
+
+$(BBDIR)/nsu_svc_process_data: $(SVC_CORE)/ns_svc_parse_log.c  $(SVC_CORE)/ns_svc_parse_log.h
+	gcc -o $(BBDIR)/nsu_svc_process_data $(SVC_CORE)/ns_svc_parse_log.c $(BIN_CFLAGS) -DBUILD_SVC_ALONE $(PROD_LIBS) -lpq -lpthread
+
+$(BBDIR)/nsi_db_svc_get_comp_timing_details: $(SVC_CORE)/nsi_db_svc_get_comp_timing_details.c
+	gcc -o $(BBDIR)/nsi_db_svc_get_comp_timing_details $(SVC_CORE)/nsi_db_svc_get_comp_timing_details.c $(BIN_CFLAGS) $(PROD_LIBS) -lpq
+
+$(BBDIR)/nsi_db_svc_compare_comp_screen_data: $(SVC_CORE)/nsi_db_svc_compare_comp_screen_data.c
+	gcc -o $(BBDIR)/nsi_db_svc_compare_comp_screen_data $(SVC_CORE)/nsi_db_svc_compare_comp_screen_data.c $(BIN_CFLAGS) $(PROD_LIBS)
+
+$(BBDIR)/nsi_db_svc_compare_main_screen_data: $(SVC_CORE)/nsi_db_svc_compare_main_screen_data.c
+	gcc -o $(BBDIR)/nsi_db_svc_compare_main_screen_data $(SVC_CORE)/nsi_db_svc_compare_main_screen_data.c $(BIN_CFLAGS) $(PROD_LIBS)
+
+$(BODIR)/ns_nvm_msg_def.pb-c.o: ns_nvm_msg_def.pb-c.c ns_nvm_msg_def.pb-c.h 
+	gcc -o $(BODIR)/ns_nvm_msg_def.pb-c.o ns_nvm_msg_def.pb-c.c $(OBJ_CFLAGS) 
+
+$(BODIR)/ns_java_string_api.o: ns_java_string_api.c 
+	gcc -o $(BODIR)/ns_java_string_api.o ns_java_string_api.c $(OBJ_CFLAGS)
+
+$(BODIR)/ns_nvm_njvm_msg_com.o: ns_nvm_njvm_msg_com.c ns_nvm_njvm_msg_com.h
+	gcc -o $(BODIR)/ns_nvm_njvm_msg_com.o ns_nvm_njvm_msg_com.c $(OBJ_CFLAGS)
+
+$(BODIR)/ns_param_override.o: ns_param_override.c ns_param_override.h
+	gcc -o $(BODIR)/ns_param_override.o ns_param_override.c $(OBJ_CFLAGS)
+
+$(BBDIR)/njvm_simulator_tool:	ns_njvm_simulator.c ns_nvm_msg_def.pb-c.c ns_nvm_msg_def.pb-c.h
+	gcc -o $(BBDIR)/njvm_simulator_tool ns_njvm_simulator.c $(BIN_CFLAGS) $(ALL_LIBS) -rdynamic
+
+$(BODIR)/ns_progress_report.o: ns_progress_report.c ns_progress_report.h
+	gcc -o $(BODIR)/ns_progress_report.o ns_progress_report.c $(OBJ_CFLAGS)
+
+$(BODIR)/ns_handle_alert.o: ns_handle_alert.c ns_handle_alert.h
+	gcc -o $(BODIR)/ns_handle_alert.o ns_handle_alert.c $(OBJ_CFLAGS)
+
+$(BBDIR)/ndi_send_msg: ndi_send_msg.c 
+	gcc -o $(BBDIR)/ndi_send_msg ndi_send_msg.c $(BIN_CFLAGS) $(PROD_LIBS)
+
+$(BBDIR)/ndi_send_msg_ex: ndi_send_msg_ex.c 
+	gcc -o $(BBDIR)/ndi_send_msg_ex ndi_send_msg_ex.c $(BIN_CFLAGS) $(PROD_LIBS)
+
+$(BBDIR)/ndi_communicate_with_ndc: ndi_communicate_with_ndc.c
+	gcc -o $(BBDIR)/ndi_communicate_with_ndc ndi_communicate_with_ndc.c $(BIN_CFLAGS) $(PROD_LIBS)
+
+$(BBDIR)/ndi_comp_ctrl: ndi_comp_ctrl.c 
+	gcc -o $(BBDIR)/ndi_comp_ctrl ndi_comp_ctrl.c $(BIN_CFLAGS) $(PROD_LIBS)
+
+$(BBDIR)/cav_service: $(TOOL_SRC)/cav_service.c
+	gcc -o $(BBDIR)/cav_service $(TOOL_SRC)/cav_service.c $(BIN_CFLAGS)
+
+$(BBDIR)/nsu_xml_reader: $(TOOL_SRC)/ns_xml_reader.c
+	gcc -o $(BBDIR)/nsu_xml_reader $(TOOL_SRC)/ns_xml_reader.c $(BIN_CFLAGS) $(PROD_LIBS) -lxml2_cav
+
+$(BODIR)/ns_jms_conn_pool.o: jms/src/ns_jms_conn_pool.c jms/src/ns_jms_conn_pool.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_jms_conn_pool.o jms/src/ns_jms_conn_pool.c
+
+$(BODIR)/ns_ibmmq_api.o: jms/src/ns_ibmmq_api.c jms/src/ns_ibmmq_api.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_ibmmq_api.o jms/src/ns_ibmmq_api.c
+
+$(BODIR)/ns_kafka_api.o: jms/src/ns_kafka_api.c jms/src/ns_kafka_api.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_kafka_api.o jms/src/ns_kafka_api.c
+
+$(BODIR)/ns_tibco_api.o: jms/src/ns_tibco_api.c jms/src/ns_tibco_api.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_tibco_api.o jms/src/ns_tibco_api.c
+
+$(BODIR)/ns_tls_utils.o: ns_tls_utils.c ns_tls_utils.h
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_tls_utils.o ns_tls_utils.c
+
+$(BODIR)/ns_js_api.o: ns_js_api.c
+	gcc $(OBJ_CFLAGS) -o $(BODIR)/ns_js_api.o ns_js_api.c
+# ------------------ || Main Targets || -----------------------
+clean:
+	rm -rf $(BDIR)
+
+build: lib init main
+
+# Adding new target lib because on switching form one branch to another branch
+#  facing issue - library changes is not same in all and hence build failed
+lib:
+	cd $(__core_base_dir)/topology/topolib_v1; make 
+	cd $(__core_base_dir)/topology/topolib; make
+	cd $(__core_base_dir)/libnscore; make
+
+init:
+	# Create build and its sub-dirs for compilation and package bundling
+	mkdir -p $(BIDIR)
+	mkdir -p $(BODIR)
+	mkdir -p $(BBDIR)
+	mkdir -p $(BTDIR)
+	mkdir -p $(BSDIR)
+	mkdir -p $(LOCAL_BIN_DIR)
+	mkdir -p $(BMKDIR)
+	
+	mkdir -p $(BDIR)/etc 
+	mkdir -p $(BSDIR)/tr069/conf 
+	mkdir -p $(BSDIR)/tr069/templates
+	mkdir -p $(BSDIR)/tr069/samples 
+	mkdir -p $(BSDIR)/tr069/data 
+	mkdir -p $(BSDIR)/tr069/schema
+
+main:   $(NS_BINS)
+	# Copy into dir 'build/etc'
+	cp $(EXPORT_ETCFILES) $(BDIR)/etc
+	
+	# Copy into dir 'build/bin'
+	cp $(EXPORT_BINFILES) $(BBDIR)
+	chmod 755 $(BBDIR)/nsi_ns_upgrade  
+	chmod 755 $(BBDIR)/nsi_show_config 
+	chmod 755 $(BBDIR)/nsi_har_to_webcoach
+	
+	# Copy into dir 'build/include'
+	cp $(EXPORT_INCFILES) $(BIDIR) 
+	
+	# Copy into dir 'build/sample'
+	cp $(EXPORT_SAMPLEFILES) $(BSDIR) 
+	
+	# Copy into dir 'build/tools'
+	cp $(EXPORT_TOOLFILES) $(BTDIR)
+
+increas_build:
+	$(shell $(__tool_dir)/build_version -i)
+
+get_build_id:
+	$(eval BUILD_RELEASE=$(shell $(__tool_dir)/build_version -r))
+	$(eval BUILD_VERSION=$(shell $(__tool_dir)/build_version -b))
+	$(eval BUILD_ID=$(BUILD_RELEASE).$(BUILD_VERSION)_$(NS_RELEASE))
+
+release: get_build_id
+	- rm -f $(BMKDIR)/*	
+	- rm -f $(BDIR)/capture.*.gz
+	- rm -f $(BDIR)/dbfunc.*.gz
+	- rm -f $(BDIR)/ns_pg_bulkload.*.gz
+	- rm -rf $(BDIR)/webapps/*
+	- rm -rf $(BDIR)/rbu
+	
+	mkdir -p $(BMKDIR)
+	mkdir -p $(BDIR)/etc $(BDIR)/docs $(BDIR)/samples \
+		$(BDIR)/sys $(BDIR)/events $(BDIR)/include $(BDIR)/templates \
+		$(BDIR)/templates/excel_templates $(BDIR)/templates/jenkins $(BDIR)/tools $(BDIR)/templates/thresholdTemplates \
+		$(BDIR)/thirdparty $(BDIR)/cert $(BDIR)/server_management $(BDIR)/cert/custom \
+		$(BDIR)/samples/tr069/conf $(BDIR)/samples/tr069/templates \
+		$(BDIR)/samples/tr069/samples $(BDIR)/samples/tr069/data $(BDIR)/samples/tr069/schema \
+		$(BDIR)/templatesJSON mkdir $(BDIR)/etc/dbconf $(BDIR)/samples/replay/profiles/default \
+		$(BDIR)/snmp/inp $(BDIR)/MBean/XML $(BDIR)/webapps/ \
+		$(BDIR)/samples/scenarios/NSSamples/Hessian $(BDIR)/samples/scripts/NSSamples/Hessian/HessianService \
+		$(BDIR)/samples/pronto $(BDIR)/mprof/.custom/.system 
+	
+	cd $(BDIR)/webapps; ln -s ../include .
+	cp pronto.template pronto_gen_nasid.c pronto_gen_config.c ctl_config \
+		$(BBDIR)/pronto_gen_nasid $(BBDIR)/pronto_gen_config $(BDIR)
+	
+	cp snmp/inp/*.inp $(BDIR)/snmp/inp
+	cp README pronto.template pronto_gen_nasid.c pronto_gen_config.c ctl_config \
+		$(BBDIR)/pronto_gen_nasid $(BBDIR)/pronto_gen_config $(BDIR)
+	
+	#Copy required files to run RBU in Node Mode	
+	cp -r rbu $(BDIR)
+	
+	chmod 777 $(BDIR)/etc/rbu_parameter.csv
+	cp cm_iperf_start_server  $(BDIR)/bin	
+	cp nsi_get_work_space_path.sh $(BDIR)/bin
+	#copying nsu_stop_netstorm with nsu_stop_test
+	cp nsu_stop_netstorm  $(BDIR)/bin/nsu_stop_test
+	cp nsu_server_admin_java $(BDIR)/bin/nsu_server_admin
+	
+	cp release_version $(BDIR)/bin
+	cp nsi_rm_gen_trun $(BDIR)/bin
+	cp nsu_check_vuser_usage $(BDIR)/bin
+	cp nsi_build_upgrade_multipleworkspace.sh $(BDIR)/bin
+	cp $(TOOL_SRC)/nsi_update_nde_public_gdf $(BDIR)/bin
+	cp $(TOOL_SRC)/nsu_check_lps $(BDIR)/bin
+	cp $(TOOL_SRC)/nsi_start_flight_recorder $(BDIR)/bin
+	cp $(TOOL_SRC)/nsi_flight_recorder $(BDIR)/bin
+	cp $(TOOL_SRC)/nsi_memory_leakage $(BDIR)/bin
+	cp $(TOOL_SRC)/ndu_migrate_profile $(BDIR)/bin
+	cp $(TOOL_SRC)/nsu_migrate_nd_data_with_410.sh $(BDIR)/bin
+	cp $(TOOL_SRC)/nsu_migrate_topology $(BDIR)/bin
+	cp $(TOOL_SRC)/neu_get_missing_constraints $(BDIR)/bin
+	cp $(TOOL_SRC)/neu_get_tomcat_ip_port.sh $(BDIR)/bin
+	cp $(TOOL_SRC)/neu_validate_db_data $(BDIR)/bin
+	cp $(TOOL_SRC)/ndu_upload_partition_data $(BDIR)/bin
+	cp $(TOOL_SRC)/nsi_drop_all_tables_except_some_testruns $(BDIR)/bin
+	cp $(TOOL_SRC)/ut_sync_point_rtc.sh $(BDIR)/bin
+	cp $(TOOL_SRC)/415_migrate $(BDIR)/bin
+	cp $(TOOL_SRC)/jarExtractor.sh $(BDIR)/bin
+	cp nsi_migrate_database $(BDIR)/bin
+	cp nsu_upload_alertHistory_data.sh $(BDIR)/bin
+	cp ndu_db_append_colon_in_corrid $(BDIR)/bin
+	cp nsi_drop_empty_partition_table $(BDIR)/bin
+	cp $(TOOL_SRC)/ndu_compare_method_timing $(BDIR)/bin
+	cp $(TOOL_SRC)/neu_check_progress $(BDIR)/bin
+	cp $(TOOL_SRC)/neu_create_tsa_name $(BDIR)/bin
+	cp $(TOOL_SRC)/ndu_vallidate_raw_data $(BDIR)/bin
+	cp $(TOOL_SRC)/ndu_copy_csv_to_db $(BDIR)/bin 
+	cp $(TOOL_SRC)/nsi_dr_common.sh $(BDIR)/bin 
+	cp $(TOOL_SRC)/nsu_dr_health_check.sh $(BDIR)/bin 
+	cp $(TOOL_SRC)/nsi_dr_rsync.sh $(BDIR)/bin 
+	cp $(TOOL_SRC)/neu_get_tablespace_info $(BDIR)/bin
+	cp $(TOOL_SRC)/neu_check_partition_overlap $(BDIR)/bin
+	cp $(TOOL_SRC)/nsi_sys_stats_csv_generator $(BDIR)/bin
+	cp $(TOOL_SRC)/nsu_check_sys_stats_generator $(BDIR)/bin
+	cp $(TOOL_SRC)/nsi_epoch_generator $(BDIR)/bin
+	cp $(TOOL_SRC)/nsu_cb_partition.sh $(BDIR)/bin
+	cp $(TOOL_SRC)/nsu_gcpCB_partition.sh $(BDIR)/bin
+	cp $(TOOL_SRC)/neu_* $(BDIR)/tools
+	cp $(TOOL_SRC)/nsu_validate_urc $(BDIR)/tools
+	cp $(TOOL_SRC)/tomcat_cleanup_backup.sh $(BDIR)/tools
+	cp $(TOOL_SRC)/nde_purge_config_sample.json $(BDIR)/tools
+	cp $(TOOL_SRC)/nde_purge_config_ex.json $(BDIR)/tools
+	cp $(TOOL_SRC)/cav_docker_config $(BDIR)/tools
+	cp $(TOOL_SRC)/nsi_start_cmtest_on_reboot $(BDIR)/bin
+	cp $(TOOL_SRC)/ndp_create_at_job_id_files $(BDIR)/bin
+	cp $(TOOL_SRC)/ndu_get_testrun_info $(BDIR)/bin
+	cp $(TOOL_SRC)/chartGeneration.sh $(BDIR)/bin
+	cp $(TOOL_SRC)/chartGenerationV2.sh $(BDIR)/bin
+	cp $(TOOL_SRC)/nsu_debug $(BDIR)/bin
+	cp $(TOOL_SRC)/nsu_create_generator_db $(BDIR)/bin
+	cp $(TOOL_SRC)/nie_generator_test_init_summary $(BDIR)/bin
+	cp $(TOOL_SRC)/nsu_get_running_stage_info $(BDIR)/bin
+	cp $(TOOL_SRC)/nsi_collect_data_on_progress_delay $(BDIR)/bin
+	cp $(TOOL_SRC)/rm_wrapper.sh $(BDIR)/tools
+	cp -r cert/* $(BDIR)/cert/
+	cp -r server_management/* $(BDIR)/server_management/
+	cp cert/nsu_gen_cert cert/openssl.cnf $(BDIR)/cert
+	rm -f $(BDIR)/cert/cert_list.dat
+	cp cert/cert_list.dat $(BDIR)/samples/
+	cp NSConf gen_server.conf hpd_tours.conf hpd_concurrency.conf hpd_hits.conf hpd_cps.conf \
+		hpd_testpg.conf hpd_throughput.conf bh1Xml.conf  replay_netstorm.conf \
+		tr069_cpe_test.conf scr*gz  ts/*.gz svcreports/core/svc.conf network_cache_stats_debug_headers.dat \
+		cav_ns_bkp.conf cav_no_bkp.conf smtp_test.conf RunCommandList.dat $(SAMPLE_DIR)/SampleAutoMprof.json $(SAMPLE_DIR)/GIAG2.crt \
+		$(BDIR)/samples
+	cp gdf/cm_*.gdf $(BDIR)/sys
+	cp -r system_monitor/* $(BDIR)/mprof/.custom/.system/
+	cp gdf/ns_ip_data.gdf $(BDIR)/sys
+	cp gdf/ns_runtime_runlogic_progress.gdf $(BDIR)/sys
+	cp http_response_codes.dat $(BDIR)/sys
+	cp $(TOOL_SRC)/drsync.dat $(BDIR)/sys 
+	cp git_ssh_config $(BDIR)/sys 
+	cp netstorm_events.dat $(BDIR)/events
+	mkdir -p $(BDIR)/pdf
+	cp pdf/*.* $(BDIR)/pdf/
+	cp adf/netstorm.adf $(BDIR)/samples/
+	cp schema.sql $(BDIR)
+	cp templatesJSON/*.json $(BDIR)/templatesJSON
+	cp templates/excel_templates/*.xls $(BDIR)/templates/excel_templates
+	cp templates/thresholdTemplates/*.csv $(BDIR)/templates/thresholdTemplates
+	cp templates/jenkins/*.* $(BDIR)/templates/jenkins/
+	#cp ../docs/*.* $(BDIR)/docs
+	cp  tr069/conf/*.*  $(BDIR)/samples/tr069/conf
+	cp  tr069/templates/*.* $(BDIR)/samples/tr069/templates
+	cp  tr069/samples/*.* $(BDIR)/samples/tr069/samples
+	cp  tr069/data/*.* $(BDIR)/samples/tr069/data
+	cp  tr069/schema/*.* $(BDIR)/samples/tr069/schema  
+	cp  $(SAMPLE_DIR)/scenarios/NSSamples/Hessian/*.* $(BDIR)/samples/scenarios/NSSamples/Hessian  
+	cp  $(SAMPLE_DIR)/scripts/NSSamples/Hessian/HessianService/*.* $(BDIR)/samples/scripts/NSSamples/Hessian/HessianService 
+	cp  $(SAMPLE_DIR)/replay/profiles/default/*.* $(BDIR)/samples/replay/profiles/default/ 
+	cp  $(__base_dir)/commons/config/MBeanXML/*.xml $(BDIR)/MBean/XML/
+	cp  $(__base_dir)/commons/config/MBeanXML/*.json $(BDIR)/MBean/XML/
+
+	#mkdir -p ../version
+	#cp etc/version ../version/
+	#./build_version -i
+	cp etc/version $(BDIR)/etc/
+	cp octave_files/*.m $(BDIR)/etc
+	cp dbconf/*.conf $(BDIR)/etc/dbconf
+	cd capture_mods; cp appy_capture_diff get_capture_mods make_capture_tar *.cpp *.h *.c $(BDIR)
+	
+	cd $(BDIR); tar cvzf $(BMKDIR)/capture.$(BUILD_RELEASE).$(BUILD_VERSION).tar.gz  \
+		appy_capture_diff get_capture_mods make_capture_tar *.cpp *.h *.c
+	
+	cp insert_aggregate.sql install_percentiles percentile.c postgresql $(BDIR)
+	
+	# TODO: Need to handle in thirdparty 
+	#if [[ $(DISTRO) == "Ubuntu" && $(RELEASE) -eq 1204 ]]; then \
+	#	cd thirdparty/ns_pg_bulkload; make;	\
+        #elif [[ $(DISTRO) == "Ubuntu" && $(RELEASE) -eq 1604 ]]; then \
+	#	cd thirdparty/Ubuntu_1604/ns_pg_bulkload; make;	\
+        #fi
+	#cd $(BDIR); tar cvzf $(BDIR)/ns_pg_bulkload.$(BUILD_RELEASE).$(BUILD_VERSION).tar.gz ns_pg_bulkload
+	
+	cd $(BDIR); tar cvzf $(BMKDIR)/dbfunc.$(BUILD_RELEASE).$(BUILD_VERSION).tar.gz \
+		postgresql insert_aggregate.sql install_percentiles percentile.c schema.sql
+		
+	cp core/dbaggregator/nd_aggregate_reports.h $(BDIR)/samples/
+	cp core/dbaggregator/aggregate_reporting/nd_rtc_aggregate $(BDIR)/samples/
+	cp core/dbaggregator/aggregate_reporting/ndstorewiseaggregateparser.c $(BDIR)/samples/
+	cp core/dbaggregator/aggregate_reporting/ndstoreterminalwiseaggregateparser.c $(BDIR)/samples/
+	cp core/dbaggregator/aggregate_reporting/ndstoreterminalassociatewiseaggregateparser.c $(BDIR)/samples/
+	cp core/dbaggregator/aggregate_reporting/ndpercentileaggregateparser.c $(BDIR)/samples/
+	cp core/dbaggregator/aggregate_reporting/ndstorewiseaggregateparser.aprof $(BDIR)/samples/
+	cp core/dbaggregator/aggregate_reporting/ndpercentilewiseaggregateparser.aprof $(BDIR)/samples/
+	cp core/dbaggregator/aggregate_reporting/ndstoreterminalwiseaggregateparser.aprof $(BDIR)/samples/
+	cp core/dbaggregator/aggregate_reporting/ndstoreterminalassociatewiseaggregateparser.aprof $(BDIR)/samples/
+	cp  database/sample/odbc.ini $(BDIR)/samples/  
+	cp ../../netdiagnostics/src/core/NDBCIAgentKeywordDefinition.dat $(BDIR)/samples/
+	cp ../../netdiagnostics/src/core/NDHttpHeadersList.dat $(BDIR)/samples/
+	cp ../../netdiagnosticsagent/javaagent/config/instrumentProfiles/standard/*.xml $(BDIR)/samples/
+	cp ../../netdiagnosticsagent/javaagent/config/instrumentProfiles/standard/NDEntryPointsFile.txt $(BDIR)/samples/
+	cp ../../netdiagnosticsagent/javaagent/config/instrumentProfiles/standard/NDInterfaceBaseEntryPoint.txt $(BDIR)/samples/
+	cp ../../netdiagnosticsagent/javaagent/config/instrumentProfiles/standard/BlackListForDebugSession.txt $(BDIR)/samples/
+	cp -r ../../netdiagnosticsagent/javaagent/config/instrumentProfiles/standard/dotnet $(BDIR)/samples/dotnet
+	cp -r ../../netdiagnosticsagent/javaagent/config/instrumentProfiles/standard/php $(BDIR)/samples/php
+	cp ../../netdiagnosticsagent/javaagent/config/instrumentProfiles/standard/DD_AI_File.txt $(BDIR)/samples/
+	cp ../../netdiagnosticsagent/javaagent/config/instrumentProfiles/standard/AsyncRule.txt $(BDIR)/samples/
+	cp ../../netdiagnosticsagent/javaagent/config/instrumentProfiles/standard/*.json $(BDIR)/samples/
+	
+	# Create NetStorm tar file
+	rm -f $(BDIR)/netstorm*.tar.gz	
+	cd $(BDIR); \
+		find . -type d -name 'CVS' | xargs rm -rf; \
+		tar cvzf $(BMKDIR)/netstorm$(SSL_VERSION).$(BUILD_RELEASE).$(BUILD_VERSION).tar.gz \
+		bin etc sys events webapps docs samples thirdparty include \
+		README pronto.template ctl_config pronto_gen_nasid pronto_gen_config templates \
+		templatesJSON tools pdf cert snmp MBean server_management mprof rbu 
+		
+release_bin: get_build_id
+	- rm -f $(BBDIR)/netstorm.*$(NS_RELEASE).bin
+	cd $(BDIR); echo "NS_RELEASE=$(NS_RELEASE)" > $(BMKDIR)/upgrade.spec
+	cd $(BDIR); echo "netstorm=netstorm.$(BUILD_RELEASE).$(BUILD_VERSION).tar.gz" >> $(BMKDIR)/upgrade.spec
+	cd $(BDIR); echo "build=netstorm${SSL_VERSION}.$(BUILD_ID).bin" >> $(BMKDIR)/upgrade.spec
+		
+	if [[ $(NS_RELEASE) == "Redhat_64" ]]; then \
+		cp $(LDIR)/librhelnsc++.so $(BMKDIR)/libnsc++.so; \
+	else \
+		cp $(LDIR)/libnsc++.so $(BMKDIR)/libnsc++.so; \
+	fi
+	cp $(LDIR)/libdiffc++.so $(BMKDIR)/libdiffc++.so
+	
+	cp etc/version $(TDIR)/nsi_get_linux_release_ex $(TDIR)/nsi_upgrade.sh nsi_migrate.sh \
+		nsi_migrate_scen nsi_migrate_cshm_conf $(TOOL_SRC)/nsi_change_custom_mon_keyword $(BBDIR)/nsu_two_step_encrypt $(BMKDIR)
+		
+	$(__cav_make_cmd) --current $(BMKDIR) $(BDIR)/netstorm${SSL_VERSION}.$(BUILD_ID).bin \
+		"Netstorm ${BUILD_RELEASE} Build ${BUILD_VERSION}" ./nsi_upgrade.sh
+		
+	make -f Makefile.common do_export
+
+do_export: get_build_id
+	mkdir -p $(__export_dir)
+	mkdir -p $(__export_dir)/mk
+	echo "NS_RELEASE = $(NS_RELEASE), BUILD_ID = $(BUILD_ID)"	
+	- rm -f $(__export_dir)/netstorm.*$(NS_RELEASE).bin
+	- rm -f $(__export_dir)/mk/netstorm.*.tar.gz
+	
+	cp $(BDIR)/netstorm.$(BUILD_ID).bin $(__export_dir)
+	cp $(BMKDIR)/netstorm.*.tar.gz $(__export_dir)/mk/
+	cp $(BBDIR)/nsu_two_step_encrypt  $(__export_dir)/mk/
+# ------------------ || THE END || -----------------------

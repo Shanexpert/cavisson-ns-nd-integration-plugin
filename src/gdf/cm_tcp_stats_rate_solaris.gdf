@@ -1,0 +1,51 @@
+# 1.0 - Initial version
+
+Info|1.0|1|-|-|-1|-1|-
+Group|TCP Stats Rate (Solaris)|10188|vector|46|0|Network Metrics|Tier>Server|TCP Stats for Solaris
+Graph|Active opens/Sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Active connections openings per second.
+Graph|Passive opens/Sec|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Passive connections openings per second .
+Graph|Attempt fails/Sec|3|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Attempt fails  per second.
+Graph|Estab resets/Sec|4|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Estab resets  per second.
+Graph|Out segs/Sec|5|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Out segs per second.
+Graph|Out data segs/Sec|6|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Out data segs per second.
+Graph|Out data bytes/Sec|7|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Out data bytes per second.
+Graph|Retrans segs/Sec|8|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Retrans seg per second.
+Graph|Retrans bytes/Sec|9|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Retrans bytes per second.
+Graph|Out ack/Sec|10|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Out ack per second.
+Graph|Out ack delayed/Sec|11|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Out ack delayed per second.
+Graph|Out urg/Sec|12|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Out urg per second.
+Graph|Out win update/Sec|13|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Out win update per second.
+Graph|Out win probe/Sec|14|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Out win probe per second.
+Graph|Out control/Sec|15|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Out control per second.
+Graph|Out rsts/Sec|16|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Out rsts  per second.
+Graph|Out fast retrans/Sec|17|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Out fast retrans per second.
+Graph|In segs/Sec|18|scalar|rate|-|-|0|NA|-1|-1|NA|NA|In segs per second.
+Graph|In ack segs/Sec|19|scalar|rate|-|-|0|NA|-1|-1|NA|NA|In ack segs  per second.
+Graph|In ack bytes/Sec|20|scalar|rate|-|-|0|NA|-1|-1|NA|NA|In ack bytes  per second.
+Graph|In dup ack/Sec|21|scalar|rate|-|-|0|NA|-1|-1|NA|NA|In dup ack  per second.
+Graph|In ack unsent/Sec|22|scalar|rate|-|-|0|NA|-1|-1|NA|NA|In ack unsent  per second.
+Graph|In inorder segs/Sec|23|scalar|rate|-|-|0|NA|-1|-1|NA|NA|In inorder segs per second.
+Graph|In inorder bytes/Sec|24|scalar|rate|-|-|0|NA|-1|-1|NA|NA|In inorder bytes per second.
+Graph|In unorder segs/Sec|25|scalar|rate|-|-|0|NA|-1|-1|NA|NA|In unorder segs per second.
+Graph|In unorder bytes/Sec|26|scalar|rate|-|-|0|NA|-1|-1|NA|NA|In unorder bytes per second.
+Graph|In dup segs/Sec|27|scalar|rate|-|-|0|NA|-1|-1|NA|NA|In dup segs per second.
+Graph|In dup bytes/Sec|28|scalar|rate|-|-|0|NA|-1|-1|NA|NA|In dup bytes per second.
+Graph|In part dup segs/Sec|29|scalar|rate|-|-|0|NA|-1|-1|NA|NA|In part dup segs per second.
+Graph|In part dup bytes/Sec|30|scalar|rate|-|-|0|NA|-1|-1|NA|NA|In part dup bytes  per second.
+Graph|In past win segs/Sec|31|scalar|rate|-|-|0|NA|-1|-1|NA|NA|In past win segs  per second.
+Graph|In past win bytes/Sec|32|scalar|rate|-|-|0|NA|-1|-1|NA|NA|In past win bytes  per second.
+Graph|In win probe/Sec|33|scalar|rate|-|-|0|NA|-1|-1|NA|NA|In win probe per second.
+Graph|In win update/Sec|34|scalar|rate|-|-|0|NA|-1|-1|NA|NA|In win update per second.
+Graph|In closed/Sec|35|scalar|rate|-|-|0|NA|-1|-1|NA|NA|In closed per second.
+Graph|Rtt no update/Sec|36|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Rtt no update per second.
+Graph|Rtt update/Sec|37|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Rtt update per second.
+Graph|Tim retrans/Sec|38|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Tim retrans per second.
+Graph|Tim retrans drop/Sec|39|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Tim retrans drop per second.
+Graph|Tim keep alive/Sec|40|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Tim keep alive per second.
+Graph|Tim keep alive probe/Sec|41|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Tim keep alive probe per second.
+Graph|Tim keep alive drop/Sec|42|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Tim keep alive drop per second.
+Graph|Listen drop/Sec|43|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Listen drop  per second.
+Graph|Listen drop q0/Sec|44|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Listen drop q0  per second.
+Graph|Half open drop/Sec|45|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Half open drop  per second.
+Graph|Out sack retrans/Sec|46|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Out sack retrans  per second.
+

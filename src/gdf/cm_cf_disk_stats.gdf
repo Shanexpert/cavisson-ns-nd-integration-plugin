@@ -1,0 +1,12 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|CF Disk Stats|14253|vector|4|0|Cloud Foundry Metrics|Tier>Server>AppName>ContainerID>DiskPartition|Cloud Foundary Disk Metrics.
+
+Graph|Disk Partition Size(MB)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|CF Disk  Partition Stats.
+Graph|Disk Partition Used (MB)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|CF Disk  Partition Used.
+Graph|Disk Partition Available(MB)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|CF Disk  Partition Available.
+Graph|Disk Partition Used (Pct)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|CF Disk  Partition Used in percentage.
+

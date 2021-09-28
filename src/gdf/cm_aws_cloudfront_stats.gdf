@@ -1,0 +1,21 @@
+# --- GDF Version History ---
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS Cloud Front Stats|11289|vector|14|0|AWS Metrics|AccountName>Region>DistributionID>Region|Amazon CloudFront is a web service that speeds up distribution of your static and dynamic web content, such as .html, .css, .js, and image files, to your users.
+
+Graph|AWS Cloud Front 401 Error Rate (pct)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of all viewer requests for which the response’s HTTP status code is 401 (Additional Metrics must be enabled).
+Graph|AWS Cloud Front 403 Error Rate (pct)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of all viewer requests for which the response’s HTTP status code is 403 (Additional Metrics must be enabled).
+Graph|AWS Cloud Front 404 Error Rate (pct)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of all viewer requests for which the response’s HTTP status code is 404 (Additional Metrics must be enabled).
+Graph|AWS Cloud Front 4xx Error Rate (pct)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of all requests for which the HTTP status code is 4xx.
+Graph|AWS Cloud Front 502 Error Rate (pct)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of all viewer requests for which the response’s HTTP status code is 502 (Additional Metrics must be enabled).
+Graph|AWS Cloud Front 503 Error Rate (pct)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of all viewer requests for which the response’s HTTP status code is 503 (Additional Metrics must be enabled).
+Graph|AWS Cloud Front 504 Error Rate (pct)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of all viewer requests for which the response’s HTTP status code is 504 (Additional Metrics must be enabled).
+Graph|AWS Cloud Front 5xx Error Rate (pct)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of all requests for which the HTTP status code is 5xx.
+Graph|AWS Cloud Front Downloaded Bytes|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of bytes downloaded by viewers for GET, HEAD, and OPTIONS requests.
+Graph|AWS Cloud Front Uploaded Bytes|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of bytes uploaded to your origin with CloudFront using POST and PUT requests.
+Graph|AWS Cloud Front cache Hit Rate (pct)|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of all cacheable requests for which CloudFront served the content from its cache. HTTP POST and PUT requests (and errors) are not considered cacheable requests (Additional Metrics must be enabled).
+Graph|AWS Cloud Front Origin Latency (ms)|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total time spent from when CloudFront receives a request to when it starts providing a response to the network (not the viewer) for requests that are served from the origin (not the CloudFront cache). This is also known as first byte latency or time-to-first-byte (Additional Metrics must be enabled).
+Graph|AWS Cloud Front Requests|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of requests for all HTTP methods and for both HTTP and HTTPS requests.
+Graph|AWS Cloud Front Total Error Rate (pct)|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of all requests for which the HTTP status code is 4xx or 5xx.

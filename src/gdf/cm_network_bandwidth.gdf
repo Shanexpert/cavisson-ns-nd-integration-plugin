@@ -1,0 +1,8 @@
+#---------GDFVersionHistory---------
+#1.0-Initial Version
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Network Bandwidth|14143|vector|3|0|Network Metrics|Tier>Server>Destination|Network Statistics.
+Graph|Network Bytes Transferred (MB)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Network Bytes Transfered.
+Graph|Network Bandwidth (Mbps)|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Network Bandwidth.
+Graph|Number of threads|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of all live threads at the Monitor running.

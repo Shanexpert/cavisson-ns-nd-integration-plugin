@@ -1,0 +1,9 @@
+# 1.0 - Initial version
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP Router BGP Traffic|11589|vector|5|0|GCP Metrics|ProjectID>Region>RouterId|It provide metric related to BGP(Border Gateway Protocol) session and communication.
+Graph|GCP Router BGP Down Session|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of BGP sessions on the router that are down.
+Graph|GCP Router BGP Up Session|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of BGP sessions on the router that are up.
+Graph|GCP Router Received Routes|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current number of best routes received by router.
+Graph|GCP Router Router Status|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Router status, up or down.
+Graph|GCP Router Sent Routes|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current number of routes sent by router.

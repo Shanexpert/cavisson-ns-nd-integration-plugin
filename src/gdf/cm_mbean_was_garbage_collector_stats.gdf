@@ -1,0 +1,53 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+# ---  Mbean Reference Link :https://www.ibm.com/support/knowledgecenter/SSYKE2_7.1.0/com.ibm.java.api.71.doc/com.ibm.lang.management/com/ibm/lang/management/GarbageCollectorMXBean.html?view=embed#getMemoryUsed() --- #
+# This Mbean is applicable to WAS type Server #
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Websphere Garbage Collector Stats|11034|vector|14|0|WebSphere Metrics|Tier>Server>Instance>Monitor>Vector|Websphere Garbage Collector Stats
+
+#G1
+Graph|Scavenge Collection End Time (msec)|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The end time in milliseconds of the last garbage collection that was carried out by scavenge collection.
+
+#G2
+Graph|Scavenge Collection Count|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The total number of collections that have occurred during scavenge collection.
+
+#G3
+Graph|Scavenge Collection Time (msec)|3|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The accumulated collection elapsed time in milliseconds corresponding to scavenge collection.
+
+#G4
+Graph|Scavenge Last Collection Start Time (msec)|4|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The start time in milliseconds of the last garbage collection that was carried out by scavenge collection.
+
+#G5
+Graph|Scavenge Memory Used (Bytes)|5|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The amount of heap memory used by objects that are managed by the collector corresponding to scavenge collection.
+
+#G6
+Graph|Scavenge Total Memory Freed (Bytes)|6|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The cumulative total amount of memory freed, in bytes, by the garbage collector corresponding to scavenge collection.
+
+#G7
+Graph|Scavenge Total Compacts|7|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The cumulative total number of compacts that was performed by garbage collector corresponding to scavenge collection.
+
+#G8
+Graph|Global Last Collection End Time (msec)|8|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The end time in milliseconds of the last garbage collection that was carried out by global collection.
+
+#G9
+Graph|Global Collection Count|9|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The total number of collections that have occurred during global collection.
+
+#G10
+Graph|Global Collection Time (msec)|10|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The accumulated collection elapsed time in milliseconds corresponding to global collection.
+
+#G11
+Graph|Global Last Collection Start Time (msec)|11|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The start time in milliseconds of the last garbage collection that was carried out by global collection.
+
+#G12
+Graph|Global Memory Used (Bytes)|12|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The amount of heap memory used by objects that are managed by the collector corresponding to global collection.
+
+
+#G13
+Graph|Global Total Memory Freed (Bytes)|13|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The cumulative total amount of memory freed, in bytes, by the garbage collector corresponding to global collection.
+
+#G14
+Graph|Global Total Compacts|14|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The cumulative total number of compacts that was performed by garbage collector corresponding to global collection.

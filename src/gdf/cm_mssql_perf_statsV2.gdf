@@ -1,0 +1,13 @@
+#LAST_MODIFIED_DATE = 09/01/16 01:56:09
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|MSSQL Performance Stats|10727|vector|3|0|MSSQL Metrics|Tier>Server>Source|MSSQL database Performance statitstics.
+Graph|MSSQL Query/Min|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of query executing per minute.
+Graph|MSSQL Avg Query CPU Time (ms)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average query cpu time in milliseconds.
+Graph|MSSQL Avg Query Elasped Time (ms)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average query elapsed time in milliseconds.
+

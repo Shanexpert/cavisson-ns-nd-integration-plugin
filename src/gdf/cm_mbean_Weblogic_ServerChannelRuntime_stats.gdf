@@ -1,0 +1,24 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+
+#ObjectName :com.bea:ServerRuntime=AdminServer,Name=*,Type=ServerChannelRuntime
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Weblogic Server Channel Runtime Stats|14198|vector|6|0|Weblogic Metrics|Tier>Server>Instance>Name|This stats provides information related to Server Channel metrics.
+
+Graph|Weblogic Connections Count|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of active connections and sockets associated with this channel.
+
+Graph|Weblogic Messages Received Count|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of messages received on this channel.
+
+Graph|Weblogic Bytes Received Count|3|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of bytes received on this channel.
+
+Graph|Weblogic Accept Count|4|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of sockets that have been accepted on this channel. This includes sockets both past and present so gives a good idea of the connection rate to the server.
+
+Graph|Weblogic Bytes Sent Count|5|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of bytes sent on this channel.
+
+Graph|Weblogic Messages Sent Count|6|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of messages sent on this channel.

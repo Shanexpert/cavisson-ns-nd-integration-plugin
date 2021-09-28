@@ -1,0 +1,110 @@
+#! /bin/bash
+
+#export LANG=en_US
+CAVGEN_BIN=cavgen
+CavGenLogFile=$NS_WDIR/bin/cavgen.log
+. $NS_WDIR/etc/netstorm.env
+
+#check for cavisson owner
+USER=`whoami`
+if [ "$USER" != "cavisson" ];then
+  echo "You must run this command through cavisson user."
+  exit 1
+fi
+
+#sudo setcap 'cap_net_bind_service+ep' $NS_WDIR/bin/$CAVGEN_BIN  >/dev/null 2>&1
+
+
+start_fun()
+{
+ cd $NS_WDIR
+
+ CAVGEN_ID=`ps -lef --forest | awk '{print $4 "\t" $16}' | grep "$NS_WDIR/bin/cavgen" | grep -v grep|awk '{print $1}'`
+ #if [ "XX$CAVGEN_STATUS" == "XX1" ];then 
+ if [ "XX$CAVGEN_ID" != "XX" ];then
+   echo "CavGen is already running "
+   echo "CavGen pid=" $CAVGEN_ID"  is already running " >>$CavGenLogFile
+   exit 1 
+ fi
+
+ BIN_PATH=$NS_WDIR/bin/$CAVGEN_BIN
+ nohup $BIN_PATH 2>&1 | awk '{print strftime("%m/%d/%y %H:%M:%S|") $0; fflush()}' > $CavGenLogFile 2>&1 &
+ echo "nohum status=" $? >> $CavGenLogFile
+ if [ $? != 0 ];then
+    echo  "Failed to start" $CAVGEN_CMD
+  else
+    echo  $CAVGEN_CMD" started Successfully"
+  fi
+
+}
+
+stop_fun()
+{
+   #Stop test if NV
+   #CAVGEN_PID=`ps --ppid $NSU_START_TEST_PID -o 'pid args' |grep -v PID | grep cavdebug | awk '{print $1}'`
+   CAVGEN_PID=`ps aux | grep  "$NS_WDIR/bin/cavgen"|grep -v grep| awk '{print $2}'`
+   if [ "XX$CAVGEN_PID" == "XX" ];then   
+     echo  "CavGen not running"
+     exit $?
+   fi
+   echo "Stopping CavGen" $CAVGEN_PID >>$CavGenLogFile
+   kill -10 $CAVGEN_PID 2>>$CavGenLogFile
+   if [ $? != 0 ];then
+    echo  "Failed to stop" $CAVGEN_CMD
+  else
+    echo  $CAVGEN_CMD" stopped Successfully"
+  fi
+}
+
+function Usage()
+{
+  CMD=/etc/init.d/$CAVGEN_CMD
+  echo "Usage: $CMD {start|stop|restart|status}" >&2
+  echo "Where:"
+  echo "  start            : To start CavGen service"
+  echo "  stop             : To stop CavGen service"
+  echo "  restart          : To stop and then start CavGen service"
+  echo "  status           : To show CavGen service current status"
+  exit 1
+}
+
+
+set -e
+
+case "$1" in
+		  start)
+                        echo "Starting $CAVGEN_CMD ... "
+                        start_fun
+                        ;;
+		  debug)
+                        echo "Starting $CAVGEN_CMD in Debug Mode ... "
+			CAVGEN_BIN=cavgen.debug
+                        start_fun
+                        ;;
+
+                   stop) 
+                        echo "Stopping $CAVGEN_CMD ... "
+                        stop_fun
+                        ;;
+		  restart)
+			echo "Restarting $CAVGEN_CMD ... "
+                        stop_fun
+                        start_fun
+			                  ;;
+		  status)
+                        CAVGEN_ID=`ps -lef --forest | awk '{print $4 "\t" $16}' | grep "$NS_WDIR/bin/$CAVGEN_BIN" | grep -v grep|awk '{print $1}'`
+                        if [ "XX$CAVGEN_ID" != "XX" ];then
+                          echo $CAVGEN_CMD "is running"
+			  echo $CAVGEN_CMD "is running" $CAVGEN_ID >>$CavGenLogFile
+                        else
+                          echo $CAVGEN_CMD "is not running"
+                          exit 1
+                        fi
+		        ;;
+
+		  *)
+                        Usage
+			;;
+      esac
+
+exit 0

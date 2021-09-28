@@ -1,0 +1,16 @@
+#Author: Richa
+# --- GDF Version History ---
+# # 1.0 - Initial version
+#
+# Command to get data for this gdf on windows server :
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# wmic path Win32_LogicalDisk
+#
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Windows Drive Space stats|14226|vector|5|0|System Metrics|Tier>Server>Drive|Amount of disk space available, free and used for each drive in the system.
+Graph|Total Disk Space (GB)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total amount of disk space.
+Graph|Used Disk Space (GB)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total amount of used disk space.
+Graph|Used Disk Space (Pct)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total amount of used disk space in percentage.
+Graph|Available Disk Space (GB)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total amount of free disk space.
+Graph|Available Disk Space (Pct)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total amount of available disk space in percentage.

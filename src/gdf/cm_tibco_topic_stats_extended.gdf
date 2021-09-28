@@ -1,0 +1,35 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+#
+# General information line
+# Info|msgVersion|numGroups|startIndex|testRun|sizeOfMsgData|interval|testRunStartDate/Time
+#
+# Group information line
+# Group|groupName|rptGrpId|groupType|numGraphs|numVectors
+#
+# Graph information line
+# Graph|graphName|rptId|graphType|dataType|graphDataIndex|formula|numVectors
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Tibco Topic Extended Stats|10735|vector|17|0|Application Metrics|Tier>Server>Instance>Topic|Tibco Topic statistics.
+Graph|Active Durable/Sec|1|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of active durable subscribers per second for this topic.
+Graph|Durable/Sec|2|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of durable subscribers per second for the topic.
+Graph|Export Transports/Sec|3|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of the transports per second that this topic exports messages on.
+Graph|Import Transports/Sec|4|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of the transports per second that this destination imports messages from.
+Graph|Subscriber Count|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current number of subscribers for the topic.
+Graph|Consumer Count|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current number of consumers for the topic.
+Graph|Flow Control Maximum Bytes|7|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Volume of pending messages (in bytes) at which flow control is enabled for this destination.
+Graph|Received Throughput(Kbps)|8|scalar|rate|-|KBPS|0|NA|-1|-1|NA|NA|Received throughput in kilo bits per second for this topic.
+Graph|Inbound Message/Sec|9|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Inbound message per second for this topic.
+Graph|Inbound Bytes/Sec|10|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Amount of messages bytes received per second.
+Graph|Sent Throughput (Kbps)|11|scalar|rate|-|KBPS|0|NA|-1|-1|NA|NA|Transmitted throughput in kilo bits per second for this topic.
+Graph|Outbound Message/Sec|12|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Outbound message per second for this topic.
+Graph|Outbound Bytes/Sec|13|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Amount of messages bytes sent per second.
+Graph|Pending Message/Sec|14|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of pending messages for this destination per second.
+Graph|Pending Message Size (KB)|15|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total size for all pending messages for this destination in kilobytes.
+Graph|Pre-fetched Message/Sec|16|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of messages pre-fetched per second by the EMS client from the server to improve efficiency.
+Graph|Re-delivery Delay (ms)|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Redelivery delay for this queue in milliseconds.

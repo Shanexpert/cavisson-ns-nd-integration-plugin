@@ -1,0 +1,17 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP BigQuery Global Stats V2|11412|vector|10|0|GCP Metrics|ProjectID>ResourceType|BigQuery stats provided metrics related to client request to bigquery.
+
+Graph|BigQuery Queries Count|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of In-flight queries.
+Graph|BigQuery Scanned Bytes / Sec|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of scanned bytes per second. 
+Graph|BigQuery Scanned Bytes Billed / Sec|3|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of server scanned bytes billed per second.  
+Graph|BigQuery Slots Used By Project|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of slots used by project.   
+Graph|BigQuery Total Slots|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of BigQuery slots available for the project.
+Graph|BigQuery Average Query Execution Time (Sec)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average query execution time in seconds.
+Graph|BigQuery 5th Percentile Query Execution Time (Sec)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|5th percentile of time taken for processing query in seconds.
+Graph|BigQuery 50th Percentile Query Execution Time (Sec)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|50th percentile of time taken for processing query in seconds.
+Graph|BigQuery 95th Percentile Query Execution Time (Sec)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|95th percentile of time taken for processing query in seconds.
+Graph|BigQuery 99th Percentile Query Execution Time (Sec)|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|99th percentile of time taken for processing query inseconds.

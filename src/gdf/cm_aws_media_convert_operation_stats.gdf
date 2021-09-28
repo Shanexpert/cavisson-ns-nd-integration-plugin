@@ -1,0 +1,9 @@
+# --- GDF Version History ---
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS MediaConvert Operation Stats|11377|vector|1|0|AWS Metrics|AccountName>Region>Operation|AWS Elemental MediaConvert is a file-based video processing service that provides scalable video processing for content owners and distributors with media libraries of any size.
+
+Graph|AWS MediaConvert Errors|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of errors caused by invalid operation parameters such as a request for a job status that does not include the job ID.
+

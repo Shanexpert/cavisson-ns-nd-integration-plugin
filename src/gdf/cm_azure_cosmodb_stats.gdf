@@ -1,0 +1,127 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Azure CosmoDb Stats|22222|vector|60|0|Azure Metrics|AccountName>Region>ResourceGroup>databaseAccounts|Azure Cosmos DB is a fully managed NoSQL database service for modern app development with guaranteed single-digit millisecond response times and 99.999-percent availability backed by SLAs, automatic and instant scalability, and open source APIs for MongoDB and Cassandra.
+
+Graph|Azure Cosmodb Add Region Count|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA| Number of added Region in Cosmodb.
+
+Graph|Azure Cosmodb Autoscale Max Throughput|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Autoscale max throughput.
+
+Graph|Azure Cosmodb Available Storage(GB)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Cosmos DB collection storage size in GB.
+
+Graph|Azure Cosmodb Cassandra Connector Avg Replication Latency(ms)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Cassandra connector average replication latency.
+
+Graph|Azure Cosmodb Cassandra Connector Replication Health Status|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Cassandra cnnector replication health status.
+
+Graph|Azure Cosmodb Cassandra Keyspace Created|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of cassandra keyspace created.
+
+Graph|Azure Cosmodb Cassandra Keyspace Deleted|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of cassandra keyspace deleted.
+
+Graph|Azure Cosmodb Cassandra Keyspace Throughput Updated|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of cassandra keyspace throughput updated.
+
+Graph|Azure Cosmodb Cassandra Keyspace Updated|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of cassandra keyspace updated.
+
+Graph|Azure Cosmodb Cassandra Table Created|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of cassandra table created.
+
+Graph|Azure Cosmodb Cassandra Table Deleted|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of cassandra table deleted.
+
+Graph|Azure Cosmodb Cassandra Table Throughput Updated|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of cassandra table throughput updated.
+
+Graph|Azure Cosmodb Cassandra Table Updated|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of cassandra table updated.
+
+Graph|Azure Cosmodb  Account Created|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of account created in Cosmodb.
+
+Graph|Azure Cosmodb Data Usage(Bytes)|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total data usage reported at 5 minutes granularity.
+
+Graph|Azure Cosmodb Delete Account|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of account Deleted in Cosmodb.
+
+Graph|Azure Cosmodb Document Count|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total document count reported at 5 minutes granularity.
+
+Graph|Azure Cosmodb Removed Region|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of region removed.
+
+Graph|Azure Cosmodb Sql Container Deleted|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of sql container deleted.
+
+Graph|Azure Cosmodb Sql Container Throughput Updated|20|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of sql container throughput updated.
+
+Graph|Azure Cosmodb Gremlin Graph Throughput Updated|21|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of gremlin graph throughput updated.
+
+Graph|Azure Cosmodb Gremlin Graph Updated|22|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of gremlin graph updated.
+
+Graph|Azure Cosmodb Index Usage(Bytes)|23|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total index usage reported at 5 minutes granularity.
+
+Graph|Azure Cosmodb Metadata Requests(Count)|24|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Count of metadata requests Cosmos DB maintains system metadata collection for each account that allows you to enumerate collection databases etc.
+
+Graph|Azure Cosmodb Mongo Collection Deleted|25|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of mongo collection deleted.
+
+Graph|Azure Cosmodb Mongo Collection Throughput Updated|26|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of mongo collection throughput updated.
+
+Graph|Azure Cosmodb Mongo Collection Updated|27|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of mongo collection updated.
+
+Graph|Azure Cosmodb Mongo DB Database Updated|28|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of mongo database updated.
+
+Graph|Azure Cosmodb Mongo Database Deleted|29|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of mongo database deleted.
+
+Graph|Azure Cosmodb Mongo Database Throughput Updated|30|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of mongo database throughput updated.
+
+Graph|Azure Cosmodb Mongo Request Charge(Count)|31|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Mongo request units consumed.
+
+Graph|Azure Cosmodb Mongo Requests(Count)|32|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of mongo requests made.
+
+Graph|Azure Cosmodb Mongo Requests Count/Sec|33|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Mongo request Count per second.
+
+Graph|Azure Cosmodb Mongo Requests Delete/Sec|34|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Mongo delete request per second.
+
+Graph|Azure Cosmodb Mongo Requests Insert/Sec|35|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Mongo insert count per second.
+
+Graph|Azure Cosmodb Mongo Requests Query/Sec|36|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Mongo query request per second.
+
+Graph|Azure Cosmodb Mongo Requests Update/Sec|37|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Mongo update request per second.
+
+Graph|Azure Cosmodb Normalized RU Consumption(%)|38|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Max RU consumption percentage per minute.
+
+Graph|Azure Cosmodb Provisioned Throughput|39|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Provisioned throughput.
+
+Graph|Azure Cosmodb Region Failover|40|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Region Failed Over
+
+Graph|Azure Cosmodb Sql Container Updated|41|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of sql container updated.
+
+Graph|Azure Cosmodb Sql Database Deleted|42|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of sql database deleted.
+
+Graph|Azure Cosmodb Sql Database Throughput Updated|43|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of sql database throughput updated.
+
+Graph|Azure Cosmodb Sql Database Updated|44|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of sql database updated.
+
+Graph|Azure Cosmodb Table  Throughput Updated|45|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of azure table throughput updated.
+
+Graph|Azure Cosmodb Table  Updated|46|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of azure table updated.
+
+Graph|Azure Cosmodb Updated Account Keys(Count)|47|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of account keys updated.
+
+Graph|Azure Cosmodb Updated Account Network Settings(Count)|48|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of account network settings updated.
+
+Graph|Azure Cosmodb Account Replication Settings Updated|49|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Account replication settings updated.
+
+Graph|Azure Cosmodb Diagnostics Settings Updated(Count)|50|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Account diagnostic settings updated.
+
+Graph|Azure Cosmodb Document Quota(GB)|51|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total storage quota reported at 5 minutes granularity.
+
+Graph|Azure Cosmodb Gremlin Database Created|52|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of gremlin database created.
+
+Graph|Azure Cosmodb Gremlin Database Deleted|53|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of gremlin database deleted.
+
+Graph|Azure Cosmodb Gremlin Database Throughput Updated|54|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of gremlin database throughput updated.
+
+Graph|Azure Cosmodb Gremlin Database Updated|55|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of gremlin database updated.
+
+Graph|Azure Cosmodb Gremlin Graph Created|56|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of gremlin graph created.
+
+Graph|Azure Cosmodb Replication Latency(ms)|57|scalar|sample|-|-|0|NA|-1|-1|NA|NA|P99 Replication latency across source and target regions for geo-enabled account.
+
+Graph|Azure Cosmodb Total Requests|58|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of requests made.
+
+Graph|Azure Cosmodb Total Request Units|59|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Request Units consumed.
+
+Graph|Azure Cosmodb Service Availability(%)|60|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Account requests availability at one hour day or month granularity

@@ -1,0 +1,46 @@
+Info|3.1|1|-|-|-1|-1|-
+
+Group|ASP.NET Applications v2.0.50727 Stats|10703|vector|42|0|Application Metrics|Tier>Server>Instance|ASP.NET Application v2.0.50727 Stats
+
+Graph|Cache Entries|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of entries within the cache added by the user.
+Graph|Cache Hit Ratio|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Ratio of cache hits.
+Graph|Cache Hits|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of cache hits.
+Graph|Cache Misses|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of cache misses.
+Graph|Cache Entries Trims|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of entries forcibly removed from the cache due to memory pressure.
+Graph|Cache Turn Over/Sec|6|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of additions and removals to the API cache per second.
+Graph|Cache Machine Memory Used (%)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of physical memory used by the machine divided by the physical memory limit for the cache, as a percentage.
+Graph|Cache Process Memory Used (%)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of reserved private bytes for the worker process used by the cache, as a percentage.
+Graph|Cache Total Entries|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of entries within the cache (both internal and user added.
+Graph|Cache Total Hit Ratio|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Ratio of hits from all cache calls.
+Graph|Cache Hits/Sec|11|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of hits from the cache per second.
+Graph|Cache Misses/Sec|12|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of cache misses per second.
+Graph|Cache Trims/Sec|13|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of entries forcibly removed from the cache per second due to memory pressure.
+Graph|Cache Total Turnover/Sec|14|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of additions and removals to the total cache per second.
+Graph|Requests Size (Bytes)|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Size of all requests in bytes.
+Graph|Response Size (Bytes)|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Size of responses sent to a client in bytes.
+Graph|Request Error Events Raised|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of runtime error events raised since the application was started.
+Graph|Request Error Events Raised/Sec|18|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of runtime error events occured due to running application per second.
+Graph|Request Events Raised|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of request events raised since the application was started.
+Graph|Request Events Raised/Sec|20|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of request events raised per second.
+Graph|Request Execution Time (ms)|21|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of time in milliseconds that the application took to execute the most recent request.
+Graph|Requests Disconnected|22|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of requests disconnected due to communication errors or user terminated.
+Graph|Requests Executing|23|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of requests currently executing.
+Graph|Requests Failed|24|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of failed requests.
+Graph|Requests In Application Queue|25|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of requests in the application request queue.
+Graph|UnAuthorized Requests|26|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of requests failed due to unauthorized access.
+Graph|Requests Not Found|27|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of requests for resources that were not found..
+Graph|Requests/Sec|28|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of requests executed per second..
+Graph|Requests Rejected|29|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of requests rejected because the application request queue was full.
+Graph|Requests Succeeded|30|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of requests that executed successfully.
+Graph|Requests Timed Out|31|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of requests that timed out.
+Graph|Requests Total|32|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of requests since the application was started
+Graph|Request Wait Time|33|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of time in milliseconds, the most recent request was waiting in the queue.
+Graph|Error Events Raised|34|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of error events raised since the application was started.
+Graph|Error Events Raised/Sec|35|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of error events per second.
+Graph|Errors During Compilation|36|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of errors that have occurred during compilation.
+Graph|Errors During Execution|37|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of errors that have occurred during the processing of a request.
+Graph|Errors During Preprocessing|38|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of errors that have occurred during parsing and configuration.
+Graph|Total Errors|39|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of errors occurred.
+Graph|Errors/Sec|40|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of errors occurred per second.
+Graph|Errors Unhandled During Execution|41|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of errors not handled by user code, but by the default error handler.
+Graph|Unhandled Error During Execution/Sec|42|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of unhandled errors per second while application executing.

@@ -1,0 +1,37 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Azure ServiceBus Stats|11466|vector|15|0|Azure Metrics|AccountName>Region>ResourceGroup>ServiceBus|Azure Service Bus Messaging documentation. Learn how to set up messaging that connects applications and services across on-premises and cloud
+
+Graph|Azure ServiceBus Successful Requests|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total successful requests for a namespace
+
+Graph|Azure ServiceBus Server Errors|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Server Errors for Microsoft.ServiceBus.
+
+Graph|Azure ServiceBus User Errors|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|User Errors for Microsoft.ServiceBus.
+
+Graph|Azure ServiceBus Throttled Requests|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Throttled Requests for Microsoft.ServiceBus.
+
+Graph|Azure ServiceBus Incoming Requests|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Incoming Requests for Microsoft.ServiceBus.
+
+Graph|Azure ServiceBus Incoming Messages|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Incoming Messages for Microsoft.ServiceBus.
+
+Graph|Azure ServiceBus Outgoing Messages|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Outgoing Messages for Microsoft.ServiceBus.
+
+Graph|Azure ServiceBus Active Connections|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total Active Connections for Microsoft.ServiceBus.
+
+Graph|Azure ServiceBus Connections Opened|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Connections Opened for Microsoft.ServiceBus.
+
+Graph|Azure ServiceBus Connections Closed|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Connections Closed for Microsoft.ServiceBus.
+
+Graph|Azure ServiceBus Size (Bytes)|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Size of an queue,topic in bytes.
+
+Graph|Azure ServiceBus Count Of Messages In A Queue/Topic|12|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Count of messages in a Queue,Topic.
+
+Graph|Azure ServiceBus Count Of Active Messages In A Queue/Topic|13|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Count of active messages in a Queue,Topic.
+
+Graph|Azure ServiceBus Count Of Dead-lettered Messages In A Queue/Topic|14|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Count of dead-lettered messages in a Queue,Topic.
+
+Graph|Azure ServiceBus Count Of Scheduled Messages In A Queue/Topic|15|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Count of scheduled messages in a Queue,Topic.

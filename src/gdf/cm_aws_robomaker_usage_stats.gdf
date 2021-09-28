@@ -1,0 +1,9 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS RoboMaker Usage Stats|11405|vector|1|0|AWS Metrics|AccountName>Region>Usage|AWS RoboMaker is a service that makes it easy to create robotics applications at scale.
+
+Graph|AWS Robomaker Resource Count|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of the specified resources running in your account. The resources are defined by the dimensions associated with the metric.

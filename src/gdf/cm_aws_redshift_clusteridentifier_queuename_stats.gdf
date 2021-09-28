@@ -1,0 +1,12 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS RedShift ClusterIdentifier Queue Stats|11401|vector|2|0|AWS Metrics|AccountName>Region>ClusterIdentifier>QueueName|Amazon RedShift is a data warehouse product which forms part of the larger cloud-computing platform Amazon Web Services.
+
+Graph|AWS RedShift WLM Running Query|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of queries running from both the main cluster and concurrency scaling cluster per WLM queue.
+
+Graph|AWS RedShift WLM Waiting Query|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of queries waiting to enter a workload management (WLM) queue.
+

@@ -1,0 +1,1374 @@
+#!/bin/sh
+
+################################################################################################
+# Name          : nsu_git_service_ex 
+#
+# Purpose       : This shell provide different options of GIT features
+#                 This shell is called by UI
+#                 Following operation is supporetd -
+#                   * clone
+#                   * pull
+#                   * commit
+#                   * push
+#                   * checkout
+#                   * log
+#                   * diff
+#                   * revert
+#                   * reset
+#
+# Syntax        : nsu_git_service_ex -o <operation> -n <product> -r <script/scenario>
+#
+# Author(s)     : Abhay Singh 
+# Mod. Hist.    : [B-Bugid] [A-Author] [T-Time] [Discription] 
+#               : [B-50088] [A-Abhay Singh] [T- --] [Support new operations log by commit id]
+#               : [B-81991] [A-Manish Mishra] [T-Sat Apr  4 10:48:15 IST 2020] [Clenaing code 
+#                   and supporting HTTP/HTTPS support]
+#               : [B-97985] [A-Vikas Verma] [T- Mon Jan 25 22:05:10 IST 2021] [Support of single git repo]
+###############################################################################################
+
+# Declare global variables
+# Common vars
+DLOG_FILE="`pwd`/.git.log"
+ELOG_FILE="`pwd`/.git.err"
+CUR_DATE_TIME=`date '+%m%d%y_%H%M%S'` 
+CMD_OUT=""
+ERR_MSG=""
+SUCC_MSG=""
+IS_RECONFIGURED=0
+NEW_CLONE=0
+ERROR="ERROR!!! "
+# GIT url vars
+GIT_USER=""
+DEBUG=1
+TIMEOUT=3600
+# Cmdline vars
+OPERATION=""
+FILES=""
+COMMIT_MESSAGE=""
+PRODUCT="NS"
+LOCAL_REPO_PATH=""
+
+SSH_KEY=""
+
+#****************************************************************************************
+TA_DIR_NAME="cavisson"
+FULL_NAME=""
+EMAILID=""
+GIT_URL=""
+BRANCH_NAME=""
+#WorkProfile Configuration File
+WP_CONF_FILE=".workprofile.conf"
+SSH_KEY_NAME=".ssh_key"
+SSH_CONFIG_NAME=".ssh_config"
+WORKSPACE_PROFILE=""
+WORKSPACE=""
+PROFILE=""
+WORK_PROFILE_PATH=""
+#******************************************************************************************
+Usage(){
+  echo "nsu_git_service
+         -n <product_name> 
+         -s <git url>
+         -i <commit hash>
+         -u <Git_User> 
+         -o <PUSH>/<PULL>/<CLONE>/<COMMIT>/<REVERT>/<DIFF>/<LOG>/<RESET>
+         -f (files) <f1,f2,f3>
+         -U <ACL_USER>
+         -m <commit message>
+         -P <PASSWORD> 
+          ?) usage ;;"
+  exit 1;
+}        
+
+print_all_args()
+{
+  while (( "$#" ))
+  do 
+    echo -e $1 
+    shift 
+  done
+}
+
+debug_logs()
+{
+  if [ "$DEBUG" == "1" ];then
+   echo -e "[`date +\"%D %H:%M:%S\"`] $@" >> $DLOG_FILE
+  fi
+}
+
+error_exit()
+{
+  echo -e "[`date +\"%D %H:%M:%S\"`] Error: $@ \n-------\n`cat $CMD_OUT`\n-------\n" >> $ELOG_FILE 
+
+  #echo -e "Error: $@" 
+  print_all_args "$@"
+
+  exit 1 
+}
+
+_exit()
+{
+  echo "$*"
+  exit 1 
+}
+
+#****************************************************************************************
+#$1 ==> field name
+#$2 ==> field value
+exit_if_empty()
+{
+  if [ "X$2" == "X" ];then
+    _exit "$1 $2 is empty.\n GIT operation failed."
+  fi
+}
+
+#****************************************************************************************
+success_exit()
+{
+  debug_logs "$@" 
+
+  #echo -e "$@"
+  print_all_args "$@"
+
+  cleanup
+  exit 0
+}
+
+out_logs()
+{
+  debug_logs "$@"
+
+  #echo -e "$@"
+  print_all_args "$@"
+}
+
+save_dlog()
+{
+  OLD_DLOG_FILE=$DLOG_FILE
+  OLD_ELOG_FILE=$ELOG_FILE
+  
+  DLOG_FILE="$WORK_PROFILE_PATH/.logs/git.log"
+  ELOG_FILE="$WORK_PROFILE_PATH/.logs/git.err"
+  CMD_OUT="$WORK_PROFILE_PATH/.logs/cmd.out.$$"
+ 
+
+  if [ -f ${OLD_DLOG_FILE} ];then
+    cat ${OLD_DLOG_FILE} >>${DLOG_FILE}
+  fi
+
+  if [ -f ${OLD_ELOG_FILE} ];then
+    cat ${OLD_ELOG_FILE} >>${ELOG_FILE}
+  fi
+
+  rm -f ${OLD_DLOG_FILE} ${OLD_ELOG_FILE} >>${DLOG_FILE}
+  >$CMD_OUT
+  
+  debug_logs "[SAVE_DLOG] CMD_OUT = $CMD_OUT"
+}
+
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# Name		: remove_1Rn_char()
+# Purpose	: Remove first or last character from given string.
+#                 pos: 1 => Remove first character
+#                      n => Remove last character
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+remove_1Rn_char()
+{
+  in=$1
+  lchar=$2
+  pos=$3
+
+  debug_logs "[REMOVE_FIRST_LAST_CHAR] in = $in, lchar = $lchar, pos = $pos"
+
+  if [ "X$pos" == "X1" ];then  # Remove first character
+    tmp_char="${in:0:1}"
+    debug_logs "[REMOVE_FIRST_LAST_CHAR] Remove first character = $tmp_char from $in" 
+    if [ "X$lchar" == "X$tmp_char" ];then
+      echo "${in#?}"
+      return
+    fi
+  else
+    tmp_char="${in: -1}"       # Remove last character
+    debug_logs "[REMOVE_FIRST_LAST_CHAR] Remove last character = $tmp_char from $in" 
+    if [ "X$lchar" == "X$tmp_char" ];then
+      echo "${in%?}"
+      return
+    fi
+  fi
+
+  # Return same string
+  echo "$in"
+}
+
+set_password_passphrase()
+{
+  if [ "XX$PASSWORD" != "XX" ];then
+    GIT_PASSWORD=$PASSWORD
+    GIT_PASSPHRASE=$PASSWORD
+  elif [ "XX$CAV_PASSWORD" != "XX" ];then
+    GIT_PASSWORD=$CAV_PASSWORD
+    GIT_PASSPHRASE=$CAV_PASSWORD
+  elif [ "XX$CAV_PASSPHRASE" != "XX" ];then
+    GIT_PASSWORD=$CAV_PASSPHRASE
+    GIT_PASSPHRASE=$CAV_PASSPHRASE  
+  fi
+
+  decrypt_password
+}
+parse_git_config()
+{
+  GIT_URL=`echo $1|awk -F[\'\'] '{print $1}'|awk '{print $1}'`
+  BRANCH_NAME=`echo $1|awk -F[\'\'] '{print $1}'|awk '{print $2}'`
+  GIT_USER=`echo $1|awk -F[\'\'] '{print $1}'|awk '{print $3}'`
+  GIT_PASSWORD=`echo $1|awk -F[\'\'] '{print $1}'|awk '{print $4}'`
+  GIT_PASSPHRASE=`echo $1|awk -F[\'\'] '{print $1}'|awk '{print $5}'`
+  
+  FULL_NAME=`echo $1|awk -F[\'\'] '{print $2}'`
+  EMAILID=`echo $1|awk -F[\'\'] '{print $3}'|awk '{print $1}'`
+  DISABLE_SSL_VERIFY=`echo $1|awk -F[\'\'] '{print $3}'|awk '{print $2}'`
+  #decrypt_password 
+}
+
+read_git_passwd()
+{
+  if [ -f $CONFIG_FILE ];then
+    CONFIG_DATA=`grep "^GIT_CONFIG.*=" ${CONFIG_FILE} | cut -d'=' -f2-`
+    GIT_PASSWORD=`echo $CONFIG_DATA|awk -F[\'\'] '{print $1}'|awk '{print $4}'`
+    GIT_PASSPHRASE=`echo $CONFIG_DATA|awk -F[\'\'] '{print $1}'|awk '{print $5}'`
+  fi
+}
+
+
+decrypt_password()
+{
+  # Decrypt Password and Phase phase, It is assumed UI write pass in encrypted form
+  # Java class EncryptDecryptText will encrypt and decrypt pass
+  if [ "XX$GIT_PASSWORD" != "XX" -a "XX$GIT_PASSWORD" != "XXNA"  ];then
+    GIT_PASSWORD=`java -cp $NS_WDIR/webapps/netstorm/lib/netstorm_bean.jar:/home/cavisson/monitors/lib/java-getopt-1.0.9.jar pac1.Bean.EncryptDecryptText -t "$GIT_PASSWORD" -e 0`
+  fi
+
+  if [ "XX$GIT_PASSPHRASE" != "XX" -a "XX$GIT_PASSPHRASE" != "XXNA" ];then
+    GIT_PASSPHRASE=`java -cp $NS_WDIR/webapps/netstorm/lib/netstorm_bean.jar:/home/cavisson/monitors/lib/java-getopt-1.0.9.jar pac1.Bean.EncryptDecryptText -t "$GIT_PASSPHRASE" -e 0`
+  fi
+}
+
+# ######################################################################
+# Name		: read_git_config()
+# Purpose	: Read file $NS_WDIR/workspace/$WORKSPACE_PROFILE/git_config.conf 
+#                 Parse keyword GIT_CONFIG
+#                 GIT_CONFIG format
+#                  GIT_CONFIG = <git_repo_url> <branch_name> <git_usr> <git_pass> <git_passphase> <full_name> <email_id> 
+#
+#                 Eg: Arguments MUST be in double quotes
+#                   GIT_CONFIG = "http://10.10.30.23/gitlabadmin/prod-src" "origin/4.6.1" "manish" "cav_repo" "manish123" "Manish Kumar" "manish@cavisson.com"
+#
+#                 -> All fields are mandatory. Either value or NA.
+#                 -> Repository can be on any path
+# ######################################################################
+read_git_config()
+{
+  READ_LINE=""
+  CONFIG_FILE="$WORK_PROFILE_PATH/$WP_CONF_FILE"
+  REPO_NAME=`echo ${GIT_URL} | awk -F'/' '{print $NF}' | cut -d'.' -f 1`  # GIT Repository name
+  # ++++++++++++++++++++++++++++++++++++++++++++++++++++
+  # In case of operation TEST , UI will provide GIT_CONFIG -
+  # in command line by argument -m , and will save into
+  # file only if Button Ok click.
+  # ++++++++++++++++++++++++++++++++++++++++++++++++++++
+  if [ "X$OPERATION" == "XTEST" ]; then
+     read_git_passwd
+     return 0
+  fi
+
+  if [ ! -f $CONFIG_FILE ]; then
+    error_exit "$ERROR git configurtion file $WP_CONF_FILE doesn't exists."
+  fi
+
+  VERSION_CONTROL=`grep "^VERSION_CONTROL.*=" ${CONFIG_FILE} | cut -d'=' -f2-`
+  TA_PATH=`grep "^TA_PATH.*=" ${CONFIG_FILE} | cut -d'=' -f2-`
+  DEBUG=`grep "^DEBUG.*=" ${CONFIG_FILE} | cut -d'=' -f2-`
+  GIT_PROXY=`grep "^PROXY_URL.*=" ${CONFIG_FILE} | cut -d'=' -f2- | tr -d ' '`
+  CONFIG_DATA=`grep "^GIT_CONFIG.*=" ${CONFIG_FILE} | cut -d'=' -f2-`
+  debug_logs "[GIT_CONFIG] parsing config : $CONFIG_DATA"
+  #exit_if_empty "READ_LINE" $READ_LINE
+  #exit_if_empty "VERSION_CONTROL" $VERSION_CONTROL
+  #exit_if_empty "TA_PATH" $TA_PATH
+  exit_if_empty "CONFIG_DATA" $CONFIG_DATA
+ 
+
+  #parse_git_config "$READ_LINE"
+  parse_git_config "$CONFIG_DATA"
+  REPO_NAME=`echo ${GIT_URL} | awk -F'/' '{print $NF}' | cut -d'.' -f 1`  # GIT Repository name
+  # Process read line if any
+  #debug_logs "[GIT_CONFIG] READ_LINE = $READ_LINE"
+  debug_logs "[GIT_CONFIG] CONFIG_DATA = $CONFIG_DATA"
+  if [ "X${REPO_NAME}" == "X" -o "${REPO_NAME}" == "${GIT_USER}" ]; then
+        echo "GIT configuration test failed. Provided git repository path is not valid."
+        exit 1
+  fi
+  
+  
+  debug_logs "[GIT_CONFIG] inputs are: GIT_URL = $GIT_URL, BRANCH_NAME = $BRANCH_NAME, "                 \
+             "LOCAL_REPO_PATH = $LOCAL_REPO_PATH, GIT_USER = $GIT_USER, "  \
+             "EMAILID = $EMAILID, FULL_NAME = $FULL_NAME"
+
+  # All fields are mandatory
+  if [ "X$GIT_URL" = "X" ] || [ "X$BRANCH_NAME" = "X" ] || [ "X$FULL_NAME" = "X" ] ||  \
+     [ "X$GIT_USER" = "X" ] || [ "X$GIT_PASSWORD" = "X" ] || [ "X$GIT_PASSPHRASE" = "X" ] || \
+     [ "X$EMAILID" = "X" ] ;then
+    error_exit "Missing one or more fields of keyword GIT_CONFIG in file " \
+               "$NS_WDIR/workspace/$WORKSPACE/$PROFILE.\nPlease consult from admin/devloper."
+  fi
+
+  if [ "X$DISABLE_SSL_VERIFY" == "Xtrue" ];then
+    debug_logs "[GIT_CONFIG] Disabling SSL verification, DISABLE_SSL_VERIFY = $DISABLE_SSL_VERIFY"
+    export GIT_SSL_NO_VERIFY=1
+  fi
+
+  debug_logs "[GIT_CONFIG] LOCAL_REPO_PATH = $LOCAL_REPO_PATH,  REPO_NAME = $REPO_NAME"
+ 
+}
+
+# #################################################################################
+# Name		: chk_and_update_repo_url()
+# Purpose	: Check whether GIT-Configuration has changed ot not? If it is - 
+#                 changed then update it for calling repository.
+# #################################################################################
+chk_and_update_repo_url()
+{
+  # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  # Try to add remote origin for given url, if it fails and provided url is 
+  #   different from old one then update url for remote origin
+  #
+  # git remote -v
+  #      origin	http://209.208.10.61/gyanendra/scenarios (fetch)
+  #      origin	http://209.208.10.61/gyanendra/scenarios (push)
+  # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  debug_logs "[UPDATE_URL] Updating url = $GIT_URL"
+
+  git remote add origin $GIT_URL>>${DLOG_FILE} 2>&1 
+  if [ $? -ne 0 ];then
+    CUR_GIT_URL=`git remote -v|grep fetch|awk -F' ' '{print $2}'`
+    debug_logs "[UPDATE_URL] CUR_GIT_URL = $CUR_GIT_URL"
+    if [ "X$CUR_GIT_URL" != "X$GIT_URL" ];then
+      git remote set-url origin $GIT_URL >>${DLOG_FILE} 2>&1
+      IS_RECONFIGURED=1 
+    fi
+  fi
+
+  debug_logs "[UPDATE_URL] IS_RECONFIGURED = $IS_RECONFIGURED"
+}
+
+
+# git clone https://github.com/mishramanish/scripts.git /home/cavisson/Gen1/webapps/scripts
+git_runcmd()
+{
+  GITCMD_STATUS=0
+  GIT_CMD=$1     
+
+  debug_logs "[RUN_CMD] Method called, GIT_CMD = ${GIT_CMD}, pwd = `pwd`" 
+
+  # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  # On running GIT command Following possible cases can be -
+  # 1. Asked for GIT User name and Password
+  # 2. Asked for Passphase  
+  # 3. SSH user and password
+  # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  /usr/bin/expect -c '
+    set timeout '"${TIMEOUT}"'
+    spawn '"${GIT_CMD}"'
+    sleep 3
+    expect {
+      "Username" {send "'"${GIT_USER}"'\r"; exp_continue} 
+      "Password" {send "'"${GIT_PASSWORD}"'\r"; exp_continue}
+      "password:" {send "'"${GIT_PASSWORD}"'\r"; exp_continue}
+      "Permission denied, please try again." {send "Wrong password\r"; exp_continue}
+      "Enter passphrase for key" {send "'"${GIT_PASSPHRASE}"'\r"; exp_continue}
+      "Are you sure you want to continue connecting (yes/no)?" {send "yes"; exp_continue}
+      eof { }
+      timeout {puts "\nTimeout" ; close ; exit 1}
+   }
+  
+   foreach {pid spawnid os_error_flag value} [wait] break
+
+   if {$os_error_flag == 0} {
+     puts "exit status: $value"
+     exit $value
+   } else {
+     puts "errno: $value"
+     exit $value
+  }
+  ' >$CMD_OUT
+
+  if [ $? -ne 0 ]; then
+    GITCMD_STATUS=1
+  fi
+
+  debug_logs "CMD_OUT => \n-------\n`cat $CMD_OUT`\n-------\n"
+  debug_logs "[RUN_CMD] GITCMD_STATUS = $GITCMD_STATUS, GIT_CMD = [$GIT_CMD]"
+}
+
+#SERVICE_DIR=$HPD_ROOT/correlation 
+#sparse_checkout()
+#{
+#  git config core.sparseCheckout true
+#  echo "$1/*" >> .git/info/sparse-checkout
+#  git pull origin master
+#  if [ $? -ne 0 ]; then
+#    mv $BACKUP_DIR $SERVICE_DIR/webapps/scripts/$PROJ/$SUB_PROJ/$SCRIPT_DIR 
+#    error_exit "GIT CLONE Failed."
+#  else
+#    debug_logs "Cloning repository...successful"
+#  fi
+#  
+#  # To restore checkout to full
+#  git config core.sparseCheckout false
+#  git read-tree --empty
+#  git reset --hard
+#}
+
+#Function for push operation of the repository
+push_repository()
+{
+  debug_logs "[PUSH] PRODUCT = $PRODUCT"
+
+  
+  debug_logs "[PUSH]"
+
+  if [ "x$GIT_PASSWORD" == "x" ];then
+    error_exit "GIT password is missing."
+  fi
+  
+  #Before pushing anything to repository we have to perform pull operation
+  pull_repository "PUSH"
+  if [ $RETURN -eq 0 ];then  #Pass
+    git_runcmd "git push -u origin $BRANCH_NAME"
+    handle_error "$REPO_NAME" 
+    
+    if [ "X$1" != "XPUSH" ];then
+      return
+    fi
+
+    if [ $RETURN -eq 0 ];then  #Pass
+      success_exit "GIT Push successfully completed."
+    else
+      error_exit "GIT Push failed."
+    fi
+  fi
+}
+
+#Function for log operation of the repository
+log_repository()
+{
+  debug_logs "[LOG] PRODUCT = ${PRODUCT}, COMMIT_ID = ${COMMIT_ID}"
+
+  cd $TA_DIR_NAME 
+
+  if [ "X$COMMIT_ID" != "X" ];then
+    git show --pretty="" --name-only $COMMIT_ID
+    exit 0 
+  fi
+
+  debug_logs "[LOG] FILES = ${FILES}" 
+  if [ "X$FILES" != "X" ]; then
+    git log --pretty=format:"%ad|%H|%s" --date=format:'%d/%m/%Y %H:%M:%S' `echo $FILES | tr ',' ' '`
+    if [ $? -ne 0 ]; then
+      error_exit "GIT log Failed."
+    fi
+  else
+    git log --pretty=format:"%ad|%H|%s" --date=format:'%d/%m/%Y %H:%M:%S'
+  fi
+}
+
+#this function is used revert commit specific changes
+revert_repository()
+{
+  debug_logs "[REVERT] method called"
+
+  rev_flag=0
+
+  debug_logs "[REVERT] COMMIT_ID = $COMMIT_ID"
+  #git reflog show | grep "reset:"
+  if [ "X$COMMIT_ID" != "X" ];then
+    git revert --no-edit --no-commit $COMMIT_ID  
+    if [ "$?" != "0" ];then
+      rev_flag=1
+      show_repository
+      error_exit "Fix the above error manually in above listed files."
+    fi
+  else
+    error_exit "COMMIT_ID is mandatory."
+  fi
+}
+
+#this function is used revert commit specific changes
+reset_repository()
+{
+  debug_logs "[RESET] method called"
+
+  git reset --hard 
+}
+
+#Function for diff operation b/w files, commit hash, repo
+diff_repository()
+{
+  debug_logs "[DIFF] method called" 
+
+  cd $TA_DIR_NAME 
+
+  debug_logs "[DIFF] COMMIT_ID = ${COMMIT_ID}, FILES = ${FILES}"
+
+  if [ "X$COMMIT_ID" != "X" -a "X$FILES" != "X" ]; then
+    git diff `echo $COMMIT_ID | tr ',' ' '` `echo $FILES | tr ',' ' '`
+  elif [ "X$COMMIT_ID" != "X" -a "X$FILES" == "X" ]; then
+    git diff `echo $COMMIT_ID | tr ',' ' '`
+  elif [ "X$COMMIT_ID" == "X" -a "X$FILES" != "X" ]; then
+    git diff `echo $FILES | tr ',' ' '`
+  else
+    git diff .
+  fi
+}
+
+#Function for diff operation b/w files, commit hash, repo
+show_repository()
+{
+  debug_logs "[SHOW] LOCAL_REPO_PATH = $LOCAL_REPO_PATH"
+
+  if [ "$LOCAL_REPO_PATH" == "" ];then
+    error_exit "Provide git repository"
+  fi
+
+  cd $TA_DIR_NAME 
+
+  GIT_MODIFIED_FILE_COUNT=`git status --short | grep "^\ *M"  |wc -l`
+  GIT_CONFLICTED_FILE_COUNT=`git status --short | grep "^\ *UU"  |wc -l`
+  
+  if [ $GIT_MODIFIED_FILE_COUNT -gt 0 -a  "x$rev_flag" != "x1" ];then
+    git status --short `echo $FILES | tr ',' " "` | grep "^\ *M"  | awk -F' ' '{print $2"|MODIFIED"}' 
+  fi
+
+  if [ $GIT_CONFLICTED_FILE_COUNT -gt 0 ];then
+    if [ "x$rev_flag" == "x1" ]; then
+      git status --short `echo $FILES | tr , " "` | grep "^\ *UU" | awk -F' ' '{print $2}' 
+    else
+      git status --short `echo $FILES | tr , " "` | grep "^\ *UU" | awk -F' ' '{print $2"|CONFLICTED"}' 
+    fi
+  fi
+  
+  if [ $GIT_MODIFIED_FILE_COUNT -gt 0 -a  "$SHOW_FLAG" = "1" ];then
+    git status --short `echo $FILES | tr ',' " "` | grep "^\ *M"  | awk -F' ' '{print $2"|MODIFIED"}' 
+  fi
+}
+
+#Function for pull operartion of the repository
+pull_repository()
+{
+  debug_logs "[PULL] change dir"
+
+  debug_logs "[PULL] Check for deleted files... " 
+  del_files=`git ls-files --deleted`
+  if [ "X$del_files" != "X" ];then
+    git checkout $del_files >>${DLOG_FILE} 2>&1 
+    debug_logs "[PULL] Fetched all deleted files" 
+  fi
+
+  # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  # --no-edit:
+  #   If GIT-Configuration changed, then pull opens a editor to -
+  #   to provide merge message. It create an issue.
+  #   To avoid this issue using option --no-edit so that -
+  #   editor is not open and GIT auto add a merge message
+  #
+  # --rebase:
+  #   The --rebase option tells Git to move all of local commits -
+  #   to the tip of the master branch after synchronising it with -
+  #   the changes from the central repository
+  #
+  #   --rebase also override repository changes with new one. So conflict -
+  #   no happens
+  # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  if [ $NEW_CLONE -eq 1 ];then
+    git_runcmd "git fetch origin $BRANCH_NAME"
+    git_runcmd "git checkout $BRANCH_NAME"
+    git_runcmd "git pull origin $BRANCH_NAME"
+  else    
+    git status --short | grep "^\ *M" >>$DLOG_FILE
+    if [ $? -eq 0 ];then
+      if [ $IS_RECONFIGURED -eq 0 ];then
+        git_runcmd "git pull origin $BRANCH_NAME"
+      else
+        git_runcmd "git pull origin $BRANCH_NAME --no-edit"
+      fi
+    else
+      if [ $IS_RECONFIGURED -eq 0 ];then
+        git_runcmd "git pull origin $BRANCH_NAME --rebase"
+      else
+        git_runcmd "git pull origin $BRANCH_NAME --rebase --no-edit"
+      fi
+    fi
+  fi
+
+  handle_error "$REPO_NAME"
+
+  ### If not call form operation PULL then return from here 
+  if [ "X$1" != "XPULL" ];then
+    return
+  fi
+
+  if [ $RETURN -eq 0 ];then  #Pass
+    debug_logs "[PULL] fetching files form branch $BRANCH_NAME, cmd = git pull origin $BRANCH_NAME"
+    if [ $IS_RECONFIGURED -eq 0 ];then
+      success_exit "GIT Pull completed successfully."\
+                   "$ERR_MSG"
+     else
+      success_exit "GIT Pull completed successfully."\
+                   "Merged branch master of $GIT_URL."\
+                   "Warning: Local repository changes may be overwritten by newly configured repository." 
+     fi
+  else
+    if [ "X$ERR_MSG" == "XCONFLICT" ]; then
+        debug_logs "[PULL] There is conflict to reset it to last commit"
+        git reset --hard >>$ELOG_FILE
+        error_exit "GIT Pull failed."\
+                   "There are some merge conflict found so reset it to last commit."
+    else
+      error_exit "GIT Pull failed."\
+                 "$ERR_MSG"
+    fi
+  fi
+}
+
+# #############################################################
+# [ Clone ]
+#
+# Case 1: scripts/scenarios dir does not exist
+# Case 2: scripts/scenarios dir exist
+# Case 3: No Scripts/Scenarios in scripts/sceanrios dir 
+# Case 4: Already some scripts/scenarios exist in script dir
+#
+# ############################################################
+init_repository()
+{
+  NEW_CLONE=0
+
+  debug_logs "[CLONE] GIT_URL = $GIT_URL, PRODUCT = $PRODUCT, "\
+             "CUR_DATE_TIME = $CUR_DATE_TIME, LOCAL_REPO_PATH = $LOCAL_REPO_PATH, REPO_NAME = $REPO_NAME"
+
+  # Check GIT-Configuration inputs 
+  if [ "X$GIT_URL" == "X" ] || [ "X$GIT_URL" == "XNA" ] ; then
+    error_exit "GIT Clone failed."\
+               "Configure valid git repo url."
+  fi
+
+  if [ -d $LOCAL_REPO_PATH/.git ];then
+     if [ "X$LOCAL_BRANCH" == "X" ];then
+        NEW_CLONE=1;
+     fi
+     return
+  fi
+    
+  NEW_CLONE=1
+  # Case 2: scripts/scenarios dir exist and Repo is also exist 
+  debug_logs "[CLONE] git init"
+  git init >>${DLOG_FILE} 2>&1 
+  
+
+  # Check and update Repository URL
+  chk_and_update_repo_url
+
+  #Enable sparseCheckout : Checkout only cavisson directory and its sub-directories 
+  if [ "X$REPO_NAME" != "Xcavisson" -a "X$TA_DIR_NAME" == "Xcavisson" ];then
+    git config core.sparseCheckout true
+    echo "cavisson/" > ${LOCAL_REPO_PATH}/.git/info/sparse-checkout
+  fi
+
+  # Add config
+  git config user.name "$FULL_NAME" >>${DLOG_FILE} 2>&1
+  git config user.email "$EMAILID" >>${DLOG_FILE} 2>&1
+  if [ "XX$GIT_PROXY" != "XX" ];then
+    git config http.proxy "$GIT_PROXY"
+    git config  http.sslverify false
+  else
+    git config --unset http.proxy 
+  fi
+
+  if [ ! -z "${GIT_SSH_COMMAND}" ];then
+    git config core.sshCommand "ssh -i ${SSH_KEY_NAME} -F ${SSH_CONFIG_NAME} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o LogLevel=quiet"
+  fi
+  echo ".logs" >> ${LOCAL_REPO_PATH}/.gitignore
+  echo ".ssh_key" >> ${LOCAL_REPO_PATH}/.gitignore
+  echo ".ssh_key.pub" >> ${LOCAL_REPO_PATH}/.gitignore
+  echo ".ssh_config" >> ${LOCAL_REPO_PATH}/.gitignore
+  echo ".workprofile.conf" >> ${LOCAL_REPO_PATH}/.gitignore
+  echo ".*.sw*" >> ${LOCAL_REPO_PATH}/.gitignore
+  echo ".*.lock" >> ${LOCAL_REPO_PATH}/.gitignore
+  echo "cavisson/.system" >> ${LOCAL_REPO_PATH}/.gitignore
+  echo "cavisson/correleation.conf" >> ${LOCAL_REPO_PATH}/.gitignore
+  echo "cavisson/data/.gitignore" >> ${LOCAL_REPO_PATH}/.gitignore  
+  echo "shared" >> ${LOCAL_REPO_PATH}/cavisson/data/.gitignore
+  echo "tmp" >> ${LOCAL_REPO_PATH}/cavisson/data/.gitignore
+}
+
+clone_repository()
+{
+  init_repository
+  pull_repository "CLONE"
+  handle_error "$REPO_NAME" 
+  if [ $RETURN -eq 0 ];then  #Pass
+    if [ $NEW_CLONE -eq 1 ];then  #Fresh Clone
+      success_exit "GIT Clone successfully completed."
+    else #Repo already exist 
+      if [ $IS_RECONFIGURED -eq 0 ];then
+        success_exit "Repository $REPO_NAME already exist."\
+                     "Updated with the latest changes."
+      else
+        # TODO: need to make it intractive 
+        success_exit "GIT Clone successfully completed."\
+                     "Merged branch master of Repository $GIT_URL."\
+                     "Warning: Local repository changes may be overwritten by newly configured repository."
+
+      fi
+    fi
+  else #Fail
+    if [ $NEW_CLONE -eq 1 ];then
+      rm -rf .git >>${DLOG_FILE}
+    fi
+
+    error_exit "GIT Clone failed."\
+               "$ERR_MSG"
+  fi
+}
+
+# ###################################################################################
+# Name		: is_repo_exist()
+# Purpose	: Check whether repository exist or not? Any GIT operation should 
+#                   not apply if local repository not exist.
+#                 If operation is not Clone then privent operation if local -
+#                   repository not ready.
+# ###################################################################################
+is_repo_exist()
+{
+  debug_logs "[IS_REPO_EXIST], Check repository is exist or not? OPERATION = $OPERATION, "\
+             "LOCAL_REPO_PATH = $LOCAL_REPO_PATH, arg1 = $1"
+
+  # For Testing do not do anything
+  if [ "X$OPERATION" = "XTEST" ];then
+    return
+  fi
+
+  # In case of operation 'CLONE', need to make clone so skip and clone repository
+  if [ "X$OPERATION" = "XCLONE" ];then
+    return
+  fi 
+
+  # Except operation TEST and CLONE, no operation is allowed without clone.
+  if [ ! -d $LOCAL_REPO_PATH/.git ];then
+    #Bug 100173 : First clone in case of pull if not clone already
+    if [ "X$1" == "XGIT Pull failed." ]; then
+      clone_repository
+    else
+      error_exit "$1."\
+               "Repository for $REPO_NAME does not exist."\
+               "First clone it by operation GIT Clone."
+    fi
+  fi
+
+  # Check and update Repository URL
+  chk_and_update_repo_url
+
+  debug_logs "[IS_REPO_EXIST] Local repository exist." 
+}
+
+
+checkout_repository()
+{
+  debug_logs "[CHECKOUT] LOCAL_REPO_PATH = $LOCAL_REPO_PATH, REPO_NAME = $REPO_NAME"
+
+  cd $TA_DIR_NAME 
+
+  if [ "X$FILES" != "X" ]; then
+    debug_logs "[CHECKOUT] checkout specific files"
+
+    flist=`echo $FILES | tr ',' ' '`
+    debug_logs "flist = $flist"
+
+    for f in $flist
+    do
+      debug_logs "f = $f"
+      files="${files} $f"
+    done
+
+    git_runcmd "git checkout $files"
+    handle_error "$GIT_URL"
+    if [ $RETURN -eq 0 ];then
+      debug_logs "[CHECKOUT] file ${files} sucessfully"
+    else
+      error_exit "GIT checkout failed.""$ERR_MSG"
+    fi
+  else
+    #ToDO: Error hadling for below commands
+    git_runcmd "git fetch origin $BRANCH_NAME"
+    git_runcmd "git checkout $BRANCH_NAME"
+    git_runcmd "git pull origin $BRANCH_NAME"
+  fi
+
+  success_exit "Git checkout successfully ."\
+                   "$ERR_MSG"
+}
+
+
+# ######################################################
+# [ COMMIT ]
+# Case 1: New files/dir
+# Case 2: Modified files/dir
+# Case 3: Already commited files or dir
+# -----------------------
+# Possible fail cases:  
+# ----------------------
+# 1. Committing a file without adding 
+#      error: pathspec 'hpd3.conf' did not match any file(s) known to git
+# 2. Committing already committed but not pushed file
+#      On branch master
+#      Your branch is ahead of 'origin/master' by 3 commits.
+#      (use "git push" to publish your local commits)
+#      Untracked files:
+#      	../../abc/
+#
+#      nothing added to commit but untracked files present
+ 
+# ###################################################### 
+
+#this function commits the changes in local repo and push it on the remote repo
+commit_repository()
+{
+  debug_logs "[COMMIT] PRODUCT = ${PRODUCT}, LOCAL_REPO_PATH = $LOCAL_REPO_PATH, REPO_NAME = $REPO_NAME"
+
+  cd $TA_DIR_NAME 
+
+  debug_logs "[COMMIT] COMMIT_MESSAGE = $COMMIT_MESSAGE, GIT_ACL_USER = $GIT_ACL_USER"
+
+  if [ "X$COMMIT_MESSAGE" == "X" ];then 
+    error_exit "GIT commit failed."\
+               "Commit message is missing."
+  elif [  "X$GIT_ACL_USER" == "X" ];then
+    error_exit "GIT commit failed."\
+               "ACL user is missing."
+  fi
+
+  # Check modification for commit
+  debug_logs "[COMMIT] check modified and new files"
+
+
+  # Check is there any file or dir for commit on repository level
+  git status --short | egrep "^\ *M|^\ *??|^\ *A"  >>$DLOG_FILE
+  if [ $? -eq 1 ];then
+    git status | grep "Your branch is ahead of" >>$DLOG_FILE
+    if [ $? -eq 1 ];then 
+      success_exit "Repository $REPO_NAME is up-to-date."\
+                   "Nothing to commit."
+    fi
+  fi
+
+  debug_logs "[COMMIT] pwd=`pwd`"
+
+  if [ "X$FILES" != "X" ]; then
+    debug_logs "[COMMIT] commit specific files"
+
+    flist=`echo $FILES | tr ',' ' '`
+    debug_logs "flist = $flist"
+
+    for f in $flist
+    do
+      debug_logs "f = $f"
+      git status --short $f | egrep "^\ *M|^\ *??|^\ *A" >>$DLOG_FILE
+      if [ $? -eq 0 ];then      
+        files="${files} $f"
+      fi
+    done
+    arg=-m
+    COMMIT_MESSAGE="$COMMIT_MESSAGE|$GIT_ACL_USER"
+    add_list=$files
+  else
+    # Commit All files
+    debug_logs "[COMMIT] GIT commit all files"
+    files=""
+    arg=-am
+    add_list=-A
+    COMMIT_MESSAGE="$COMMIT_MESSAGE|$GIT_ACL_USER"
+  fi
+
+  if [ "XX$add_list" != "XX" ]; then
+    debug_logs "[COMMIT] adding files = $files"
+    git add $add_list >> $DLOG_FILE
+    debug_logs "[COMMIT] committing files, COMMIT_MESSAGE = $COMMIT_MESSAGE, GIT_ACL_USER = $GIT_ACL_USER"
+    git commit $arg "$COMMIT_MESSAGE" $files >$CMD_OUT
+    GITCMD_STATUS=$?
+    handle_error "$REPO_NAME"
+  else
+    success_exit "Nothing to commit."
+  fi
+
+  if [ $RETURN -eq 0 ]; then
+    push_repository
+    if [ $RETURN -eq 0 ];then  #Pass
+      success_exit "GIT Commit successfully completed."\
+                     "$ERR_MSG"
+    else
+      error_exit "GIT Commit failed."\
+                   "$ERR_MSG"
+    fi
+  else
+    error_exit "GIT Commit failed."\
+                "$ERR_MSG"
+  fi
+}
+
+handle_error()
+{
+  ERR_MSG=""
+  RETURN=-1
+  TEST_REPO=$1
+
+  out=`grep "Could not resolve" $CMD_OUT`
+  if [ "X$out" != "X" ];then
+    ERR_MSG="Unable to resolve domain name $GIT_URL.\nProvide valid domain name and re-test."
+    RETURN=1
+  fi 
+
+  # Not using else because there are lots of cases and indentation goes on 
+  if [ "X$ERR_MSG" = "X" ];then
+    out=`grep "Timeout" $CMD_OUT` 
+    if [ "X$out" != "X" ];then
+        ERR_MSG="Unable to connect $GIT_URL.\nConnection timeout.\nCheck connectivity of $GIT_URL and re-test."
+        RETURN=1
+    fi
+  fi
+
+  # If route not found 
+  if [ "X$ERR_MSG" = "X" ];then
+    out=`grep "No route to host" $CMD_OUT` 
+    if [ "X$out" != "X" ];then
+      ERR_MSG="Unable to connect $GIT_URL.\nNo route to host.\nCheck connectivity of $GIT_URL and re-test."
+      RETURN=1
+    fi
+  fi
+
+  if [ "X$ERR_MSG" = "X" ];then
+    out=`grep "server certificate verification failed" $CMD_OUT | awk -F'CAfile:' '{print "CAfile:"$2}'` 
+    if [ "X$out" != "X" ];then
+      ERR_MSG="Unable to access repository $TEST_REPO.\nServer certificate verification failed.\n$out"
+      RETURN=1
+    fi
+  fi
+
+  # IP is correct but using wrong protocol 
+  if [ "X$ERR_MSG" = "X" ];then
+    out=`grep "Connection reset by peer" $CMD_OUT` 
+    if [ "X$out" != "X" ];then
+      ERR_MSG="Unable to access repository $TEST_REPO.\nConnection closed by peer."
+      RETURN=1
+    fi
+  fi
+
+  if [ "X$ERR_MSG" = "X" ];then
+    out=`grep "Failed to connect" $CMD_OUT` 
+    if [ "X$out" != "X" ];then
+      ERR_MSG="Unable to access repository $TEST_REPO.\nConnection refused by peer."
+      RETURN=1
+    fi
+  fi
+
+  if [ "X$ERR_MSG" = "X" ];then
+    out=`egrep "Invalid username or password|Wrong password|publickey,password|Authentication failed" $CMD_OUT` 
+    if [ "X$out" != "X" ];then
+      ERR_MSG="Invalid username or password.\nAuthentication failed."
+      RETURN=1
+    fi
+  fi
+
+  # Invalid repo path or invalid repo name or repo not exist
+  if [ "X$ERR_MSG" = "X" ];then
+    out=`egrep -i "Repository not found|Not Found|does not appear to be a git repository" $CMD_OUT` 
+    if [ "X$out" != "X" ];then
+      ERR_MSG="Repository $REPO_NAME not found on path."
+      RETURN=2
+    fi
+  fi
+
+  # Domain is correct but not access
+  if [ "X$ERR_MSG" = "X" ];then
+    out=`grep "Please make sure you have the correct access rights" $CMD_OUT` 
+    if [ "X$out" != "X" ];then
+      ERR_MSG="Could not read from remote repository.\nMake sure you have the correct access rights and the repository exists."
+      RETURN=1
+    fi
+  fi
+
+  # Repository is Empty 
+  if [ "X$ERR_MSG" = "X" ];then
+    out=`grep "Couldn't find remote ref master" $CMD_OUT` 
+    if [ "X$out" != "X" ];then
+      ERR_MSG="Repository $REPO_NAME is empty."
+      RETURN=0
+    fi
+  fi
+
+  # Repository does not have cavisson directory 
+  if [ "X$ERR_MSG" = "X" ];then
+    out=`grep "Sparse checkout leaves no entry on working directory" $CMD_OUT`
+    if [ "X$out" != "X" ];then
+      ERR_MSG="cavisson directory must be present in the repository."
+      RETURN=2
+    fi
+  fi
+
+  # Repository is Empty 
+  if [ "X$ERR_MSG" = "X" ];then
+    out=`egrep "Already up-to-date|Current branch master is up to date|Your branch is up-to-date" $CMD_OUT` 
+    if [ "X$out" != "X" ];then
+      ERR_MSG="Repository $REPO_NAME is already up-to-date."
+      RETURN=0
+    fi
+  fi
+
+  # Repository is Empty 
+  if [ "X$ERR_MSG" = "X" ];then
+    out=`grep "CONFLICT" $CMD_OUT` 
+    if [ "X$out" != "X" ];then
+      ERR_MSG="CONFLICT"
+      RETURN=1
+    fi
+  fi
+
+  # Nothing to commit 
+  if [ "X$ERR_MSG" = "X" ];then
+    out=`grep "nothing to commit" $CMD_OUT` 
+    if [ "X$out" != "X" ];then
+      ERR_MSG="Repository $REPO_NAME is up-to-date.\nNothing to commit."
+      RETURN=0
+    fi
+  fi
+
+  # Nothing to commit 
+  if [ "X$ERR_MSG" = "X" ];then
+    out=`grep "move or remove them before you can merge" $CMD_OUT` 
+    if [ "X$out" != "X" ];then
+      ERR_MSG="Repository $REPO_NAME has untracked files that would be overwritten by merge.\nMove or remove them before GIT merge."
+      RETURN=1
+    fi
+  fi
+
+  ##### Should be last. It is defaut message
+  if [ $GITCMD_STATUS -ne 0 ];then
+    if [ $RETURN -eq -1 ];then
+      ERR_MSG=`egrep 'fatal:|error:' $CMD_OUT | cut -d':' -f2`  
+      RETURN=1
+    elif [ $RETURN -ne 0 ] && [ $RETURN -ne 1 ] && [ $RETURN -ne 2 ];then 
+      RETURN=3
+    fi
+  else
+    RETURN=0
+  fi
+
+  debug_logs "[HANDLE_ERROR] TEST_REPO = $TEST_REPO, RETURN = $RETURN, ERR_MSG = $ERR_MSG"
+}
+
+# ##############################################################################################
+# Name   : test_git_config()
+# Purpose: Test whether provided repository exist or not
+#          Run command => git ls-remote <url>
+#
+# =================================
+# Possible Error cases for Protocol:
+# =================================
+# Case 1: Protocol is missing (: does not exist)
+# => git ls-remote //github.com1/mishramanish//scenarios
+#                         Or
+#    git ls-remote github.com1/mishramanish//scenarios
+#      fatal: '//github.com1/mishramanish//scenarios' does not appear to be a git repository
+#      fatal: Could not read from remote repository.
+#
+#      Please make sure you have the correct access rights
+#      and the repository exists.
+#
+# Case 2: Protocol is wrong (: exist)
+# => git ls-remote ://github.com1/mishramanish//scenarios
+#      fatal: I don't handle protocol ''
+#      
+# => git ls-remote h://github.com1/mishramanish//scenarios
+#      fatal: Unable to find remote helper for 'h'
+#     
+# => git ls-remote httppp://github.com/mishramanish/s
+#      fatal: Unable to find remote helper for 'httppp'  
+#
+# =======================================
+# Possible Error cases for IP/Domain Name:
+# =======================================
+# Case 3: IP/Domain Name missing (: does not exist) 
+# => git ls-remote http
+#      fatal: 'http' does not appear to be a git repository
+#      fatal: Could not read from remote repository.
+#
+#      Please make sure you have the correct access rights
+#      and the repository exists.
+#
+# Case 4: Wrong Domain Name (: exist) 
+# => git ls-remote http:
+#      ssh: Could not resolve hostname http: Name or service not known
+#      fatal: Could not read from remote repository.
+#
+#       Please make sure you have the correct access rights
+#       and the repository exists.
+#
+# => git ls-remote http://github.com1/mishramanish//scenarios
+#      fatal: unable to access 'http://github.com1/mishramanish//scenarios/': Could not resolve host: github.com1
+#
+# Case 5: Sertificate issue in IP/Domain 
+# => git ls-remote http://10.10.30.3/mishramanish//scenarios
+#      fatal: unable to access 'https://10.10.30.3/mishramanish//scenarios/': server certificate verification failed. CAfile: /etc/ssl/certs/ca-certificates.crt CRLfile: none
+#
+# Case 6: Timeout
+#     
+#
+# Case 7: Connection refused
+#    git ls-remote http://10.10.70.4/mishramanish//scenarios
+#    fatal: unable to access 'http://10.10.70.4/mishramanish//scenarios/': Failed to connect to 10.10.70.4 port 80: Connection refused
+#
+# ========================================
+# Possible Error cases for Repository Path:
+# ========================================
+# Case 8: Path is missing (with or withour /)
+# => git ls-remote http://github.com/
+#      fatal: repository 'https://github.com/' not found  
+#
+# Case 9: Only path is given with or without / whether path is correct or wrong
+# => git ls-remote http://github.com/mishramanish1
+#      remote: Not Found
+#      fatal: repository 'https://github.com/mishramanish1/' not found
+#
+# Case 10: Either path is incorrect or repository name is incorrect 
+# => git ls-remote http://github.com/mishramanish/sce
+#      Username for 'https://github.com': mishramanish
+#      Password for 'https://mishramanish@github.com': 
+#      remote: Repository not found.
+#      fatal: repository 'https://github.com/mishramanish/sce/' not found
+#
+# Case 11: Everythig is correct
+# => git ls-remote http://github.com/mishramanish/scenarios
+#      Username for 'https://github.com': mishramanish
+#      Password for 'https://mishramanish@github.com': 
+#      1313242307ad4ec31a90929e99ceac4c1b715636	HEAD
+#      1313242307ad4ec31a90929e99ceac4c1b715636	refs/heads/master 
+# ############################################################################################## 
+test_git_config()
+{
+  debug_logs "[CONFIG_TEST]  REPO_NAME = $REPO_NAME, GIT_URL = $GIT_URL"
+  TIMEOUT=60
+  # Run command and to check repository
+  if [ "XX$GIT_PROXY" != "XX" ];then
+    export http_proxy=$GIT_PROXY
+    export https_proxy=$GIT_PROXY
+    export GIT_SSL_NO_VERIFY=1
+  fi
+  git_runcmd "git ls-remote --heads $GIT_URL" #|awk -F'/' '{print $NF}'"
+  count="2"
+  handle_error "$GIT_URL"
+  if [ $RETURN -eq 0 ];then
+     debug_logs "[TEST] repo ${repos[$j]} exist"
+     temp=`egrep -w "passphrase|password:" $CMD_OUT`
+     if [ "X$temp" != "X" ]; then
+      count="3"
+     fi
+     temp=`grep -w "Password" $CMD_OUT`
+     if [ "X$temp" != "X" ]; then
+      count="4"
+     fi
+     awk -F "/" 'NR>'$count' {print last} {last=$NF}' $CMD_OUT 
+  elif [ $RETURN -eq 1 -o $RETURN -eq 2 ];then
+    error_exit "GIT configuration test failed."\
+                 "$ERR_MSG"
+  fi
+}
+
+validate_and_set_vars()
+{
+  if [ "X$OPERATION" = "X" ]; then
+    Usage
+  fi
+
+  exit_if_empty "WORKSPACE_PROFILE" $WORKSPACE_PROFILE 
+
+  WORKSPACE=`echo ${WORKSPACE_PROFILE} | cut -d'/' -f1`
+  PROFILE=`echo ${WORKSPACE_PROFILE} | cut -d'/' -f2`
+
+  exit_if_empty "WORKSPACE" $WORKSPACE 
+  exit_if_empty "PROFILE" $PROFILE 
+
+  #check if Work profile Exists
+  if [ ! -d $NS_WDIR/workspace/$WORKSPACE_PROFILE ]; then
+    _exit "Work Profile $NS_WDIR/workspace/$WORKSPACE_PROFILE doesn't exists."
+  fi 
+
+  #set config file and ssh key  path
+  WORK_PROFILE_PATH="$NS_WDIR/workspace/$WORKSPACE_PROFILE"
+  SSH_KEY="$WORK_PROFILE_PATH/$SSH_KEY_NAME"
+  SSH_CONFIG="$WORK_PROFILE_PATH/$SSH_CONFIG_NAME"
+  LOCAL_REPO_PATH="$WORK_PROFILE_PATH"
+
+  #. $WORK_PROFILE_PATH/$WP_CONF_FILE 
+  # Read Configugration file
+  read_git_config
+  set_password_passphrase
+  if [ "XX$PROXY_URL" != "XX" ];then
+    GIT_PROXY=$PROXY_URL
+  fi
+
+  GIT_HOST=`echo $GIT_URL | grep "://"| cut -d '/' -f3`
+  if [ "XX$GIT_HOST" == "XX" ];then
+    GIT_HOST=`echo ${GIT_URL%*:*} | cut -d '@' -f2`
+  fi
+  if [ -f ${SSH_KEY} ];then 
+    if [ ! -f ${SSH_CONFIG} ]; then
+       touch ${SSH_CONFIG}
+       if [ -f $NS_WDIR/sys/git_ssh_config ]; then
+         cp $NS_WDIR/sys/git_ssh_config ${SSH_CONFIG}
+       fi
+    fi
+    export GIT_SSH_COMMAND="ssh -i ${SSH_KEY} -F ${SSH_CONFIG} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o LogLevel=quiet"
+    chmod 600 ${SSH_KEY}
+
+    USED_PROXY=`grep "ProxyCommand" ${SSH_CONFIG}|awk '{print $5}'`
+    if [ "XX$GIT_PROXY" != "XX$USED_PROXY" ];then
+      if [ -f $NS_WDIR/sys/git_ssh_config ]; then
+        cp $NS_WDIR/sys/git_ssh_config ${SSH_CONFIG}
+      fi
+      if [ "XX$GIT_PROXY" != "XX" ];then
+	GIT_PROXY_HOST=`echo $GIT_PROXY|cut -d':' -f1`
+	GIT_PROXY_PORT=`echo $GIT_PROXY|cut -d':' -f2`
+        echo "Match host $GIT_HOST exec \"nc -z -w 1 $GIT_PROXY_HOST $GIT_PROXY_PORT >/dev/null 2>&1\"" > ${SSH_CONFIG}.$$
+        echo "  ProxyCommand nc -X connect -x $GIT_PROXY %h %p" >> ${SSH_CONFIG}.$$
+        echo "" >> ${SSH_CONFIG}.$$
+        cat ${SSH_CONFIG} >> ${SSH_CONFIG}.$$
+	mv ${SSH_CONFIG}.$$ ${SSH_CONFIG}
+      fi
+    fi
+  fi
+  debug_logs "SSH_KEY = $SSH_KEY, LOCAL_REPO_PATH = $LOCAL_REPO_PATH "
+  debug_logs "[SANITY_CHK] Checking environment variables, NS_WDIR = $NS_WDIR, "\
+             "OPERATION = $OPERATION, PRODUCT = $PRODUCT WORKSPACE_PROFILE = $WORKSPACE_PROFILE"
+
+  if [ -d "$LOCAL_REPO_PATH/.git" ]; then
+    cd $LOCAL_REPO_PATH
+    LOCAL_BRANCH=`git rev-parse --abbrev-ref HEAD 2>/dev/null | grep -v HEAD`
+    if [ "X$LOCAL_BRANCH" == "X" ];then
+      if [ "$OPERATION" != "TEST" -a "$OPERATION" != "CLONE" ]; then
+        _exit "Git repository is not cloned. First clone the git repository"
+      fi
+    fi
+    if [ "X$LOCAL_BRANCH" != "X$BRANCH_NAME" ]; then
+      if [ "$OPERATION" != "CHECKOUT" -a "$OPERATION" != "TEST" -a "$OPERATION" != "CLONE" ]; then
+        _exit "Git branch validation failed: $BRANCH_NAME does not match with local branch $LOCAL_BRANCH"
+      fi
+      if [ "$OPERATION" == "CHECKOUT" -a "X$FILES" != "X" ]; then
+        #Checkout files
+        _exit "Git branch validation failed: $BRANCH_NAME does not match with local branch $LOCAL_BRANCH"
+      fi
+    else
+      if [ "$OPERATION" == "CHECKOUT" -a "X$FILES" == "X" ]; then
+        #Checkout branch
+        success_exit "Already on $BRANCH_NAME."
+      fi
+    fi
+  fi
+}
+ 
+
+cleanup()
+{
+  # Cleanup task
+  rm -f $CMD_OUT
+}
+
+# ########## Process Operation #########
+process_opts()
+{
+  debug_logs "[PROC_OPTS] OPERATION = $OPERATION"
+  # Goto local repository path and initialize Local Repositroy
+  cd $LOCAL_REPO_PATH
+
+
+  if [ "X$OPERATION" == "XINIT" ]; then
+    init_repository
+  elif [ "X$OPERATION" == "XCLONE" ]; then
+    clone_repository 
+  elif [ "X$OPERATION" == "XDIFF" ] ; then
+    is_repo_exist "GIT Diff failed."
+    diff_repository
+  elif [ "X$OPERATION" == "XLOG" ] ; then
+    log_repository
+  elif [ "X$OPERATION" == "XPUSH" ] ; then
+    is_repo_exist "GIT Push failed."
+    push_repository
+  elif [ "X$OPERATION" == "XPULL" ] ; then
+    is_repo_exist "GIT Pull failed."
+    pull_repository "PULL"
+  elif [ "X$OPERATION" == "XCOMMIT" ]; then
+    is_repo_exist "GIT Commit failed."
+    commit_repository
+  elif [ "X$OPERATION" == "XREVERT" ]; then
+    is_repo_exist "GIT Revert failed."
+    revert_repository
+    success_exit "GIT Revert successfully completed."
+  elif [ "X$OPERATION" == "XRESET" ]; then
+    reset_repository
+    success_exit "GIT Reset successfully."
+  elif [ "X$OPERATION" == "XSHOW" ]; then
+    SHOW_FLAG=1
+    show_repository
+  elif [ "X$OPERATION" == "XTEST" ]; then
+    test_git_config
+  elif [ "X$OPERATION" == "XCHECKOUT" ]; then
+    checkout_repository
+  fi
+}
+
+################## Function Calling ##################
+debug_logs "#######################################################################################################################" 
+debug_logs "[CMDLINE] $0 $@"
+
+while getopts s:i:u:U:P:f:n:m:o:w:x:? z
+do
+  case $z in
+    s) GIT_URL="$OPTARG" ;;
+    i) COMMIT_ID="$OPTARG" ;;
+    o) OPERATION="$OPTARG";;
+    u) GIT_USER="$OPTARG";;
+    U) GIT_ACL_USER="$OPTARG";;
+    P) PASSWORD="$OPTARG";;
+    f) FILES="$OPTARG";;
+    n) PRODUCT="$OPTARG";;
+    m) COMMIT_MESSAGE="$OPTARG";;
+    w) WORKSPACE_PROFILE="$OPTARG";;
+    x) PROXY_URL="$OPTARG";;
+    ?) usage ;;
+  esac
+done 
+
+validate_and_set_vars
+
+debug_logs "[INPUT_ARGS] Input arsg after parsing: GIT_URL = $GIT_URL, COMMIT_ID = $COMMIT_ID, "    \
+           "OPERATION = $OPERATION, GIT_USER = $GIT_USER, "         \
+           "GIT_ACL_USER = $GIT_ACL_USER, FILES = $FILES, PRODUCT = $PRODUCT, " \
+           "COMMIT_MESSAGE = $COMMIT_MESSAGE, NS_WDIR = $NS_WDIR, OPERATION = $OPERATION"
+
+
+# Read Configugration file
+#read_git_config
+
+# Save old debug logs
+save_dlog
+
+# Process all operations
+process_opts
+
+exit 0

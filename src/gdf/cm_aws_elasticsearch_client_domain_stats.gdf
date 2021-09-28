@@ -1,0 +1,179 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS Elasticsearch Client Domain Stats|14056|vector|86|0|AWS Metrics|AccountName>Region>ClientId>DomainName|Amazon Elasticsearch Service (Amazon ES) is a managed service that makes it easy to deploy, operate, and scale ElasticSearch clusters in the AWS Cloud.
+
+Graph|AWS Elasticsearch Invalid HostHeader Requests|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of HTTP requests made to the ElasticSearch cluster that included an invalid (or missing) host header.
+
+Graph|AWS Elasticsearch Requests|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of requests made to the ElasticSearch cluster.
+
+Graph|AWS Elasticsearch Indexing Latency (ms)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average time in milliseconds that it takes a shard to complete an indexing operation.
+
+Graph|AWS Elasticsearch Indexing Ops/Min|4|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The number of indexing operations per minute.
+
+Graph|AWS Elasticsearch Search Latency (ms)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average time in milliseconds that it takes a shard on a data node to complete a search operation.
+
+Graph|AWS Elasticsearch Search Ops/Min|6|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The total number of search requests per minute for all shards on a data node.
+
+Graph|AWS Elasticsearch KNN Cache Hit|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of cache hits. A cache hit occurs when a user queries a graph and it is already loaded into memory.
+
+Graph|AWS Elasticsearch KNN Cache Miss|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of cache misses. A cache miss occurs when a user queries a graph and it has not yet been loaded into memory.
+
+Graph|AWS Elasticsearch KNN Load Success|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of times KNN successfully loaded a graph into the cache.
+
+Graph|AWS Elasticsearch KNN Load Exception|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of times an exception occurred when trying to load a graph into the cache.
+
+Graph|AWS Elasticsearch KNN Total Load Time (ms)|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The time in nanoseconds that KNN has taken to load graphs into the cache.
+
+Graph|AWS Elasticsearch KNN Eviction Count|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of graphs that have been evicted from the cache due to memory constraints or idle time.
+
+Graph|AWS Elasticsearch KNN Graph Memory Usage (KB)|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current cache size (total size of all graphs in memory) in kilobytes.
+
+Graph|AWS Elasticsearch KNN Cache Capacity Reached|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Whether knn.memory.circuit_breaker.limit has been reached.
+
+Graph|AWS Elasticsearch KNN Circuit Breaker Triggered|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|rue when memory usage exceeds the knn.circuit_breaker.unset.percentage value.
+
+Graph|AWS Elasticsearch Cluster Index Writes Blocked|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Indicates whether your cluster is accepting or blocking incoming write requests A value of 0 means that the cluster is accepting requests A value of 1 means that it is blocking requests.
+
+Graph|AWS Elasticsearch 2xx Request|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of requests to the domain that resulted in the given HTTP response code 2xx.
+
+Graph|AWS Elasticsearch 3xx Request|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of requests to the domain that resulted in the given HTTP response code 3xx.
+
+Graph|AWS Elasticsearch 4xx Request|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of requests to the domain that resulted in the given HTTP response code 4xx.
+
+Graph|AWS Elasticsearch 5xx Request|20|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of requests to the domain that resulted in the given HTTP response code 5xx.
+
+Graph|AWS Elasticsearch CPU Utilization (%)|21|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of CPU usage for data nodes in the cluster.
+
+Graph|AWS Elasticsearch Free Storage Space (MB)|22|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The free space for data nodes in the cluster.
+
+Graph|AWS Elasticsearch JVM Memory Pressure (%)|23|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The maximum percentage of the Java heap used for all data nodes in the cluster.
+
+Graph|AWS Elasticsearch Sys Memory Utilization (%)|24|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of the instance's memory that is in use.
+
+Graph|AWS Elasticsearch Threadpool Write Threads|25|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The size of the write thread pool.
+
+Graph|AWS Elasticsearch Threadpool Write Rejected|26|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of rejected tasks in the write thread pool.
+
+Graph|AWS Elasticsearch Threadpool Write Queue|27|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of queued tasks in the write thread pool.
+
+Graph|AWS Elasticsearch Threadpool sql-worker Threads|28|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The size of the sql worker thread pool.
+
+Graph|AWS Elasticsearch Threadpool sql-worker Rejected|29|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of rejected tasks in the sql worker thread pool If this number continually grows consider scaling your cluster.
+
+Graph|AWS Elasticsearch Threadpool sql-worker Queue|30|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of queued tasks in the sql worker thread pool If the queue size is consistently high consider scaling your cluster.
+
+Graph|AWS Elasticsearch Threadpool Force Merge Threads|31|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The size of the force merge thread pool.
+
+Graph|AWS Elasticsearch Threadpool Force Merge Rejected|32|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of rejected tasks in the force merge thread pool If this number continually grows consider scaling your cluster.
+
+Graph|AWS Elasticsearch Threadpool Force Merge Queue|33|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of queued tasks in the force merge thread pool If the queue size is consistently high consider scaling your cluster.
+
+Graph|AWS Elasticsearch Threadpool Search Threads|34|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The size of the search thread pool.
+
+Graph|AWS Elasticsearch Threadpool Search Rejected|35|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of rejected tasks in the search thread pool If this number continually grows consider scaling your cluster.
+
+Graph|AWS Elasticsearch Threadpool Search Queue|36|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of queued tasks in the search thread pool If the queue size is consistently high consider scaling your cluster The maximum search queue size is 1000.
+
+Graph|AWS Elasticsearch JVM GC Young Collection Count|37|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of times that young generation garbage collection has run A large ever-growing number of runs is a normal part of cluster operations.
+
+Graph|AWS Elasticsearch JVM GC Young Collection Time (ms)|38|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The amount of time in milliseconds that the cluster has spent performing "young generation" garbage collection.
+
+Graph|AWS Elasticsearch Kibana Healthy Nodes|39|scalar|sample|-|-|0|NA|-1|-1|NA|NA|A health check for Kibana A value of 1 indicates normal behavior A value of 0 indicates that Kibana is inaccessible.
+
+Graph|AWS Elasticsearch Alerting Scheduled Job Enabled|40|scalar|sample|-|-|0|NA|-1|-1|NA|NA|A value of 1 means that the opendistro.scheduled_jobs.enabled cluster setting is true.
+
+Graph|AWS Elasticsearch Alerting Index Exists|41|scalar|sample|-|-|0|NA|-1|-1|NA|NA|A value of 1 means the .opendistro-alerting-config index exists A value of 0 means it does not.
+
+Graph|AWS Elasticsearch Alerting Index Status (Green)|42|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The health of the index A value of 1 means green A value of 0 means that the index either doesn't exist or isn't green.
+
+Graph|AWS Elasticsearch Alerting Index Status (Yellow)|43|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The health of the index A value of 1 means yellow A value of 0 means that the index either doesn't exist or isn't yellow.
+
+Graph|AWS Elasticsearch Alerting IndexStatus (Red)|44|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The health of the index A value of 1 means red A value of 0 means that the index either doesn't exist or isn't red.
+
+Graph|AWS Elasticsearch Alerting Nodes OnSchedule|45|scalar|sample|-|-|0|NA|-1|-1|NA|NA|A value of 1 means that all alerting jobs are running on schedule (or that no alerting jobs exist) A value of 0 means some jobs are not running on schedule.
+
+Graph|AWS Elasticsearch Alerting Nodes Not OnSchedule|46|scalar|sample|-|-|0|NA|-1|-1|NA|NA|A value of 1 means some jobs are not running on schedule A value of 0 means that all alerting jobs are running on schedule (or that no alerting jobs exist).
+
+Graph|AWS Elasticsearch Automated Snapshot Failure|47|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of failed automated snapshots for the cluster.
+
+Graph|AWS Elasticsearch SQL Unhealthy|48|scalar|sample|-|-|0|NA|-1|-1|NA|NA|A value of 1 indicates that in response to certain requests the SQL plugin is returning 5xx response codes or passing invalid query DSL to ElasticSearch.
+
+Graph|AWS Elasticsearch SQL Requests|49|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of requests to the _opendistro,_sql API.
+
+Graph|AWS Elasticsearch SQL Default Cursor Requests|50|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Similar to SQLRequestCount but only counts pagination requests.
+
+Graph|AWS Elasticsearch SQL Failed Requests System Err|51|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of requests to the _opendistro,_sql API that failed due to a server problem or feature limitation.
+
+Graph|AWS Elasticsearch SQL Failed Requests Client Err|52|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of requests to the _opendistro,_sql API that failed due to a client issue.
+
+Graph|AWS Elasticsearch Master Reachable From Node|53|scalar|sample|-|-|0|NA|-1|-1|NA|NA|A health check for MasterNotDiscovered exceptions A value of 1 indicates normal behavior A value of 0 indicates that ,_cluster,health, is failing.
+
+Graph|AWS Elasticsearch Cluster Status (Green)|54|scalar|sample|-|-|0|NA|-1|-1|NA|NA|A value of 1 indicates that all index shards are allocated to nodes in the cluster.
+
+Graph|AWS Elasticsearch Cluster Status (Yellow)|55|scalar|sample|-|-|0|NA|-1|-1|NA|NA|A value of 1 indicates that the primary shards for all indices are allocated to nodes in the cluster but replica shards for at least one index are not.
+
+Graph|AWS Elasticsearch Cluster Status (Red)|56|scalar|sample|-|-|0|NA|-1|-1|NA|NA|A value of 1 indicates that the primary and replica shards for at least one index are not allocated to nodes in the cluster.
+
+Graph|AWS Elasticsearch Nodes|57|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of nodes in the Amazon ES cluster including dedicated master nodes and UltraWarm nodes.
+
+Graph|AWS Elasticsearch Cluster Used Space (MiB)|58|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total used space for the cluster. The Amazon CloudWatch console displays it in MiB.
+
+Graph|AWS Elasticsearch LTR Total Requests|59|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total count of ranking requests.
+
+Graph|AWS Elasticsearch LTR Unsuccessful Requests|60|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total count of unsuccessful requests.
+
+Graph|AWS Elasticsearch LTR Feature Memory Usage (Bytes)|61|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total count of ranking feature MemoryUsageInBytes.
+
+Graph|AWS Elasticsearch LTR Feature Set Memory Usage (Bytes)|62|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total count of ranking feature set MemoryUsageInBytes.
+
+Graph|AWS Elasticsearch LTR Model Memory Usage (Bytes)|63|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total count of ranking model MemoryUsageInBytes.
+
+Graph|AWS Elasticsearch LTR Status (Red)|64|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Red cluster status means that at least one primary shard and its replicas aren't allocated to a node.
+
+Graph|AWS Elasticsearch LTR Plugin Unhealthy|65|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total count of unhealthy plugin.
+
+Graph|AWS Elasticsearch Alerting Degraded|66|scalar|sample|-|-|0|NA|-1|-1|NA|NA|A value of 1 means that either the alerting index is red or one or more nodes is not on schedule A value of 0 indicates normal behavior.
+
+Graph|AWS Elasticsearch JVM GC Old Collection Count|67|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of times that old generation garbage collection has run In a cluster with sufficient resources this number should remain small and grow infrequently.
+
+Graph|AWS Elasticsearch JVM GC Old Collection Time (ms)|68|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The amount of time in milliseconds that the cluster has spent performing old generation garbage collection.
+
+Graph|AWS Elasticsearch Searchable Documents|69|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of searchable documents across all data nodes in the cluster.
+
+Graph|AWS Elasticsearch Deleted Documents|70|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of documents marked for deletion across all data nodes in the cluster.
+
+Graph|AWS Elasticsearch Read IO/Sec|71|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of input and output (I,O) operations per second for read operations on EBS volumes.
+
+Graph|AWS Elasticsearch Read Latency (Sec)|73|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The latency in seconds for read operations on EBS volumes.
+
+Graph|AWS Elasticsearch Read Throughput (Bytes/sec)|75|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The throughput in bytes per second for read operations on EBS volumes.
+
+Graph|AWS Elasticsearch Write Throughput (Bytes/sec)|76|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The throughput in bytes per second for write operations on EBS volumes.
+
+Graph|AWS Elasticsearch Write Latency (Sec)|74|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The latency in seconds for write operations on EBS volumes.
+
+Graph|AWS Elasticsearch Write IO/Sec|72|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of input and output (I,O) operations per second for write operations on EBS volumes.
+
+Graph|AWS Elasticsearch Disk Queue Depth|77|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of pending input and output (I,O) requests for an EBS volume.
+
+Graph|AWS Elasticsearch AD Execute Requests|78|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of requests to detect anomalies.
+
+Graph|AWS Elasticsearch AD Execute Failure Requests|79|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of failed requests to detect anomalies.
+
+Graph|AWS Elasticsearch AD Plugin Unhealthy|80|scalar|sample|-|-|0|NA|-1|-1|NA|NA|A value of 1 means that the anomaly detection plugin is not functioning properly either because of a high number of failures or because one of the indices that it uses is red.
+
+Graph|AWS Elasticsearch AD Anomaly Results Index Status (Red)|81|scalar|sample|-|-|0|NA|-1|-1|NA|NA|A value of 1 means the index that the .opendistro-anomaly-results alias points to is red A value of 0 means it is not.
+
+Graph|AWS Elasticsearch AD Anomaly Detectors Index Status (Red)|82|scalar|sample|-|-|0|NA|-1|-1|NA|NA|A value of 1 means that the .opendistro-anomaly-detectors index is red A value of 0 means it is not.
+
+Graph|AWS Elasticsearch AD Models Checkpoint Index Status (Red)|83|scalar|sample|-|-|0|NA|-1|-1|NA|NA|A value of 1 means that the .opendistro-anomaly-checkpoints index is red A value of 0 means it is not.
+
+Graph|AWS Elasticsearch AD Anomaly Results Index Exists Status|84|scalar|sample|-|-|0|NA|-1|-1|NA|NA|A value of 1 means the index that the .opendistro-anomaly-results alias points to exists.
+
+Graph|AWS Elasticsearch AD Anomaly Detectors Index Exists Status|85|scalar|sample|-|-|0|NA|-1|-1|NA|NA|A value of 1 means that the .opendistro-anomaly-detectors index exists. A value of 0 means it does not.
+
+Graph|AWS Elasticsearch AD Models Checkpoint Index Exists Status|86|scalar|sample|-|-|0|NA|-1|-1|NA|NA|A value of 1 means that the .opendistro-anomaly-checkpoints index exists. A value of 0 means it does not.

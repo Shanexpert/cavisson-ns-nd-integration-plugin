@@ -1,0 +1,37 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS MediaConnect Stats|11275|vector|27|0|AWS Metrics|AccountName>Region|AWS Elemental MediaConnect is a service that makes it easy for broadcasters and other premium video providers to reliably ingest live video into the AWS Cloud and distribute it to multiple destinations inside or outside the AWS Cloud.
+
+Graph|AWS MediaConnect FEC Packet|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of packets that were transmitted using forward error correction (FEC) and received.
+Graph|AWS MediaConnect FEC Recovered|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of packets that were transmitted using forward error correction (FEC) lost during transit and recovered.
+Graph|AWS MediaConnect ARQ Request|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of retransmitted packets that were requested through automatic repeat request (ARQ) and received.
+Graph|AWS MediaConnect ARQ Recovered|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of dropped packets that were recovered by automatic repeat request (ARQ).
+Graph|AWS MediaConnect Connected Output|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of outputs that are currently connected.
+Graph|AWS MediaConnect Packet Loss (%)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average percentage of packets that were lost during transit even if they were recovered.
+Graph|AWS MediaConnect Connected|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The status of the source. A value of one indicates that the source is connected and a value of zero indicates that the source is disconnected. This metric applies only to sources that use the Zixi protocol.
+Graph|AWS MediaConnect Bit Rate/Sec|8|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The bit rate of the incoming (source) video.
+Graph|AWS MediaConnect Total Packet|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of packets that were received.
+Graph|AWS MediaConnect Dropped Packet|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of packets that were lost during transit. This value is measured before any error correction takes place.
+Graph|AWS MediaConnect Not Recovered Packet|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of packets that were lost during transit and never recovered.
+Graph|AWS MediaConnect Recovered Packet|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of packets that were lost during transit but recovered.
+Graph|AWS MediaConnect Disconnection|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of times that the source status changed from connected to disconnected.
+Graph|AWS MediaConnect TS Sync Loss|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of times that a TS sync loss error occurred.
+Graph|AWS MediaConnect TS Byte Error|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of times that a transport stream (TS) byte error occurred.
+Graph|AWS MediaConnect PAT Error|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of times that a program association table (PAT) error occurred. This error indicates that the PAT is missing.
+Graph|AWS MediaConnect Countinuity Counter|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of times that a continuity error occurred.
+Graph|AWS MediaConnect PMT Error|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of times that a program map table (PMT) error occurred.
+Graph|AWS MediaConnect Pid Error|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of times that a packet identifier (PID) error occurred.
+Graph|AWS MediaConnect Transport Error|20|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of times that a primary transport error occurred.
+Graph|AWS MediaConnect CRC Error|21|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of times that a cyclic redundancy check (CRC) error occurred.
+Graph|AWS MediaConnect PCR Error|22|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of times that a PCR error occurred. This error happens when PCR values are not sent frequently enough.
+Graph|AWS MediaConnect PCR Accuracy Error|23|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of times that a program clock register (PCR) accuracy error occurred.
+Graph|AWS MediaConnect PTS Error|24|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of times that a presentation timestamp (PTS) error occurred. This error happens when a presentation timestamp (PTS) is not received at least every 700 ms.
+Graph|AWS MediaConnect CAT Error|25|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of times that a conditional access table (CAT) error occurred.
+Graph|AWS MediaConnect Round Trip Time (ms)|26|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average amount of time it takes for the source to send a signal and receive an acknowledgement from AWS Elemental MediaConnect.
+Graph|AWS MediaConnect Overflow Packet|27|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of packets that were lost in transit because the video required more buffer than was available.
+
+

@@ -1,0 +1,57 @@
+#! /bin/sh
+
+#Here we are drop all ND tables
+
+if [ -d $PWD/TR$1 ]; then
+  BASE_DIR=$PWD
+elif [ -d $NS_WDIR/logs/TR$1 ]; then
+  BASE_DIR=$NS_WDIR/logs
+else
+  echo "Error: Test run number $1 is not a valid test run number"
+  exit -1
+fi
+
+START=`date +%s`
+echo "ndu_drop_table: Deleting records from URL table and URL Record table inserted by ND ..."
+psql test cavisson <<+
+DELETE from URLTable_$1 where URLIndex & 1073741824 > 0;
+DELETE from URLRecord_$1 where URLIndex & 1073741824 > 0;
++
+echo "ndu_drop_table: ... Done deleting records from URL table and URL Record table inserted by ND."
+
+echo "ndu_drop_table: Please wait tables will be dropped ..."
+
+psql test cavisson <<+
+
+drop table if exists FlowPath_$1 cascade;
+drop table if exists MetaData_$1;
+drop table if exists MethodTiming_$1;
+drop table if exists NDFunctionalGroup_$1;
+drop table if exists NDAppLogs_$1 cascade;
+drop table if exists NDSQL_$1;
+drop table if exists NDSQLRecord_$1 cascade;
+drop table if exists NDTier_$1;
+drop table if exists NDAppServer_$1;
+drop table if exists NDAppInstance_$1;
+drop table if exists NDBCIArg_$1 cascade;
+drop table if exists NDAutoSensorHotSpotThreads_$1 cascade;
+drop table if exists NDHTTPHeaderMetaData_$1;
+drop table if exists NDHTTPCaptureHeader_$1 cascade;
+drop table if exists NDExceptionClass_$1;
+drop table if exists NDExceptionThrowingClass_$1;
+drop table if exists NDExceptionThrowingMethod_$1;
+drop table if exists NDExceptionStackTrace_$1;
+drop table if exists NDExceptionMessage_$1;
+drop table if exists NDExceptionCause_$1;
+drop table if exists NDExceptions_$1 cascade;
+drop table if exists NDMethodTiming_$1 cascade;
+drop table if exists NDJMS_$1 cascade;
++
+
+END=`date +%s`
+#echo $END
+#echo $START
+DIFF=`expr $END - $START`
+#echo $DIFF
+echo "ndu_drop_table: Deletion of tables took $DIFF seconds"
+

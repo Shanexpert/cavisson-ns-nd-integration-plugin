@@ -1,0 +1,15 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|JBoss EAP Thread Pool|10238|vector|8|0|Application Metrics|Tier>Server>Instance>ThreadPool|JBoss EAP Thread Pool Stats
+
+Graph|Number of Active Threads|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The approximate number of threads.which are actively executing tasks.
+Graph|Total Number of Threads|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of threads in the pool.
+Graph|Total Number Of Tasks|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The approximate total number of tasks that have ever been scheduled for execution.
+Graph|Maximum Number of Use Threads|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The largest number of threads that have ever simultaneously been in the pool.
+Graph|Number of Completed Task|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The approximate total number of tasks that have completed execution.
+Graph|Maximum Number of Threads|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The maximum number of threads that can be exist in pool.
+Graph|Number of Rejected Tasks|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of tasks that have been rejected.
+Graph|Queue Size|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The queue size.

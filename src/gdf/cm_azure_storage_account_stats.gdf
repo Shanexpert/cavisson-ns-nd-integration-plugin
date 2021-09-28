@@ -1,0 +1,14 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Azure Storage Account Stats|11230|vector|4|0|Azure Metrics|AccountName>Region>ResoureGroup>StorageAccount|Azure Storage Account Stats Monitor.
+
+Graph|Total Ingress(KB)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The amount of ingress data, in kilobytes. This number includes ingress from an external client into Azure Storage as well as ingress within Azure.
+Graph|Total Egress(KB)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The amount of egress data, in kilobytes. This number includes egress from an external client into Azure Storage as well as egress within Azure. As a result, this number does not reflect billable egress.
+Graph|Total Success Server Latency(ms)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total latency used by Azure Storage to process a successful request, in milliseconds. This value does not include the network latency specified in AverageE2ELatency.
+Graph|Total Success E2E Latency(ms)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total end-to-end latency of successful requests made to a storage service or the specified API operation, in milliseconds. This value includes the required processing time within Azure Storage to read the request, send the response, and receive acknowledgement of the response.
+

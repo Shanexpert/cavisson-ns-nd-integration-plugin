@@ -1,0 +1,550 @@
+#!/bin/sh
+
+# Name  : ts_ip_lib
+# Author: Anuj Dhiman
+# Purose : This file contains library of shell methods for TS IP management
+# Modification History:
+# 12/27/07: Initial version
+
+CAV_CONF=$HOME/etc/cav.conf
+CUR_DIR=`pwd`
+IP_ENTERIES=$NS_WDIR/sys/ip_entries
+IP_ENTERIES_TMP1=$NS_WDIR/sys/ip_entries_1_$$
+IP_ENTERIES_TMP2=$NS_WDIR/sys/ip_entries_2_$$
+IP_ENTRIES_IPv6=$CUR_DIR/client_ipv6.inp
+
+ts_debug_log ()
+{
+  #echo "$*"
+  echo >/dev/null
+}
+
+#ts_error_log()
+#{??
+#}
+
+#ts_always_log()
+#{??
+#}
+
+# Assumption: The name of the conf file will have only the single ".", which will be just before the starting of extention
+# Eg: tx_am.conf is valid, but tx.am.conf is not valid
+if_tx_am_name_valid()
+{
+  IF_TX_AM_VALID=`echo $TX_AM_CONF | cut -s -d "." -f3`
+  if [ "XX$IF_TX_AM_VALID" == "XX" ];then
+    TX_AM_CONF_WITHOUT_EXT=`echo $TX_AM_CONF | cut -s -d "." -f1`
+    export TX_AM_CONF_WITHOUT_EXT=$TX_AM_CONF_WITHOUT_EXT
+    ts_debug_log "Exporting the TX_AM_CONF_WITHOUT_EXT = $TX_AM_CONF_WITHOUT_EXT"
+  else
+    echo "Error: The conf file name $TX_AM_CONF is not in correct format."
+    exit -1
+  fi
+}
+
+# Take parameters from conf file and set variables
+# Assumption - Both files are in current directory
+set_parameters()
+{
+  ts_debug_log "set_parameters() - method called"
+
+  if_tx_am_name_valid
+  
+  #Check if TX_AM_CONF file exists or not?
+  if [ ! -f $TX_AM_CONF ]; then
+    echo "$TX_AM_CONF file not present"
+    exit -1
+  fi
+
+  DEVID=`egrep "^DEVID" $TX_AM_CONF | cut -s -d" " -f2`
+  if [ "XX$DEVID" == "XX" ];
+  then
+    echo "Error: DEVID not found or value is missing in $TM_IF_FILE, exiting....."
+    exit -1
+  fi
+
+  #Get TM_IF File from TM_AM_CONF. Prefix path (Later)
+  TM_IF_FILE=`egrep "^TM.IF" $TX_AM_CONF | cut -s -d " " -f2`
+  if [ "XX$TM_IF_FILE" == "XX" ];
+  then
+    TM_IF_FILE="tm.if"
+    ts_debug_log "set_parameters() - The TM.IF keyword not found in the $TX_AM_CONF, using default name '$TM_IF_FILE'"
+  fi 
+
+  # used in the ts_summary_results
+  MODE=`egrep "^MODE" $TX_AM_CONF | cut -s -d " " -f2`
+  if [ "XX$MODE" == "XX" ];then
+    MODE="Transparent"
+    ts_debug_log "set_parameters() - The MODE keyword not found in the $TX_AM_CONF, using default name '$MODE'"
+  fi 
+  export MODE=$MODE
+  ts_debug_log "Exporting the MODE = $MODE"
+
+  PLATFORM=`egrep "^PLATFORM" $TX_AM_CONF | cut -s -d " " -f2`
+  if [ "XX$PLATFORM" == "XX" ];then
+    PLATFORM="Ax2000"
+    ts_debug_log "set_parameters() - The PLATFORM keyword not found in the $TX_AM_CONF, using default name '$PLATFORM'"
+  fi
+  export PLATFORM=$PLATFORM
+  ts_debug_log "Exporting the PLATFORM = $PLATFORM"
+
+  #Check if TM_IF_FILE file exists or not?
+  if [ ! -f $TM_IF_FILE ];then
+    echo "$TM_IF_FILE file not present"
+    exit -1
+  fi
+
+  TEST_SUITE_NAME=`egrep "^TEST_SUITE_NAME" $TX_AM_CONF | cut -s -d " " -f2`
+  if [ "XX$TEST_SUITE_NAME" == "XX" ];
+  then
+    echo "Error: TEST_SUITE_NAME not found in $TX_AM_CONF, exiting....."
+    exit -1
+  fi
+
+  # What to do if GATEWAY is present with out argument in the tm.if
+  GATEWAY_D1=`egrep "^GATEWAY" $TM_IF_FILE | cut -s -d " " -f2`
+  if [ "XX$GATEWAY_D1" == "XX" ];
+  then
+    #GATEWAY_D1="-"   #putting the "-" in the last octect, if  g/w not present
+    GATEWAY_D1="1"   #if GW not present take 1
+  fi
+
+  USE_SAME_NETID_SRC=`egrep "^USE_SAME_NETID_SRC" $TX_AM_CONF | cut -s -d " " -f2`
+  if [ "XX$USE_SAME_NETID_SRC" == "XX" ];
+  then
+    USE_SAME_NETID_SRC=0 #Default is 0
+  fi 
+
+  # If user has given only one value with the keyword than it will pick the whole default value
+  RUN_TIME=`egrep "^RUN_TIME" $TX_AM_CONF`
+  if [ "XX$RUN_TIME" == "XX" ];then
+    RUN_TIME_AMMOUNT=1
+    RUN_TIME_UNIT='M'
+  else
+    RUN_TIME_AMMOUNT=`egrep "^RUN_TIME" $TX_AM_CONF | awk '{print $2}'`
+    RUN_TIME_UNIT=`egrep "^RUN_TIME" $TX_AM_CONF | awk '{print $3}'`
+    if [ "XX$RUN_TIME_AMMOUNT" == "XX" -o  "XX$RUN_TIME_UNIT" == "XX" ];then
+      RUN_TIME_AMMOUNT=1
+      RUN_TIME_UNIT='M'
+    fi
+#    if [ "XX$RUN_TIME_UNIT" == "XX" ];then
+#      RUN_TIME_UNIT='M'
+#    fi
+  fi
+   
+  DEBUG=`egrep "^DEBUG" $TX_AM_CONF | cut -s -d" " -f2`
+  if [ "XX$DEBUG" == "XX" ];then
+    DEBUG=0
+    ts_debug_log "set_parameters() - The DEBUG keyword not found in the $TX_AM_CONF, using default value '$DEBUG'"
+  fi
+
+  IP_FORMAT=`egrep "^IP_FORMAT" $TX_AM_CONF | cut -s -d" " -f2` 
+  if [ "XX$IP_FORMAT" == "XX" ];then
+    IP_FORMAT=IPv4
+    ts_debug_log "set_parameters() - The IP_FORMAT keyword not found in the $TX_AM_CONF, using default value '$IP_FORMAT'"
+  fi
+  if [ $IP_FORMAT == "IPv6" ];then
+    F1=2001
+    F2=0000
+    F3=0000
+    F4=0000
+  fi
+
+  WAN_ENV=`egrep "^WAN_ENV" $TX_AM_CONF`
+  if [ "XX$WAN_ENV" == "XX" ];then
+     WAN_VALUE=0 
+  else
+     WAN_VALUE=`echo $WAN_ENV | awk '{print $2}'`
+     if [ "XX$WAN_VALUE" != "XX1" ];then
+       WAN_VALUE=0
+     fi
+  fi
+  
+  DELAY_BETWEEN_TEST_UNIT=`grep -w "^DELAY_BETWEEN_TEST" $TX_AM_CONF | cut -d " " -f2` #Added by Anuj Sharma
+  if [ "XX$DELAY_BETWEEN_TEST_UNIT" == "XX" ];then
+    export DELAY_BETWEEN_TEST_UNIT=0
+  else
+    export DELAY_BETWEEN_TEST_UNIT=$DELAY_BETWEEN_TEST_UNIT
+  fi
+
+  DELAY_BETWEEN_TESTCASE_UNIT=`grep -w "^DELAY_BETWEEN_TEST_CASE" $TX_AM_CONF | cut -d " " -f2` #Added by Anuj Sharma
+  if [ "XX$DELAY_BETWEEN_TESTCASE_UNIT" == "XX" ];then
+    export DELAY_BETWEEN_TESTCASE_UNIT=0
+  else
+    export DELAY_BETWEEN_TESTCASE_UNIT=$DELAY_BETWEEN_TESTCASE_UNIT
+  fi
+
+  SCENARIO_KEYWORD_FILE=/tmp/scenario_keyword_file.$$
+  cat $TX_AM_CONF | grep "^SCENARIO_KEYWORD" | cut -d " " -f2- >$SCENARIO_KEYWORD_FILE
+
+  ADD_MONITORS=`egrep "^ADD_MONITORS" $TX_AM_CONF`
+  if [ "XX$ADD_MONITORS" == "XX" ];then
+    ADD_MONITORS_VALUE=0
+  else
+    ADD_MONITORS_VALUE=`echo $ADD_MONITORS | awk '{print $2}'`
+    if [ "XX$ADD_MONITORS_VALUE" != "XX1" ];then
+      ADD_MONITORS_VALUE=0
+    fi
+  fi
+}
+
+#Assumption is A1, B1, C1 and GATEWAY_D1 are set before this method is called.
+get_gateway_ip()
+{
+  if [ "$MODE" == "GW" ];then
+    echo "$A1.$B1.$C1.$GATEWAY_D1"
+  else
+    echo "-"
+  fi
+}
+
+#If user do not want to use interface number as third octet, then he can specify third octet by USE_INTERFACES_SUBNET keyword.
+#Example:
+#          USE_INTERFACES eth1,eth2
+#          USE_INTERFACES_SUBNET 3,5
+#          For first Interface	– eth1 	 C1 = 3 (C1 is 3rd octet)
+#          For second Interface	– eth2 	 C1 = 5
+
+ts_get_interfaces_subnet()
+{
+  MAPPING_LIST=`grep -w ^USE_INTERFACES_SUBNET $TX_AM_CONF | awk '{print $2}'` 
+  NUM_FIELDS=`echo $MAPPING_LIST | awk -F',' '{print NF}'`
+
+  if [ "XX$MAPPING_LIST" != "XX" ];then
+    if [ $NUM_FIELDS != ${#IFArray[@]} ];then
+      echo "Number of interfaces is not same as Subnets given by USE_INTERFACES_SUBNET !"
+      exit -1
+    fi
+  fi
+   
+  #Note : Array index starts with 0.
+  #       But in awk to print first field we use $1
+  for ((i=0; i<$NUM_FIELDS; i=`expr $i+1`))
+  do
+    MAP_ARRAY[$i]=`echo $MAPPING_LIST | awk -v x=$i -F',' '{ print $(x + 1) }'`
+  done
+}
+
+get_C1()
+{
+  inteface_idx=$1
+
+  if [ "XX${MAP_ARRAY[$inteface_idx]}" == "XX" ];then
+    inteface_num_part=`echo ${IFArray[$inteface_idx]} | cut -c 4-6`
+  else
+    inteface_num_part=`echo ${MAP_ARRAY[$inteface_idx]}`
+  fi
+
+  echo "$inteface_num_part" 
+}
+
+# This mthd will display all the VIP one by one, Not storing the VIPs
+# Not used. For testing only
+ts_get_vip_list()
+{
+  idx=0
+  ts_debug_log "Toatal i/f $NumInterfaces"
+  while [ $idx -lt ${#VIP_ARR[@]} ]
+  do
+    VIP=$A1.$B1.$C1.${VIP_ARR[$idx]}
+    ts_debug_log "The `expr $idx + 1` VIP is = $VIP"
+    idx=`expr $idx + 1`
+  done
+}
+
+# Put the last octet of all VIPs in an array called VIP_ARR
+ts_get_vip_arr()
+{
+  VIP_FILE=`egrep "^RANGE_VIP_LIST" $TX_AM_CONF | cut -s -d" " -f2`
+  ts_debug_log "The VIP_LIST from file is $VIP_FILE"
+  found=1
+  Index=0
+  field_no=1
+  while [ $found == 1 ]
+  do 
+    #Note - cut always returns the first feild is there is no deliminator for all field numbers
+    IFVIP=`echo $VIP_FILE | cut -d ',' -f $field_no`
+    #ts_debug_log "The last octet of $field_no VIP = $IFVIP"
+    if [ "XX$IFVIP" == "XX" ];
+    then
+      found=0
+      break
+    fi
+    # ts_debug_log "The last octect of $field_no VIP = $IFVIP"
+    # If VIP is given in the range format like x-z
+    RANGE_MIN=`echo $IFVIP | cut -s -d "-" -f1`
+    ts_debug_log "The RANGE_MIN of $field_no VIP = $RANGE_MIN"
+    if [ "XX$RANGE_MIN" == "XX" ];
+    then 
+      RANGE_MIN=$IFVIP
+      RANGE_MAX=$RANGE_MIN
+    else  
+      RANGE_MAX=`echo $IFVIP | cut -s -d "-" -f2`
+      if [ "XX$RANGE_MAX" == "XX" ];
+      then
+        echo "Error: ts_get_vip() - The RANGE_VIP_LIST is not in the proper Format, exiting"
+        exit -1
+      fi
+    fi
+
+    ts_debug_log "The RANGE_MAX of $field_no VIP = $RANGE_MAX"
+    if [ $IP_FORMAT == "IPv4" ];then
+      CUR_VIP=$RANGE_MIN
+      UP_LIMIT=255
+    else
+      CUR_VIP=$( printf "%d" 0x$RANGE_MIN )
+      RANGE_MAX=$( printf "%d" 0x$RANGE_MAX )
+      UP_LIMIT=65535
+    fi
+    while [ $CUR_VIP -le $RANGE_MAX ]
+    do
+      if [ $CUR_VIP -gt $UP_LIMIT ];
+      then
+        echo "Error: The value of VIP octet $CUR_VIP can not exceed $UP_LIMIT"
+        exit -1
+      fi
+      
+      if [ $IP_FORMAT == "IPv4" ];then 
+        VIP_ARR[Index]=$CUR_VIP
+      else
+        VIP_ARR[Index]=$( printf "%x" $CUR_VIP )
+      fi
+      ts_debug_log "The Range - VIP_ARR[$Index] = $CUR_VIP"  
+      Index=`expr $Index + 1`
+      CUR_VIP=`expr $CUR_VIP + 1`
+    done
+    field_no=`expr $field_no + 1`
+
+    #Note - cut always returns the first feild is there is no deliminator for all field numbers
+    echo $VIP_FILE | egrep ',' > /dev/null
+    if [ $? != 0 ]
+    then
+      found=0
+      break
+    fi
+  done
+  if [ ${#VIP_ARR[@]} == 0 ]
+  then 
+    echo "No VIP list has been defined with RANGE_VIP_LIST keyword, exiting..."
+    exit -1
+  fi
+} 
+
+#This fn will put the all the interfaces specified in the tx_am.conf in the array IFArray[]
+ts_get_interfaces()
+{
+  ts_debug_log "ts_get_interfaces() - method called"
+  IFList=`egrep -w "^USE_INTERFACES" $TX_AM_CONF | cut -d" " -f2`
+  if [ "XX$IFList" == "XX" ];
+  then 
+    echo "Error: ts_get_interfaces() - USE_INTERFACES is not defined or not in valid format in $TX_AM_CONF file"
+  fi 
+  
+  found=1
+  NumInterfaces=1
+  Index=0
+  while [ $found == 1 ]
+  do
+    IFName=`echo $IFList | cut -d ',' -f $NumInterfaces`
+    if [ "${IFName}XX" == "XX" ];
+    then
+      found=0
+      break
+    fi
+    #Cheking the Interface is valid or not
+    ifconfig -a | grep $IFName >/dev/null
+    if [ $? == 1 ]; # checking the output of last command, if found (sucess) it will be 0, else 1
+    then 
+      echo "Error: The given Interface $IFName is not valid. Exiting..."
+      exit -1
+    fi
+    IFArray[Index]=$IFName
+    Index=`expr $Index + 1`
+    NumInterfaces=`expr $NumInterfaces + 1`
+    #Note - cut always returns the first feild is there is no deliminator for all field numbers
+    echo $IFList | egrep ',' > /dev/null
+    if [ $? != 0 ]
+    then
+      found=0
+      break
+    fi
+  done
+  if [ ${#IFArray[@]} == 0 ]
+  then 
+    echo "No Interface has been defined with USE_INTERFACES keyword, exiting..."
+    exit -1
+  fi
+  ts_debug_log "ts_get_interfaces() - Total number of USE_INTERFACES=${#IFArray[@]}"
+}
+
+ts_get_IP_octets()
+{
+  A1=`egrep "^A1" $TM_IF_FILE | cut -s -d" " -f2`
+  if [ "XX$A1" == "XX" ];
+  then
+    A1=20
+    echo "ts_get_IP_octects() -  Value of first octet not found in $TM_IF_FILE, using default value of A1 = $A1"
+  fi
+  ts_debug_log "The first octet is = $A1"
+
+  #Use DEVID as B1 (2nd Octect of IP Address)
+  B1=$DEVID
+  ts_debug_log "The second octet is = $B1"
+
+  D1=`egrep "^D1" $TM_IF_FILE | cut -s -d" " -f2`
+  if [ "XX$D1" == "XX" ];
+  then
+    D1=4
+    echo "D1 not found in $TM_IF_FILE file, using default of D1 =$D1 "
+  fi
+  
+  NUM_SRC_IPS=`egrep "^D1" $TM_IF_FILE | cut -s -d" " -f3`
+  if [ "XX$NUM_SRC_IPS" == "XX" ];then 
+    NUM_SRC_IPS=4
+    ts_debug_log "The NUM SRC IP is = $NUM_SRC_IPS"
+    echo "Number of src IPs value in D1 not found in $TM_IF_FILE file, using default of Number of src IPs=$NUM_SRC_IPS "
+  fi
+  
+  D2=`egrep "^D2" $TM_IF_FILE | cut -s -d" " -f2`
+  if [ "XX$D2" == "XX" ];
+  then
+    D2=32
+    echo "D2 not found in $TM_IF_FILE file, using default of D2 =$D2 "
+  fi
+  SERVER_NUM_SRC_IPS=`egrep "^D2" $TM_IF_FILE | cut -s -d" " -f3`
+  if [ "XX$SERVER_NUM_SRC_IPS" == "XX" ];then
+    SERVER_NUM_SRC_IPS=7
+    ts_debug_log "The SERVER NUM SRC IP is = $SERVER_NUM_SRC_IPS"
+    echo "SERVER Number of src IPs value in D2 not found in $TM_IF_FILE file, using default of Number of src IPs=$SERVER_NUM_SRC_IPS "
+  fi
+}
+
+# This need to be called from ts_run_ax before test suite is started
+# We are not entring the IPs with range, there will be indiviual entry for every VIP (Need to be fixed Later) : Anuj
+add_vip_to_ip_entries()
+{
+  if [ $USE_SAME_NETID_SRC != 1 ];
+  then
+    return
+  fi
+  cp $IP_ENTERIES $IP_ENTERIES_TMP1
+  cp $IP_ENTERIES $IP_ENTERIES_TMP2
+
+  ts_debug_log "add_vip_to_ip_entries() - method called. Total Intefaces=${#IFArray[@]}. Total VIP=${#VIP_ARR[@]}"
+
+  IFidx=0
+  while [ $IFidx -lt ${#IFArray[@]}  ]
+  do 
+    VIPidx=0
+    ts_debug_log "add_vip_to_ip_entries() - adding VIP for interface index=$IFidx, VIP index=$VIPidx"
+    while [ $VIPidx -lt ${#VIP_ARR[@]} ]
+    do
+      #Check if IP is in the ip_entires.
+      #If not add it as ServerIP (This check is not implemented right now)
+      C1=`get_C1 $IFidx`
+      NETID_FOR_FILE=$A1.$B1.$C1.0
+      NETBITS_FOR_FILE=24
+      IP_FOR_FILE=$A1.$B1.$C1.${VIP_ARR[$VIPidx]}
+      INTERFACE_FOR_FILE=${IFArray[$IFidx]}
+      GATEWAY_IP=`get_gateway_ip`
+     
+      # We are not setting the exclude_ip since we are assuming that the gateway will be out side of the IP Range : Anuj (Later)
+
+      # ENTRY_TO_FILE=S|$A1.$B1.$C1.0|24|$A1.$B1.$C1.${VIP_ARR[$VIPidx]}|$A1.$B1.$C1.${VIP_ARR[`expr ${#VIP_ARR[@]} - 1`]}|${#VIP_ARR[@]}|-|-|$GATEWAY_IP|${IFArray[$IFidx]}
+
+      ENTRY_TO_FILE="S|$NETID_FOR_FILE|$NETBITS_FOR_FILE|$IP_FOR_FILE|$IP_FOR_FILE|1|-|-|$GATEWAY_IP|$INTERFACE_FOR_FILE"
+      ts_debug_log "The entry of the file is $ENTRY_TO_FILE"
+      echo "$ENTRY_TO_FILE" >> $IP_ENTERIES
+
+      VIPidx=`expr $VIPidx + 1`
+    done
+
+    IFidx=`expr $IFidx + 1`  
+  done
+}
+
+#This need to be called from ts_run_ax after test suite is over
+#  Assumption is this that user will not assign any IPs while test Run is in execution.
+del_vip_from_ip_entries()
+{
+  if [ $USE_SAME_NETID_SRC != 1 ]
+  then
+    return
+  fi
+
+  ts_debug_log "del_vip_from_ip_entries() - method called"
+  ts_debug_log "Moving $IP_ENTERIES_TMP1 to $IP_ENTERIES file"
+  mv $IP_ENTERIES_TMP1 $IP_ENTERIES
+  rm $IP_ENTERIES_TMP2
+  ts_debug_log "del_vip_from_ip_entries() - method ended sucessfully"
+}
+
+#This need to be called from ts_run_ax after test suite is over
+#del_vip_from_ip_entries()
+#{
+#  if [ $USE_SAME_NETID_SRC != 1 ]
+#  then
+#    return
+#  fi
+  
+#  ts_debug_log "del_vip_from_ip_entries() - method called"
+
+#  IFidx=0
+#  cp $IP_ENTERIES $IP_ENTERIES_TMP1
+#  while [ $IFidx -lt ${#IFArray[@]}  ]
+#  do
+#    VIPidx=0
+#    C1=`get_C1 $IFidx`
+#   while [ $VIPidx -lt ${#VIP_ARR[@]} ]
+#    do
+#      IP_FOR_FILE=$A1.$B1.$C1.${VIP_ARR[$VIPidx]}
+#      ts_debug_log "Deleting $IP_FOR_FILE from ip_entries"
+#      egrep -v "$IP_FOR_FILE" $IP_ENTERIES_TMP1 > $IP_ENTERIES_TMP2
+#      cp $IP_ENTERIES_TMP2 $IP_ENTERIES_TMP1
+#      VIPidx=`expr $VIPidx + 1`
+ #   done
+
+  #  IFidx=`expr $IFidx + 1`
+  #done
+
+  #cp $IP_ENTERIES_TMP1 $IP_ENTERIES 
+  #rm $IP_ENTERIES1 $IP_ENTERIES_TMP2
+#}
+
+get_NS_admin_ip()
+{
+  egrep "^NSAdminIP" $CAV_CONF | cut -d " " -f2 | cut -d '/' -f1
+  #Add a check if not found
+  # This check has been added where ever this mthd get called  # Anuj 30/01/08
+  # since we can not give the error msg in this mthd, as it is directly fetching the value.
+}
+ 
+get_NO_admin_ip()
+{
+  egrep "^SRAdminIP" $CAV_CONF | cut -d " " -f2 | cut -d '/' -f1
+  #Add a check if not found
+  # This check has been added where ever this mthd get called  # Anuj 30/01/08
+  # since we can not give the error msg in this mthd, as it is directly fetching the value.
+}
+
+## Currently it is appending in the end of the cav.conf, need to solve later : Done by Anuj 24/01/08
+# Pending - How to handle case of some interfaces not defined but IPs were created on those?
+update_interface_cav_conf()
+{
+  TMP_FILE=/tmp/cav.conf.$$
+  ts_debug_log "Updating cav.conf, Appending Interface ${IFArray[0]}"
+  CAV_INTERFACES=${IFArray[0]}
+  i=1
+  while [ $i -lt ${#IFArray[@]} ]
+  do
+    ts_debug_log "Updating cav.conf, Appending Interface ${IFArray[$i]}"
+    CAV_INTERFACES=`echo "$CAV_INTERFACES|${IFArray[$i]}"` 
+    i=`expr $i + 1`
+  done   
+
+  sed "s/NSLoadIF .*/NSLoadIF $CAV_INTERFACES/g" $CAV_CONF > $TMP_FILE
+  
+  mv $TMP_FILE $CAV_CONF
+# cp $TMP_FILE $CAV_CONF
+}
+

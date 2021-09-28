@@ -1,0 +1,21 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+#
+Info|3.1|1|-|-|-1|-1|-
+#
+Group|Device Stats|10148|vector|11|0|System Metrics|Tier>Server>Device|Device utilization stats on a per physical device or partition basis. 
+#
+Graph|Read Requests Merged/Sec|1|scalar|rate|-|-|0|NA|-1|-1|L|NA|The number of read requests merged per second that were queued to the device.
+Graph|Write Requests Merged/Sec|2|scalar|rate|-|-|0|NA|-1|-1|L|NA|The number of write requests merged per second that were queued to the device.
+Graph|Read Requests/Sec|3|scalar|rate|-|-|0|NA|-1|-1|L|NA|The number of read requests that were issued to the device per second.
+Graph|Write Requests/Sec|4|scalar|rate|-|-|0|NA|-1|-1|L|NA|The number of write requests that were issued to the device per second.
+Graph|Read KBytes/Sec|5|scalar|rate|-|-|0|NA|-1|-1|L|NA|The number of kilobytes read from the device per second.
+Graph|Write KBytes/Sec|6|scalar|rate|-|-|0|NA|-1|-1|L|NA|The number of kilobytes written to the device per second.
+Graph|Average Size Of Request (Sectors)|7|scalar|sample|-|-|0|NA|-1|-1|L|NA|The average size (in sectors) of the requests that were issued to the device.
+Graph|Average Queue length|8|scalar|sample|-|-|0|NA|-1|-1|L|NA|The average queue length of the requests that were issued to the device.
+Graph|Average Request Time (ms)|9|scalar|rate|-|-|0|NA|-1|-1|L|NA|The average time (in milliseconds) for I/O requests issued to the device to be served. This includes the time spent by the requests in queue and the time spent servicing them.
+Graph|Average Service Time (ms)|10|scalar|rate|-|-|0|NA|-1|-1|L|NA|The average service time (in milliseconds) for I/O requests that were issued to the device.
+Graph|Bandwidth Utilization (Pct)|11|scalar|rate|-|-|0|NA|-1|-1|H|NA|Percentage of CPU time during which I/O requests were issued to the device (bandwidth utilization for the device).

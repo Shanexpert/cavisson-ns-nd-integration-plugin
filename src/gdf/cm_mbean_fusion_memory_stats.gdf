@@ -1,0 +1,62 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+#
+# General information line
+# Info|msgVersion|numGroups|startIndex|testRun|sizeOfMsgData|interval|testRunStartDate/Time
+#
+# Group information line
+# Group|groupName|rptGrpId|groupType|numGraphs|numVectors
+#
+# Graph information line
+# Graph|graphName|rptId|graphType|dataType|graphDataIndex|formula|numVectors
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Fusion Memory Stats|10801|vector|47|0|Fusion Metrics|Tier>Server>Instance|Fusion Memory Statistics.
+Graph|Heap Memory Committed (MB)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of memory that is currently allocated to the JVM for heap memory in mega bytes.
+Graph|Heap Memory init (MB)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The initial amount of memory that the JVM requests from the operating system for heap memory during start up in  mega bytes.
+Graph|Heap Memory Max (MB)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum amount of heap memory in mega bytes.
+Graph|Heap Memory Usage (Pct)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|percentage  of available heap memory that the system is currently using (Heap Memory Used / Heap Memory Max).
+Graph|Heap Memory Used (MB)|5|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Current amount of heap memory(in mega bytes) used by the system.
+Graph|Non-Heap Memory Committed (MB)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of memory that is currently allocated to the JVM for Non-heap memory in mega bytes.
+Graph|Non-Heap Memory Init (MB)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The initial amount of memory that the JVM requests from the operating system for Non-heap memory during start up in mega byte.
+Graph|Non-Heap Memory Max (MB)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum amount of non-heap memory(in mega bytes) that the system could use.
+Graph|Non-Heap Memory Usage (Pct)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|percentage of available Non-heap memory that the system is currently using (Non-Heap Memory Used / Non-Heap Memory Max).
+Graph|Non-Heap Memory Used (MB)|10|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Current amount of Non-heap memory(in mega bytes) used by the system.
+Graph|CMS Old Generation Committed (MB)|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of memory that is currently allocated in mega bytes.
+Graph|CMS Old Generation init (MB)|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The initial amount of memory that the JVM requests from the operating system for CMS during start up in mega bytes.
+Graph|CMS Old Generation Max (MB)|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum amount of memory that CMS old generation could use in mega bytes.
+Graph|CMS Old Generation Usage (Pct)|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percentage of CMS old generation used and CMS old generation max.
+Graph|CMS Old Generation Used (MB)|15|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Currently used old generation in mega bytes.
+Graph|CMS Old Generation Used after GC (MB)|16|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Used old generation after garbage collection in mega bytes.
+Graph|Code Cache Committed (MB)|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of memory in mega bytes that is committed for the JVM to use.
+Graph|Code Cache init (MB)|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of memory in mega bytes that the JVM initially requests from the operating system for memory management.
+Graph|Code Cache Max (MB)|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum amount of memory in bytes that can be used for memory management.
+Graph|Code Cache Usage (PCT)|20|scalar|sample|-|-|0|NA|-1|-1|NA|NA|percentage  of available heap memory that the system is currently using (Code cache Used / Code Cache Max).
+Graph|Code Cache Used (MB)|21|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The amount of memory used by code cache in mega bytes.
+Graph|Compressed class space Committed (MB)|22|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of memory in mega bytes that is committed for the JVM to use.
+Graph|Compressed class space init (MB)|23|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of memory in mega bytes that the JVM initially requests from the operating system for memory management.
+Graph|Compressed class space Max (MB)|24|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum amount of memory in mega bytes that can be used for memory management.
+Graph|Compressed class space Usage(PCT)|25|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percentage of available heap memory that the system is currently using ( Compressed class space Used / Compressed class space  Max).
+Graph|Compressed class space Used(MB)|26|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The amount of used memory in mega bytes.
+Graph|Metaspace Committed (MB)|27|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of memory in mega bytes that is committed for the JVM to use.
+Graph|Metaspace Init(MB)|28|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of memory in mega bytes that the JVM initially requests from the operating system for memory management.
+Graph|Metaspace Max(MB)|29|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum amount of memory in mega bytes that can be used for metaspace.
+Graph|Metaspace Usage (PCT)|30|scalar|sample|-|-|0|NA|-1|-1|NA|NA|percentage  of available heap memory that the system is currently using (Metaspace  Used / Metaspace Max).
+Graph|Metaspace Used (MB)|31|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The amount of memory used by metaspace in mega bytes.
+Graph|Eden-space Committed (MB)|32|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of memory in mega bytes that is committed for the eden-space to use.
+Graph|Eden-space Init (MB)|33|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of memory in mega bytes that the JVM initially requests from the operating system for eden-space.
+Graph|Eden-space Max (MB)|34|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum amount of memory in mega bytes that can be used for memory management.
+Graph|Eden-space Usage (PCT)|35|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percentage  of available heap memory that the system is currently using (Eden space  Used / Eden space Max).
+Graph|Eden-space Used (MB)|36|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The amount of memory used by eden-space in mega bytes.
+Graph|Eden-space After GC (MB)|37|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of Eden space after gc in mega bytes.
+Graph|Survivor-space Committed (MB)|38|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of memory in mega bytes that is committed for the JVM to use.
+Graph|Survivor-space Init (MB)|39|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of memory in mega bytes that the JVM initially requests from the operating system for memory management.
+Graph|Survivor-space Max (MB)|40|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum amount of memory in mega bytes that can be used for memory management
+Graph|Survivor-space Usage (PCT)|41|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percentage  of available heap memory that the system is currently using (suvivor space used / survivor space  Max).
+Graph|Survivor-space Used (MB)|42|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The amount of used memory in mega bytes.
+Graph|Survivor-space After GC (MB)|43|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of survivor space after gc in mega bytes.
+Graph|Total memory committed (MB)|44|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total amount of memory in mega bytes that is committed for the JVM to use.
+Graph|Total Memory Initialized (MB)|45|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total amount of memory in mega bytes that the JVM initially requests from the operating system for memory management.
+Graph|Total Memory Max (MB)|46|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum amount of memory in mega bytes that can be used for memory management.
+Graph|Total memory used (MB)|47|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The amount of Memory used in mega bytes.

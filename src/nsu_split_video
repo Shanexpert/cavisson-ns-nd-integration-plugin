@@ -1,0 +1,12 @@
+while getopts s:t:i:d: option
+do
+case "${option}"
+in
+s) START_DURATION=${OPTARG};;
+t) TOTAL_DURATION=${OPTARG};;
+i) INPUT_FILE=${OPTARG};;
+d) DESTINATION_FILE=$OPTARG;;
+esac
+done
+
+ffmpeg -ss $START_DURATION -t $TOTAL_DURATION  -y -i $INPUT_FILE $DESTINATION_FILE

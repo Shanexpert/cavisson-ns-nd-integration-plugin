@@ -1,0 +1,37 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+#
+# General information line
+# Info|msgVersion|numGroups|startIndex|testRun|sizeOfMsgData|interval|testRunStartDate/Time
+#
+# Group information line
+# Group|groupName|rptGrpId|groupType|numGraphs|numVectors
+#
+# Graph information line
+# Graph|graphName|rptId|graphType|dataType|graphDataIndex|formula|numVectors
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Tibco Topic Stats|10144|vector|19|0|Application Metrics|Tier>Server>TopicName|Tibco Topic Statistics
+Graph|Active Durable Count|1|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Current number of active durable subscribers for the topic.
+Graph|Durable Count|2|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Current number of durable subscribers for the topic.
+Graph|Export Transports|3|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Number of the transports that this topic exports messages on.
+Graph|Import Transports|4|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Number of the transports that this destination imports messages from.
+Graph|Subscriber Count|5|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Current number of subscribers for the topic.
+Graph|Consumer Count|6|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Number of consumers for the destination.
+Graph|Flow Control Max Bytes(Bytes)|7|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Volume of pending messages (in bytes) at which flow control is enabled for this destination.
+Graph|Inbound Byte Rate(Kbits Per sec)|8|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Rate of kilo bit per second
+Graph|Inbound Message Rate/second|9|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Number of messages per second.
+Graph|Inbound Total Bytes|10|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total size of messages.
+Graph|Inbound Total Messages|11|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total number of messages.
+Graph|Outbound Byte Rate(Kbits per sec)|12|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Rate of kilo bit per second
+Graph|Outbound Message Rate/second|13|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Number of messages per second.
+Graph|Outbound Total Bytes|14|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total size of messages.
+Graph|Outbound Total Messages|15|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total number of messages.
+Graph|Pending Message Count|16|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total number of pending messages for this destination.
+Graph|Pending Message Size|17|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total size for all pending messages for this destination.
+Graph|Prefetch|18|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|number of messages prefetched by the EMS client from the server to improve efficiency.
+Graph|Redelivery Delay|19|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Redelivery delay for this queue

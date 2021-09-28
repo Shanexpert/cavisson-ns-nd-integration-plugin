@@ -1,0 +1,15 @@
+# --- GDF Version History ---
+# # 1.0 - Initial version
+# # 2.0 - Change done for match Long_data and Long_long_data to double
+# # 3.0 - Changes done for Dynamic data in Execution GUI
+# # 3.1 - Use future1 field of group line for Metric group name
+#
+#LAST_MAX_ASSIGNED_GRAPH_ID = 13
+#LAST_MODIFIED_DATE = 08/31/12 20:57:35
+
+Info|3.1|1|-|-|-1|-1|-
+Group|cm_macys_ray_usage_stats_preview|10113|vector|4|0|Application Metrics|-|RayTestingUsageMacys
+Graph|Preview - Average Response Time|1|scalar|times|-|-|0|A|-1|-1|NA|NA|Hot Import - Average Response Time
+Graph|Preview - Cumulative|2|scalar|cumulative|-|-|0|A|-1|-1|NA|NA|Hot Import - Cumulative
+Graph|Preview - Sample|3|scalar|sample|-|-|0|A|-1|-1|NA|NA|Hot Import - Sample
+Graph|Error Graph (for invalid IDs) - Cumulative|4|scalar|cumulative|-|-|0|A|-1|-1|NA|NA|Error Graph (for invalid IDs) - Cumulative

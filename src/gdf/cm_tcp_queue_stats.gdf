@@ -1,0 +1,12 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Socket Queue Stats|10116|vector|3|0|Network Metrics|Tier>Server|Queue status of open network sockets.
+
+Graph|Number of connections|1|scalar|sample|-|None|0|NA|-1|-1|NA|NA|Number of connections
+Graph|Send queue size (bytes)|2|scalar|sample|-|None|0|NA|-1|-1|NA|NA|Size of the transmit queue.
+Graph|Receive queue size (bytes)|3|scalar|sample|-|None|0|NA|-1|-1|NA|NA|Size of the receive queue.

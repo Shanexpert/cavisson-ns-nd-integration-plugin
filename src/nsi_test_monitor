@@ -1,0 +1,20 @@
+
+test_func()
+{
+  ./nsi_start_monitor -n _newScript -P $VAL
+  sleep 5
+  ./nsi_status_monitor -P $VAL
+  sleep 5
+  ./nsi_stop_monitor -P $VAL
+}
+
+while getopts u: c
+do
+ case $c in
+ u) VAL="$OPTARG";;
+ esac
+done
+
+echo "START... VAL = $VAL"
+test_func
+echo "END..."

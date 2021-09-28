@@ -1,0 +1,29 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Tomcat Cache Stats|14129|vector|7|0|Application Metrics|Tier>Server>Instance>context|This stats provide information about cache details(Size,count) of Apache Tomcat.
+
+#G1
+Graph|Tomcat Access Count|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of times the cache was accessed.
+
+#G2
+Graph|Tomcat Hit Count|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of times the cache was hit.
+
+#G3 
+Graph|Tomcat Cache Size|3|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Size of cache in Apache Tomcat.
+
+#G4
+Graph|Tomcat Desired Entry Access Ratio|4|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Entry hit ratio at which an entry will never be removed from the cache.
+
+#G5
+Graph|Tomcat Spare Not Found Entries|5|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Spare amount of not found entries.
+
+#G6 
+Graph|Tomcat Max Allocate Iterations|6|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Maximum amount of removals during a make space.
+
+#G7
+Graph|Tomcat Cache Max Size|7|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Maximum size of resources which will have their content cached.

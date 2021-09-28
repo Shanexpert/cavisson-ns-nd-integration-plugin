@@ -1,0 +1,137 @@
+#! /bin/sh
+
+######################################################################################
+#
+# >>>> nsu_svc_create_table
+#
+# Author:   Ambuj K Singh
+#
+######################################################################################
+
+
+BASE_DIR=""
+
+function Usage()
+{
+  echo $*
+  echo "Usage: $0 <Test Run Number> [<ns_working_dir>]"
+  echo "Example:"
+  echo "  $0 1234"
+  echo "  $0 1234 /home/cavisson/work2"
+  exit -1
+}
+
+if [ $# -lt 1 ]; then
+  Usage "Test run number argument is missing"
+fi
+
+#Checking if test number is numeric
+echo $1 | egrep '^[0-9]+$' >/dev/null 2>&1
+if [ "$?" -eq "1" ]; then
+  Usage "Test run number is not numeric"
+fi
+
+#Checking Test number is valid or not
+if [ $# -eq 2 -a -d $2/logs/TR$1 ]; then
+  BASE_DIR=$2/logs
+elif [ -d $PWD/TR$1 ]; then
+  BASE_DIR=$PWD
+elif [ -d $NS_WDIR/logs/TR$1 ]; then
+  BASE_DIR=$NS_WDIR/logs
+else
+  echo "nsu_svc_create_table: Error: Test run number $1 is not a valid test run number"
+  exit -1
+fi
+
+echo "nsu_svc_create_table: Deleting existing tables, if any present and creating tables ..."
+
+###################################################################################################
+#The drop index command will be used later since as of now we are not creating index for the tables
+
+#nsu_svc_drop_index $1
+
+###################################################################################################
+#The drop table is used to drop the table if it had already been created earlier
+
+nsu_svc_drop_table $1
+
+##################################################################################################
+#From here we are now creating the desired tables
+
+TXC_START=`date +%s`
+psql test cavisson <<+
+
+create table SvcTable_$1 (
+        SvcIndex int,
+        SvcName text,
+	primary key(SvcIndex)
+);
+
+create table SvcSignatureTable_$1 (
+        SvcSignatureIndex int,
+        SvcSignatureName text,
+	primary key(SvcSignatureIndex)
+);
+
+create table SvcErrorCode_$1 (
+        SvcStatusIndex smallInt,
+        SvcStatus text,
+	primary key(SvcStatusIndex)
+);
+
+create table SvcRecord_$1 (
+        InstanceId int,
+        SvcInstance int,
+        SvcIndex int,
+        SvcSessionIndex text,
+        SvcSignatureIndex int,
+        SvcCPSignatureIndex int,
+        SvcStatusIndex smallint,
+        SvcStartTime bigint,
+        SvcRespTime bigint, 
+        SvcSorTime bigint, 
+        SvcSelfTime bigint, 
+        SvcQueueWaitTime bigint,
+        SvcTotalTime bigint,
+        SvcElapsedTime bigint,
+        SvcNSRelTime bigint,
+	primary key(SvcInstance)
+        --SvcObjectType smallint
+);
+
+create table SvcCompRecord_$1 (
+        InstanceId int,
+        SvcParentInstance int,
+        SvcParentIndex int,
+        SvcInstance int,
+        SvcIndex int,
+        SvcSessionIndex text,
+        SvcSignatureIndex int,
+        SvcStatusIndex smallint,
+        SvcStartTime bigint,
+        SvcParentStartTime bigint,
+        SvcRespTime bigint, 
+        SvcSORRespTime bigint, 
+        SvcTotalTime bigint,
+        SvcQueueWaitTime bigint,
+        SvcElapsedTime bigint,
+        SvcCritPathFlag int,
+        SvcNSRelTime bigint,
+	primary key(SvcInstance)
+        --SvcObjectType smallint
+);
+
+create table SvcInstanceTable_$1 (
+        InstanceId int,
+        InstanceName text
+);
+
++
+echo "nsu_svc_create_table: ... Done deleting and creating tables ..."
+echo
+echo "nsu_svc_create_table: Creating transaction component indexes ..."
+#./nsu_svc_create_index.sh $1
+#echo "nsu_svc_create_table: ... Done creating transaction component indexes."
+TXC_END=`date +%s`
+TXC_DIFF=`expr $TXC_END - $TXC_START`
+echo "nsu_svc_create_table: Took $TXC_DIFF seconds creating transaction component tables."

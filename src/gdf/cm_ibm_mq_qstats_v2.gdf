@@ -1,0 +1,29 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+#
+# General information line
+# Info|msgVersion|numGroups|startIndex|testRun|sizeOfMsgData|interval|testRunStartDate/Time
+#
+# Group information line
+# Group|groupName|rptGrpId|groupType|numGraphs|numVectors
+#
+# Graph information line
+# Graph|graphName|rptId|graphType|dataType|graphDataIndex|formula|numVectors
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|IBM MQ Queue Stats|10812|vector|11|0|IBM MQ Metrics|Tier>Server>QueueManager>QueueName|IBM MQ Queue Statistics
+Graph|Maximum Message Size(Bytes)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum Message Size in Bytes
+Graph|Maximum Queue Depth|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum Queue Depth
+Graph|Open Input Count|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current count of open input handles. Input handles are opened so that an application may PUT messages to a queue.
+Graph|Open Output Count|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current count of open output handles. Output handles are opened so that an application may GET messages from a queue.
+Graph|Message Dequeues/Min|5|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Rate of messages coming off the queue per minute.
+Graph|Message Enqueues/Min|6|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Rate of messages coming on to the queue per minute.
+Graph|Number Of Uncommitted Changes|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of messages currently uncommitted on the queue
+Graph|Current Queue Depth|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current count of messages on a local queue. This measurement applies only to local queues of the monitored queue manager.
+Graph|Queue Full(%)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|How full is the queue as a percentage
+Graph|Total Message Dequeues|10|scalar|sum|-|-|0|NA|-1|-1|NA|NA|Total messages coming off the queue
+Graph|Total Message Enqueues|11|scalar|sum|-|-|0|NA|-1|-1|NA|NA|Total messages coming on to the queue

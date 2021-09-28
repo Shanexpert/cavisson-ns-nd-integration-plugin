@@ -1,0 +1,7 @@
+# 1.0 - Initial version
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Store-wise Business Transactions|10676|vector|2|0|Business Transaction Metrics|Tier>Server>Store>BT|Provides Business Transaction metrics Store-wise. This will be available for a fixed set of business transactions configured and all other business transactions will be counted in "Others" category.
+Graph|Transactions/Sec|1|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of business transactions per second.
+Graph|Response Time (Sec)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Query response time in second.
+

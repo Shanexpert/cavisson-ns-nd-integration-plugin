@@ -1,0 +1,43 @@
+#!/bin/sh
+TEST_IDX=$1
+MODE=$2
+if [ "X$MODE" = "X" ]; then
+  MODE=1
+elif [ $MODE -gt 1 ]; then
+  NUM_INSTANCE=`ls -ltr $NS_WDIR/logs/TR$TEST_IDX/nd/raw_data | grep -v ^d | grep -v '^\.' | grep '^-' | wc -l`
+fi
+
+print_output()
+{
+  if [ $MODE -eq 1 ]; then
+    echo -n "$TEST_IDX$1" 
+  elif [ $MODE -eq 2 ]; then
+    echo "$TEST_IDX (Num instance $NUM_INSTANCE)" 
+    echo "  Num meta data file : `ls -ltr $NS_WDIR/logs/TR$TEST_IDX/nd/meta_data/ | grep '^-' | wc -l`"
+    echo "  Num offset files : `ls -ltra logs/TR$TEST_IDX/nd/raw_data/ | grep -v ^d | grep '\.offset$' | wc -l`"
+    echo "-------------------------------------------------------------"
+  elif [ $MODE -eq 3 ]; then
+    echo "$TEST_IDX (Num instance $NUM_INSTANCE)" 
+      NUM_META_DATA_FILE=`ls -ltr $NS_WDIR/logs/TR$TEST_IDX/nd/meta_data/ | grep '^-' | wc -l`
+      NUM_OFFSET_FILES=`ls -ltra logs/TR$TEST_IDX/nd/raw_data/ | grep -v ^d | grep '\.offset$' | wc -l`
+      echo "  Num meta data file : $NUM_META_DATA_FILE"
+      if [ $NUM_META_DATA_FILE -gt 0 ]; then
+        echo "`ls -ltr $NS_WDIR/logs/TR$TEST_IDX/nd/meta_data/ | grep '^-' | sed 's/^/    /g'`"
+      fi
+      echo "  Num offset files : $NUM_OFFSET_FILES"
+      if [ $NUM_OFFSET_FILES -gt 0 ]; then
+        echo "`ls -ltra logs/TR$TEST_IDX/nd/raw_data/ | grep -v ^d | grep '\.offset$' | sed 's/^/    /g'`"
+      fi
+      echo "-------------------------------------------------------------"
+  fi 
+}
+while true
+do
+  if [ -f $NS_WDIR/logs/TR$TEST_IDX/nd/.next_test_run ]; then
+    print_output '-->'
+    TEST_IDX=`cat $NS_WDIR/logs/TR$TEST_IDX/nd/.next_test_run`
+  else
+       print_output 
+    break
+  fi
+done

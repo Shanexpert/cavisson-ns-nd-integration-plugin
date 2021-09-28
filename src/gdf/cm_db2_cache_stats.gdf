@@ -1,0 +1,14 @@
+# --- GDF Version History ---
+# -- 1.0 - Initial version --
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|DB2 Cache Stats|10422|vector|8|0|DB2 Metrics|Tier>Server>Instance|DB2 Cache Stats provide metrics related to database cache.
+Graph|DB2 Package Cache Look-ups/Sec|1|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of times that an application looked for a section or package in the package cache per second.
+Graph|DB2 Package Cache Inserts/Sec|2|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of times that a requested section was not available for use and had to be loaded into the package cache per second.
+Graph|DB2 Package Cache Overflows/Sec|3|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of times that the package cache overflowed the bounds of its allocated memory per second.
+Graph|DB2 SQL Section Look-ups/Sec|4|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of look-ups of SQL sections by an application from its shared SQL work space per second.
+Graph|DB2 SQL Section Inserts/Sec|5|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of inserts of SQL sections by an application from its shared SQL work space per second.
+Graph|DB2 Catalog Cache Look-ups/Sec|6|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of times that the catalog cache was referenced to obtain table descriptor information or authorization information per second.
+Graph|DB2 Catalog Cache Inserts/Sec|7|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of times that the system tried to insert table descriptor or authorization information into the catalog cache per second.
+Graph|DB2 Catalog Cache Overflows/Sec|8|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of times that the catalog cache overflowed the bounds of its allocated memory per second.

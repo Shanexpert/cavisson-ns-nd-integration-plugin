@@ -1,0 +1,189 @@
+#!/bin/sh
+
+#----------------------------------------------------------------------
+# Name    :   nsu_show_used_profiles_in_scenarios 
+# Author  :   Shakti
+# Purpose :    This file is to show used profiles in scenario
+# Usage   :
+#  nsu_show_used_profiles_in_scenarios [-p <project/subproject>] [-f <proj/subproj/scenario_profile]
+# where
+#  -p : For all project/sub-project details.
+#  -f : For specified scenario_profile in project/subproject
+# Format of Output:
+#   Project|Subproject|Scenario Name
+#----------------------------------------------------------------------
+
+. $NS_WDIR/bin/ns_user_admin_lib
+PFLAG=0
+FFLAG=0
+
+#SCENARIO_PROFILE_PATH=$NS_WDIR/scenario_profiles
+SCENARIO_PROFILE_PATH=$NS_WDIR/workspace
+
+check_presence_proj_subproj()
+{
+  PROJ=$1
+  SUB_PROJ=$2
+  if [ ! -d $SCENARIO_PROFILE_PATH/$PROJ/$SUB_PROJ ];then
+    echo 1
+  else 
+    echo 0
+  fi
+}
+
+#check_presence_proj_subproj_scenario_profile()
+#{
+ # PROJ=$1
+  #SUB_PROJ=$2
+  #SCENARIO_PROF=$3
+  #if [ ! -f $SCENARIO_PROFILE_PATH/$PROJ/$SUB_PROJ/$SCENARIO_PROF ];then
+   # return 1
+ # fi
+#}
+err_msgout()
+{
+  echo "$1"
+}
+
+display_help_and_exit()
+{
+  err_msgout "$1"
+  err_msgout "Usage: nsu_show_used_profiles_in_scenarios  [-p <workspace/profile/project/subproject>] [-f <workspace/profile/<proj/subproj/scenario_profile]"
+  err_msgout "Where:"
+  err_msgout "  -p For all project/sub-project details placed inside <workspace/profile/"
+  err_msgout "  -f For specified scenario_profile in <workspace/profile/project/subproject/scenario_profiles"
+  exit -1
+}
+
+
+check_option()
+{
+  OPTION_FLAG=$1
+  if [ $OPTION_FLAG -gt 0 ] ;then
+    display_help_and_exit "nsu_show_used_profiles_in_scenarios: $2 option cannot be specified more than once."
+  fi
+}
+
+set_default_workspace_profile()
+{
+  WORKSPACE=$1
+  PROFILE=$2
+  if [ "$WORKSPACE" == "" ];then
+     WORKSPACE=admin
+   fi
+
+   if [ "$WORKSPACE" == "" ];then
+    PROFILE=admin
+   fi
+}
+check_format_of_proj_subproj()
+{
+   WORKSPACE=`echo $PROJ_SUB_PROJ | egrep "/" | cut -d'/' -f1`
+   PROFILE=`echo $PROJ_SUB_PROJ | egrep "/" | cut -d'/' -f2`
+   PROJECT=`echo $PROJ_SUB_PROJ | egrep "/" | cut -d'/' -f3`
+   SUB_PROJECT=`echo $PROJ_SUB_PROJ | egrep "/" | cut -d'/' -f4`
+   if [ "$PROJECT" == "" -o "$SUB_PROJECT" == "" ];then
+     err_msgout "-p <workspace/profileProject/Subproject> is not given in proper format."
+     exit -1
+   fi
+   set_default_workspace_profile $WORKSPACE $PROFILE
+}
+
+check_format_of_proj_subproj_scenario_profile()
+{
+
+    WORKSPACE=`echo $PROJ_SUB_PROJ_SCENARIO_PROFILE | egrep "/" | cut -d'/' -f1`
+    PROFILE=`echo $PROJ_SUB_PROJ_SCENARIO_PROFILE | egrep "/" | cut -d'/' -f2`
+    PROJECT=`echo $PROJ_SUB_PROJ_SCENARIO_PROFILE | egrep "/" | cut -d'/' -f3`
+    SUB_PROJECT=`echo $PROJ_SUB_PROJ_SCENARIO_PROFILE | egrep "/" | cut -d'/' -f4`
+    SCENARIO_PROFILE=`echo $PROJ_SUB_PROJ_SCENARIO_PROFILE | egrep "/" | cut -d'/' -f5`
+    if [ "$PROJECT" == "" -o "$SUB_PROJECT" == "" -o "$SCENARIO_PROFILE" == "" ];then
+      err_msgout "-p <Project/Subproject/scenario_profile> is not given in proper format."
+      exit -1
+    fi
+   set_default_workspace_profile $WORKSPACE $PROFILE
+}
+
+check_if_p_option()
+{
+  if [ $PFLAG -eq 1 -a $FFLAG -eq 1 ];then
+    display_help_and_exit "nsu_show_used_profiles_in_scenarios: -p can not be use with -f option."
+  fi
+}
+
+check_if_f_option()
+{
+  if [ $PFLAG -eq 1 -a $FFLAG -eq 1 ];then
+    display_help_and_exit "nsu_show_used_profiles_in_scenarios: -f can not be use with -p option."
+  fi
+}
+
+show_proj_subproj_detail()
+{
+  #relative test assets dir
+  RTA_DIR=$WORKSPCAE/$PROFILE/cavisson
+  
+  if [ $PFLAG -eq 1 ]; then
+    USED_SCENARIO=(`grep -r "^SCENARIO_SETTINGS_PROFILE" $FROM/$RTA_DIR/* | grep -v "$FILTER" | grep "$SELECT" | tr ' '  '_'`)
+  elif [ $FFLAG -eq 1 ]; then
+    USED_SCENARIO=(`grep -r "^SCENARIO_SETTINGS_PROFILE" $FROM/$RTA_DIR/* | grep "$SELECT" | tr ' '  '_'`)
+  fi
+  for((i = 0; i < ${#USED_SCENARIO[@]}; i++))
+  do
+     #/home/cavisson/work/workspace/<worksoace_name>/<profile>/cavisson/<proj>/<subproj>
+     PROJ=`echo ${USED_SCENARIO[$i]}|cut -d '/' -f8`
+     SUB_PROJ=`echo ${USED_SCENARIO[$i]}|cut -d '/' -f9`
+     SCENARIO_NAME=`echo ${USED_SCENARIO[$i]}|cut -d '/' -f10 | cut -d ':' -f1`
+     VERSION_VAL=`echo $SCENARIO_NAME | awk -F'.conf' '{print $2}'`
+     if [ "X$VERSION_VAL" = "X" ];then
+       VERSION="-"
+     else
+       VERSION=$VERSION_VAL
+     fi
+     SCENARIO_NAME=`echo "$SCENARIO_NAME" | awk -F'.conf' '{print $1}'`
+     SCENARIO_PROFILE_NAME=`echo ${USED_SCENARIO[$i]}|cut -d ':' -f 2|cut -d '/' -f3`
+     SCENARIO_PROFILE_NAME=`echo "$SCENARIO_PROFILE_NAME" | awk -F'.ssp' '{print $1}'`
+     echo "$PROFILE|$PROJ|$SUB_PROJ|$SCENARIO_NAME|$VERSION|$SCENARIO_PROFILE_NAME" 
+  done  
+}
+
+if [ "X$*" = "X" ]; then
+  display_help_and_exit
+fi
+FROM="$NS_WDIR"/workspace
+while getopts p:f:? c
+do
+  case $c in
+    p) check_option $PFLAG "-p"
+       check_if_p_option
+       PFLAG=`expr $PFLAG + 1`
+       PROJ_SUB_PROJ="$OPTARG"
+       check_format_of_proj_subproj $PROJ_SUB_PROJ
+       PROJ_SUB_PROJ=`echo $OPTARG | cut -d '/' -f 3,4`
+       FILTER="$PROJ_SUB_PROJ/scenarios"
+       SELECT="$PROJ_SUB_PROJ"
+    ;;
+    f) check_option $FFLAG "-f"
+       check_if_f_option
+       FFLAG=`expr $FFLAG + 1`
+       PROJ_SUB_PROJ_SCENARIO_PROFILE="$OPTARG"
+       WORKSPACE=`echo $PROJ_SUB_PROJ_SCENARIO_PROFILE | cut -d '/' -f 1`
+       PROFILE=`echo $PROJ_SUB_PROJ_SCENARIO_PROFILE | cut -d '/' -f 1`
+       PROJ_SUB_PROJ=`echo $PROJ_SUB_PROJ_SCENARIO_PROFILE | cut -d '/' -f 3,4`
+       check_format_of_proj_subproj_scenario_profile $PROJ_SUB_PROJ_SCENARIO_PROFILE
+       #FILTER="scenarios/$PROJ_SUB_PROJ"
+       SELECT=`echo $PROJ_SUB_PROJ_SCENARIO_PROFILE | egrep "/" | cut -d'/' -f3,4,5`
+
+    ;;  
+    ?) display_help_and_exit ;;
+    *) display_help_and_exit ;;
+  esac
+done
+
+
+echo "WorkProfile|Project|Subproject|Scenario Name|Scenario Version|Profile Name"
+
+show_proj_subproj_detail
+
+#err_msgout "----------------------------------------------------------------------"
+exit 0

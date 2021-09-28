@@ -1,0 +1,25 @@
+#LAST_MAX_ASSIGNED_GRAPH_ID = 8
+#LAST_MODIFIED_DATE = 03/31/17 04:46:32
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Container File System Stats|10442|vector|13|0|Kubernetes Metrics|Tier>Region>Zone>Node>Namespace>Pod>Container|Amount of disk space available on the filesystem of free and used memory.
+
+Graph|Total Disk Space (MB)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total amount of disk space in Megabytes.
+Graph|Used Disk Space (MB)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total amount of used disk space in Megabytes.
+Graph|Available Disk Space (MB)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total amount of free disk space in Megabytes.
+Graph|Available Disk Space (Pct)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total amount of available disk space in percentage.
+Graph|Total INodes|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of INodes.
+Graph|Used INodes|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of used INodes.
+Graph|Available INodes|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of free INodes.
+Graph|Available INodes (Pct)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of free INodes in percentage.
+Graph|Requested Mili CPU Cores|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Request for number of mili cpu cores set.
+Graph|Requested Memory (MB)|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Request for memory in MegaBytes.
+Graph|Mili CPU Cores Limit|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Limit of mili cpu cores set. 
+Graph|Memory Limits (MB)|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Limit of memory set in MegaBytes.
+Graph|Used Disk Space (Pct)|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Used disk space percentage.
+

@@ -1,0 +1,38 @@
+#!/bin/bash
+
+#######################################################################################################
+# Name   : nsi_chk_file_fmt_and_chg_to_unix
+# Example:
+# Initial version : -- 1.0
+#   Author: -- Abhishek Mittal
+#   Date: --   24 Sep 2013
+#      nsi_check_file_format_and_change_in_unix_format <file Name> 
+#      Exit status: 
+#       0  - File is unix format.
+#       1  - File is not unix format but successfully changed in unix format.
+#       2 - File is not unix format and not able to change in  unix format.
+#       3 - File does not exist.
+#         
+#########################################################################################################
+
+if [ "X$1" = "X" ];then 
+  echo "First argument is mandatory."
+  exit 3
+fi 
+
+
+if [ ! -f $1 ]; then 
+  exit 3
+fi
+
+head -1 $1 | od -c | grep '\\r' > /dev/null
+
+if [ "X$?" = "X0" ]; then
+  dos2unix $1 > /dev/null
+  if [ "X$?" != "X0" ]; then
+    exit 2
+  fi
+  exit 1  
+fi
+
+exit 0

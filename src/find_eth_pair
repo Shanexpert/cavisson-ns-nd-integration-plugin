@@ -1,0 +1,16 @@
+#!/bin/sh
+
+for ipl in `cat other_end_ip`
+do
+	echo $ipl
+	ip=`echo $ipl |cut -d: -f1`
+	eth=`echo $ipl |cut -d: -f2`
+ping -c 3 $ip > /dev/null
+if [ $? -eq 0 ]; then
+	echo "This is $eth pair"
+	exit 0
+fi
+done
+
+echo "Not a pair"
+exit 1

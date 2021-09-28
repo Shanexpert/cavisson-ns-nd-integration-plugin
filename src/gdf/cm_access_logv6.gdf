@@ -1,0 +1,44 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+#We are taking same group id as cm_apache_svc_time_ex.gdf in future we will delete cm_apache_svc_time_ex.gdf
+Info|3.1|1|-1|-|-1|-1|-
+
+Group|Access Log V6|10872|vector|33|0|Application Metrics|Tier>Server>Instance>Page|Request stats using access Log such as Requests/Sec, Service Time, Receive Throughtput.
+
+Graph|AL Requests/Sec|1|scalar|times_4B_1000|-|-|0|AS|-1|-1|NA|NA|Number of requests per second
+Graph|AL Service Time (ms)|2|scalar|times_4B_1000|-|-|0|AS|-1|-1|NA|NA|Average Service Time in milliseconds
+Graph|AL Receive Throughtput (Kb/sec)|3|scalar|sample_2B_100|-|-|0|AS|-1|-1|NA|NA|Receive Throughput in kilo bits/Sec
+Graph|AL 50th Percentile Service Time (ms)|4|scalar|sample_4B_1000|-|-|0|AS|-1|-1|NA|NA|50th percentile data
+Graph|AL 80th Percentile Service Time (ms)|5|scalar|sample_4B_1000|-|-|0|AS|-1|-1|NA|NA|80th percentile data
+Graph|AL 90th Percentile Service Time (ms)|6|scalar|sample_4B_1000|-|-|0|AS|-1|-1|NA|NA|90th percentile data
+Graph|AL 95th Percentile Service Time (ms)|7|scalar|sample_4B_1000|-|-|0|AS|-1|-1|NA|NA|95th percentile data
+Graph|AL 99th Percentile Service Time (ms)|8|scalar|sample_4B_1000|-|-|0|AS|-1|-1|NA|NA|99th percentile data
+Graph|AL 1xx/Sec|9|scalar|times_4B_1000|-|-|0|AS|-1|-1|NA|NA|Number of requests per second with HTTP status code of 1xx series
+Graph|AL Sevice Time 1xx (ms)|10|scalar|times_4B_1000|-|-|0|AS|-1|-1|NA|NA|Average Service Time in seconds with HTTP status code of 1xx series
+Graph|AL Receive Throughtput 1xx (Kb/sec)|11|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Receive Throughput in kilo bits/Sec with HTTP status code of 1xx series
+Graph|AL 1xx (%)|12|scalar|sample_2B_100_count_4B|-|-|0|AS|-1|-1|NA|NA|Percentage of 1xx requests.
+Graph|AL 2xx/Sec|13|scalar|times_4B_1000|-|-|0|AS|-1|-1|NA|NA|Number of requests per second with HTTP status code of 2xx series
+Graph|AL Sevice Time 2xx (ms)|14|scalar|times_4B_1000|-|-|0|AS|-1|-1|NA|NA|Average Service Time in milliseconds with HTTP status code of 2xx series
+Graph|AL Receive Throughtput 2xx (Kb/Sec)|15|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Receive Throughput in kilo bits/Sec with HTTP status code of 2xx series
+Graph|AL 2xx (%)|16|scalar|sample_2B_100_count_4B|-|-|0|AS|-1|-1|NA|NA|Percentage of 2xx requests.
+Graph|AL 3xx/Sec||17|scalar|times_4B_1000|-|-|0|AS|-1|-1|NA|NA|Number of requests per second with HTTP status code of 3xx series
+Graph|AL Sevice Time 3xx (ms)|18|scalar|times_4B_1000|-|-|0|AS|-1|-1|NA|NA|Average Service Time in milliseconds with HTTP status code of 3xx series
+Graph|AL Receive Throughtput 3xx (Kb/Sec)|19|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Receive Throughput in kilo bits/Sec with HTTP status code of 3xx series
+Graph|AL 3xx (%)|20|scalar|sample_2B_100_count_4B|-|-|0|AS|-1|-1|NA|NA|Percentage of 3xx requests.
+Graph|AL 4xx/Sec|21|scalar|times_4B_1000|-|-|0|AS|-1|-1|NA|NA|Number of requests per second with HTTP status code of 4xx series
+Graph|AL Sevice Time 4xx (ms)|22|scalar|times_4B_1000|-|-|0|AS|-1|-1|NA|NA|Average Service Time in milliseconds with HTTP status code of 4xx series
+Graph|AL Receive Throughtput 4xx (Kb/Sec)|23|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Receive Throughput in kilo bits/Sec with HTTP status code of 4xx series
+Graph|AL 4xx (%)|24|scalar|sample_2B_100_count_4B|-|-|0|AS|-1|-1|NA|NA|Percentage of 4xx requests.
+Graph|AL 5xx/Sec|25|scalar|times_4B_1000|-|-|0|AS|-1|-1|NA|NA|Number of requests per second with HTTP status code of 5xx series
+Graph|AL Sevice Time 5xx (ms)|26|scalar|times_4B_1000|-|-|0|AS|-1|-1|NA|NA|Average Service Time in milliseconds with HTTP status code of 5xx series
+Graph|AL Receive Throughtput 5xx (Kb/Sec)|27|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Receive Throughput in kilo bits/Sec with HTTP status code of 5xx series
+Graph|AL 5xx (%)|28|scalar|sample_2B_100_count_4B|-|-|0|AS|-1|-1|NA|NA|Percentage of 5xx requests.
+Graph|AL Others Request/sec|29|scalar|times_4B_1000|-|-|0|AS|-1|-1|NA|NA|Number of requests per second with other HTTP status code
+Graph|AL Sevice Time Others (ms)|30|scalar|times_4B_1000|-|-|0|AS|-1|-1|NA|NA|Average Service Time in milliseconds with other HTTP status code
+Graph|AL Receive Throughtput Others (Kb/Sec)|31|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Receive Throughput in kilo bits/sec with other HTTP status code
+Graph|AL Others Request (%)|32|scalar|sample_2B_100_count_4B|-|-|0|AS|-1|-1|NA|NA|Percentage of other requests.
+Graph|AL Requests Greater Than Threshold Service Time (%)|33|scalar|sample_2B_100|-|-|0|AS|-1|-1|NA|NA|Percentage of requests which have response time greater than threshold.

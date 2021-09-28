@@ -1,0 +1,16 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS DynamoDB Stats|14048|vector|8|0|AWS Metrics|AccountName>Region|Amazon DynamoDB is a fully managed NoSQL database service that provides fast and predictable performance with seamless scalability.
+
+Graph|AWS DynamoDB Account Max Reads|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The maximum number of read capacity units that can be used by an account
+Graph|AWS DynamoDB Account Max Table Level Reads|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The maximum number of read capacity units that can be used by a table or global secondary index of an account
+Graph|AWS DynamoDB Account Max Table Level Writes|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The maximum number of write capacity units that can be used by a table or global secondary index of an account
+Graph|AWS DynamoDB Account Max Writes|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The maximum number of write capacity units that can be used by an account
+Graph|AWS DynamoDB Account Provisioned Read Capacity Utilization (%)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of provisioned read capacity units utilized by an account
+Graph|AWS DynamoDB Account Provisioned  Write Capacity Utilization (%)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of provisioned write capacity units utilized by an account
+Graph|AWS DynamoDB Max Provisioned Table Read Capacity Utilization (%)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of provisioned read capacity units utilized by the highest provisioned read table or global secondary index of an account
+Graph|AWS DynamoDB Max Provisioned Table Write Capacity Utilization (%)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of provisioned write capacity utilized by the highest provisioned write table or global secondary index of an account

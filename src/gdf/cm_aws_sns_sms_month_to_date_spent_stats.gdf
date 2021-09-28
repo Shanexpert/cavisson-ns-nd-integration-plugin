@@ -1,0 +1,8 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+Group|AWS SNS SMS|11344|vector|1|0|AWS Metrics|AccountName>Region|Amazon Simple Notification Service (Amazon SNS) is a web service that coordinates and manages the delivery or sending of messages to subscribing endpoints or clients.
+
+Graph|AWS SNS SMS Month To Date Spent USD|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|SMS Month o ate pent SD

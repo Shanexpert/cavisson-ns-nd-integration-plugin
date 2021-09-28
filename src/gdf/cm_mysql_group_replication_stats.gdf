@@ -1,0 +1,16 @@
+# --- GDF Version History ---
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|MySQL Group Replication Stats|10642|vector|5|0|MySQL Metrics|Tier>Server>Channel>Member|MySQL Group Replication ensures virtual synchronous updates on any member in a group of MySQL servers, with conflict handling and failure detection, Each member in a replication group will have associated to it a Certifier and an Applier. Statistics regarding those modules are exposed via MySQL Group Replication monitoring.
+  
+Graph|MySQL Member State|1|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|State OFFLINE=0 The Group Replication plugin is installed but has not been started, ONLINE=1 The member is in a fully functioning state, RECOVERING=2 The member has joined a group from which it is retrieving data, ERROR=3 Whenever there is an error on the recovery phase or while applying changes, the server enters this state, UNREACHABLE=4 Whenever the local failure detector suspects that a given server is not reachable, because maybe it has crashed or was disconnected involuntarily, it shows that server state as unreachable.
+Graph|MySQL In Queue Transactions|2|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|Number of transactions in queue pending certification. In case of simple run  this field shows value 0 but if the load is high it increases transactions in queue. Once the transactions have been checked for conflicts, if they pass the check, they are queued to be applied as well.
+Graph|MySQL Checked Transactions/Sec|3|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of transactions that have been checked for conflicts per second.
+Graph|MySQL Conflict Detected Transactions/Sec|4|scalar|sample|-|CumToPS|0|NA|-1|-1|NA|NA|Number of transactions that did not pass the conflict detection check per second.
+Graph|MySQL Row Validated Transactions|5|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|Current size of the conflict detection database (against which each transaction is certified).

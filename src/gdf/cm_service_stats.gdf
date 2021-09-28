@@ -1,0 +1,18 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Service Stats|10140|vector|8|0|Application Metrics|Tier>Server>ServiceName|Graphs for a service or one of its component services running on server (usually in the backend)
+
+Graph|TotalRequest|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total requests count
+Graph|CumRequest|2|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Cumulative requests count
+Graph|ReqPerSec|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of requests per second
+Graph|AvgDBRespTime(ms)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average DB response time
+Graph|AvgAppTime(ms)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average application self time
+Graph|AvgQWTime(ms)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average queue wait time
+Graph|SuccessPerSec|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of successful requests per second
+Graph|FailPerSec|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of failed requests per second

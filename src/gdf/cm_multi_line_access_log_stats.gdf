@@ -1,0 +1,11 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Multi Line Access Log Stats|10454|vector|3|0|Application Metrics|Tier>Server>Instance>Page|Request stats using multi line access log.
+Graph|Multi Line Access Log Requests/second|1|scalar|rate|-|None|0|NA|-1|-1|NA|NA|Number of requests per second.
+Graph|Multi Line Access Log Response Time(ms)|2|scalar|times|-|None|0|NA|-1|-1|NA|NA|Response time in milli seconds of multi line access log requests.
+Graph|Multi Line Access Log Total Request|3|scalar|cumulative|-|None|0|NA|-1|-1|NA|NA|Total Number of requests.

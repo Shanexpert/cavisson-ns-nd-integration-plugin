@@ -1,0 +1,11 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS Transcoder Operation Stats|11294|vector|2|0|AWS Metrics|AccountName>Region>Operation|Amazon Elastic Transcoder Operation do the work of media transcoding in the cloud. 
+
+Graph|AWS Transcoder Throttle|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of times that Elastic Transcoder automatically throttled an operation.
+Graph|AWS Transcoder Error|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of errors caused by invalid operation parameters, such as a request for a job status that does not include the job ID.
+

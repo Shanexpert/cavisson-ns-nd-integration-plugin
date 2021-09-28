@@ -1,0 +1,63 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+Info|3.1|1|-|-|-1|-1|-
+Group|Vault Storage Backend Stats|10696|vector|56|0|Vault Metrics|Tier>Server>VaultServer|Show metrics metrics relate to the supported storage backends. 
+Graph|Vault Azure Put (ms)|1|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by PUT operation against the Azure storage backend.
+Graph|Vault Azure Get (ms)|2|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by GET operation against the Azure storage backend.
+Graph|Vault Azure Delete (ms)|3|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by DELETE operation against the Azure storage backend.
+Graph|Vault Azure List (ms)|4|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by LIST operation against the Azure storage backend.
+Graph|Vault Cassandra Put (ms)|5|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by PUT operation against the Cassandra storage backend.
+Graph|Vault Cassandra Get (ms)|6|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by GET operation against the Cassandra storage backend.
+Graph|Vault Cassandra Delete (ms)|7|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by DELETE operation against the Cassandra storage backend.
+Graph|Vault Cassandra List (ms)|8|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by LIST operation against the Cassandra storage backend.
+Graph|Vault Cockroachdb Put (ms)|9|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by PUT operation against the Cockroachdb storage backend.
+Graph|Vault Cockroachdb Get (ms)|10|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by GET operation against the Cockroachdb storage backend.
+Graph|Vault Cockroachdb Delete (ms)|11|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by DELETE operation against the Cockroachdb storage backend.
+Graph|Vault Cockroachdb List (ms)|12|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by LIST operation against the Cockroachdb storage backend.
+Graph|Vault Consul Put (ms)|13|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by PUT operation against the Consul storage backend.
+Graph|Vault Consul Get (ms)|14|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by GET operation against the Consul storage backend.
+Graph|Vault Consul Delete (ms)|15|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by DELETE operation against the Consul storage backend.
+Graph|Vault Consul List (ms)|16|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by LIST operation against the Consul storage backend.
+Graph|Vault Couchdb Put (ms)|17|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by PUT operation against the Couchdb storage backend.
+Graph|Vault Couchdb Get (ms)|18|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by GET operation against the Couchdb storage backend.
+Graph|Vault Couchdb Delete (ms)|19|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by DELETE operation against the Couchdb storage backend.
+Graph|Vault Couchdb List (ms)|20|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by LIST operation against the Couchdb storage backend.
+Graph|Vault Dynamodb Put (ms)|21|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by PUT operation against the Dynamodb storage backend.
+Graph|Vault Dynamodb Get (ms)|22|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by GET operation against the Dynamodb storage backend.
+Graph|Vault Dynamodb Delete (ms)|23|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by DELETE operation against the Dynamodb storage backend.
+Graph|Vault Dynamodb List (ms)|24|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by LIST operation against the Dynamodb storage backend.
+Graph|Vault Etcd Put (ms)|25|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by PUT operation against the Etcd storage backend.
+Graph|Vault Etcd Get (ms)|26|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by GET operation against the Etcd storage backend.
+Graph|Vault Etcd Delete (ms)|27|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by DELETE operation against the Etcd storage backend.
+Graph|Vault Etcd List (ms)|28|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by LIST operation against the Etcd storage backend.
+Graph|Vault Gcs Put (ms)|29|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by PUT operation against the Gcs storage backend.
+Graph|Vault Gcs Get (ms)|30|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by GET operation against the Gcs storage backend.
+Graph|Vault Gcs Delete (ms)|31|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by DELETE operation against the Gcs storage backend.
+Graph|Vault Gcs List (ms)|32|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by LIST operation against the Gcs storage backend.
+Graph|Vault Mssql Put (ms)|33|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by PUT operation against the Mssql storage backend.
+Graph|Vault Mssql Get (ms)|34|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by GET operation against the Mssql storage backend.
+Graph|Vault Mssql Delete (ms)|35|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by DELETE operation against the Mssql storage backend.
+Graph|Vault Mssql List (ms)|36|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by LIST operation against the Mssql storage backend.
+Graph|Vault Mysql Put (ms)|37|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by PUT operation against the Mysql storage backend.
+Graph|Vault Mysql Get (ms)|38|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by GET operation against the Mysql storage backend.
+Graph|Vault Mysql Delete (ms)|39|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by DELETE operation against the Mysql storage backend.
+Graph|Vault Mysql List (ms)|40|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by LIST operation against the Mysql storage backend.
+Graph|Vault Postgres Put (ms)|41|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by PUT operation against the Postgres storage backend.
+Graph|Vault Postgres Get (ms)|42|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by GET operation against the Postgres storage backend.
+Graph|Vault Postgres Delete (ms)|43|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by DELETE operation against the Postgres storage backend.
+Graph|Vault Postgres List (ms)|44|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by LIST operation against the Postgres storage backend.
+Graph|Vault S3 Put (ms)|45|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by PUT operation against the S3 storage backend.
+Graph|Vault S3 Get (ms)|46|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by GET operation against the S3 storage backend.
+Graph|Vault S3 Delete (ms)|47|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by DELETE operation against the S3 storage backend.
+Graph|Vault S3 List (ms)|48|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by LIST operation against the S3 storage backend.
+Graph|Vault Swift Put (ms)|49|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by PUT operation against the Swift storage backend.
+Graph|Vault Swift Get (ms)|50|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by GET operation against the Swift storage backend.
+Graph|Vault Swift Delete (ms)|51|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by DELETE operation against the Swift storage backend.
+Graph|Vault Swift List (ms)|52|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by LIST operation against the Swift storage backend.
+Graph|Vault Zookeeper Put (ms)|53|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by PUT operation against the Zookeeper storage backend.
+Graph|Vault Zookeeper Get (ms)|54|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by GET operation against the Zookeeper storage backend.
+Graph|Vault Zookeeper Delete (ms)|55|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by DELETE operation against the Zookeeper storage backend.
+Graph|Vault Zookeeper List (ms)|56|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by LIST operation against the Zookeeper storage backend.

@@ -1,0 +1,134 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS ElastiCache Stats|12400|vector|63|0|AWS Metrics|AccountName>Region|Amazon ElastiCache works as an in-memory data store and cache to support the most demanding applications requiring sub-millisecond response times.
+
+Graph|AWS ElastiCache Active Defrag Hits/Min|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The number of value reallocations per minute performed by the active defragmentation process. 
+
+Graph|AWS ElastiCache Bytes Read Into Memcached|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memcached - The number of bytes that have been read from the network by the cache node.
+
+Graph|AWS ElastiCache Bytes Used For Cache Items|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memcached - The number of bytes used to store cache items.
+
+Graph|AWS ElastiCache Bytes Used For Hash|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memcached - The number of bytes currently used by hash tables.
+
+Graph|AWS ElastiCache Bytes Written Out From Memcached|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memcached - The number of bytes that have been written to the network by the cache node.
+
+Graph|AWS ElastiCache CAS Badval|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memcached - The number of CAS (check and set) requests the cache has received where the CAS value did not match the CAS value stored.
+
+Graph|AWS ElastiCache Cache Hits|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Redis - The number of successful key lookups.
+
+Graph|AWS ElastiCache CAS Hits|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memcached - The number of CAS requests the cache has received where the requested key was found and the CAS value matched.
+
+Graph|AWS ElastiCache CAS Misses|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memcached - The number of CAS requests the cache has received where the key requested was not found.
+
+Graph|AWS ElastiCache Cache Misses|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Redis - The number of unsuccessful key lookups.
+
+Graph|AWS ElastiCache CMD Config Get|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memcached - The cumulative number of config get requests.
+
+Graph|AWS ElastiCache CMD Config Set|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memcached - The cumulative number of config set requests.
+
+Graph|AWS ElastiCache CMD Flush|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memcached - The number of flush commands the cache has received.
+
+Graph|AWS ElastiCache CMD Get|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memcached - The number of get commands the cache has received.
+
+Graph|AWS ElastiCache CMD Set|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memcached - The number of set commands the cache has received.
+
+Graph|AWS ElastiCache CMD Touch|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memcached - The cumulative number of touch requests.
+
+Graph|AWS ElastiCache CPU Utilization (%)|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of CPU utilization for the server.
+
+Graph|AWS ElastiCache Curr Connections|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Redis - The number of client connections, excluding connections from read repliCAS. Memcached - A count of the number of connections connected to the cache at an instant in time.
+
+Graph|AWS ElastiCache Curr Items|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Redis - The number of items in the cache. This is derived from the Redis keyspace statistic, summing all of the keys in the entire keyspace. Memcached - A count of the number of items currently stored in the cache.
+
+Graph|AWS ElastiCache Decr Hits|20|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memcached - The number of decrement requests the cache has received where the requested key was found.
+
+Graph|AWS ElastiCache Decr Misses|21|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memcached - The number of decrement requests the cache has received where the requested key was not found.
+
+Graph|AWS ElastiCache Curr Config|22|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memcached - The current number of configurations stored.
+
+Graph|AWS ElastiCache Delete Hits|23|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memcached - The number of delete requests the cache has received where the requested key was found.
+
+Graph|AWS ElastiCache Delete Misses|24|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memcached - The number of delete requests the cache has received where the requested key was not found.
+
+Graph|AWS ElastiCache Evicted Unfetched|25|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memcached - The number of valid items evicted from the least recently used cache (LRU) which were never touched after being set.
+
+Graph|AWS ElastiCache Evictions|26|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Redis - The number of keys that have been evicted due to the maxmemory limit. Memcached - The number of non-expired items the cache evicted to allow space for new writes.
+
+Graph|AWS ElastiCache Expired Unfetched|27|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memcached - The number of expired items reclaimed from the LRU which were never touched after being set.
+
+Graph|AWS ElastiCache Freeable Memory|28|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The amount of free memory available on the host.
+
+Graph|AWS ElastiCache Get Hits|29|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memcached - The number of get requests the cache has received where the key requested was found.
+
+Graph|AWS ElastiCache Get Misses|30|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memcached - The number of get requests the cache has received where the key requested was not found.
+
+Graph|AWS ElastiCache Incr Hits|31|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memcached - The number of increment requests the cache has received where the key requested was found.
+
+Graph|AWS ElastiCache Incr Misses|32|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memcached - The number of increment requests the cache has received where the key requested was not found.
+
+Graph|AWS ElastiCache Is Master|33|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Redis - Returns 1 if the node is master, 0 otherwise.
+
+Graph|AWS ElastiCache Key Based CMDs|34|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Redis - The total number of commands that are key-based. This is derived from the Redis commandstats statistic by summing all of the commands that act upon one or more keys.
+
+Graph|AWS ElastiCache Master Link Health Status|35|scalar|sample|-|-|0|NA|-1|-1|NA|NA|This status has two values: 0 or 1. The value 0 indicates that data in the ElastiCache primary node is not in sync with Redis on EC2. The value of 1 indicates that the data is in sync.
+
+Graph|AWS ElastiCache Network Bytes In|36|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of bytes the host has read from the network.
+
+Graph|AWS ElastiCache Network Bytes Out|37|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of bytes the host has written to the network.
+
+Graph|AWS ElastiCache Network Packets In|38|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of packets the host has read from the network.
+
+Graph|AWS ElastiCache Network Packets Out|39|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of packets the host has written to the network.
+
+Graph|AWS ElastiCache New Connections|40|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Redis - The total number of connections that have been accepted by the server during this period. Memcached - The number of new connections the cache has received. This is derived from the memcached total.connections statistic by recording the change in total.connections across a period of time. This will always be at least 1, due to a connection reserved for a ElastiCache.
+
+Graph|AWS ElastiCache New Items|41|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memcached - The number of new items the cache has stored. This is derived from the memcached total.items statistic by recording the change in total.items across a period of time.
+
+Graph|AWS ElastiCache Replication Lag|42|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Redis - This metric is only applicable for a cache node running as a read replica. It represents how far behind, in seconds, the replica is in applying changes from the primary cache cluster.
+
+Graph|AWS ElastiCache Save In Progress|43|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Redis - This binary metric returns 1 whenever a background save (forked or forkless) is in progress, and 0 otherwise. A background save process is typically used during snapshots and syncs. These operations can cause degraded performance. Using the SaveInProgress metric, you can diagnose whether or not degraded performance was caused by a background save process.
+
+Graph|AWS ElastiCache Replication Bytes|44|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Redis - For primaries with attached repliCAS, ReplicationBytes reports the number of bytes that the primary is sending to all of its repliCAS. This metric is representative of the write load on the replication group. For repliCAS and standalone primaries, ReplicationBytes is always 0.
+
+Graph|AWS ElastiCache SaveInProgress|45|scalar|sample|-|-|0|NA|-1|-1|NA|NA|This binary metric returns 1 whenever a background save (forked or forkless) is in progress, and 0 otherwise. A background save process is typically used during snapshots and syncs. 
+
+Graph|AWS ElastiCache Set Type CMD|46|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Redis - The total number of set types of commands. This is derived from the Redis commandstats statistic by summing all of the set types of commands (set, hset, etc.)
+
+Graph|AWS ElastiCache Slabs Moved|47|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memcached - The total number of slab pages that have been moved.
+
+Graph|AWS ElastiCache Swap Usage|48|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The amount of swap used on the host.
+
+Graph|AWS ElastiCache Touch Hits|49|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memcached - The number of keys that have been touched and were given a new expiration time.
+
+Graph|AWS ElastiCache Touch Misses|50|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memcached - The number of items that have been touched, but were not found.
+
+Graph|AWS ElastiCache Unused Memory|51|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memcached - The amount of unused memory the cache can use to store items. This is derived from the memcached statistics limit.maxbytes and bytes by subtracting bytes from limit.maxbytes.
+
+Graph|AWS ElastiCache Bytes Used For Cache|52|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Redis - The total number of bytes allocated by Redis.
+
+Graph|AWS ElastiCache Engine CPU Utilization (%)|53|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The Percentage of CPU Utilization for the Redis process.
+
+Graph|AWS ElastiCache Get Type CMD|54|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Redis - The total number of get types of commands. This is derived from the Redis commandstats statistic by summing all of the get types of commands (get, mget, hget, etc.)
+
+Graph|AWS ElastiCache Hash Based CMD|55|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Redis - The total number of commands that are hash-based. This is derived from the Redis commandstats statistic by summing all of the commands that act upon one or more hashes.
+
+Graph|AWS ElastiCache Hyper Log Log Based CMD|56|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Redis - The total number of HyperLogLog based commands. This is derived from the Redis commandstats statistic by summing all of the pf type of commands (pfadd, pfcount, pfmerge).
+
+Graph|AWS ElastiCache List Based CMD|57|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Redis - The total number of commands that are list-based. This is derived from the Redis commandstats statistic by summing all of the commands that act upon one or more lists.
+
+Graph|AWS ElastiCache Set Based CMD|58|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Redis - The total number of commands that are set-based. This is derived from the Redis commandstats statistic by summing all of the commands that act upon one or more sets.
+
+Graph|AWS ElastiCache String Based CMD|59|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Redis - The total number of commands that are string-based. This is derived from the Redis commandstats statistic by summing all of the commands that act upon one or more strings.
+
+Graph|AWS ElastiCache Geo Spatial Based CMD|60|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Redis - The total number of geo spatial based commands.
+
+Graph|AWS ElastiCache Reclaimed|61|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Redis - The total number of key expiration events. Memcached - The number of expired items the cache evicted to allow space for new writes.
+
+Graph|AWS ElastiCache Sorted Set Based CMD|62|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Redis - The total number of commands that are sorted set-based. This is derived from the Redis commandstats statistic by summing all of the commands that act upon one or more sorted sets.
+
+Graph|AWS ElastiCache Cache Hits Ratio (%)|63|scalar|sample|-|-|0|NA|-1|-1|NA|NA|ndicates the usage efficiency of the Redis instance. If the cache ratio is lower than ~0.8, it means that a significant amount of keys are evicted, expired or do not exist. 
+

@@ -1,0 +1,37 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Azure Blockchain Stats|11469|vector|15|0|Azure Metrics|AccountName>Region>ResourceGroup>BlockchainMember|Azure Blockchain Service is integrated with Microsoft serverless and codeless development tools.
+
+Graph|Azure Blockchain CPU Usage(%)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The recent cpu usage for the whole system.
+
+Graph|Azure Blockchain Memory Usage|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The recent memory usage for the whole system.
+
+Graph|Azure Blockchain Memory Limit|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memory Limit.
+
+Graph|Azure Blockchain Memory Usage (%)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memory Usage Percentage.
+
+Graph|Azure Blockchain Storage Usage|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Storage Usage.
+
+Graph|Azure Blockchain IO Read Bytes|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|IO Read Bytes.
+
+Graph|Azure Blockchain IO Write Bytes|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|IO Write Bytes.
+
+Graph|Azure Blockchain Accepted Connections|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Accepted Connections.
+
+Graph|Azure Blockchain Handled Connections|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Handled Connections.
+
+Graph|Azure Blockchain Active Connections|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Active Connections.
+
+Graph|Azure Blockchain Handled Requests|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Handled Requests.
+
+Graph|Azure Blockchain Processed Blocks|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Processed Blocks.
+
+Graph|Azure Blockchain Processed Transactions|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Processed Transactions.
+
+Graph|Azure Blockchain Pending Transactions|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Pending Transactions.
+
+Graph|Azure Blockchain Queued Transactions|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Queued Transactions.

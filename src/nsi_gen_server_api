@@ -1,0 +1,265 @@
+#!/bin/sh
+
+if [ "X$NS_WDIR" == "X" ]; then
+  NS_WDIR="/home/cavisson/work"
+fi
+
+DATE=`date "+%Y-%m-%d"`
+GEN_INST_LOG="$NS_WDIR/webapps/netstorm/logs/gen_inst.netstorm-${DATE}.log"
+TEST_RUN=""
+OPERATION=""
+KEY=""
+
+TIMEOUT_1=60
+TIMEOUT_2=900
+TIMEOUT_3=300
+
+D_IFS="$IFS"
+
+msg_out()
+{
+  echo "$*"
+  debug_log "$*"
+  exit -1
+}
+
+debug_log()
+{
+  echo "`date "+%D %H:%M:%S"`|$*" >> $GEN_INST_LOG
+  if [ -d "$NS_WDIR/logs/TR$TEST_RUN" ]; then
+    DEBUG_LOG_FILE="$NS_WDIR/logs/TR$TEST_RUN/NetCloud/gen_inst.netstorm.log"
+    echo "`date "+%D %H:%M:%S"`|$*" >> $DEBUG_LOG_FILE
+  fi
+}
+
+gen_log()
+{
+  if [ -d "$NS_WDIR/logs/TR$TEST_RUN" ]; then
+    GENERATOR_VALIDATION="$NS_WDIR/logs/TR$TEST_RUN/ready_reports/TestInitStatus/2_generatorValidation.log"
+    echo "`date "+%D %H:%M:%S"`|$*" >> $GENERATOR_VALIDATION
+  fi
+}
+
+NS_GEN_FILE="$NS_WDIR/etc/.netcloud/gen_server.conf"
+if [ ! -f $NS_GEN_FILE ]; then
+  msg_out "INFO: $NS_GEN_FILE file not found."
+fi
+
+GEN_SERV_URL=`grep "^generatorServer" $NS_GEN_FILE | cut -d'=' -f 2 | tr -d '[:space:]'`
+if [ "XX${GEN_SERV_URL}" == "XX" ]; then
+  msg_out "INFO: Generator Server is not configured."
+fi
+
+GEN_CLIENT_NAME=`grep "^clientName" $NS_GEN_FILE | cut -d'=' -f 2 | tr -d '[:space:]'`
+if [ "XX${GEN_CLIENT_NAME}" == "XX" ]; then
+  GEN_CLIENT_NAME="ClientNameNotAvailable"
+fi
+
+GEN_APP_NAME=`grep "^appName" $NS_GEN_FILE | cut -d'=' -f 2 | tr -d '[:space:]'`
+if [ "XX${GEN_APP_NAME}" == "XX" ]; then
+  GEN_APP_NAME="AppNameNotAvailable"
+fi
+
+GEN_CAPACITY=`grep "^genCapacity" $NS_GEN_FILE | cut -d'=' -f 2 | tr -d '[:space:]'`
+if [ "XX${GEN_CAPACITY}" == "XX" ]; then
+  GEN_CAPACITY="Medium"
+fi
+
+GEN_LEASE_DURATION=`grep "^leaseDuration" $NS_GEN_FILE | cut -d'=' -f 2 | tr -d '[:space:]'`
+if [ "XX${GEN_LEASE_DURATION}" == "XX" ]; then
+  GEN_LEASE_DURATION=1800
+elif [ ${GEN_LEASE_DURATION} -lt 900 ]; then
+  GEN_LEASE_DURATION=900
+fi
+
+usages()
+{
+  echo "$1"
+  echo "nsi_gen_rest_api -o <Operation> [-a <Arguments>]"
+  echo "where:"
+  echo "  -o      Operation"
+  echo "          - <getLocationDetail/allocateGenerator/releaseGenerator/renewGeneratorLease>"
+  echo "  -a      Arguments"
+  exit -1
+}
+
+get_key()
+{
+  KEY=`nsi_get_product_key "$GEN_SERV_URL"`
+  if [ $? -ne 0 ]; then
+    exit -1
+  fi
+}
+
+getLocationDetail()
+{
+  RESPONSE=`curl -ks --max-time ${TIMEOUT_2} --compressed -X POST "${GEN_SERV_URL}/DashboardServer/Cavisson/GeneratorService/GetLocationDetails" -H "Content-Type: application/json" -d "{\"clientName\":\"$GEN_CLIENT_NAME\",\"appName\":\"$GEN_APP_NAME\",\"genCapacity\":\"$GEN_CAPACITY\"}"`
+
+  if [ $? -ne 0 -o "X$RESPONSE" == "X" ]; then
+    msg_out "Failed to get location detail from generator service."
+  fi
+
+  STATUS=`echo $RESPONSE | awk -F'"status":' '{print $2}' | cut -d',' -f1` 
+  if [ "$STATUS" != '"SUCCESS"' ]; then
+    MESSAGE=`echo $RESPONSE | awk -F'"message":' '{print $2}' | awk -F',"errorHeader":' '{print $1}' | tr -d '"}'`
+    msg_out "$MESSAGE"
+  fi
+  
+  echo $RESPONSE | awk -F'"output":' '{print $2}' | cut -d']' -f1 | tr -d '["' | tr ',' '\n' 
+}
+
+allocateGenerator()
+{
+  #send response to stdout
+  RESPONSE=`curl -ks --max-time ${TIMEOUT_2} --compressed -X POST "${GEN_SERV_URL}/DashboardServer/Cavisson/GeneratorService/AllocateGenerators" -H "Content-Type: application/json" -d "{\"clientName\":\"$GEN_CLIENT_NAME\",\"appName\":\"$GEN_APP_NAME\",\"genCapacity\":\"$GEN_CAPACITY\",\"allocatedID\":\"$ALLOCATED_ID\",\"testRun\":\"$TEST_RUN\",\"controllerIP\":\"$CTRL_IP\",\"locName\":\"$LOCATION\",\"numGen\":\"$NUM_GEN\",\"leaseDuration\":\"$GEN_LEASE_DURATION\",\"testOwner\":\"$TEST_OWNER\",\"scenarioName\":\"$SCENARIO_NAME\",\"startTimestamp\":\"$START_TIMESTAMP\",\"version\":\"$VERSION\"}"`
+
+  if [ $? -ne 0 -o "X$RESPONSE" == "X" ]; then
+    MESSAGE="Failed to get allocated generator list from generator service. Please contact Cavisson representative."
+    gen_log "[$LOCATION]$MESSAGE"
+    msg_out "[$LOCATION]$MESSAGE"
+  fi
+
+  STATUS=`echo $RESPONSE | awk -F'"status":' '{print $2}' | cut -d',' -f1` 
+  if [ "$STATUS" != '"SUCCESS"' ]; then
+    MESSAGE=`echo $RESPONSE | awk -F'"message":' '{print $2}' | awk -F',"errorHeader":' '{print $1}'| tr -d '"}'`
+    gen_log "[$LOCATION]$MESSAGE"
+    msg_out "[$LOCATION]$MESSAGE"
+  else
+    MESSAGE=`echo $RESPONSE | awk -F'"output":' '{print $2}' | cut -d']' -f1 | tr -d '["' | tr ',' '\n'`
+    debug_log "[$LOCATION]$MESSAGE"
+  fi
+  
+  echo $RESPONSE | awk -F'"output":' '{print $2}' | cut -d']' -f1 | tr -d '["' | tr ',' '\n'
+}
+
+releaseGenerator()
+{
+  #send msg to $GEN_INST_LOG file
+  RESPONSE=`curl -ks --max-time ${TIMEOUT_3} --compressed -X POST "${GEN_SERV_URL}/DashboardServer/Cavisson/GeneratorService/ReleaseGenerators" -H "Content-Type: application/json" -d "{\"allocatedID\":\"${ARG_LIST[0]}\", \"endTimestamp\":\"${ARG_LIST[1]}\", \"testStatus\":\"${ARG_LIST[2]}\", \"testStatusMessage\":\"${ARG_LIST[3]}\", \"duration\":\"${ARG_LIST[4]}\", \"testStoppedBy\":\"${ARG_LIST[5]}\", \"maxVuser\":\"${ARG_LIST[6]}\", \"avgVuser\":\"${ARG_LIST[7]}\", \"maxVUH\":\"${ARG_LIST[8]}\", \"avgVUH\":\"${ARG_LIST[9]}\", \"maxPagePerMin\":\"${ARG_LIST[10]}\", \"avgPagePerMin\":\"${ARG_LIST[11]}\", \"totalUrl\":\"${ARG_LIST[12]}\", \"totalPage\":\"${ARG_LIST[13]}\", \"totalTransection\":\"${ARG_LIST[14]}\", \"totalSession\":\"${ARG_LIST[15]}\"}"`
+
+  if [ $? -ne 0 -o "X$RESPONSE" == "X" ]; then
+    msg_out "Failed to release generator from generator service."
+  fi
+
+  STATUS=`echo $RESPONSE | awk -F'"status":' '{print $2}' | cut -d',' -f1` 
+  if [ "$STATUS" != '"SUCCESS"' ]; then
+    MESSAGE=`echo $RESPONSE | awk -F'"message":' '{print $2}' | awk -F',"errorHeader":' '{print $1}' | tr -d '"}'`
+    msg_out "$MESSAGE"
+  fi
+
+  MESSAGE=`echo $RESPONSE | awk -F'"output":' '{print $2}' | cut -d']' -f1 | tr -d '"[' |tr ',' '\n'`
+  debug_log "$MESSAGE"
+}
+
+renewGeneratorLease()
+{
+  #send msg to $GEN_INST_LOG file
+  RESPONSE=`curl -ks --max-time ${TIMEOUT_1} --compressed -X POST "${GEN_SERV_URL}/DashboardServer/Cavisson/GeneratorService/RenewGeneratorLease" -H "Content-Type: application/json" -d "{\"allocatedID\":\"$ALLOCATED_ID\"}"`
+
+  if [ $? -ne 0 -o "X$RESPONSE" == "X" ]; then
+    msg_out "Failed to renew generator from generator service."
+  fi
+
+  STATUS=`echo $RESPONSE | awk -F'"status":' '{print $2}' | cut -d',' -f1` 
+  if [ "$STATUS" != '"SUCCESS"' ]; then
+    MESSAGE=`echo $RESPONSE | awk -F'"message":' '{print $2}' | awk -F',"errorHeader":' '{print $1}' | tr -d '"}'`
+    msg_out "$MESSAGE"
+  fi
+
+  MESSAGE=`echo $RESPONSE | awk -F'"output":' '{print $2}' | cut -d']' -f1 | tr -d '"[' |tr ',' '\n'`
+  debug_log "$MESSAGE"
+}
+
+validate_args_and_set_vars()
+{
+
+  if [ "XX${OPERATION}" == "XX" ]; then
+    usages "ERROR:Operation (-o) is not provided."
+  fi
+
+  case ${OPERATION} in
+    getLocationDetail)
+      #Arguments will be fetch from Generator Server File
+      ;;
+    allocateGenerator)
+      if [ "XX${ARGS}" == "XX" ]; then
+        usages "ERROR: Arguments (-a) is not provided for Opeartion $OPERATION."
+      else
+        #ALLOCATED_ID|TEST_RUN|CONTROLLER_IP|LOCATION|NUM_GEN|TEST_OWNER|SCENARIO_NAME|START_TIMESTAMP
+        ARGS_ARR=($(echo $ARGS | tr "|" "\n"))
+        if [ ${#ARGS_ARR[@]} -ne 8 ]; then
+          msg_out "Invalid Arguments are passed with option -a for Operation $OPERATION."
+        else
+          ALLOCATED_ID="${ARGS_ARR[0]}"
+          TEST_RUN="${ARGS_ARR[1]}"
+          CTRL_IP="${ARGS_ARR[2]}"
+          LOCATION="${ARGS_ARR[3]}"
+          NUM_GEN="${ARGS_ARR[4]}"
+          TEST_OWNER="${ARGS_ARR[5]}"
+          SCENARIO_NAME="${ARGS_ARR[6]}"
+          START_TIMESTAMP="${ARGS_ARR[7]}"
+          VERSION=`nsu_get_version -v`
+        fi
+      fi
+      ;;
+    releaseGenerator)
+      if [ "XX${ARGS}" == "XX" ]; then
+        usages "ERROR: Allocated ID (-a) is not provided for Opeartion $OPERATION."
+      else
+        #ALLOCATED_ID|END_TIMESTAMP|TEST_STATUS|TEST_STATUS_MSG|DURATION|TEST_STOPPEDBY|MAX_VUSER|AVG_VUSER|MAX_VUSER_PERSEC|AVG_VUSER_PERSEC|MAX_PAGE_PERMIN|AVG_PAGE_PERMIN
+        #NUM=`echo $ARGS | awk -F"|" '{print NF}'`
+        #if [ ${NUM} -ne 16 ]; then
+         # msg_out "Invalid Arguments are passed with option -a for Operation $OPERATION."
+        #fi
+        #ALLOCATED_ID=`echo ${ARGS} | cut -d'|' -f1`
+        #END_TIMESTAMP=`echo ${ARGS} | cut -d'|' -f2`
+        #TEST_STATUS=`echo ${ARGS} | cut -d'|' -f3`
+        #TEST_STATUS_MSG=`echo ${ARGS} | cut -d'|' -f4`
+        #DURATION=`echo ${ARGS} | cut -d'|' -f5`
+        #TEST_STOPPEDBY=`echo ${ARGS} | cut -d'|' -f6`
+        #MAX_VUSER=`echo ${ARGS} | cut -d'|' -f7`
+        #AVG_VUSER=`echo ${ARGS} | cut -d'|' -f8`
+        #MAX_VUSER_PERSEC=`echo ${ARGS} | cut -d'|' -f9`
+        #AVG_VUSER_PERSEC=`echo ${ARGS} | cut -d'|' -f10`
+        #MAX_PAGE_PERMIN=`echo ${ARGS} | cut -d'|' -f11`
+        #AVG_PAGE_PERMIN=`echo ${ARGS} | cut -d'|' -f12`
+        #TOTAL_URL_COUNT=`echo ${ARGS} | cut -d'|' -f13`
+        #TOTAL_PAGE_COUNT=`echo ${ARGS} | cut -d'|' -f14`
+        #TOTAL_TRANS_COUNT=`echo ${ARGS} | cut -d'|' -f15`
+        #TOTAL_SESS_COUNT=`echo ${ARGS} | cut -d'|' -f16`
+
+        IFS='|' ARG_LIST=($ARGS) IFS="$D_IFS"
+        TEST_RUN=`echo $ALLOCATED_ID | awk -F'-tr' '{printf $2}'`
+      fi
+      ;;
+    renewGeneratorLease)
+      if [ "XX${ARGS}" == "XX" ]; then
+        usages "ERROR: Allocated ID (-a) is not provided for Opeartion $OPERATION."
+      else
+        ALLOCATED_ID=${ARGS}
+      fi
+      ;;
+    *)
+      usages "Error: Invalid operation ${OPERATION}."
+      ;;
+  esac
+}
+
+while getopts o:s:d:f:c:a:? C 
+do
+  case $C in
+    o) OPERATION=$OPTARG;;
+    a) ARGS=$OPTARG;;
+    ?) usages "Error: Invalid arguments";;
+    *) usages "Error: Invalid arguments";;
+  esac
+done
+
+#Validate
+validate_args_and_set_vars
+#get_key
+
+#Execute Function
+$OPERATION
+
+exit 0

@@ -1,0 +1,19 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Websphere Thread Pool Data|10059|vector|9|0|WebSphere Metrics|Tier>Server>Instance>ThreadPool|Information related to websphere Thread Pool Data
+
+Graph|Cumulative threads created|1|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total number of threads created
+Graph|Cumulative threads destroyed|2|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total number of threads destroyed
+Graph|Number of concurrently active threads|3|scalar|times|-|-|0|NA|-1|-1|NA|NA|Number of concurrently active threads
+Graph|Average number of threads in pool|4|scalar|times|-|-|0|NA|-1|-1|NA|NA|Average number of threads in pool
+Graph|Average percent of the time of all used threads|5|scalar|times|-|-|0|NA|-1|-1|NA|NA|Average percent of the time that all threads are in use
+Graph|Cumulative threads declared hung|6|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Number of threads declared hung
+Graph|Cumulative thread hangs cleared|7|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Number of thread hangs cleared
+Graph|Number of concurrently hung threads|8|scalar|times|-|-|0|NA|-1|-1|NA|NA|Number of concurrently hung threads
+Graph|Average time the threads are in active state|9|scalar|timesStd|-|-|0|NA|-1|-1|NA|NA|Average time in milliseconds the threads are in active state

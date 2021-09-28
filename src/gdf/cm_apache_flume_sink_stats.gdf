@@ -1,0 +1,11 @@
+Info|3.1|1|-|-|-1|-1|-
+Group|Apache Flume Sink Stats|10709|vector|8|0|Apache Flume Metrics|Tier>Server>Instance>Sink|Apache Flume Sink Stats consumes events from the channels and then delivers it to the destination. It Provides metrics for Sink Batch, Connection and Event.
+
+Graph|Flume Sink Batch Completed/Sec|1|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of append batches attempted per second containing the maximum number of events supported by the next hop.
+Graph|Flume Sink Batch Empty Event/Sec|2|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of append batches attempted per second containing zero events.
+Graph|Flume Sink Batch UnderFlow Event/Sec|3|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of append batches attempted per second containing less than the maximum number of events supported by the next hop.
+Graph|Flume Sink Connection Closed/Sec|4|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of connections closed per second by this sink.
+Graph|Flume Sink Connection Created/Sec|5|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of connections created per second by this sink.
+Graph|Flume Sink Connection Failed/Sec|6|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of failed connections per second by this sink.
+Graph|Flume Sink Event Drain/Sec|7|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of events per second that have been attempted to be drained to the next hop.
+Graph|Flume Sink Event Drain Success/Sec|8|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of events per second that have successfully been drained to the next hop.

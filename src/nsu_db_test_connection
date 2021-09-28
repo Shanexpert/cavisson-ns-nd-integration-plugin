@@ -1,0 +1,29 @@
+#Name       :nsu_db_jms_test_connection
+#Author     :Dashboard_scriptTeam
+#Purpose    :used to check the connection established or not with JMS or db.
+#
+#Usage      : for JMS
+#           :Example-> nsu_db_jms_test_connection JmsType=IBMMQ hostName=10.10.30.55 port=1414 userName=app password=admin queueName=DEV.QUEUE.AUTOMATION queueMngr=QM1 channel=DEV.APP.SVRCONN
+                 
+#           :for db 
+#           :Example-> nsu_db_jms_test_connection hostName=10.10.50.2 port=5432 userName=admin password=1234 dbName=test driverName=Oracle debugFlag=on
+#Arguments in case of db: hostName, port, userName, password, dbName, driverName, debugFlag
+#Arguments in case of JMS: hostName, port, userName, password, dbName, driverName, queueMngr, channel, prodOrCon, queueOrTopic, consumerGroup, debugFlag
+#Check and get login user name
+USER_NAME=`whoami 2>/dev/null`
+if [ $? != 0 ];then
+  echo "Error: Unable to get the real user name"
+  exit 1
+fi
+
+if [ $# == 0 ];then
+  echo "Mandatory arguments are missing."
+  exit 1
+fi
+
+if [ ! -d /home/cavisson/thirdparty/.script_lib ]; then
+  echo "Error in getting script_lib folder."
+  exit -1
+fi
+
+java -cp :/home/cavisson/thirdparty/.script_lib/com.ibm.mq.allclient.jar:/home/cavisson/thirdparty/.script_lib/com.ibm.mq.commonservices.jar:/home/cavisson/thirdparty/.script_lib/com.ibm.mq.jar:/home/cavisson/thirdparty/.script_lib/com.ibm.mq.jmqi.jar:/home/cavisson/thirdparty/.script_lib/com.ibm.mqjms.jar:/home/cavisson/thirdparty/gui_signed_jars/com.mysql.jdbc_5.1.5.jar:/home/cavisson/thirdparty/.script_lib/connector.jar:/home/cavisson/thirdparty/.script_lib/javax.jms-1.1.jar:/home/cavisson/thirdparty/.script_lib/javax.jms-api-2.0.1.jar:/home/cavisson/thirdparty/.script_lib/javax.jms-api-2.0.jar:/home/cavisson/thirdparty/.script_lib/jms.jar:/home/cavisson/thirdparty/.script_lib/kafka-clients-2.2.0.jar:/home/cavisson/thirdparty/.script_lib/mq.jar:/home/cavisson/thirdparty/gui_signed_jars/ojdbc14.jar:/home/cavisson/thirdparty/.script_lib/slf4j-api-1.7.12.jar:/home/cavisson/thirdparty/.script_lib/slf4j-jdk14-1.7.26-javadoc.jar:/home/cavisson/thirdparty/.script_lib/slf4j-simple-1.7.25.jar:/home/cavisson/thirdparty/.script_lib/tibjms.jar:$NS_WDIR/webapps/netstorm/WEB-INF/lib/netstorm_bean.jar:$NS_WDIR/webapps/netstorm/WEB-INF/lib/netstorm_servlet.jar:$NS_WDIR/webapps/netstorm/WEB-INF/lib/postgresql-9.4.1209.jre7.jar  pacServlet.TestConnection $* 

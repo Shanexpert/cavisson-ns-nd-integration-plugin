@@ -1,0 +1,16 @@
+# --- GDF Version History ---
+#  1.0 - Initial version
+#  2.0 - Change done for match Long_data and Long_long_data to double
+#  3.0 - Changes done for Dynamic data in Execution GUI
+#  3.1 - Use future1 field of group line for Metric group name
+#
+#LAST_MODIFIED_DATE = 11/14/15 20:17:38
+Info|3.1|1|-|-|-1|-1|-
+Group|Weblogic Min Thread Constraint Extended Stats|10284|vector|7|0|Weblogic Metrics|Tier>Server>Instance>Constraint|This is used to monitor weblogic minimum thread constraints extended stats.
+Graph|Pending Requests Count|1|scalar|sample|-|-|0|A|-1|-1|NA|NA|The number of Pending requests that are waiting for an available thread.
+Graph|Executing Requests Count|2|scalar|sample|-|-|0|A|-1|-1|NA|NA|The number of requests that are currently executing
+Graph|Current Waiting Time (ms)|3|scalar|sample|-|-|0|A|-1|-1|NA|NA|The last measured time a request had to wait for a thread. Only requests whose execution is needed to satisfy the constraint are considered.
+Graph|Maximum Waiting Time (ms)|4|scalar|sample|-|-|0|A|-1|-1|NA|NA|The max time a request had to wait for a thread. Only requests whose execution is needed to satisfy the constraint are considered.
+Graph|Completed Requests Count|5|scalar|cumulative|-|-|0|A|-1|-1|NA|NA|The number of completed requests.
+Graph|Out Of Order Execution Count|6|scalar|cumulative|-|-|0|A|-1|-1|NA|NA|The number of requests executed out of turn to satisfy this constraint.
+Graph|Must Run Request Count|7|scalar|sample|-|-|0|A|-1|-1|NA|NA|The number of requests that must be executed to satisfy the constraint.

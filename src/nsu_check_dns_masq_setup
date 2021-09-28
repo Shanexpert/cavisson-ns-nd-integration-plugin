@@ -1,0 +1,69 @@
+#!/bin/bash
+
+TEM_DATA="/tmp/dns_masq_status"
+RESOLVE_CONF_FILE="/etc/resolv.conf"
+SERVER_NAME="nameserver"
+SERVER_IP="127.0.0.1"
+
+check_resolve_conf_file()
+{
+  #if file not exist
+  if [ ! -f "$RESOLVE_CONF_FILE" ];then
+    echo "1"
+    exit 1 
+  fi
+
+  #if file is empty
+  if [ ! -s "$RESOLVE_CONF_FILE" ];then
+    echo "1"
+    exit 1
+  fi
+
+  while read line
+  do
+    echo "$line" | egrep -v "^#" >/dev/null
+    if [ $? -ne 0 ];then
+      continue
+    fi
+
+    echo $line |grep -v "^$" >/dev/null
+    if [ $? -ne 0 ];then
+      continue
+    fi
+
+    SVR_NAME=`echo "$line" | cut -d' ' -f1`
+    SVR_IP=`echo "$line" | cut -d' ' -f2`
+
+    if [ "$SVR_NAME" == "$SERVER_NAME" ];then
+      if [ "$SVR_IP" == "$SERVER_IP" ];then
+        echo "0"
+        exit 0
+      else
+        echo "1"
+        exit 1
+      fi
+    else
+      echo "1"
+      exit 1
+    fi
+  done<$RESOLVE_CONF_FILE
+
+  #if no entry in the /etc/resolv.conf file
+  if [ "XX$SVR_NAME" == "XX" -o "XX$SVR_IP" == "XX" ];then
+    echo "1"
+    exit 1 
+  fi
+}
+
+COUNT=`ps -ef | grep dnsmasq | grep -v grep | grep -c dnsmasq.pid` 
+#service dnsmasq status >/dev/null 2>&1
+if [ $? -eq 0 ];then
+  check_resolve_conf_file
+else
+  echo "1"
+  exit 1
+fi
+
+rm -f $TEM_DATA
+exit 0
+

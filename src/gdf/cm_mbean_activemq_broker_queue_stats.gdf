@@ -1,0 +1,23 @@
+Info|3.1|1|-|-|-1|-1|-
+
+
+Group|Apache ActiveMQ Broker Queue Stats|10876|vector|19|0|Application Metrics|Tier>Server>Instance>Broker>Address>RoutingType>Queue|Apache ActiveMQ Broker Queue Stats provides information about the Queue.
+Graph|ActiveMQ ID|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|ID of the current queue.
+Graph|ActiveMQ Durable Messages|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of durable messages currently in this queue (includes scheduled, paged, and in-delivery messages).
+Graph|ActiveMQ Durable Messages Persistent Size|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Persistent size of durable messages currently in this queue (includes scheduled, paged and in-delivery messages).
+Graph|ActiveMQ Delivering Messages|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of messages that this queue is currently delivering to its consumers.
+Graph|ActiveMQ Delivering Messages Size|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Persistent size of messages that this queue is currently delivering to its consumers.
+Graph|ActiveMQ Durable Delivering Messages|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of durable messages that this queue is currently delivering to its consumers.
+Graph|ActiveMQ Durable Delivering Messages Size|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Persistent size of durable messages that this queue is currently delivering to its consumers.
+Graph|ActiveMQ Scheduled Messages|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of scheduled messages in this queue.
+Graph|ActiveMQ Scheduled Messages Size|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Persistent size of scheduled messages in this queue.
+Graph|ActiveMQ Durable Scheduled Messages|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of durable scheduled messages in this queue.
+Graph|ActiveMQ Durable Scheduled Messages Size|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Persistent size of durable scheduled messages in this queue.
+Graph|ActiveMQ Messages Expired|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of messages expired from this queue since it was created.
+Graph|ActiveMQ Messages Killed|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of messages removed from this queue since it was created due to exceeding the maximum delivery attempts.
+Graph|ActiveMQ Groups|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of currently active groups.
+Graph|ActiveMQ Persistent Messages Size|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Persistent size of all messages (including durable and non-durable) currently in this queue (includes scheduled, paged, and in-delivery messages).
+Graph|ActiveMQ Consumers|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of consumers consuming messages from this queue.
+Graph|ActiveMQ Messages|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of messages currently in this queue (includes scheduled, paged, and in-delivery messages).
+Graph|ActiveMQ Messages Added|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of messages added to this queue since it was created.
+Graph|ActiveMQ Messages Acknowledged|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of messages acknowledged from this queue since it was created.

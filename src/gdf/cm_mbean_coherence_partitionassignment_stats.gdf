@@ -1,0 +1,48 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+
+#ObjectName :Coherence:type=PartitionAssignment,service=*,responsibility=DistributionCoordinator
+
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Coherence Partition Assignment Stats|14171|vector|16|0|Coherence Metrics|Tier>Server>Instance>service|This stats provides information about the Partition assignment metrics.
+
+
+Graph|Coherence Partition Count|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The configured number of partitions for the service.
+
+Graph|Coherence Backup Count|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The configured number of partition backups to be maintained by the service.
+
+Graph|Coherence Average Partition Size(KB)|3|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The average partition storage size in kilobytes.
+
+Graph|Coherence Max Partition Size(KB)|4|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The maximum number of partition size in kilobytes.
+
+Graph|Coherence Max Storage Size(KB)|5|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The maximum number of storage size in kilobytes.
+
+Graph|Coherence Average Storage Size(KB)|6|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The maximum number of average storage size in kilobytes.
+
+Graph|Coherence Max Load NodeId|7|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The node identified with the maximum node storage size.
+
+Graph|Coherence Coordinator Id|8|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The member identifier of the service node that is the ownership distribution coordinator.
+
+Graph|Coherence Service Node Count|9|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The number of storage-enabled nodes running this service.
+
+Graph|Coherence Service Machine Count|10|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The number of machines that host storage-enabled nodes running this service.
+
+Graph|Coherence Service Rack Count|11|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The number of racks that host storage-enabled nodes running this service.
+
+Graph|Coherence Service Site Count|12|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The number of sites that host storage-enabled nodes running this service.
+
+Graph|Coherence HA Status Code|13|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The high availability status for this service. Valid values are:MACHINE-SAFE,RACK-SAFE ,SITE-SAFE,NODE-SAFE,ENDANGERED
+
+Graph|Coherence Fair Share Backup|14|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The number of backup partitions per storage-enabled service member that this strategy currently attempts to maintain.
+
+Graph|Coherence Fair Share Primary|15|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The number of primary partitions per storage-enabled service member that this strategy currently attempts to maintain.
+
+Graph|Coherence Remaining Distribution Count|16|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The number of partition transfers that remain to be completed before the service achieves the goals set by this strategy.
+
+

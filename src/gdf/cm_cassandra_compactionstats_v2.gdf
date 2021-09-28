@@ -1,0 +1,14 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+          
+Info|3.1|1|-|-|-1|-1|-
+          
+Group|Cassandra Compaction StatsV2|10510|vector|4|0|Cassandra Metrics|Tier>Server>Instance|Cassandra Compaction Stats provides metrics about Pending Tasks, Completed Tasks, Bytes Compacted etc.        
+
+Graph|Cassandra Pending Tasks|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of pending tasks. This metric has been derived from 'org.apache.cassandra.metrics:type=Compaction,name=PendingTasks', where attribute name is 'Value'
+Graph|Cassandra Active Compaction Remaining Time(Sec)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Active compaction remaining time in seconds. Remaining Comapaction time is calculated by using 'remaining compacted bytes' and 'compaction throughput'. compaction throughput is derived from 'org.apache.cassandra.db:type=StorageService(attribute=CompactionThroughputMbPerSec)' and  remaining compacted bytes is the sum of all compactions, where bytes are required to be compacted. Each remaining bytes compaction is calculated as the difference of 'org.apache.cassandra.db:type=CompactionManager(attribute=Compactions, tasktype=Compaction,totalBytes)' and 'org.apache.cassandra.db:type=CompactionManager(attribute=Compactions, tasktype=Compaction,bytesComplate)'. If 'compaction throughput' or 'remaining compaction bytes' is greater than '0', remaing compaction time will be calculated by (remainingCompactedBytes/(1024 * 1024 * CompactionThroughputMbPerSec)) otherwise it will be '0'. 
+Graph|Cassandra Compaction Task Completed/Sec|3|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of compacted task completed per second. This metric has been derived from 'org.apache.cassandra.metrics:type=Compaction,name=CompletedTasks', where attribute name is 'Value'.
+Graph|Cassandra Bytes Compacted/Sec|4|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of bytes compacted per second. This metric has been derived from 'org.apache.cassandra.metrics:type=Compaction,name=BytesCompacted', where attribute name is 'Count'.

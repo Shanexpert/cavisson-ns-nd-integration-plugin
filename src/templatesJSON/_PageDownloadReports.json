@@ -1,0 +1,106 @@
+{
+  "templateName": "_PageDownloadReports",
+  "description": "Template for Page Download reports as simple Report",
+  "creationDate": "10/15/07 15:35:54",
+  "modifiedDate": "10/15/07 15:35:54",
+  "owner": "cavisson",
+  "isConverted": true,
+  "reportSetArray": [
+    {
+      "reportSetName": "Page Download Started/Second",
+      "dataType": 0,
+      "chartType": 0,
+      "formulaType": "0",
+      "scaling": 0,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 4,
+          "graphId": 9,
+          "vecName": "NA"
+        }
+      ]
+    },
+    {
+      "reportSetName": "Page Download Completed/Second",
+      "dataType": 0,
+      "chartType": 0,
+      "formulaType": "0",
+      "scaling": 0,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 4,
+          "graphId": 10,
+          "vecName": "NA"
+        }
+      ]
+    },
+    {
+      "reportSetName": "Success Page Responses/Second",
+      "dataType": 0,
+      "chartType": 0,
+      "formulaType": "0",
+      "scaling": 0,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 4,
+          "graphId": 11,
+          "vecName": "NA"
+        }
+      ]
+    },
+    {
+      "reportSetName": "Average Page Response Time (Seconds)",
+      "dataType": 0,
+      "chartType": 0,
+      "formulaType": "0",
+      "scaling": 0,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 4,
+          "graphId": 3,
+          "vecName": "NA"
+        }
+      ]
+    },
+    {
+      "reportSetName": "Failed Page Responses (All Errors)/Minute",
+      "dataType": 0,
+      "chartType": 0,
+      "formulaType": "0",
+      "scaling": 0,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 8,
+          "graphId": 1,
+          "vecName": "NA"
+        }
+      ]
+    },
+    {
+      "reportSetName": "Failed Page Responses/Minute",
+      "dataType": 0,
+      "chartType": 0,
+      "formulaType": "0",
+      "scaling": 0,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 8,
+          "graphId": 2,
+          "vecName": "All"
+        }
+      ]
+    }
+  ]
+}

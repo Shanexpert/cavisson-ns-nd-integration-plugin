@@ -1,0 +1,61 @@
+Release 1.1.1 (Build 87) 11/10/2004
+
+1.Normally, Requests completed after WARMUP time and upto REUN_TIME completion 
+are accounted.  It us possible to account for all requests, includeing RAMP, 
+WARMUP and RAMPDOWN pahse.  To do so, set keyword ACCOUNT_ALL to 1.
+
+2.Test runs for the duartion specified by RUN_TIME keyword. You can specify 
+the the session to be completed, in place of the time. To do so, set the 
+number of session completion as RUN_TIME number-of-session C
+
+For eaxmple -
+RUN_TIME 100 C
+will run upto the time till 100 session executions are completed. Note that, 
+ACCOUNT_ALL is automatically set to 1, in this case.
+
+3.You can specify, nsl_web_find() to log some Idenetifir string alongwith 
+message when content variafication fails. String specified by ID can have NS 
+variables inside it.  At the time of logging, NS Variables will be expanded.
+
+For Example:
+nsl_web_find (TEXT="Welcome to Home", PAGE=login, ID="Test failed for {nasid}");
+If the string "Welcome to Home" is not found on the login page, a message will 
+be logged based on the LOGGING keyword. This logged message will contain the string
+"Test failed for 67:78:80:00:00:00", if the value of NS variable at the moment of
+conetent verification was 67:78:80:00:00:00.
+
+Release 1.1.1 (Build 92) 11/24/2004
+1)Added TRACING mode 4.
+when tracing mode is 4, it creates a HTML tree of receicved page.
+After the run, Point the brwoser to NetStorm server an look at the url
+/logs/TRxxx/
+
+where xxx is the RUN number.
+This will diaply all the listing of received page responses.
+
+Release 1.1.2 (Build 12) 12/12/2004
+1)Multi-instances of netstorm could be run togather. No specific action required by user.
+2)nsu_get_errors added for Internel GUI use
+3)SESSION_PACING and DEFAUKT_SESSION_PACING's first_session has
+values values:
+0: Session pacing would be done before first session and would use the timer mode 
+	(Random or Fixed) same as as for all subsequent sessions 
+1: No Session pacing would be done before first session
+2: Session pacing would be done before first session and would use
+	Fixed  pacing_timing mode
+3: Session pacing would be done before first session and would use
+	Random  pacing_timing mode
+4)New URL and Pager Error ConFail added
+
+Release 1.1.2 (Build 26) 12/18/2004
+1)utilities for internal UI purpose added
+
+Release 1.1.2 (Build 47) 01/06/2005
+1)Internal utils
+2)SSL request size increased to 32 K
+3)Remove any leftover shm
+
+Release 1.1.2 (Build 87) 01/20/2005
+1)DB field for RunPhase stats
+2)Dump of recorded pages kept
+3)LOGDATA_PROCESS keyword allows dsisabling of log processing

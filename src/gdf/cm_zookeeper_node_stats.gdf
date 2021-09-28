@@ -1,0 +1,22 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Zookeeper Node Stats|10487|vector|17|0|Zookeeper Metrics|Tier>Server>Instance|Zookeeper Node Stats provides metrics for latency, network throughput etc.
+Graph|Zookeeper Server State|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Status of the ZooKeeper. Status is 1 = FOLLOWER, 2 = LEADER, 3 = OBSERVER, 4 = READ_ONLY, 5 = STANDALONE.
+Graph|Zookeeper Average Latency (ms)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average time in milliseconds for requests to be processed. This is measured since the last restart of the ZooKeeper server.
+Graph|Zookeeper Maximum Latency (ms)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum time in milliseconds for a request to be processed. This is measured since the last restart of the ZooKeeper server.
+Graph|Zookeeper Minimum Latency (ms)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Minimum time in milliseconds for a request to be processed. This is measured since the last restart of the ZooKeeper server.
+Graph|Zookeeper Packets Received/Sec|5|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of packets received by the server per second.
+Graph|Zookeeper Packets Sent/Sec|6|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of packets sent by the server per second.
+Graph|Zookeeper Alive Connections|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of active clients connected to a ZooKeeper serve.
+Graph|Zookeeper Outstanding Requests|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of currently executing requests on server.
+Graph|Zookeeper Node Count|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of z-nodes that a ZooKeeper server has in its data tree.
+Graph|Zookeeper Watch Count|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of watches placed on Z-Nodes on a ZooKeeper server.
+Graph|Zookeeper Ephemerals Count|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of unique ephemeral z-nodes on ZooKeeper server. 
+Graph|Zookeeper Open File Descriptor Count|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of file descriptors ZooKeeper server has open.
+Graph|Zookeeper Max File Descriptor Count|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum number of file descriptors a ZooKeeper server can open.
+Graph|Zookeeper Approximate Data Size (KB)|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Size in KiloBytes of the data tree for a ZooKeeper server.
+Graph|Zookeeper Followers|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of followers on ZooKeeper server. This metrics is only for leader, When Zookeeper Server State will be leader (State = 2) then it will be applicable. 
+Graph|Zookeeper Synced Followers|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of followers allow to sync with ZooKeeper. This metrics is only for leader, When Zookeeper Server State will be leader (State = 2) then it will be applicable. 
+Graph|Zookeeper Pending Syncs|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of pending followers allow to sync with ZooKeeper. This metrics is only for leader, When Zookeeper Server State will be leader (State = 2) then it will be applicable. 

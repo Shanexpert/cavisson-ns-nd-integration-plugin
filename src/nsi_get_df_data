@@ -1,0 +1,92 @@
+#!/bin/bash
+# Name    : Naveen Raina 
+# Purpose : To show the disk space(in GB) and inodes  
+# Usage   : nsi_get_df_data <-d> or <-i>
+# Here, 
+#     <-d> is used to display the information regarding the disk space."
+#     <-i> is used to display the information regarding the inodes."
+# Example : 1) nsi_get_df_data -i ( to get the inode data )
+#           2) nsi_get_df_data -d ( to get the disk space data in GB )
+######################################################################################################################################
+###
+
+arg=$1
+RAW_DATA=""
+os_type=""
+
+
+display_help()
+{
+  echo "Error: Incorrect Usage!"
+  echo "Usage: nsi_get_df_data <-d> or <-i>"
+  echo "Where:"
+  echo "  <-d> is used to display the information regarding the disk space."
+  echo "  <-i> is used to display the information regarding the inodes."
+  exit -1
+}
+
+#checking for the number of arguments
+if [ $# != 1 ];then
+  display_help
+fi
+
+if [ $arg != "-d" -a $arg != "-i" ];then
+  display_help 
+fi
+
+get_data_in_gb()
+{ 
+  #Here,the count variable signifies the number of fields that are to be converted into GB
+  count=2
+  k=0
+  free_pct=0
+  Filesystem=""
+
+  for(( i = 0; i < ${#RAW_DATA[@]};))
+  do
+    Filesystem=`echo ${RAW_DATA[$i]}`
+    i=`expr $i + 1`
+    SPACE_OR_INDOE=""
+    for(( j = 0; j < $count;))
+    do
+      #This will append Total "space/inode" and used "space/inode"
+      if [ "$arg" == "-d" ];then
+        #Converting the total space, used space and available space into GB (in case of disk space)
+        SPACE_OR_INDOE="$SPACE_OR_INDOE `echo ${RAW_DATA[$i]} | awk '{printf("%0.3f ", ($1)/(1024 * 1024))}'`"
+      else
+        SPACE_OR_INDOE="$SPACE_OR_INDOE `echo ${RAW_DATA[$i]} | awk '{printf("%d ", ($1))}'`"
+      fi
+      i=`expr $i + 1`
+      j=`expr $j + 1`
+    done
+    free_pct=`echo ${RAW_DATA[$i]} | awk '{printf("%d ", (100 - $1))}'`
+    i=`expr $i + 1`
+    #Here we print the output separated by pipe using sed by first trimming multiple spaces by single then substituting it        by pipe symbol and ignoring the last pipe symbol
+    echo "$Filesystem $SPACE_OR_INDOE $free_pct" | sed -r 's/  / /g' | sed 's/ /|/g' | sed 's/|$/ /g'
+  done
+}
+
+#Getting the OS type
+os_type=`uname`
+if [ "X$os_type" == "XLinux" ]; then   
+  #Checking for the options
+  if [ $arg == -d ];then
+    RAW_DATA=(`df -P | sed '/Filesystem/d' | egrep -v "/boot" | egrep -v "/dev/shm" | awk '{print $6" "$2" "$3" "$5}'|awk -F'%' '{print $1}'`)
+  elif [ $arg == -i ];then
+    RAW_DATA=(`df -iP | sed '/Filesystem/d' | egrep -v "/boot" | egrep -v "/dev/shm" | awk '{print $6" "$2" "$3" "$5}'| awk -F'%' '{print $1}'`)
+  fi
+elif [ "X$os_type" == "XAIX" ]; then
+  if [ $arg == -d ];then
+    RAW_DATA=(`df -kP | egrep -v "Filesystem" | egrep -v "/boot" | egrep -v "/dev/shm" | awk '{print $6" "$2" "$3" "$5}'|awk -F'%' '{print $1}'`)
+  elif [ $arg == -i ];then
+    RAW_DATA=(`/usr/sysv/bin/df -i | egrep -v "/boot" | egrep -v "/dev/shm" | awk '{print $7" "$2" "$5" "$6}'| sed '/Filesystem/d' | awk -F'%' '{print $1}'`)
+  fi
+else
+  echo "OS_TYPE $os_type Not Recognized"
+  exit 1
+fi
+
+#Calling the function get_data_in_gb
+get_data_in_gb
+
+exit 0

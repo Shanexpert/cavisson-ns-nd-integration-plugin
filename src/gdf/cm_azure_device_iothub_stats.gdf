@@ -1,0 +1,143 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Azure IotHub Stats|11297|vector|68|0|Azure Metrics|AccountName>Region>ResourceGroup>IotHubs|Azure IoT Hub provides a cloud-hosted solution back-end to connect virtually any device.
+
+Graph|Azure C2D Messages Abandoned Count|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of cloud-to-device messages abandoned by the device.
+
+Graph|Azure C2D Messages Deliveries Completed Count|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of cloud-to-device message deliveries completed successfully by the device.
+
+Graph|Azure C2D Messages Rejected Count|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of cloud-to-device messages rejected by the device.
+
+Graph|Azure Direct Method Failed Invocations Count|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The count of all failed direct method calls.
+
+Graph|Azure Direct Method Invocations Request Size  (Bytes)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Request size of cloud to device method invocations in bytes.
+
+Graph|Azure Direct Method Invocations Response Size (Bytes)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Response size of cloud to device method invocations in bytes.
+
+Graph|Azure Direct Method Successful Invocations Count|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The count of all successful direct method calls.
+
+Graph|Azure Twin Failed Reads From Back End Count|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The count of all failed back-end-initiated twin reads.
+
+Graph|Azure Twin Reads Response Size From Back End (Bytes)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Response size of twin reads from back-end in bytes.
+
+Graph|Azure Twin Successful Reads From Back End Count|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The count of all successful back-end-initiated twin reads.
+
+Graph|Azure Twin Failed Updates From Back End Count|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The count of all failed back-end-initiated twin updates.
+
+Graph|Azure Twin Size Updates From Back End (Bytes)|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Size of twin updates from back end in bytes..
+
+Graph|Azure Twin Successful Updates From Back End|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of successful device-initiated twin updates
+
+Graph|Azure Routing Messages Delivered To Endpoints|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of times IoT Hub routing successfully delivered messages to the built-in endpoint (messages/events).
+
+Graph|Azure Routing Messages Delivered To Event Hub|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of times IoT Hub routing successfully delivered messages to Event Hub endpoints.
+
+Graph|Azure Routing Messages Delivered To Service Bus Queue|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of times IoT Hub routing successfully delivered messages to Service Bus queue endpoints.
+
+Graph|Azure Routing Messages Delivered To Service Bus Topic|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of times IoT Hub routing successfully delivered messages to Service Bus topic endpoints.
+
+Graph|Azure Routing Message Latency for Endpoints (ms)|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average latency (milliseconds) between message ingress to IoT Hub and telemetry message ingress into the built-in endpoint (messages/events).
+
+Graph|Azure Routing Message Latency For Event Hub (ms)|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average latency (milliseconds) between message ingress to IoT Hub and message ingress into an Event Hub endpoint.
+
+Graph|Azure Routing Message Latency For Service Bus Queue (ms)|20|scalar|sample|-|-|0|NA|-1|-1|NA|NA|TThe average latency (milliseconds) between message ingress to IoT Hub and telemetry message ingress into a Service Bus queue endpoint.
+
+Graph|Azure Routing Message Latency For Service Bus Topic (ms)|21|scalar|sample|-|-|0|NA|-1|-1|NA|NA|TThe average latency (milliseconds) between message ingress to IoT Hub and telemetry message ingress into a Service Bus topic endpoint.
+
+Graph|Azure Routing Telemetry Messages Dropped|22|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of times messages were dropped by IoT Hub routing due to dead endpoints. This value does not count messages delivered to fallback route as dropped messages are not delivered there.
+
+Graph|Azure Routing Messages Delivered To Fallback|23|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of times IoT Hub routing delivered messages to the endpoint associated with the fallback route.
+
+Graph|Azure Routing Telemetry Messages Incompatible|24|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of times IoT Hub routing failed to deliver messages due to an incompatibility with the endpoint. This value does not include retries.
+
+Graph|Azure Routing Telemetry Messages Orphaned|25|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of times messages were orphaned by IoT Hub routing because they didn't match any routing rules (including the fallback rule). 
+
+Graph|Azure Routing Telemetry Messages Delivered|26|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of times messages were successfully delivered to all endpoints using IoT Hub routing. If a message is routed to multiple endpoints, this value increases by one for each successful delivery. If a message is delivered to the same endpoint multiple times, this value increases by one for each successful delivery.
+
+Graph|Azure Telemetry Message Send Attempts Count|27|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of device-to-cloud telemetry messages attempted to be sent to your IoT hub.
+
+Graph|Azure Telemetry Messages Sent Count|28|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of device-to-cloud telemetry messages sent successfully to your IoT hub.
+
+Graph|Azure Failed Twin Reads From Devices Count|29|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The count of all failed device-initiated twin reads.
+
+Graph|Azure Twin Reads Response Size From Devices (Bytes)|30|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Response size of device-initiated twin reads in bytes.
+
+Graph|Azure Successful Twin Reads From Devices Count|31|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The count of all successful device-initiated twin reads.
+
+Graph|Azure Failed Twin Updates From Devices Count|32|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The count of all failed device-initiated twin updates.
+
+Graph|Azure Twin Updates Size From Devices (Bytes)|33|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Response size of device-initiated twin updates in bytes.
+
+Graph|Azure Successful Twin Updates From Devices Count|34|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The count of all successful device-initiated twin updates.
+
+Graph|Azure Connected Devices Count|35|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of devices connected to your IoT hub.
+
+Graph|Azure Total Devices Count|36|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of devices registered to your IoT hub.
+
+Graph|Azure Failed Job Cancellations Count|37|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The count of all failed calls to cancel a job.
+
+Graph|Azure Successful Job Cancellations Count|38|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The count of all successful calls to cancel a job.
+
+Graph|Azure Completed Jobs Count|39|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The count of all completed jobs.
+
+Graph|Azure Failed Creations Of Method Invocation Jobs Count|40|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The count of all failed creation of direct method invocation jobs.
+
+Graph|Azure Successful Creations Of Method Invocation Jobs Count|41|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The count of all successful creation of direct method invocation jobs.
+
+Graph|Azure Failed Creations Of Twin Update Jobs Count|42|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The count of all failed creation of twin update jobs.
+
+Graph|Azure Successful Creations Of Twin Update Jobs Count|43|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The count of all successful creation of twin update jobs.	
+
+Graph|Azure Failed Jobs Count|44|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The count of all failed jobs.
+
+Graph|Azure Failed Calls To List Jobs Count|45|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The count of all failed calls to list jobs.
+
+Graph|Azure Successful Calls To List Jobs Count|46|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The count of all successful calls to list jobs.
+
+Graph|Azure Failed Job Queries Count|47|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The count of all failed calls to query jobs.
+
+Graph|Azure Successful Job Queries Count|48|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The count of all successful calls to query jobs.
+
+Graph|Azure Failed Twin Queries Count|49|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The count of all failed twin queries.
+
+Graph|Azure Twin Queries Result Size (Bytes)|50|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average result size of successful twin queries in bytes.
+
+Graph|Azure Successful Twin Queries Count|51|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The count of all successful twin queries.
+
+Graph|Azure C2D Messages Expired Count|52|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of expired cloud-to-device messages.
+
+Graph|Azure Routing Messages Delivered To Storage Count|53|scalar|sample|-|-|0|NA|-1|-1|NA|NA|TThe number of times IoT Hub routing successfully delivered messages to storage endpoints.
+
+Graph|Azure Routing Message Latency For Storage (ms)|54|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average latency (milliseconds) between message ingress to IoT Hub and telemetry message ingress into a storage endpoint.
+
+Graph|Azure Routing Data Delivered To Storage (Bytes)|55|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The amount of data (bytes) IoT Hub routing delivered to storage endpoints.
+
+Graph|Azure Routing Blobs Delivered To Storage Count|56|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of times IoT Hub routing delivered blobs to storage endpoints.
+
+Graph|Azure Event Grid Deliveries Count|57|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of IoT Hub events published to Event Grid. 
+
+Graph|Azure Event Grid Latency (ms)|58|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average latency (milliseconds) from when the Iot Hub event was generated to when the event was published to Event Grid. This number is an average between all event types.
+
+Graph|Azure Routing Deliveries Count|59|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of times IoT Hub attempted to deliver messages to all endpoints using routing.
+
+Graph|Azure Routing Delivery Latency (ms)|60|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average latency (milliseconds) between message ingress to IoT Hub and telemetry message ingress into an endpoint.
+
+Graph|Azure Routing Delivery Message Size (Bytes)|61|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total size in bytes of messages delivered by IoT hub to an endpoint.
+
+Graph|Azure Throttling Errors Count|62|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of throttling errors due to device throughput throttles.
+
+Graph|Azure Messages Used Count|63|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of total messages used today.
+
+Graph|Azure Total Device Data Used (Bytes)|64|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Bytes transferred to and from any devices connected to IotHub.
+
+Graph|Azure Total Device Data Used V2 (Bytes)|65|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Bytes transferred to and from any devices connected to IotHub.
+
+Graph|Azure Total Devices Count|66|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of devices registered to your IoT hub.
+
+Graph|Azure Connected Device Count|67|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of devices connected to your IoT hub.
+
+Graph|Azure Configurations Metrics Count|68|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total metrics for configuration operations.

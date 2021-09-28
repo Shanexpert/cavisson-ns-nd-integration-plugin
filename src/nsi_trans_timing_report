@@ -1,0 +1,149 @@
+#!/bin/sh
+
+#############################################################################################################
+# Name   	: nsi_trans_timing_report 
+#
+# Author 	: Rupinder Singh Sidhu
+#
+# Description 	: This query is used to find FIRST_BYTE  --> AVERAGE 
+#                                                        --> NINETEETH_PERCENTILE
+#                                                        --> FIRST_BYTE_PERCENTAGE  
+#                 where 
+#                   FIRST_BYTE = DNSDuration + ConnectDuration + SSLHandshakeDuration + WriteCompleteDuration + FirstByteRcdDuration
+#
+# Usage 	: report_making --testrun 12345 --limit 10 
+#############################################################################################################
+
+
+########################################Variables and init settings###########################################################################
+
+# Including nsi_db_utils
+. $NS_WDIR/bin/nsi_db_utils
+
+# Set default values of variables
+TRNUM=""
+LIMIT=""
+
+DEBUG=0 # 0 --> off
+        # 1 --> on
+
+########################################Functions's Definitions###############################################################################
+debug_logs()
+{
+  if [ "X$DEBUG" != "X0" ];then
+    echo "$*"
+  fi
+}
+
+usage()
+{
+  echo "$*"
+  echo  "$0 --testrun <value> --limit <value> --offset <value>" 
+  echo ""
+  echo "Where"
+  echo "  --testrun is test run number, which is mandatory argument."
+  echo "  --limit is for limit (This is the number of results returned by query statment (e.g. 10 it will show first 10 records)), which is optional argument"
+  echo " --offset is for offset (This is used to skip rows as specified by offset (e.g suppose you wanted to show results 11-20 then you can use offset 10)), which is optional argument"
+  exit 1
+}
+
+chk_args_of_option()
+{
+  if [ "X$2" == "X" ];then
+    echo "Option $1 required a value."
+    usage
+    exit -1
+  fi
+}
+
+chk_args()
+{
+  if [ "X$TRNUM" == "X" ]; then
+    usage "Test run argument is missing"
+  fi
+}
+
+
+################################################### ARGUMENTS CHECK ###############################
+
+while [ "$1" != "" ];do
+  debug_logs "ARGS=$1"
+  case $1 in
+    "--testrun")
+      shift
+      chk_args_of_option "--testrun" "$1"
+      TRNUM=$1;;
+    "--limit")
+        shift
+        chk_args_of_option "--limit" "$1"
+        LIMIT=$1;;
+    "--offset")
+        shift
+        chk_args_of_option "--offset" "$1"
+        OFFSET=$1;;
+    --*) usage "Invalid options";;
+    *) usage ;;
+ esac
+ shift
+done
+
+#checking for mandatory Testrun number argument
+chk_args
+
+debug_logs "TRNUM = $TRNUM, LIMIT=$LIMIT"
+
+#handle_time_filters_in_ms $TRNUM
+
+set_query_files $TRNUM
+
+# Check if limit argument is given or not. It will limit number of rows to max this number
+if [ "X$LIMIT" != "X" ];then
+  LIMIT="LIMIT $LIMIT"
+fi
+
+# Check if Offset argument is given or not. This is used to skip rows as specified by offset.
+# For example, if offset is 1, then first row is skipped. If offset is 100, then first 100 rows are skipped
+if [ "X$OFFSET" != "X" ];then
+  OFFSET="OFFSET $OFFSET"
+fi
+
+############################### MAKING INNER QUERY ########################################
+
+INN_SELECT="SELECT $NEWLINE    transactionindex,"
+INN_SELECT="$INN_SELECT $NEWLINE    RESPTIME,"
+INN_SELECT="$INN_SELECT $NEWLINE    ((CASE WHEN URLRecord_$TRNUM.DNSDuration > 0 THEN URLRecord_$TRNUM.DNSDuration ELSE 0 END) +"
+INN_SELECT="$INN_SELECT $NEWLINE    (CASE WHEN URLRecord_$TRNUM.ConnectDuration > 0 THEN URLRecord_$TRNUM.ConnectDuration ELSE 0 END) +"
+INN_SELECT="$INN_SELECT $NEWLINE    (CASE WHEN URLRecord_$TRNUM.SSLHandshakeDuration > 0 THEN URLRecord_$TRNUM.SSLHandshakeDuration ELSE 0 END) +"
+INN_SELECT="$INN_SELECT $NEWLINE    (CASE WHEN URLRecord_$TRNUM.WriteCompleteDuration > 0 THEN URLRecord_$TRNUM.WriteCompleteDuration ELSE 0 END) +"
+INN_SELECT="$INN_SELECT $NEWLINE    (CASE WHEN URLRecord_$TRNUM.FirstByteRcdDuration > 0 THEN URLRecord_$TRNUM.FirstByteRcdDuration ELSE 0 END))AS \"FIRST_BYTE\""
+
+INN_FROM=" FROM $NEWLINE    URLRecord_$TRNUM"
+
+INN_WHERE=" WHERE $NEWLINE    urltype = 1"
+
+############################## MAKING OUTER QUERY ##########################################
+
+SELECT="SELECT $NEWLINE  transactionname as \"Tx Name\","
+SELECT="$SELECT $NEWLINE  ROUND(AVG(INN.\"FIRST_BYTE\"), 2) AS \"Avg First Byte Time\","
+SELECT="$SELECT $NEWLINE  ROUND(AVG(RESPTIME), 2) AS \"Avg Resp Time\","
+SELECT="$SELECT $NEWLINE  ROUND((CASE"
+SELECT="$SELECT $NEWLINE   WHEN $NEWLINE    (ROUND(AVG(INN.RESPTIME), 2)) > 0"
+SELECT="$SELECT $NEWLINE   THEN $NEWLINE    ((ROUND(AVG(INN.\"FIRST_BYTE\"), 2)) * 100)/(ROUND(AVG(INN.RESPTIME), 2))"
+SELECT="$SELECT $NEWLINE   ELSE $NEWLINE    0 $NEWLINE  END),2)AS \"First Byte % of Total\","
+SELECT="$SELECT $NEWLINE  count(*) AS \"Count\","
+SELECT="$SELECT $NEWLINE  PERCENTILE_DISC(0.9) WITHIN GROUP (ORDER BY INN.\"FIRST_BYTE\") AS \"First Byte 90th %ile Disc\""
+
+FROM="FROM $NEWLINE($NEWLINE  $INN_SELECT $NEWLINE $INN_FROM $NEWLINE $INN_WHERE $NEWLINE)AS INN,$NEWLINE TransactionTable_$TRNUM" 
+
+WHERE="WHERE $NEWLINE  transactionTable_$TRNUM.transactionindex = INN.transactionindex"
+
+GROUP="GROUP BY $NEWLINE  transactionname, $NEWLINE  INN.transactionindex"
+ 
+ORDER="ORDER BY \"Avg Resp Time\" DESC"
+
+ns_run_query
+
+show_query_result_comma_sep
+
+exit 0
+

@@ -1,0 +1,10 @@
+# --- GDF Version History ---
+# # 1.0 - Initial version
+#
+Info|3.1|1|-|-|-1|-1|-
+#
+Group|Revenue Stats by Containing Pages and Events|10978|vector|3|0|UX Metrics|Channel>PageName>EventName|NetVision Revenue Stats
+#
+Graph|Total Sessions|1|scalar|sum|-|-|0|A|-1|-1|NA|NA|Number of session
+Graph|Total Complete Sessions|2|scalar|sum|-|-|0|A|-1|-1|NA|NA|Number of complete session
+Graph|Total Bounce Session|3|scalar|sum|-|-|0|A|-1|-1|NA|NA|Number of bounce session

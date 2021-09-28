@@ -1,0 +1,89 @@
+#! /bin/sh
+
+#Here we are creating indexes for tables
+#Index will enhance database performance (indexes can be used to obtain fast access)
+
+if [ -d $PWD/TR$1 ]; then
+  BASE_DIR=$PWD
+elif [ -d $NS_WDIR/logs/TR$1 ]; then
+  BASE_DIR=$NS_WDIR/logs
+else
+  echo "Error: Test run number $1 is not a valid test run number"
+  echo "Usage: nsu_orl_create_index <testrun>"
+  echo "Example:"
+  echo "  nsu_orl_create_index 127331"
+  exit 1
+fi
+
+echo "nsu_orl_create_index: Please wait indexes will be created ..."
+START=`date +%s`
+
+psql test cavisson <<+
+CREATE INDEX orlStatsSQLIDTable_NormSQLID_$1 ON orlStatsSQLIDTable_$1 (NormSQLID);
+CREATE INDEX orlStatsSQLIDTable_SQLID_$1 ON orlStatsSQLIDTable_$1 (SQLID);
+
+CREATE INDEX orlStatsSnapTable_SnapBeginID_$1 ON orlStatsSnapTable_$1 (SnapBeginID);
+
+CREATE INDEX orlStatsSQLStmtOrdByElapsedTime_SnapID_$1 ON orlStatsSQLStmtOrdByElapsedTime_$1 (SnapID);
+CREATE INDEX orlStatsSQLStmtOrdByElapsedTime_InstNum_$1 ON orlStatsSQLStmtOrdByElapsedTime_$1 (InstNum);
+CREATE INDEX orlStatsSQLStmtOrdByElapsedTime_DBID_$1 ON orlStatsSQLStmtOrdByElapsedTime_$1 (DBID);
+CREATE INDEX orlStatsSQLStmtOrdByElapsedTime_NormSQLID_$1 ON orlStatsSQLStmtOrdByElapsedTime_$1 (NormSQLID);
+CREATE INDEX orlStatsSQLStmtOrdByElapsedTime_ElapsedTime_$1 ON orlStatsSQLStmtOrdByElapsedTime_$1 (ElapsedTimeMS);
+
+CREATE INDEX orlStatsSQLStmtOrdByCPUTime_SnapID_$1 ON orlStatsSQLStmtOrdByCPUTime_$1 (SnapID);
+CREATE INDEX orlStatsSQLStmtOrdByCPUTime_InstNum_$1 ON orlStatsSQLStmtOrdByCPUTime_$1 (InstNum);
+CREATE INDEX orlStatsSQLStmtOrdByCPUTime_DBID_$1 ON orlStatsSQLStmtOrdByCPUTime_$1 (DBID);
+CREATE INDEX orlStatsSQLStmtOrdByCPUTime_NormSQLID_$1 ON orlStatsSQLStmtOrdByCPUTime_$1 (NormSQLID);
+
+CREATE INDEX orlStatsSQLStmtOrdByUsrIOTime_SnapID_$1 ON orlStatsSQLStmtOrdByUsrIOTime_$1 (SnapID);
+CREATE INDEX orlStatsSQLStmtOrdByUsrIOTime_InstNum_$1 ON orlStatsSQLStmtOrdByUsrIOTime_$1 (InstNum);
+CREATE INDEX orlStatsSQLStmtOrdByUsrIOTime_DBID_$1 ON orlStatsSQLStmtOrdByUsrIOTime_$1 (DBID);
+CREATE INDEX orlStatsSQLStmtOrdByUsrIOTime_NormSQLID_$1 ON orlStatsSQLStmtOrdByUsrIOTime_$1 (NormSQLID);
+
+CREATE INDEX orlStatsSQLStmtOrdByGets_SnapID_$1 ON orlStatsSQLStmtOrdByGets_$1 (SnapID);
+CREATE INDEX orlStatsSQLStmtOrdByGets_InstNum_$1 ON orlStatsSQLStmtOrdByGets_$1 (InstNum);
+CREATE INDEX orlStatsSQLStmtOrdByGets_DBID_$1 ON orlStatsSQLStmtOrdByGets_$1 (DBID);
+CREATE INDEX orlStatsSQLStmtOrdByGets_NormSQLID_$1 ON orlStatsSQLStmtOrdByGets_$1 (NormSQLID);
+
+CREATE INDEX orlStatsSQLStmtOrdByReads_SnapID_$1 ON orlStatsSQLStmtOrdByReads_$1 (SnapID);
+CREATE INDEX orlStatsSQLStmtOrdByReads_InstNum_$1 ON orlStatsSQLStmtOrdByReads_$1 (InstNum);
+CREATE INDEX orlStatsSQLStmtOrdByReads_DBID_$1 ON orlStatsSQLStmtOrdByReads_$1 (DBID);
+CREATE INDEX orlStatsSQLStmtOrdByReads_NormSQLID_$1 ON orlStatsSQLStmtOrdByReads_$1 (NormSQLID);
+
+CREATE INDEX orlStatsSQLStmtOrdByPhyReadsUnopt_SnapID_$1 ON orlStatsSQLStmtOrdByPhyReadsUnopt_$1 (SnapID);
+CREATE INDEX orlStatsSQLStmtOrdByPhyReadsUnopt_InstNum_$1 ON orlStatsSQLStmtOrdByPhyReadsUnopt_$1 (InstNum);
+CREATE INDEX orlStatsSQLStmtOrdByPhyReadsUnopt_DBID_$1 ON orlStatsSQLStmtOrdByPhyReadsUnopt_$1 (DBID);
+CREATE INDEX orlStatsSQLStmtOrdByPhyReadsUnopt_NormSQLID_$1 ON orlStatsSQLStmtOrdByPhyReadsUnopt_$1 (NormSQLID);
+
+CREATE INDEX orlStatsSQLStmtOrdByExec_SnapID_$1 ON orlStatsSQLStmtOrdByExec_$1 (SnapID);
+CREATE INDEX orlStatsSQLStmtOrdByExec_InstNum_$1 ON orlStatsSQLStmtOrdByExec_$1 (InstNum);
+CREATE INDEX orlStatsSQLStmtOrdByExec_DBID_$1 ON orlStatsSQLStmtOrdByExec_$1 (DBID);
+CREATE INDEX orlStatsSQLStmtOrdByExec_NormSQLID_$1 ON orlStatsSQLStmtOrdByExec_$1 (NormSQLID);
+
+CREATE INDEX orlStatsSQLStmtOrdByParseCalls_SnapID_$1 ON orlStatsSQLStmtOrdByParseCalls_$1 (SnapID);
+CREATE INDEX orlStatsSQLStmtOrdByParseCalls_InstNum_$1 ON orlStatsSQLStmtOrdByParseCalls_$1 (InstNum);
+CREATE INDEX orlStatsSQLStmtOrdByParseCalls_DBID_$1 ON orlStatsSQLStmtOrdByParseCalls_$1 (DBID);
+CREATE INDEX orlStatsSQLStmtOrdByParseCalls_NormSQLID_$1 ON orlStatsSQLStmtOrdByParseCalls_$1 (NormSQLID);
+
+CREATE INDEX orlStatsSQLStmtOrdBySharableMemory_SnapID_$1 ON orlStatsSQLStmtOrdBySharableMemory_$1 (SnapID);
+CREATE INDEX orlStatsSQLStmtOrdBySharableMemory_InstNum_$1 ON orlStatsSQLStmtOrdBySharableMemory_$1 (InstNum);
+CREATE INDEX orlStatsSQLStmtOrdBySharableMemory_DBID_$1 ON orlStatsSQLStmtOrdBySharableMemory_$1 (DBID);
+CREATE INDEX orlStatsSQLStmtOrdBySharableMemory_NormSQLID_$1 ON orlStatsSQLStmtOrdBySharableMemory_$1 (NormSQLID);
+
+CREATE INDEX orlStatsSQLStmtOrdByVersionCount_SnapID_$1 ON orlStatsSQLStmtOrdByVersionCount_$1 (SnapID);
+CREATE INDEX orlStatsSQLStmtOrdByVersionCount_InstNum_$1 ON orlStatsSQLStmtOrdByVersionCount_$1 (InstNum);
+CREATE INDEX orlStatsSQLStmtOrdByVersionCount_DBID_$1 ON orlStatsSQLStmtOrdByVersionCount_$1 (DBID);
+CREATE INDEX orlStatsSQLStmtOrdByVersionCount_NormSQLID_$1 ON orlStatsSQLStmtOrdByVersionCount_$1 (NormSQLID);
+
+CREATE INDEX orlStatsSQLStmtOrdByClusterWaitTime_SnapID_$1 ON orlStatsSQLStmtOrdByClusterWaitTime_$1 (SnapID);
+CREATE INDEX orlStatsSQLStmtOrdByClusterWaitTime_InstNum_$1 ON orlStatsSQLStmtOrdByClusterWaitTime_$1 (InstNum);
+CREATE INDEX orlStatsSQLStmtOrdByClusterWaitTime_DBID_$1 ON orlStatsSQLStmtOrdByClusterWaitTime_$1 (DBID);
+CREATE INDEX orlStatsSQLStmtOrdByClusterWaitTime_NormSQLID_$1 ON orlStatsSQLStmtOrdByClusterWaitTime_$1 (NormSQLID);
++
+
+END=`date +%s`
+#echo $END
+#echo $START
+DIFF=`expr $END - $START`
+#echo $DIFF
+echo "nsu_orl_create_index: Creating indexes took $DIFF seconds"

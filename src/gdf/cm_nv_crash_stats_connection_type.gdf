@@ -1,0 +1,9 @@
+# --- GDF Version History ---
+# # 1.0 - Initial version
+#
+Info|3.1|1|-|-|-1|-1|-
+#
+Group|AppCrash By Connection Type|10395|vector|1|0|UX Metrics|Channel>ConnectionType|NetVision App CrashStats by Connection Type
+#
+Graph|Number of crash/minute|1|scalar|rate|-|CumToPM|0|A|-1|-1|NA|NA|Number of app crash per minute
+

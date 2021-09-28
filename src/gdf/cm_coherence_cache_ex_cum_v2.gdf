@@ -1,0 +1,58 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Coherence Cache States V2|10207|vector|36|0|Application Metrics|Tier>Server>Type>Instance>CacheName|Information related to All the attributes of a cache Managed bean for a  Coherence instance collected by coherence monitor.
+Graph|Number Of Cache Entries|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of entries in the cache.
+Graph|Cache Size (In MB, for back cache only)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The size of the cache measured in MegaBytes. It is only available for back cache. 
+Graph|Write-behind Queue Size|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The size of the write-behind queue. Applicable only for WRITE-BEHIND persistence type.
+Graph|Number Of Store Failures|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of CacheStore failures (load, store and erase operations); -1 if persistence type is NONE.
+
+Graph|UnitFactor|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The factor by which the Units, LowUnits and HighUnits properties are adjusted. Using a BINARY unit calculator, for example, the factor of 1048576 could be used to count megabytes instead of bytes.
+Graph|High Units (MB)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The limit of the cache size measured in MegaBytes.The cache will prune itself automatically once it reaches its maximum unit level. This is often referred to as the high water mark of the cache.
+Graph|Low Units (MB)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of units in MegaBytes to which the cache will shrink when it prunes. This is often referred to as a low water mark of the cache.
+Graph|Average Object Size (MB)|36|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average object size in MegaBytes.
+Graph|Total Gets from last reset|8|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of get operations per minute from last Reset.
+Graph|Total Gets/Minute|9|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of get operations per minute in the sampling period.
+
+Graph|Time taken for all Gets (ms)|10|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average time in milliseconds per get from last Reset..
+Graph|Average Get Time (ms)|11|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average time in milliseconds per get operation in the sampling period.
+
+Graph|Total Puts from last reset|12|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of put operations put minute from last Reset.
+Graph|Total Puts/Minute|13|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of put operations per minute in the sampling period.
+
+Graph|Time taken for all Puts (ms)|14|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average time in milliseconds per put operation from last Reset.
+Graph|Average Put Time (ms)|15|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average time in milliseconds per put operation in the sampling period.
+
+Graph|Total Hits from last reset|16|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of hit operations per minute from last Reset.
+Graph|Total Hits/Minute|17|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of hit operations per minute in the sampling period.
+
+Graph|Time taken for all Hits (ms)|18|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average time in milliseconds per Hit operation from last Reset.
+Graph|Average Hit Time (ms)|19|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average time in milliseconds per Hit operation in the sampling period.
+
+Graph|Total Misses from last reset|20|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of miss operations per minute from last Reset.
+Graph|Total Misses/Minute|21|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of miss operations per minute in the sampling period.
+
+Graph|Time taken for all Miss (ms)|22|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average time in milliseconds per Miss operation from last Reset.
+Graph|Average Miss Time (ms)|23|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average time in milliseconds per Miss operation in the sampling period.
+
+Graph|Total Reads from last reset|24|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of read or load operations per minute from last Reset.
+Graph|Total Reads/Minute|25|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of read or load operations per minute in the sampling period.
+
+Graph|Time taken for all Reads (ms)|26|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average time in milliseconds per read operation from last Reset.
+Graph|Average Read Time (ms)|27|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average time in milliseconds per read operation in the sampling period.
+
+Graph|Total Writes from last reset|28|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of write or store operations per minute from last Reset.
+Graph|Total Writes/Minute|29|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of write or store operations per minute in the sampling period.
+
+Graph|Time taken for all Writes (ms)|30|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average time in milliseconds per write operation from last Reset. 
+Graph|Average Write Time (ms)|31|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average time in milliseconds per write operation in the sampling period.
+
+Graph|Total Prunes from last reset|32|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of prune or recycling operations from last Reset.
+Graph|Total Prunes/Minute|33|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of prune or recycling operations per minute in the sampling period.
+
+Graph|Time taken for all Prunes (ms)|34|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average time in milliseconds per prune from last Reset.
+Graph|Average Prune Time (ms)|35|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average time in milliseconds per prune operation in the sampling period.

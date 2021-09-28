@@ -1,0 +1,16 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Tomcat Log4j2|14134|vector|2|0|Application Metrics|Tier>Server>Instance>name|This stats provide information about MBeans that instrument AsyncLoggerConfig ring buffers.
+
+#G1
+Graph|Tomcat Remaining Capacity|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Returns the number of available slots in the ring buffer. May vary wildly between invocations.
+
+#G2
+Graph|Tomcat Buffer Size|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Returns the number of slots that the ring buffer was configured with. Disruptor ring buffers are bounded-size data structures, this number does not change during the life of the ring buffer.
+
+

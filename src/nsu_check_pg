@@ -1,0 +1,251 @@
+#!/bin/sh
+##############################################################################################
+# Purpose : This shell will take care of Postgres .
+#           If due to core dump postgres is stopped, then this shell will start postgres and remove core file.
+#
+# Design  : This shell will check whether the core file is created  or not. If it is created  then it stop
+#           the postgres and again start it .
+#
+# Author  : Shibani Patra
+#
+# Date   : Tue Aug 11 12:37:00 IST 2015
+##############################################################################################
+. $NS_WDIR/bin/nsi_db_utils 
+debug_log()
+{
+  if [ `ls -l $LOG_FILE | awk -F" " '{print $5}'` -gt $CHK_LOG_SIZE ]; then
+    #rollover
+    su cavisson -c "mv ${LOG_FILE} ${LOG_FILE}.prev"
+  # su cavisson -c "touch ${LOG_FILE}"
+  fi
+    su cavisson -c "touch ${LOG_FILE}"
+  if [ $DEBUG -eq 1 ];then
+    echo "`date +'%D|%T'`|$*" >> $LOG_FILE
+  fi
+  
+}
+
+#If postgres is stoppend then DBU will create a hidden file.
+#This function will check for this file and if it is present then start postgresql. 
+check_if_file_exists()
+{
+  if [ -f $FILE_PATH ]; then
+    debug_log "File $FILE_PATH found. Postgres might not be running going to start postgres."
+    check_pg_signal=1
+    rm $FILE_PATH
+  fi
+}
+
+sleep_pg()
+{
+  #If shell script is in sleep, it does not execute signal handler.
+  #Signal handler is executed after sleep completes.
+  #That is why shell script is sleeping in chunk of 5 sec. 
+  TIME_CHUNK=5
+  SLEEP_COUNT=`expr $1 / $TIME_CHUNK`
+  REM=`expr $1 % $TIME_CHUNK`
+  
+  while [ $SLEEP_COUNT -gt 0 ]
+  do
+    check_if_file_exists
+    if [ $check_pg_signal -eq 1 ]; then
+      return
+    else
+      sleep $TIME_CHUNK
+    fi
+    SLEEP_COUNT=`expr $SLEEP_COUNT - 1`
+  done
+  
+  sleep $REM
+  check_if_file_exists
+}
+
+#It will check postgres is running or not, if not then it will start postgres.
+check_and_start_postgres()
+{
+  debug_log "Method check_and_start_postgres() called"
+
+  status=`isPgRunning`
+   if [ $status -ne 0 ]; then
+     debug_log "Postgres is not running. Starting postgres...."
+     /etc/init.d/postgresql start
+     if [ $? -eq 0 ]; then
+       debug_log "Postgres started successfully."
+     else 
+       debug_log "Postgres failed to start."
+     fi
+   else 
+     debug_log "Postgres is Running."
+   fi
+  
+
+  debug_log "Method check_and_start_postgres() exited"
+}
+version=`psql --version | grep -o '[0-9].[0-9]'`  
+#It will check core in postgres and if found then it will restart the postgres.
+check_core_and_restart_postgres()
+{
+  
+  debug_log "Method check_core_and_restart_postgres() called"
+  CORE_PATH="/var/lib/pgsql/data/"
+  export PGDATA="/var/lib/pgsql/data/"
+  ls -l $CORE_PATH | grep "^-" | awk '{print $9}' | grep "^core" >/dev/null 2>&1
+
+  #If core found
+  if [ $? -eq 0 ]; then
+    debug_log "Core file found in postgres, stopping postgres..."
+    #Stop postgres
+    /etc/init.d/postgresql stop
+    #If DB was stopped successfully
+    if [ $? -eq 0 ]; then
+      #Recover pg_bulkload as it creates lock file and need to remove that file
+      /usr/lib/postgresql/$version/bin/pg_bulkload -r
+      debug_log "Postgres was stopped successfully, now starting it, and removing core files..."
+      /etc/init.d/postgresql start
+      rm -f /var/lib/pgsql/data/core*
+    else
+      debug_log "Error in stopping postgres..."
+    fi
+
+    status=`isPgRunning`
+    if [ $staus -eq 0 ]; then
+      debug_log "Postgres recovered successfully..."
+    else
+      debug_log "Could not Recover postgres..."
+    fi
+
+    PS=`ps -lef | grep post`
+    debug_log "================All postgres processes are===================="
+    debug_log "$PS"
+    debug_log "=============================================================="
+  else
+    debug_log "No core file found"
+  fi
+  debug_log "Method check_core_and_restart_postgres() exited"
+}
+
+
+check_core()
+{
+  while true
+  do
+    #Check if postgres core file is created, restart postgres if found
+    check_core_and_restart_postgres
+    check_if_file_exists
+
+    #If signal is received from DBU
+    if [ $check_pg_signal -eq 1 ]; then
+      #This function starts postgres if it is not running.
+      check_and_start_postgres
+      check_pg_signal=0
+    fi
+    #Sleep for given interval in chunks of 5 seconds.
+    sleep_pg $INTERVAL_SECS
+  done
+}
+
+check_pg()
+{
+  /sbin/chkconfig --list postgresql >/dev/null 2>&1
+  if [ $? -ne 0 ];then
+    echo "Database not configured for auto start on reboot"
+    exit 0    
+  fi
+}
+
+check_prev_process()
+{
+  #Exclude self pid and parent PID
+  PID_LIST=`ps -ef | grep nsu_check_pg | grep -v grep | grep -v -w $$ | awk '{print $2}' | grep -v -w $PPID`
+}
+
+check_and_kill_prev_process()
+{
+  check_prev_process
+  if [ "X$PID_LIST" != "X" ]; then
+    kill -9 $PID_LIST
+  fi
+}
+
+stop_check_pg()
+{
+  check_and_kill_prev_process
+  if [ "X$PID_LIST" != "X" ]; then
+    echo "nsu_check_pg with PID $PID_LIST stopped successfully..."
+  else
+    echo "No nsu_check_pg is running."
+  fi
+}
+
+start_check_pg()
+{
+  nohup $NS_WDIR/bin/nsu_check_pg >/dev/null 2>&1 &
+  echo "nsu_check_pg started successfully ..."
+}
+
+show_check_pg()
+{
+  check_prev_process
+  if [ "X$PID_LIST" != "X" ]; then
+    echo "nsu_check_pg is running with PID $PID_LIST"
+  else
+    echo "nsu_check_pg is not running.."
+  fi
+  exit 0
+}
+
+###################### FUNCTION CALLING #####################################
+USERID=`id -u`
+if [ $USERID -ne 0 ];then
+  echo "You must be root to execute this command"
+  exit 1
+fi
+
+DEBUG=1
+CHK_LOG_SIZE=10485760   #10 MB
+INTERVAL_SECS=300       #5 min
+LOG_FILE="/home/cavisson/work/ndc/logs/nsu_check_pg.log"
+PID_FILE="/home/cavisson/work/ndc/logs/.nsu_check_pg.pid"
+FILE_PATH="/home/cavisson/work/ndc/logs/.dbu_could_not_connect"
+
+su cavisson -c "touch ${LOG_FILE}"
+#If DBU is not able to make connection with postgres, it will send signal to nsu_check_pg
+#nsu_check_pg will check if postgres is stopped; if yes then it will start postgres.
+check_pg_signal=0
+trap "check_pg_signal=1; debug_log 'CHECK_PG signal received'" SIGRTMIN+6
+
+if [ "X$1" = "X" ]; then
+  #Save nsu_check_pg PID. It will be used by DBU
+  mkdir -p "/home/cavisson/work/ndc/logs/"
+  echo "$$" > $PID_FILE
+  chown cavisson:cavisson $PID_FILE
+  debug_log "#Date|Time|Message"
+  debug_log "Started nsu_check_postgres. PId $$ written in file $PID_FILE"
+  debug_log "----------------------------------"
+  #check_pg
+  check_and_kill_prev_process
+  check_core
+  exit 0
+fi
+
+case "$1" in
+  start)
+    start_check_pg
+    ;;
+  stop)
+    stop_check_pg
+    ;;
+  restart)
+    stop_check_pg
+    start_check_pg
+    ;;
+  show)
+    show_check_pg
+    ;;
+  ?)
+    echo "Usage: $0 {start|stop|restart|show}" >&2
+    exit 1
+    ;;
+esac
+
+exit 0

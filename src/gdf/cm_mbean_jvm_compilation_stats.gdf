@@ -1,0 +1,13 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+# ---  Mbean Reference Link :https://docs.oracle.com/javase/7/docs/api/java/lang/management/CompilationMXBean.html --- #
+# This Mbean is applicable to all JVM #
+
+Info|3.1|1|-|-|-1|-1|-
+Group|JVM Compilation Stats|11028|vector|1|0|JVM Metrics|Tier>Server>Instance|This stats gives information about compilation time.
+
+#G1
+Graph|Total Compilation Time (msec)|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|It is the elapsed time (in milliseconds) spent in compilation.

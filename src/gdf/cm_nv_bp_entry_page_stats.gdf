@@ -1,0 +1,8 @@
+# --- GDF Version History ---
+# # 1.0 - Initial version
+#
+Info|3.1|1|-|-|-1|-1|-
+#
+Group|BP Page Entry by Page|10230|vector|1|0|UX Metrics|ChannelName>BusinessProcess>SegmentName>BPPage>Page|Business Process page entry by different pages
+#
+Graph|BP Entries/Minute|1|scalar|rate|-|CumToPM|0|NA|-1|-1|NA|NA|Business Process entries in a BP page per minute from any session page

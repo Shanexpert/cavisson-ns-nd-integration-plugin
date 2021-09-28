@@ -1,0 +1,4 @@
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP Spanner Node Stats V2|11312|vector|1|0|GCP Metrics|ProjectID>InstanceConfig>InstanceId>Location|Spanner node stats provided merics related to spanner nodes.
+Graph|GCP Spanner Nodes|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of nodes in spanner instance.

@@ -1,0 +1,20 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Oracle Instance Efficiency Percentages|10123|vector|10|0|Oracle Metrics|Tier>Server>Instance|Oracle monitor Instance Efficiency Percentages Stats
+
+Graph|Buffer Nowait|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Shows the percentage of times when data buffers were accessed directly without any wait time.
+Graph|Redo NoWait|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Shows whether the redo log buffer has sufficient size.
+Graph|Buffer Hits|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Measures how many times a required block was found in memory rather than having to execute an expensive read operation on disk to get the block.
+Graph|In-memory Sort|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Shows the percentage of times when sorts are performed in memory instead of using temporary tablespaces.
+Graph|Library Hits|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Shows the percentage of times when SQL statements and PL/SQL packages were found in the shared pool.
+Graph|Soft Parse|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Shows how often sessions issued a SQL statement that is already in the shared pool and how it can use an existing version of that statement.
+Graph|Execute to Parse|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Shows how often parsed SQL statements are reused without reparsing.
+Graph|Latch Hit|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Shows how often latches(locks) were acquired without having to wait.
+Graph|Parse CPU to Parse Elapsd|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Gives the ratio of CPU time spent to parse SQL statements.
+Graph|% Non-Parse CPU|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Shows the percentage of how much CPU resources were spent on the actual SQL execution.

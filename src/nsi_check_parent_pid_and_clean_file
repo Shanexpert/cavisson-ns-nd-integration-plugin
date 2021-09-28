@@ -1,0 +1,73 @@
+#! /bin/sh
+
+################### Design for remove temp file ##############################
+#                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~                              #
+#                                                                            #
+# 1. DB upload start a shell script (nsi_check_parent_pid_and_clean_file)    #
+#    on starting with test-run(eg 1234) number upload PID(), temp file path  #
+#    and pattern (eg: /mnt/tmp/*/*.csv.<PID>, *.cav, *.dat, urc.csv) as      #
+#    argument and sleep interval.                                            #
+# 2. Shell script will sleep for 1 minute (60 secods).                       #
+# 3. After sleep check is parent pid is alive.                               #
+# 4. If parent pid is alive then repeat step 2 and 3.                        #
+# 5. If parent dies, clean all the temp file using command                   #
+#      rm -rf *.csv.PID                                                      #
+# 6. And then exit.                                                          #
+##############################################################################
+
+function Usage()
+{
+  echo $*
+  echo "Usage: $0 <Test Run Number> <parent PID> <temp file path and pattern> <sleep interval in seconds>"
+  echo "Example:"
+  echo "  $0 1234 \"/mnt/tmp/*.csv.4563\" 60 "
+  exit -1
+}
+
+if [ $# -lt 3 -o $# -gt 4 ]; then 
+  Usage "Invalid number of arguments '$#', must be 3 or 4"
+fi
+
+#Checking if test number is numeric
+echo $1 | egrep '^[0-9]+$' >/dev/null 2>&1
+if [ "$?" -eq "1" ]; then
+  Usage "Test run number is not numeric"
+fi
+TESTRUN=$1
+ 
+#Checking if parent pid is numeric
+echo $2 | egrep '^[0-9]+$' >/dev/null 2>&1
+if [ "$?" -eq "1" ]; then
+  Usage "Parent id is not numeric"
+fi
+P_PID=$2
+
+#Checking if temp file or pattern
+echo $3 | egrep '^//*' >/dev/null 2>&1
+if [ "$?" -eq "1" ]; then
+  Usage "temp file or pattern must be fully qualified path i.e must start with forward slash ('/')."
+fi
+TMP_FILE_PATH=$3
+
+SLEEP_INTERVAL=60
+if [ "X$4" != "X" ]; then
+  #Checking if sleep interval is numeric
+  echo $4 | egrep '^[0-9]+$' >/dev/null 2>&1
+  if [ "$?" -eq "1" ]; then
+    Usage "Sleep interval is not numeric"
+  fi
+  SLEEP_INTERVAL=$4
+fi
+
+
+while true
+do
+  stat /proc/$P_PID > /dev/null 2>&1
+
+  if [ "$?" -ne "0" ]; then 
+    rm -rf $TMP_FILE_PATH
+    exit 0
+  fi
+  sleep $SLEEP_INTERVAL
+done
+

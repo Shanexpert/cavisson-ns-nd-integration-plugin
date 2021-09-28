@@ -1,0 +1,8 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Kafka Topic Stats|10446|vector|1|0|Kafka Metrics|Tier>Server>Instance>Topic|Fetches the messages on each topic.
+
+Graph|Kafka Topic Messages|1|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Number of messages of each topics.

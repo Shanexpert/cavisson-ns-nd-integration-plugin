@@ -1,0 +1,14 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|1.0|1|-|-|-1|-1|
+
+Group|Kubernetes Daemonset|14091|vector|7|0|Kubernetes Metrics|Cluster>NameSpace>Daemonset|Provides metrics related to kubernetes daemonset stats.
+
+Graph|Kubernetes Ready Nodes|1|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|The number of nodes that should be running the daemon pod and have one or more running and ready.
+Graph|Kubernetes Desired Nodes|2|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|The number of nodes that should be running the daemon pod.
+Graph|Kubernetes Scheduled Nodes|3|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|The number of nodes running at least one daemon pod and that are supposed to.
+Graph|Kubernetes Misscheduled Nodes|4|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|The number of nodes running a daemon pod but are not supposed to.
+Graph|Kubernetes Updated Scheduled Nodes|5|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|The number of nodes that run the updated daemon pod spec.
+Graph|Kubernetes Available Nodes|6|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|The number of available nodes.
+Graph|Kubernetes Observed Generation Nodes|7|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|The observed generation nodes.

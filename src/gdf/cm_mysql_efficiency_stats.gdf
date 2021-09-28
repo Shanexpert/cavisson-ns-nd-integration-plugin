@@ -1,0 +1,19 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+ 
+#We are taking same group id as cm_apache_svc_time.gdf in future we will delete cm_apache_svc_time.gdf
+Info|3.1|1|-|-|-1|-1|-
+Group|MySQL Efficiency Stats|10350|vector|9|0|MySQL Metrics|Tier>Server>Instance|MySQL Efficiency monitors metrics related to key cache, query cache, InnoDB cache etc.
+Graph|MySQL Slow Queries (Pct)|1|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|Percentage of queries that have taken more than long_query_time.
+Graph|MySQL Key Cache Read Hits/Sec|2|scalar|rate|-|NA|0|NA|-1|-1|NA|NA|The number of physical reads per second of a key block from disk into the MyISAM key cache.
+Graph|MySQL Key Cache Write Hits/Sec|3|scalar|rate|-|NA|0|NA|-1|-1|NA|NA|The number of physical writes per second of a key block from disk into the MyISAM key cache.
+Graph|MySQL Query Cache Hits (Pct)|4|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|Percentage of query cache hits.
+#Graph|MySQL Cache Threads|5|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|Number of threads created to handle connections.
+Graph|MySQL InnoDB Cache Buffer Pool Hits/Sec|5|scalar|rate|-|NA|0|NA|-1|-1|NA|NA|Number of logical reads per second from the buffer pool.
+Graph|MySQL InnoDB Cache Buffer Pool Writes Waited (Pct)|6|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|Percentage of InnoDB buffer Pool waiting request to write.
+Graph|MySQL InnoDB Row Locks Waiting|7|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|Number of row locks currently being waited for by operations on InnoDB tables.
+Graph|MySQL InnoDB Row Locks Avg Lock Time (Sec)|8|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|Average time to acquire a row lock for InnoDB tables, in seconds.
+Graph|MySQL Table Locks Waited (Pct)|9|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|Percentage of request for a table lock could not be granted immediately and a wait was needed.

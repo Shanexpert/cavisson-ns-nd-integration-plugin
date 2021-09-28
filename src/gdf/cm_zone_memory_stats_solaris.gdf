@@ -1,0 +1,25 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+# General information line
+# Info|msgVersion|numGroups|startIndex|testRun|sizeOfMsgData|interval|testRunStartDate/Time
+#
+# Group information line
+# Group|groupName|rptGrpId|groupType|numGraphs|numVectors
+#
+# Graph information line
+# Graph|graphName|rptId|graphType|dataType|graphDataIndex|formula|numVectors
+#
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Zone Memory Stats|10898|vector|6|0|System Metrics|Tier>Server>Instance|Memory Stats for solaris
+
+Graph|Total Memory(MB)|1|scalar|sample|-|None|0|NA|-1|-1|NA|NA|Total Capacity of a zone in MB.
+Graph|RSS Memory Size(MB)|2|scalar|sample|-|None|0|NA|-1|-1|NA|NA|The non-swapped physical memory that a zone has been allocated in MB
+Graph|RSS Memory Size(Pct)|3|scalar|sample|-|None|0|NA|-1|-1|NA|NA|The RSS(%) is calculated by (RSS/CAP * 100).
+Graph|Memory Capacity Overrun|4|scalar|sample|-|None|0|NA|-1|-1|NA|NA|This provides the number of times the zone has gone over its capacity.
+Graph|Paged Out (MB)|5|scalar|sample|-|None|0|NA|-1|-1|NA|NA|This indicates the total amount of memory that has been paged out when the zone has gone over its capacity.
+Graph|Swap Memory (Pct)|6|scalar|sample|-|None|0|NA|-1|-1|NA|NA|Used Swap Memory percentage.

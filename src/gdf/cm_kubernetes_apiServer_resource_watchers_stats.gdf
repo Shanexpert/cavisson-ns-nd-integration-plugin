@@ -1,0 +1,8 @@
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Kubernetes ApiServer Resource Watchers Stats|14148|vector|3|0|Kubernetes Control Plane Metrics|Cluster>MasterNode>Group>Version>Kind|Kubernetes ApiServer Resource Watchers Stats
+
+Graph|ApiServer Registered Watchers |1|scalar|sample_4B|-|None|0|NA|-1|-1|H|NA|Number of currently registered watchers for a given resources.
+Graph|ApiServer Watch Events Request/Sec |2|scalar|sample_4B|-|CumToPS|0|NA|-1|-1|H|NA|Request per sec for watch events 
+Graph|ApiServer Watch Events Throughput(Kbps) |3|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Throughput(Kbps) for watch events
+

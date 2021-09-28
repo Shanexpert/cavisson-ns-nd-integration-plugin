@@ -1,0 +1,41 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+#ObjectName :kafka.controller:type=ControllerStats
+info|3.1|1|-|-|-1|-1|-
+Group|Apache Kafka Controller Stats|11451|vector|15|0|Apache Kafka Metrics|Tier>Server>Instance>Name|AutoLeaderBalanceRateAndTimeMs =Rate and duration of auto leader rebalance,IsrChangeRateAndTimeMs =Rate and latency for the controller to manually balance the leaders,ManualLeaderBalanceRateAndTimeMs = Rate and latency for the controller to manually balance the leaders,TopicDeletionRateAndTimeMs =Rate and latency for the controller to delete topics,TopicChangeRateAndTimeMs = Rate and latency for the controller to create new topics,UncleanLeaderElectionsPerSec = Number of “unclean” elections per second,ControllerChangeRateAndTimeMs = Rate and latency for the controller change state,LeaderElectionRateAndTimeMs =Leader election rate and latency,PartitionReassignmentRateAndTimeMs =Rate and latency for the controller to reassign partitions.
+
+#G1
+Graph|Apache Kafka Leader Request Count|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of kafka controller leader request.
+#G2       
+Graph|Apache Kafka Maximum Leader Request|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Maximum processed request by the controller request to the leader
+#G3 
+Graph|Apache Kafka Minimum Leader Request|3|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Minimum  processed request by the controller request to the leader.
+#G4
+Graph|Apache Kafka Leader Request Mean|4|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Mean calculated for  controller to  processed request  at the leader.
+#G5
+Graph|Apache Kafka Leader Request Mean Rate|5|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Mean Rate for calculated for  controller to  processed request  at the leader.
+#G6
+Graph|Apache Kafka StdDev Leader Request|6|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Calculates controller request is processed  the leader
+#G7
+Graph|Apache Kafka Leader Request/Minute |7|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of request per minute taken by the controller to the leader.
+#G8
+Graph|Apache Kafka Leader Request/Five Minute |8|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of request per five minute taken by the controller to the leader
+#G9
+Graph|Apache Kafka Leader Request/Fifteen Minute |9|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of request per fifteen minute taken by the controller to the leader.
+#G10
+Graph|Apache Kafka 50th Percentile Leader Request|10|scalar|sample|-|None|0|AS|-1|-1|NA|NA||50th percentile of time in  millisecond taken by controller.
+#G11
+Graph|Apache Kafka 75th Percentile Leader Request|11|scalar|sample|-|None|0|AS|-1|-1|NA|NA||75th percentile of time in millisecond taken by controller.
+#G12
+Graph|Apache Kafka 95th Percentile Leader Request|12|scalar|sample|-|None|0|AS|-1|-1|NA|NA|95th percentile of time in millisecond taken by controller .
+#G13
+Graph|Apache Kafka 98th Percentile Leader Request|13|scalar|sample|-|None|0|AS|-1|-1|NA|NA|98th percentile of time in millisecond taken by controller 
+#G14
+Graph|Apache Kafka 99th Percentile Leader Request|14|scalar|sample|-|None|0|AS|-1|-1|NA|NA|99th percentile of time in millisecond taken by controller.
+#G15
+Graph|Apache Kafka 999th Percentile Leader Request|15|scalar|sample|-|None|0|AS|-1|-1|NA|NA|999th percentile of time in millisecond taken by controller.
+
+

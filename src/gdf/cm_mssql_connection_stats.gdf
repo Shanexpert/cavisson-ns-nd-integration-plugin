@@ -1,0 +1,7 @@
+#LAST_MODIFIED_DATE = 11/03/2019 01:56:09
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+Group|MSSQL Database Connection Stats|10796|vector|1|0|MSSQL Metrics|Tier>Server>Source>DBName>LoginName|MSSQL Connection .
+Graph|MSSQL Connections|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of connections establised per database.

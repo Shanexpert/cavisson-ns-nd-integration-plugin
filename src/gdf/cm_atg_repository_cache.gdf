@@ -1,0 +1,44 @@
+# --- GDF Version History ---
+#  1.0 - Initial version
+#  2.0 - Change done for match Long_data and Long_long_data to double
+#  3.0 - Changes done for Dynamic data in Execution GUI
+#  3.1 - Use future1 field of group line for Metric group name
+#
+#
+# Note: Please Use the Group Name and Graph Name having no special character like {%, !, ^, &, + } etc..
+
+# General information line
+# Info|msgVersion|numGroups|startIndex|testRun|sizeOfMsgData|interval|testRunStartDate/Time
+#
+# Group information line
+# Group|groupName|rptGrpId|groupType|numGraphs|numVectors
+#
+# Graph information line
+# Graph|graphName|rptId|graphType|dataType|graphDataIndex|formula|numVectors
+#
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|ATG Repository Cache Stats|10226|vector|17|0|Application Metrics|Tier>Server>Instance>RepositoryName>CacheName|ATG Repository Cache usage statistics
+
+Graph|Local Entries|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of entries currently in the cache.
+Graph|Weak Entries|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current number of weak cache entries
+
+Graph|Local Cache Size|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The maximum size of the cache.
+Graph|Used Ratio|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percent of the maximum cache size now in use. If this ratio is close to 100, you probably want to increase the cacheSize.
+Graph|Access Count|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of attempts to retrieve items or query results from the cache.
+Graph|Total Hits|6|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|The total number of times an access attempt successfully retrieved an item or query result from the cache.
+Graph|Weak Hits|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of cache hits that are found in the weak cache
+Graph|Total Misses|8|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|The total number of times an access attempt did not find an item or query result from the cache.	
+Graph|Ratio|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The ratio of hitRatio to accessCount.
+
+Graph|Cache Invalidations|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of times the entire cache has been invalidated.
+Graph|Entry Invalidations|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of individual entries that have been invalidated.
+
+Graph|Local Culls|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of times the LRU list of the cache was cleaned from entries that were both not used recently, and extended the maximum size of the LRU list
+Graph|Local Items Culled|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of items that were culled from the cache LRU list
+Graph|Local Max Culled|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The maximum number of items that were culled from the cache LRU list
+Graph|Weak Culls|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of times the LRU list of the weak cache was cleaned from entries that were both not used recently, and extended the maximum size of the LRU list
+Graph|Weak Items Culled|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of items that were culled from the weak cache LRU list
+Graph|Weak Max Culled|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The maximum number of items that were culled from the weak cache LRU list
+

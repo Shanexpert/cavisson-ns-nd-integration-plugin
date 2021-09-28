@@ -1,0 +1,10 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Apigee Deployment Stats|10340|vector|2|0|Application Metrics|Tier>Server>Instance>Environment>Zone|This monitor provides metrics about available number of routers and message processors zone wise in Apigee Edge.
+Graph|Apigee Number Of Message Processors|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current available number of message processors in Apigee Edge.
+Graph|Apigee Number Of Routers|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current available number of routers in Apigee Edge.

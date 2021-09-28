@@ -1,0 +1,390 @@
+#!/bin/sh
+
+# Exit values
+# 0 - Send signal to stop succesfully
+# 1 - Test run may not be running
+# -1 (255) - Errors like user may not be owner of the test or other errors
+
+TRNUM=""
+USERNAME=""
+CALLER="tool"
+
+if [ "XX" = "XX$NS_WDIR" ];then
+  echo "ERROR: NS_WDIR env must be defined"
+  exit -1
+fi
+
+f_flag=0
+s_flag=0
+pid=""
+if [ $# -eq 0 ];then
+  echo "usage: nsu_stop_netstorm [-f|-s] test-run-number"
+  exit -1
+fi
+
+tr_is_numeric=`echo "$1" | grep -E ^\-?[0-9]*\.?[0-9]+$`
+
+if [ "X$tr_is_numeric" != "X" ];then
+  TRNUM=$1
+  FORCE=0
+fi
+
+# ----------------------------------------------------------------#
+# Fun. Name     : get_caller_info()
+# Purpose       : This function will get nsu_stop_netstorm caller
+#                 information by traversing leaf node to parent node 
+# Author(s)     : Radhika (Tue Dec 10 13:04:33 IST 2019) 
+# ----------------------------------------------------------------#
+get_caller_info()
+{
+  arg=0
+  declare -a ps_args
+  declare -a log
+  
+  #Get this tool process id 
+  pid=$$
+  debug_log "pid is $pid"
+  while [ "X$pid" != "X1" ] && [ "X$pid" != "X0" ]
+  do
+    pid_info[$arg]=`ps -ef -o "pid,ppid,cmd,args" | grep $pid`
+    a=`ps -ef -h -o 'ppid' $pid`
+    pid=`echo $a`
+    log[$arg]=`echo -e "\n" $pid ":" ${pid_info[$arg]}`
+    arg=`expr $arg + 1`
+  done
+
+  debug_log "Hierarchy of process  is ${log[*]}"
+}
+
+
+if [ $# -ne 1 ];then
+  if [ "X$tr_is_numeric" != "X" ];then
+    shift
+  fi
+
+  while getopts f:s:u:r:C:? c 
+  do
+    case $c in
+      f) ((f_flag++))
+         if [ $f_flag == 1 -a $s_flag == 0 ]
+         then
+           TRNUM=$OPTARG
+           FORCE=1
+         else
+           echo "provide only one argument -s|-f"
+         exit -1
+         fi;;
+      s) ((s_flag++))
+         if [ $f_flag == 0 -a $s_flag == 1 ]
+         then
+           TRNUM=$OPTARG
+           FORCE=2
+         else
+           echo "provide only one argument -s|-f"
+         exit -1
+         fi;;
+      u) USERNAME=$OPTARG;;
+      r) ROLE=$OPTARG;;
+      C) CALLER=$OPTARG;;
+      ?) echo "usage: nsu_stop_netstorm [-f|-s] test-run-number"      
+         exit -1;;
+      *) echo "usage: nsu_stop_netstorm [-f|-s] test-run-number"
+         exit -1;;
+    esac
+  done
+fi
+
+if [ ! -d $NS_WDIR/logs/TR$TRNUM ];then
+  echo "Test Run '$TRNUM' is not a valid test run number."
+  exit -1
+fi
+
+SUMM_FILE=$NS_WDIR/logs/TR$TRNUM/summary.top
+TEST_OWNER=`cut -d'|' -f6 $SUMM_FILE`
+
+LOG_FILE=$NS_WDIR/logs/TR$TRNUM/nsu_stop_netstorm.log
+if [ ! -f ${LOG_FILE} ]; then
+  touch ${LOG_FILE}
+fi
+
+if [ "X$ROLE" != "X" -o "X$USERNAME" != "X" ];then
+  if [ "$ROLE" != "admin" ];then
+    if [ "$USERNAME" != "$TEST_OWNER" ];then
+      echo "Test can not be stopped, user $USERNAME can not stop the test"
+      exit -1
+    fi
+  fi
+fi
+
+INST_FILE=$NS_WDIR/logs/TR$TRNUM/.curInstance
+if [ ! -f $INST_FILE ];then
+  echo "Test can not be stopped, instance file is not present" 
+  exit -1
+fi
+INST=`cat $INST_FILE 2>/dev/null`
+
+debug_log()
+{
+ # echo "`date +'%m/%d|%r'`|$1" >>$LOG_FILE
+  echo "`date +"%F %X"`|$CALLER|$1" >>$LOG_FILE
+}
+
+
+CMD_OWNER=`whoami`
+
+if [ "X$USERNAME" != "X" ];then
+  debug_log "Command  Owner is <$USERNAME> who called nsu_stop_netstorm with <$1> for Testrun number <$TRNUM>"
+else
+  debug_log "Command  Owner is <$CMD_OWNER> who called nsu_stop_netstorm with <$1> for Testrun number <$TRNUM>"
+fi
+
+# This function will get all firefox process by testrun number and kill them 
+ns_rbu_kill_firefox()
+{ 
+  FFX_PIDS=`ps -ef | grep "firefox.*.-cav_testrun $TRNUM" | grep -v grep | awk -F' ' '{printf $2" "}'`
+  if [ "X$FFX_PIDS" != "X" ];then
+    debug_log "FFX_PIDS = $FFX_PIDS"
+    kill $FFX_PIDS 
+    if [ $? -ne 0 ];then
+      debug_log "Unable to kill firefox PIDs [$FFX_PIDS] sleeping for 3sec.. and forcefully killing it"
+      sleep 3
+      kill -9 $FFX_PIDS 
+    fi
+  fi
+}
+
+
+# This function will get all chrome process by testrun number and kill them 
+ns_rbu_kill_chrome()
+{
+  CHROME_PIDS=`ps -ef | grep "chrome.*.-cav_testrun=$TRNUM" | grep -v grep | awk -F' ' '{printf $2" "}'`
+  if [ "X$CHROME_PIDS" != "X" ];then
+    debug_log "CHROME_PIDS = $CHROME_PIDS"
+    kill $CHROME_PIDS
+    if [ $? -ne 0 ];then
+      debug_log "Unable to kill chrome PIDs [$CHROME_PIDS] sleeping for 3sec.. and forcefully killing it"
+      sleep 3
+      kill -9 $CHROME_PIDS
+    fi
+  fi
+}
+
+# This function will get all jmeter process by jmeter file name and kill them 
+# This function is not in used because this is killing all jmeter proces by that all test of jmter are stoping.
+ns_kill_jmeter_process()
+{
+  JMETER_PIDS=`ps -ef | grep "ApacheJMeter.jar" |grep -v grep | awk -F' ' '{printf $2" "}'`
+  if [ "X$JMETER_PIDS" != "X" ];then
+    debug_log "JMETER_PIDS = $JMETER_PIDS"
+    kill $JMETER_PIDS
+    if [ $? -ne 0 ];then
+      debug_log "Unable to kill JMeter PIDs [$JMETER_PIDS] sleeping for 3sec.. and forcefully killing it"
+      sleep 3
+      kill -9 $JMETER_PIDS
+    fi
+  fi
+}
+
+##changed in 3.7.7
+update_duration() 
+{
+  if [ "X$TRNUM" != "X" ]; then
+    nsi_tr_duration -n $TRNUM -u >/dev/null 2>&1
+    if [ $? -ne 0 ]; then
+      echo "ERROR: Duration not updated."
+      debug_log "ERROR: Duration not updated."
+    fi 
+  fi
+}
+
+ns_kill_rtg_sim_tool()
+{
+  PIDS=`ps -ef|grep netstorm|grep $TRNUM|grep -v grep|awk '{print $2}'`
+  i=0
+  for pid in $PIDS
+  do
+    INST=ns_inst_sim_tool_$pid
+    if [ -d $NS_WDIR/.tmp/$INST ];then
+      kill -9 $pid 2>/dev/null
+      echo "Signalling RTG Simulator pid $pid to stop forcefully...command [kill -9 $pid]"
+      debug_log "Signalling RTG Simulator pid $pid to stop forcefully...command [kill -9 $pid]"
+     ((i=i+1))
+    fi
+  done
+  if [ $i -eq 0 ];then
+    echo "ERROR: Test Run '$TRNUM' is not running."
+    debug_log "ERROR: Test Run '$TRNUM' is not running."
+    exit 1
+  fi
+  exit 0
+}
+
+#Get this tool caller information 
+get_caller_info
+
+
+# Kill all firefox processes if exist
+#We cannot kill firefox with 0(Gracefully kill), because new sessions get invoked using gracefully kill and so firefox also invoked, with G_RBU (stop browser after each session) is disabled.
+#After graceful kill of test nsu_show_netstorm shows no test is running but it will show the firefox processes.
+if [ "$FORCE" == 1 -o "$FORCE" == 2 ];then 
+  ns_rbu_kill_firefox
+fi
+
+if [ "$FORCE" == 1 -o "$FORCE" == 2 ];then
+  ns_rbu_kill_chrome
+fi
+
+# Stopping of jmeter is handled in ns_jmeter_api.c
+#if [ "$FORCE" == 1 -o "$FORCE" == 2 ];then
+#  ns_kill_jmeter_process
+#fi
+
+if [ ! -d $NS_WDIR/.tmp/$INST ];then
+  ns_kill_rtg_sim_tool
+fi
+
+#using parameter expansion
+PID=${INST##*_}
+if [ "X$PID" == "X" ];then
+  echo "Test run number ($TRNUM) is not valid testrun"
+  debug_log "Test run number ($TRNUM) is not valid testrun"
+  exit 1
+fi
+ACT=`sed -n '1p' $NS_WDIR/.tmp/$INST/keys 2>/dev/null`
+if [ "X$ACT" != "X$TRNUM" ];then
+  echo "Test run number ($TRNUM) is not valid testrun"
+  debug_log "Test run number ($TRNUM) is not valid testrun"
+  exit 1
+fi
+TEST_RUN_OWNER=`ps -p $PID -o user= 2>/dev/null`
+if [ $? -ne 0 ];then
+  echo "ERROR: Test Run '$TRNUM' is not running."
+  debug_log "ERROR: Test Run '$TRNUM' is not running."
+  exit 1
+fi
+
+ns_stage_summary_status()
+{
+  STAGE_PATH=$NS_WDIR/logs/TR$TRNUM/ready_reports/TestInitStatus/
+  ERR_STAGE_PATH=(`awk -F'|' '{if($NF==1) print FILENAME}' $STAGE_PATH*.summary`)
+  for (( i=0; i<${#ERR_STAGE_PATH[@]}; i++ ))
+  do
+    if [ "XX${ERR_STAGE_PATH[$i]}" != "XX" ];then
+      STAGE_MSG[$i]=`awk -F'|' '{printf "%s|%s|%s|%s|%s\n", $1, $2, $3, $4, 3}' ${ERR_STAGE_PATH[$i]}`
+    fi
+  done
+  [ ${#ERR_STAGE_PATH[@]} -ne 0 ] && debug_log "Running stage file ${#ERR_STAGE_PATH[@]} ${ERR_STAGE_PATH[*]} MSG: ${STAGE_MSG[@]}"
+}
+
+# bug 66392 :Logs should come in TestInitStatus Directory when test got stopped forcefully
+console_log()
+{
+  for (( i=0; i<${#ERR_STAGE_PATH[@]}; i++ ))
+  do
+    echo -e "${STAGE_MSG[$i]}\n$1" >${ERR_STAGE_PATH[$i]}
+  done
+  echo "$1"
+  debug_log "$1"
+}
+
+debug_log "Testrun owner who ran the test is <$TEST_RUN_OWNER>"
+if [ $CMD_OWNER == "root" -o $CMD_OWNER == $TEST_RUN_OWNER ];then
+
+  if [ "X$STOP_TEST_BY_DAEMON" != "X1" ];then
+    NSU_CHECK_CONT_TEST_PID=`cat $NS_WDIR/logs/TR$TRNUM/nsu_check_cont_test_pid 2>/dev/null`
+    if [ "X$NSU_CHECK_CONT_TEST_PID" != "X" ]; then
+      debug_log "Signalling nsu_check_cont_mon pid $PID to stop forcefully...command [kill -9 $NSU_CHECK_CONT_TEST_PID ] "
+      kill -9 $NSU_CHECK_CONT_TEST_PID 2>/dev/null
+    fi
+  fi
+
+  if [ -f $NS_WDIR/logs/TR$TRNUM/cavdebug.properties ]; then
+    NS_DEBUG_PID=`cat $NS_WDIR/logs/TR$TRNUM/cavdebug.properties|grep NS_DEBUG_PID|awk -F'=' '{print $2}' 2>/dev/null`
+    if [ "X$NS_DEBUG_PID" != "X" ]; then
+      kill -9 $NS_DEBUG_PID 2>/dev/null
+    fi
+  fi
+
+  if [ "$FORCE" == 0 ];then
+    echo "Signalling netstorm pid $PID to stop gracefully...command [kill -10 $PID]"
+    debug_log "Signalling netstorm pid $PID to stop gracefully...command [kill -10 $PID] "
+    kill -10 $PID 2>/dev/null
+    RET=$?
+  # In case of stopping test immediately send SIGRTMIN+1 signal  
+  elif [ "$FORCE" == 2 ];then
+    echo "Signalling netstorm pid $PID to stop immediately...command [kill -35 $PID]"
+    debug_log "Signalling netstorm pid $PID to stop immediately...command [kill -35 $PID]"
+    kill -35 $PID 2>/dev/null
+    RET=$?
+  else
+    update_duration  ##update duration for forcefully stopped testruns.
+        #pkill : Only match processes whose parent process ID is listed.
+    #Sometimes PARENT process killed itself because its children are died,
+    #before killing PARENT explicitly, so chking with -0 signal and  sleep of
+    #2 seconds.
+    pkill -9 -P $PID 2>/dev/null        
+    kill -9 $PID 2>/dev/null
+
+    ns_stage_summary_status
+    console_log "Signalling netstorm pid $PID to abort...command [kill -9 $PID]"
+    NIFA_PID=`cat $NS_WDIR/logs/TR$TRNUM/.nifa.pid 2>/dev/null`
+    LOGGING_READER_PID=`cat $NS_WDIR/logs/TR$TRNUM/.nlr.pid 2>/dev/null`
+    DB_UPLOADER_PID=`cat $NS_WDIR/logs/TR$TRNUM/.nsu_db_upload.pid 2>/dev/null`
+   
+    if [ "X$NIFA_PID" != "X" ];then 
+      debug_log "Signalling nia_file_aggregator pid $NIFA_PID to abort...command [kill -10 $NIFA_PID]"
+      kill -10 $NIFA_PID 2>/dev/null
+    fi
+
+    #Bug 36639 - on killing pid of nsu_db_upload nsi_db_analyze got orphaned / nsu_logging_reader also exits
+    debug_log "Signalling nsu_logging_reader pid $LOGGING_READER_PID to abort...command [kill -10 $LOGGING_READER_PID]"
+    kill -10 $LOGGING_READER_PID 2>/dev/null
+    debug_log "Signalling nsu_db_upload pid $DB_UPLOADER_PID to abort...command [kill -10 $DB_UPLOADER_PID]"
+    kill -10 $DB_UPLOADER_PID 2>/dev/null
+
+    if [ "X$NIFA_PID" != "X" ];then
+      kill -0 $NIFA_PID 2>/dev/null
+      [ $? -eq 0 ] && sleep 15
+      kill -0 $NIFA_PID 2>/dev/null
+      [ $? -eq 0 ] && sleep 45
+      debug_log "Signalling nia_file_aggregator pid $NIFA_PID to abort...command [kill -9 $NIFA_PID]"
+      kill -9 $NIFA_PID 2>/dev/null
+    fi
+
+    #Bug 36639 - on killing pid of nsu_db_upload nsi_db_analyze got orphaned / nsu_logging_reader also exits
+    debug_log "Signalling nsu_logging_reader pid $LOGGING_READER_PID to abort...command [kill -9 $LOGGING_READER_PID]"
+    kill -9 $LOGGING_READER_PID 2>/dev/null
+    debug_log "Signalling nsu_db_upload pid $DB_UPLOADER_PID to abort...command [kill -9 $DB_UPLOADER_PID]"
+    kill -9 $DB_UPLOADER_PID 2>/dev/null
+
+    #Changing usleep to sleep of 2 sec, due to issue in ubuntu which was not supporting usleep.
+    sleep 2
+    kill -0 $PID 2>/dev/null
+    if [ $? -eq 0 ]; then
+      RET=1
+    else
+      RET=0
+    fi
+    nohup nsi_repo_upload -t ${TRNUM} 1>/dev/null 2>&1 &
+  fi
+
+  if [ -s $NS_WDIR/logs/TR$TRNUM/debug_trace.log ];then
+    (echo ""; echo "**************************************END of Debug Trace**************************************") >> $NS_WDIR/logs/TR$TRNUM/debug_trace.log
+  fi
+
+  if [ $RET -ne 0 ];then
+    console_log "ERROR: Could not send stop signal to netstorm process id '$PID' for test run '$TRNUM' instance $inst"
+    exit -1
+  else
+    exit 0
+  fi
+else
+  console_log "Test Run $TRNUM cannot be stopped as you are not the owner of the test run."
+  console_log "Test Run owner is $TEST_RUN_OWNER."
+  rm -f $OUT
+  exit -1
+fi
+
+echo "ERROR: Test Run '$TRNUM' is not running."
+debug_log "ERROR: Test Run '$TRNUM' is not running."
+exit 1

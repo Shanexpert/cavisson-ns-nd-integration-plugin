@@ -1,0 +1,76 @@
+#!/bin/bash
+
+function Usage()
+{
+  echo
+  echo -n "$0 >> ERROR: "
+  echo $*
+  echo
+  echo "Usage: $0 <Testrun Number>"
+  echo "Example:"
+  echo "  $0 1234"
+  exit -1
+}
+
+INTERVAL=0
+
+# Including nsi_db_utils
+. $NS_WDIR/bin/nsi_db_utils
+
+chk_args_of_option()
+{
+  if [ "X$2" == "X" ];then
+    echo "Option $TRNUM required a value."
+    Usage
+  fi
+}
+
+while [ "$1" != "" ];do
+  case $1 in
+    "--testrun")
+        shift
+        chk_args_of_option "--testrun" "$1"
+        TRNUM=$1;;
+      --*)Usage "Invalid Options" ;;
+        *)Usage;;
+  esac
+  shift
+done
+
+ #Checking if Test exist or not
+if [ ! -d $NS_WDIR/logs/TR$TRNUM ];then
+  Usage "TestRun does not exist"
+fi
+
+DEBUG_FILE_PATH="$NS_WDIR/logs/TR$TRNUM/ns_logs/nsu_db_create_table.log"
+
+run_orl_db_analyze()
+{
+  psql test cavisson >>$DEBUG_FILE_PATH  <<+ 2>>$DEBUG_FILE_PATH
+    ANALYZE orlStatsSQLIDTable_$TRNUM;
+    ANALYZE orlStatsSnapTable_$TRNUM;
+    ANALYZE orlStatsSQLStmtOrdByElapsedTime_$TRNUM;
+    ANALYZE orlStatsSQLStmtOrdByCPUTime_$TRNUM;
+    ANALYZE orlStatsSQLStmtOrdByUsrIOTime_$TRNUM; 
+    ANALYZE orlStatsSQLStmtOrdByGets_$TRNUM;
+    ANALYZE orlStatsSQLStmtOrdByReads_$TRNUM;
+    ANALYZE orlStatsSQLStmtOrdByPhyReadsUnopt_$TRNUM;
+    ANALYZE orlStatsSQLStmtOrdByExec_$TRNUM;
+    ANALYZE orlStatsSQLStmtOrdByParseCalls_$TRNUM;
+    ANALYZE orlStatsSQLStmtOrdBySharableMemory_$TRNUM; 
+    ANALYZE orlStatsSQLStmtOrdByVersionCount_$TRNUM;
+    ANALYZE orlStatsSQLStmtOrdByClusterWaitTime_$TRNUM; 
+
++
+}
+
+START=`date +%s`
+echo "nsi_orl_db_analyze: DB Analayze started at $START." >>$DEBUG_FILE_PATH
+
+run_orl_db_analyze
+
+END=`date +%s`
+echo "nsi_orl_db_analyze: DB Analayze ended at $END." >>$DEBUG_FILE_PATH
+DIFF=`expr $END - $START`
+echo "nsi_orl_db_analyze: ANALYZING tables took $DIFF seconds" >>$DEBUG_FILE_PATH
+exit 0 

@@ -1,0 +1,52 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Azure PublicIPAddress Stats|14015|vector|22|0|Azure Metrics|AccountName>Region>ResourceGroup>PublicIPAddress|Azure DDoS Protection Standard is a new offering which provides additional DDoS mitigation capabilities and is automatically tuned to protect your specific Azure resources. Protection is simple to enable on any new or existing Virtual Network and requires no application or resource changes.
+
+Graph|Azure PublicIPAddress Packets In DDoS(Count/Sec)|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Azure PublicIPAddress Packets DDoS.
+
+Graph|Azure PublicIPAddress Packets Dropped DDoS(Count/Sec)|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Azure PublicIPAddress Packets dropped DDoS.
+
+Graph|Azure PublicIPAddress Packets Forwarded DDoS(Count/Sec)|3|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Azure PublicIPAddress Packets forwarded DDoS.
+
+Graph|Azure PublicIPAddress TCP Packets In DDoS(Count/Sec)|4|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Azure PublicIPAddress TCP Packets DDoS.
+
+Graph|Azure PublicIPAddress TCP Packets Dropped DDoS(Count/Sec)|5|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Azure PublicIPAddress TCP Packets dropped DDoS.
+
+Graph|Azure PublicIPAddress TCP Packets Forwarded DDoS(Count/Sec)|6|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Azure PublicIPAddress TCP Packets forwarded DDoS.
+
+Graph|Azure PublicIPAddress UDP Packets In DDoS(Count/Sec)|7|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Azure PublicIPAddress UDP Packets DDoS.
+
+Graph|Azure PublicIPAddress UDP Packets Dropped DDoS(Count/Sec)|8|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Azure PublicIPAddress UDP Packets dropped DDoS.
+
+Graph|Azure PublicIPAddress UDP Packets Forwarded DDoS(Count/Sec)|9|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Azure PublicIPAddress UDP Packets forwarded DDoS.
+
+Graph|Azure PublicIPAddress Bytes In DDoS(Bytes/Sec)|10|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Azure PublicIPAddress Bytes DDoS.
+
+Graph|Azure PublicIPAddress Bytes Dropped DDoS(Bytes/Sec)|11|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Azure PublicIPAddress Bytes dropped DDoS.
+
+Graph|Azure PublicIPAddress Bytes Forwarded DDoS(Bytes/Sec)|12|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Azure PublicIPAddress Bytes forwarded DDoS.
+
+Graph|Azure PublicIPAddress TCP Bytes In DDoS(Bytes/Sec)|13|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Azure PublicIPAddress TCP Bytes DDoS.
+
+Graph|Azure PublicIPAddress TCP Bytes Dropped DDoS(Bytes/Sec)|14|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Azure PublicIPAddress TCP Bytes dropped DDoS.
+
+Graph|Azure PublicIPAddress TCP Bytes Forwarded DDoS(Bytes/Sec)|15|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Azure PublicIPAddress TCP Bytes forwarded DDoS.
+
+Graph|Azure PublicIPAddress UDP Bytes In DDoS(Bytes/Sec)|16|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Azure PublicIPAddress UDP Bytes DDoS.
+
+Graph|Azure PublicIPAddress UDP Bytes Dropped DDoS(Bytes/Sec)|17|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Azure PublicIPAddress UDP Bytes dropped DDoS.
+
+Graph|Azure PublicIPAddress UDP Bytes Forwarded DDoS(Bytes/Sec)|18|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Azure PublicIPAddress UDP Bytes forwarded DDoS.
+
+Graph|Azure PublicIPAddress If Under DDoS Attack|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Azure PublicIPAddress Under DDoS attack or not.
+
+Graph|Azure PublicIPAddress DDoS Trigger TCP Packets(Count/Sec)|20|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Azure PublicIPAddress TCP Packets to trigger DDoS mitigation.
+
+Graph|Azure PublicIPAddress DDoS Trigger UDP Packets(Count/Sec)|21|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Azure PublicIPAddress UDP Packets to trigger DDoS mitigation.
+
+Graph|Azure PublicIPAddress DDoS Trigger SYN Packets(Count/Sec)|22|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Azure PublicIPAddress SYN Packets to trigger DDoS mitigation.
+

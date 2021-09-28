@@ -1,0 +1,35 @@
+# --- GDF Version History ---
+#  1.0 - Initial version
+# GDF for redis base monitor
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Redis Shard Stats|10762|vector|28|0|Redis Metrics|Tier>Server>DatabaseType|Redis server shard stats provides metrics related to Average TTL, Memory Fragmentation Ratio, Used Memory Lua, Resync Requests, Total Request, Total I/O Bytes and Used Memory etc.
+
+Graph|Redis Shard AOF ReWrite In Progress|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Flag indicating a AOF rewrite operations is ongoing. If flag is off then set it's value 0 and set it's value 1 for on flag.
+Graph|Redis Shard Average TTL (ms)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average TTL(time to live) is calculated as an approximated keys with an expiration set.
+Graph|Redis Shard Blocked Clients|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of clients blocked by Redis.
+Graph|Redis Shard Connected Clients|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of clients connected to Redis.
+Graph|Redis Shard Evicted Keys/Sec|5|scalar|rate|CumToPS|-|0|NA|-1|-1|NA|NA|Number of objects evicted from the database per second.
+Graph|Redis Shard Expired Keys/Sec|6|scalar|rate|CumToPS|-|0|NA|-1|-1|NA|NA|Number of expired objects per sec. An expired object is an object with expired TTL that was deleted from the database.
+Graph|Redis Shard Total Keys|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of keys stored in databases.
+Graph|Redis Shard System Fork Duration (ms)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Duration of the System fork operation in milliseconds.
+Graph|Redis Shard User Fork Duration (ms)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Duration of the User fork operation in milliseconds.
+Graph|Redis Shard Instantaneous Input (kbps)|10|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The network's read rate per second in kilobits per second.
+Graph|Redis Shard Instantaneous Output (kbps)|11|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The network's write rate per second in kilobits per second.
+Graph|Redis Shard Memory Fragmentation Ratio|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The ratio between the memory allocated by redis and the memory as seen by the operating system.
+Graph|Redis Shard Used Memory LUA (MB)|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Used memory in megabytes by the Lua engine.
+Graph|Redis Shard Used Memory (MB)|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of Megabytes allocated by redis.
+Graph|Redis Shard Peak Memory Used (MB)|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Peak memory consumed by Redis in megabytes.
+Graph|Redis Shard Pubsub Channels|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Global number of pub/sub channels with client subscriptions.
+Graph|Redis Shard Pubsub Patterns|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Global number of pub/sub pattern with client subscriptions.
+Graph|Redis Shard RDB Changes|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of changes since the last dump.
+Graph|Redis Shard Read Hits/Sec|19|scalar|rate|CumToPS|-|0|NA|-1|-1|NA|NA| The number of read operations successfully per second.
+Graph|Redis Shard Read Misses/Sec|20|scalar|rate|CumToPS|-|0|NA|-1|-1|NA|NA| The number of read operations failed per second.
+Graph|Redis Shard Write Hits/Sec|21|scalar|rate|CumToPS|-|0|NA|-1|-1|NA|NA| The number of write operations successfully per second.
+Graph|Redis Shard Write Misses/Sec|22|scalar|rate|CumToPS|-|0|NA|-1|-1|NA|NA| The number of write failed per second.
+Graph|Redis Shard System CPU (Pct)|23|scalar|sample|-|-|0|NA|-1|-1|NA|NA|System CPU utilization by the Redis shard.
+Graph|Redis Shard User CPU (Pct)|24|scalar|sample|-|-|0|NA|-1|-1|NA|NA|User CPU utilization by the Redis shard.
+Graph|Redis Shard Full Synchronizations|25|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Number of times slaves have fully synchronized with master.
+Graph|Redis Shard Partial Error Synchronizations|26|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Number of times partial synchronization have failed to complete.
+Graph|Redis Shard Partial OK Synchronizations|27|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Number of times partial synchronization have completed.
+Graph|Redis Shard Total Requests|28|scalar|sample|CumToPS|-|0|NA|-1|-1|NA|NA|Total number of requests received by the redis server.

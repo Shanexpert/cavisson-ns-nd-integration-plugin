@@ -1,0 +1,622 @@
+#! /bin/sh
+
+# Basename is exported from nsi_upgrade shell
+HOME_DIR=/home/cavisson
+export WORK=$BASENAME
+RELEASE_CMD="nsi_get_linux_release_ex"
+DISTRO=`$RELEASE_CMD -d`
+
+#This method set up tours and some static URLs in apache
+setup_apache()
+{
+  # Stop apache process if running
+  # ApacheRunning=`netstat -nalt | grep -c ':8802'`
+  #if [ $ApacheRunning -ne 0 ];then
+  #   /etc/init.d/httpd stop | tee -a $LOG_FILE_NAME
+  #fi
+
+  #Fixed by Neeraj for copying in Apache Home (not in HPD ROOT)
+  #APACHE_HOME=$NS_WDIR
+  # Added check in 3.9.1 as in NetCloud machines running in FC17 and other
+  # kernel version, do not have apache installed and it is not needed
+  #if [ ! -f $APACHE_HOME/html ];then
+  #  echo "file $APACHE_HOME/html do not exist." >> $LOG_FILE_NAME
+  #  echo "Info: Apache is not installed in this machine. So skipping configuration and installation of tours application in apache" | tee -a $LOG_FILE_NAME    
+  #  return
+  #fi
+  cp $HPD_ROOT/apache/ns_doc_cgi.tar.gz $NS_WDIR/html 
+  cd $NS_WDIR/html
+  tar xvzf ns_doc_cgi.tar.gz >> $LOG_FILE_NAME
+  rm -f ns_doc_cgi.tar.gz
+  cp cgi-bin/* $NS_WDIR/cgi-bin
+  rm -rf cgi-bin
+
+  #Added by Arun on 03/25/08 
+  #if httpd.conf is not present then no need to move
+  #if [ -f  /etc/httpd/conf/httpd.conf ];then
+  #  mv  /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.last
+  #fi
+
+  #  cp $HPD_ROOT/apache/ports.conf /etc/apache2/ports.conf
+
+  # Start apache process if it was running
+  #if [ $ApacheRunning -ne 0 ];then
+  #  /etc/init.d/httpd start | tee -a $LOG_FILE_NAME
+  #fi
+}
+
+msgout_both "Stopping HPD releated processes"
+
+if [ "X$HPD_ROOT" = "X" ];then
+  export HPD_ROOT="$NS_WDIR/hpd"
+fi
+
+if [ "X$HPD_CMD" = "X" ];then
+  if [ "$WORK" == "work" ];then
+    export HPD_CMD=hpd
+    export RSYNC_CMD=rsync_daemon
+  else 
+    export HPD_CMD=hpd_$WORK
+    export RSYNC_CMD=rsync_daemon_$WORK
+  fi
+fi
+   
+#Added by Arun on 03/25/08
+#Need to Change this Condition.
+#if [ ! -d $HPD_ROOT ];then
+  mkdir -p $HPD_ROOT/bin
+  mkdir -p $NS_WDIR/cgi-bin
+  mkdir -p $NS_WDIR/html
+#fi
+
+NUM=`netstat -nalt | grep -c ':8801'`
+if [ $NUM -ne 0 ];then
+  $HPD_ROOT/bin/stop_img_server
+fi
+
+if [ -f /etc/init.d/$HPD_CMD ];then
+  msgout_both "Stopping HPD Server"
+  /etc/init.d/$HPD_CMD stop | tee -a $LOG_FILE_NAME
+fi
+
+#if any link is present on HPD_ROOT then read new link.
+if [ -L $HPD_ROOT ]; then
+   DIR_PATH=`readlink $HPD_ROOT`
+   export HPD_ROOT=$DIR_PATH
+   cd $DIR_PATH;
+else
+   cd $HPD_ROOT;
+fi
+
+cd .. 
+msgout_both "Removing directories of old version."
+rm -rf hpd/bin hpd/samples hpd/etc
+
+msgout_both "Uncompressing tar file - $GZ"
+cp $NS_WDIR/.rel/$GZ .
+tar xvzf $GZ >> $LOG_FILE_NAME
+if [ "$?" != 0 ];then
+  msgout_both "Error: Error in uncompressing the $GZ"
+  exit 1
+fi
+rm -rf $GZ
+cd hpd
+
+#In case of Redhat, some bianries need to be changed. 
+if [ $DISTRO == "Redhat" ];then
+  mv bin/nsu_hpd_rhel bin/nsu_hpd;
+  mv bin/nsu_hpd.debug_rhel bin/nsu_hpd.debug; 
+else
+  rm bin/nsu_hpd_rhel bin/nsu_hpd.debug_rhel;
+fi
+
+
+msgout_both "Updating HPD configuration files for $HPD_ROOT"
+
+#06 Oct 09 - Change in 3.5.0 release 
+#  Now hpd_doc.tar.gz will be untar always before it was conditionally check if [ ! -d "$HPD_ROOT/real" ] then untar.
+#  but now always untar because previously if customer want to update his changes then had to manually copy these files 
+#  so to avoid this we will always update these files at hpd up-gradation #time  
+tar xvzf samples/hpd_doc.tar.gz >> $LOG_FILE_NAME
+
+#Untar samples
+tar xvzf samples/hpd_samples_doc.tar.gz >> $LOG_FILE_NAME
+
+#Changed for virtual host on 3/11/08 by Neeraj
+if [ ! -d "$HPD_ROOT/control" ];then
+  mkdir -p  $HPD_ROOT/control
+fi
+if [ ! -d "$HPD_ROOT/logs" ];then
+  mkdir -p  $HPD_ROOT/logs
+fi
+#Changes done to create access log directory in hpd 
+mkdir -p $HPD_ROOT/logs/access_log/
+
+if [ ! -d "$HPD_ROOT/conf" ];then
+  mkdir -p  $HPD_ROOT/conf
+  cp samples/global_headers conf/
+  cp samples/redirect_urls  conf/
+  cp samples/304_urls  conf/
+  cp samples/hpd.conf  conf/
+  cp samples/no_rr_conf_file.sample  conf/reactive_replay.conf
+fi
+
+if [ ! -f $HPD_ROOT/conf/resFieldNameForward ];then
+  cp samples/resFieldNameForward  conf/
+fi
+
+#BUG21121: As Added JSON type in extensionGUI.type file, change file will not copy if conf dir is already exist.
+msgout_both "Copying extensionGUI.type file"
+cp samples/extension.type conf/
+cp samples/extensionGUI.type conf/
+
+if [ ! -f $HPD_ROOT/conf/response_code.conf ];then
+  msgout_both "Copying response_code.conf file"
+  cp samples/response_code.conf conf/
+fi
+ 
+mkdir -p $HPD_ROOT/correlation/default/default/services
+if [ ! -f $HPD_ROOT/correlation/correlation.conf ];then
+  mkdir -p  $HPD_ROOT/correlation
+  msgout_both "Copying correlation.conf file"
+  cp samples/correlation.conf correlation/
+fi
+
+if [ ! -d "$HPD_ROOT/users/default/cavisson" ];then
+  mkdir -p  $HPD_ROOT/users/default/cavisson
+  cp samples/auth_users.dat $HPD_ROOT/users/default/
+  echo -n x > $HPD_ROOT/users/default/cavisson/ftp_tiny.txt
+fi
+
+if [ ! -d "$HPD_ROOT/zones" ];then
+  mkdir -p  $HPD_ROOT/zones
+  cp samples/default.com $HPD_ROOT/zones/
+fi
+
+if [ ! -d "$HPD_ROOT/rum/reports/" ]; then
+  mkdir -p $HPD_ROOT/rum/reports
+fi
+
+if [ ! -d "$HPD_ROOT/samples/KOHLS_OR_STANDARD_PARSER/" ]; then
+  mkdir -p $HPD_ROOT/samples/KOHLS_OR_STANDARD_PARSER
+fi
+
+#check for keyword ENABLE_JCP_PARSER
+parser_signal=`grep "^nv.clientId" $NS_WDIR/webapps/sys/config.ini|awk -F "= " '{print $2}'`
+
+move_prev_parsers()
+{
+    #create tmp directory
+    mkdir -p $HPD_ROOT/rum/reports/.prev_parsers
+    mv $HPD_ROOT/rum/reports/*.c $HPD_ROOT/rum/reports/.prev_parsers
+    mv $HPD_ROOT/rum/reports/*.aprof $HPD_ROOT/rum/reports/.prev_parsers
+}
+
+copy_standard_parser()
+{
+  #set standard parser directory.
+  STANDARD_DIR=$HPD_ROOT/samples/KOHLS_OR_STANDARD_PARSER
+
+  if [ -f $STANDARD_DIR/nvpageaggregateparser.aprof ]; then
+    cp $STANDARD_DIR/nvpageaggregateparser.aprof $HPD_ROOT/rum/reports/
+  fi
+  
+  if [ -f $STANDARD_DIR/nvpageaggregateparser.c ]; then
+    cp $STANDARD_DIR/nvpageaggregateparser.c $HPD_ROOT/rum/reports/
+  fi
+
+  if [ -f $STANDARD_DIR/nvresourceaggregateparser.aprof ]; then
+    cp $STANDARD_DIR/nvresourceaggregateparser.aprof $HPD_ROOT/rum/reports/
+  fi
+  
+  if [ -f $STANDARD_DIR/nvresourceaggregateparser.c ]; then
+    cp $STANDARD_DIR/nvresourceaggregateparser.c $HPD_ROOT/rum/reports/
+  fi
+
+  if [ -f $STANDARD_DIR/nvsessionaggregateparser.aprof ]; then
+    cp $STANDARD_DIR/nvsessionaggregateparser.aprof $HPD_ROOT/rum/reports/
+  fi
+  
+  if [ -f $STANDARD_DIR/nvsessionaggregateparser.c ]; then
+    cp $STANDARD_DIR/nvsessionaggregateparser.c $HPD_ROOT/rum/reports/
+  fi
+ 
+  if [ -f $STANDARD_DIR/nvPagePerformanceAndConversionRate.aprof ]; then
+    cp $STANDARD_DIR/nvPagePerformanceAndConversionRate.aprof $HPD_ROOT/rum/reports/
+  fi
+
+  if [ -f $STANDARD_DIR/nvPagePerformanceAndConversionRate.c ]; then
+    cp $STANDARD_DIR/nvPagePerformanceAndConversionRate.c $HPD_ROOT/rum/reports/
+  fi
+
+# if [ -f $HPD_ROOT/samples/nvpageNavigationParser.aprof ]; then
+#    cp $HPD_ROOT/samples/nvpageNavigationParser.aprof $HPD_ROOT/rum/reports/
+#  fi
+#
+#  if [ -f $HPD_ROOT/samples/nvpageNavigationParser.c ]; then
+#    cp $HPD_ROOT/samples/nvpageNavigationParser.c $HPD_ROOT/rum/reports/
+#  fi
+
+  if [ -f $STANDARD_DIR/nvaggregatemapparser.aprof ]; then
+    cp $STANDARD_DIR/nvaggregatemapparser.aprof $HPD_ROOT/rum/reports/
+  fi
+  
+  if [ -f $STANDARD_DIR/nvaggregatemapparser.c ]; then
+    cp $STANDARD_DIR/nvaggregatemapparser.c $HPD_ROOT/rum/reports/
+  fi
+
+}
+
+set_if_nf_in_server_conf()
+{
+  FILE=$1
+  
+  IS_NF=`cat $FILE | grep "^CONFIG" | cut -d' ' -f2`
+  if [ "XX$IS_NF" == "XXNF" ];then
+    sed -e 's/NOAppliance/NFAppliance/g' $NS_WDIR/topology/NetOcean/Server.conf >/tmp/Server.conf
+    mv /tmp/Server.conf $NS_WDIR/topology/NetOcean/Server.conf
+  fi 
+}
+
+
+nv_copy_files()
+{
+  
+  SUB_TYPE=`nsi_show_config -s| sed -n '2p'`
+  
+  #comment MAX_REQUEST_VALIDATE_SIZE if m/c is NV to get the complete post request.
+  if [[ "x`nsi_show_config`" == "xNV" || "$SUB_TYPE" == "ALL" || "$SUB_TYPE" == *"NV"* ]]; then
+   sed -i 's/^MAX_REQUEST_VALIDATE_SIZE/#MAX_REQUEST_VALIDATE_SIZE/g' $HPD_ROOT/conf/hpd.conf
+  fi
+
+  if [ ! -d "$HPD_ROOT/rum/config" ];then
+    mkdir -p  $HPD_ROOT/rum/config
+  fi
+  #Update rum_metadata table all the time.
+  cp $HPD_ROOT/samples/rum_metadata.csv $HPD_ROOT/rum/config/ 
+
+  cp $HPD_ROOT/samples/default_parser_setting.csv $HPD_ROOT/rum/config/ 
+
+
+  #move previous parsers
+  move_prev_parsers
+
+  #copy parser on the basis of parser_signal
+  if [ "$parser_signal" == "jcpstore " -o "$parser_signal" == "JCPSTORE " ]; then
+    #copy Standard aggregate parser 
+   if [  -f $HPD_ROOT/samples/nvresourceaggregateparser.c ];then
+     cp $HPD_ROOT/samples/nvresourceaggregateparser.c $HPD_ROOT/rum/reports/
+   fi
+
+   if [  -f $HPD_ROOT/samples/nvresourceaggregateparser.aprof ];then
+     cp $HPD_ROOT/samples/nvresourceaggregateparser.aprof $HPD_ROOT/rum/reports/
+   fi
+
+   if [ -f $HPD_ROOT/samples/nvpageaggregateparser.c ];then
+     cp $HPD_ROOT/samples/nvpageaggregateparser.c $HPD_ROOT/rum/reports/
+   fi
+
+   if [ -f $HPD_ROOT/samples/nvpageaggregateparser.aprof ];then
+     cp $HPD_ROOT/samples/nvpageaggregateparser.aprof $HPD_ROOT/rum/reports/
+   fi
+
+   if [  -f $HPD_ROOT/samples/nvsilversessionaggregateparser.c ];then
+     cp $HPD_ROOT/samples/nvsilversessionaggregateparser.c  $HPD_ROOT/rum/reports/
+   fi
+
+    if [ -f $HPD_ROOT/samples/nvsilversessionaggregateparser.aprof ]; then
+     cp $HPD_ROOT/samples/nvsilversessionaggregateparser.aprof $HPD_ROOT/rum/reports/
+   fi
+   
+   if [ -f $HPD_ROOT/samples/JCPsilverSessionWiseAggTableParser.c ]; then
+     cp $HPD_ROOT/samples/JCPsilverSessionWiseAggTableParser.c $HPD_ROOT/rum/reports/
+   fi
+
+   if [ -f $HPD_ROOT/samples/JCPsilverSessionWiseAggTableParser.aprof ]; then
+     cp $HPD_ROOT/samples/JCPsilverSessionWiseAggTableParser.aprof $HPD_ROOT/rum/reports/
+   fi
+  
+   if [ -f $HPD_ROOT/samples/JCPPageWiseAggTableParser.c ]; then
+     cp $HPD_ROOT/samples/JCPPageWiseAggTableParser.c $HPD_ROOT/rum/reports/
+   fi
+
+   if [ -f $HPD_ROOT/samples/jcpAggregatePage.aprof ]; then
+     cp $HPD_ROOT/samples/jcpAggregatePage.aprof $HPD_ROOT/rum/reports/
+   fi
+   
+   if [ -f $HPD_ROOT/samples/nvpageNavigationParser.c ]; then
+     cp $HPD_ROOT/samples/nvpageNavigationParser.c $HPD_ROOT/rum/reports/
+   fi
+
+   if [ -f $HPD_ROOT/samples/nvpageNavigationParser.aprof ]; then
+     cp $HPD_ROOT/samples/nvpageNavigationParser.aprof $HPD_ROOT/rum/reports/
+   fi
+
+    #check for kohls parser parser
+   elif [ "$parser_signal" == "kohls " -o "$parser_signal" == "KOHLS " -o "$parser_signal" == "KOHLS_POC " -o "$parser_signal" == "kohls_poc " ];then
+     #copy standard parsers
+     copy_standard_parser
+
+     if [ -f $HPD_ROOT/samples/KOHLS_OR_STANDARD_PARSER/NVEntryPageSessParser.c ]; then
+        cp $HPD_ROOT/samples/KOHLS_OR_STANDARD_PARSER/NVEntryPageSessParser.c $HPD_ROOT/rum/reports/
+     fi
+
+     if [ -f $HPD_ROOT/samples/KOHLS_OR_STANDARD_PARSER/NVEntryPageSessParser.aprof ]; then
+       cp $HPD_ROOT/samples/KOHLS_OR_STANDARD_PARSER/NVEntryPageSessParser.aprof $HPD_ROOT/rum/reports/
+     fi
+
+     if [ -f $HPD_ROOT/samples/KOHLS_OR_STANDARD_PARSER/nvPagePerformanceAndConversionRate.c ]; then
+       cp $HPD_ROOT/samples/KOHLS_OR_STANDARD_PARSER/nvPagePerformanceAndConversionRate.c $HPD_ROOT/rum/reports/
+     fi
+
+     if [ -f $HPD_ROOT/samples/KOHLS_OR_STANDARD_PARSER/nvPagePerformanceAndConversionRate.aprof ]; then
+       cp $HPD_ROOT/samples/KOHLS_OR_STANDARD_PARSER/nvPagePerformanceAndConversionRate.aprof $HPD_ROOT/rum/reports/
+     fi
+ 
+     if [ -f $HPD_ROOT/samples/KOHLS_OR_STANDARD_PARSER/domainwiseaggregateparser.aprof ]; then
+       cp $HPD_ROOT/samples/KOHLS_OR_STANDARD_PARSER/domainwiseaggregateparser.aprof $HPD_ROOT/rum/reports/
+     fi
+  
+     if [ -f $HPD_ROOT/samples/KOHLS_OR_STANDARD_PARSER/domainwiseaggregateparser.c ]; then
+       cp $HPD_ROOT/samples/KOHLS_OR_STANDARD_PARSER/domainwiseaggregateparser.c $HPD_ROOT/rum/reports/
+     fi
+  else
+    #copy standard parsers
+    copy_standard_parser
+  fi
+
+  # copy system events file 
+  if [ ! -f $HPD_ROOT/rum/config/NVSystemEvents.csv ]; then
+    cp $HPD_ROOT/samples/NVSystemEvents.csv $HPD_ROOT/rum/config/ 
+  fi
+
+  if [ ! -f $HPD_ROOT/rum/config/rum.conf ]; then
+    cp $HPD_ROOT/samples/rum.conf $HPD_ROOT/rum/config/ 
+  fi
+
+  if [ ! -f $HPD_ROOT/rum/config/NVTerminalMetadata.csv ]; then
+    cp $HPD_ROOT/samples/NVTerminalMetadata.csv $HPD_ROOT/rum/config/ 
+  fi
+
+  if [ ! -f $HPD_ROOT/rum/config/NVStoreMetaDataTable.csv ]; then
+    cp $HPD_ROOT/samples/NVStoreMetaDataTable.csv $HPD_ROOT/rum/config/ 
+  fi
+
+  if [ ! -f $HPD_ROOT/rum/config/store_control.json ]; then
+    cp $HPD_ROOT/samples/store_control.json $HPD_ROOT/rum/config/
+  fi
+
+  if [ ! -f $HPD_ROOT/rum/config/GeoMapLatLonLocationMetaData.csv ]; then
+    cp $HPD_ROOT/samples/GeoMapLatLonLocationMetaData.csv $HPD_ROOT/rum/config/ 
+  fi
+
+  if [ ! -f $HPD_ROOT/rum/config/NVStoreTable.csv ]; then
+    cp $HPD_ROOT/samples/NVStoreTable.csv $HPD_ROOT/rum/config/ 
+  fi
+  
+  if [ ! -f $HPD_ROOT/rum/config/NVStoreMetaDataTable_414.csv ]; then
+    cp $HPD_ROOT/samples/NVStoreMetaDataTable_414.csv $HPD_ROOT/rum/config/ 
+  fi
+
+  if [ ! -f $HPD_ROOT/rum/config/NVStoreMetaDataTable_1154.csv ]; then
+    cp $HPD_ROOT/samples/NVStoreMetaDataTable_1154.csv $HPD_ROOT/rum/config/
+  fi
+
+  if [ ! -f $HPD_ROOT/rum/config/NVStoreTerminalTable.csv ]; then
+    cp $HPD_ROOT/samples/NVStoreTerminalTable.csv $HPD_ROOT/rum/config/ 
+  fi
+
+  #Copy GEOMAP File.
+  cp $HPD_ROOT/samples/NVGeoMap.csv $HPD_ROOT/rum/config/
+
+  #Copy GeoMapLocationMetaData.csv 
+  cp $HPD_ROOT/samples/GeoMapLocationMetaData.csv $HPD_ROOT/rum/config
+  cp $HPD_ROOT/samples/GeoMapLatLonLocationMetaData.csv $HPD_ROOT/rum/config
+  cp $HPD_ROOT/samples/GeoMapLatLonLocationMetaData_414.csv $HPD_ROOT/rum/config
+
+  # copy location metadata file 
+  if [ ! -f $HPD_ROOT/rum/config/NVLocationMetaData.csv ]; then
+    cp $HPD_ROOT/samples/NVLocationMetaData.csv $HPD_ROOT/rum/config/ 
+  fi
+  
+  # copy default cb config file 
+  if [ ! -f $HPD_ROOT/rum/config/nv_cb_config.json ]; then
+    cp $HPD_ROOT/samples/nv_default_cb_config.json $HPD_ROOT/rum/config/nv_cb_config.json
+  fi
+ 
+ 
+  # copy location ip range csv in $HPD_ROOT/rum/config
+  if [ ! -f $HPD_ROOT/rum/config/location_ip_range.csv ]; then
+    cp samples/location_ip_range.csv $HPD_ROOT/rum/config/ 
+  fi
+  
+  # copy new location ip range csv in $HPD_ROOT/rum/config
+  if [ ! -f $HPD_ROOT/rum/config/ip_location_range.gz ]; then
+    #cp $HPD_ROOT/samples/ip_location_range.gz $HPD_ROOT/rum/config/
+    tar -xf $HPD_ROOT/samples/ip_location_range.gz -C $HPD_ROOT/rum/config/
+  fi
+  # copy new ipv6location ip range csv in $HPD_ROOT/rum/config
+  if [ ! -f $HPD_ROOT/rum/config/ipv6_location_range.gz  ]; then
+    #cp $HPD_ROOT/samples/ip_location_range.gz $HPD_ROOT/rum/config/
+    tar -xf $HPD_ROOT/samples/ipv6_location_range.gz  -C $HPD_ROOT/rum/config/
+  fi
+
+  ## Copy the Netvision scenario to scenarios directory unconditionally.
+  if [ ! -f $NS_WDIR/scenarios/default/default/nv.conf ];then
+    cp $HPD_ROOT/samples/nv.conf $NS_WDIR/scenarios/default/default/nv.conf
+  fi
+
+  ## Copy the NetOcean scenario to scenarios directory unconditionally.
+  cp $HPD_ROOT/samples/no_mon/no.conf $NS_WDIR/scenarios/default/default/no.conf
+
+  ##Remove commented data
+  sed -e '/^\s*$/d' -e '/^#.*/d' $HPD_ROOT/conf/hpd.conf >/tmp/hpd.conf 
+
+  ##FOR NO CM
+  HPD_PROGRESS_ENABLED=`grep PROGRESS_ENABLED /tmp/hpd.conf | cut -d ' ' -f3 `
+  if [ "X$HPD_PROGRESS_ENABLED" == "X" ]; then
+    HPD_PROGRESS_ENABLED=10000
+  fi
+
+  #Get Server address to replace in nv.conf according to different controllers in a machine.
+  SERVER_IP=`grep HPD_SERVER_ADDRESS /tmp/hpd.conf | cut -d ' ' -f2 `
+  HPD_PORT=`grep HPD_PORT /tmp/hpd.conf | cut -d ' ' -f2 | cut -d , -f1 `
+  URL=$SERVER_IP":"$HPD_PORT
+  if [ "X$SERVER_IP" != "X" ]; then
+     #add condition to not replace LPS server
+     #sed -e 's/127.0.0.1/'"$URL"'/g' $NS_WDIR/scenarios/default/default/nv.conf >/tmp/nv.conf 
+     grep -l ^SGRP $NS_WDIR/scenarios/default/default/nv.conf|xargs sed -i '/SGRP/s/127.0.0.1/'"$URL"'/'
+     #mv /tmp/nv.conf $NS_WDIR/scenarios/default/default/nv.conf
+     rm -f /tmp/hpd.conf
+  fi
+
+  ## Copy Netvision Monitor profile to mprof
+  if [ ! -d $NS_WDIR/mprof/NetVision ]; then
+    mkdir -p $NS_WDIR/mprof/NetVision
+  fi
+
+  #Change according to the controller name 
+  CONTROLLER=`echo $HPD_ROOT |cut -d'/' -f3`
+  MPROF=$HPD_ROOT/samples/nv.mprof
+  cp $MPROF $NS_WDIR/mprof/NetVision/nv.mprof
+
+  if [ "X$CONTROLLER" != "Xwork" ]; then
+    sed -e 's/work/'"$CONTROLLER"'/g' $MPROF >$NS_WDIR/mprof/NetVision/nv.mprof 
+  fi 
+
+  ## Copy Netvision topology to topology directory
+
+  if [ ! -d $NS_WDIR/topology/NetVision ]; then
+    mkdir -p $NS_WDIR/topology/NetVision
+  fi
+  cp $HPD_ROOT/samples/Server.conf $NS_WDIR/topology/NetVision/
+  nsi_show_config -s | grep NVSM >/dev/null 2>&1
+  if [ $? -eq 0 ];then
+    sed -i "s/NVAppliance/Controller/g" $NS_WDIR/topology/NetVision/Server.conf >/dev/null 2>&1
+  fi
+  cp $HPD_ROOT/samples/Tier.conf $NS_WDIR/topology/NetVision/
+  cp $HPD_ROOT/samples/Instance.conf $NS_WDIR/topology/NetVision/
+
+  ## Copy NetOcean Monitor profile to mprof
+  if [ ! -d $NS_WDIR/mprof/NetOcean ]; then
+    mkdir -p $NS_WDIR/mprof/NetOcean
+  fi
+
+  #Change according to the controller name 
+  CONTROLLER=`echo $HPD_ROOT |cut -d'/' -f3`
+  MPROF=$HPD_ROOT/samples/no_mon/no.mprof
+  cp $MPROF $NS_WDIR/mprof/NetOcean/no.mprof
+
+  ## Copy NetOcean topology to topology directory
+
+  if [ ! -d $NS_WDIR/topology/NetOcean ]; then
+    mkdir -p $NS_WDIR/topology/NetOcean
+  fi
+
+  cp $HPD_ROOT/samples/no_mon/Server.conf $NS_WDIR/topology/NetOcean/
+  cp $HPD_ROOT/samples/no_mon/Tier.conf $NS_WDIR/topology/NetOcean/
+  cp $HPD_ROOT/samples/no_mon/Instance.conf $NS_WDIR/topology/NetOcean/
+
+  ##If (CONFIG = NF), put NFAppliance in Server.conf 
+  #Controller_name=`basename $NS_WDIR`
+  #Anshul: shifting this line above in this function as we needed it.
+  CONFIG_FILE=$HOME_DIR/etc/cav_$Controller_name.conf
+  SYSTEM_CONFIG_FILE=$HOME_DIR/etc/cav.conf
+
+  if [ -f $CONFIG_FILE ]; then
+    set_if_nf_in_server_conf $CONFIG_FILE
+  elif [ -f $SYSTEM_CONFIG_FILE ];then
+    set_if_nf_in_server_conf $SYSTEM_CONFIG_FILE 
+  fi
+}
+
+update_cert_list()
+{
+  msgout_both "update_cert_list| To update the details of server.pem and client.pem in cert_list.dat"
+  CERT_DIR=$NS_WDIR/cert
+  NO_TEMP_CERT_DIR="/tmp/NO_cert_tmp"
+  mkdir -p $NO_TEMP_CERT_DIR
+  cp $CERT_DIR/server.pem $CERT_DIR/client.pem /tmp $NO_TEMP_CERT_DIR/
+  
+  nsu_del_cert server.pem 
+  nsu_del_cert client.pem 
+  
+  cp $NO_TEMP_CERT_DIR/server.pem $NO_TEMP_CERT_DIR/client.pem $CERT_DIR/
+  nsu_add_cert server.pem PEM
+  nsu_add_cert client.pem PEM
+  rm -rf $NO_TEMP_CERT_DIR >> $LOG_FILE_NAME
+}
+
+nv_copy_files
+#untar the services in  correlation/samples/
+cp samples/sample_services.tar.gz .
+tar xvzf sample_services.tar.gz >> $LOG_FILE_NAME
+rm -f sample_services.tar.gz >> $LOG_FILE_NAME
+
+#$HPD_ROOT/bin/set_production
+
+#Changed for virtual host on 3/11/08 by Neeraj
+#Need to check for backward compatiblity
+if [ -d $HPD_ROOT/real/default/file_set/dir00000 ]; then
+  cp -r $HPD_ROOT/real/default/file_set/dir00000 file_set
+else
+  cp -r $HPD_ROOT/real/file_set/dir00000 file_set
+fi
+
+#Set it is not set for main controller
+#if [ "X$SCHEDULER_CMD" == "X" ]; then
+#  RSYNC_CMD=rsync_daemon
+#fi
+#sudo chown -R cavisson:cavisson $HPD_ROOT
+
+if [ "$WORK" == "work" ];then
+  setup_apache
+else
+  msgout_both "Not setting apache as this is not work controller"
+fi
+cp /etc/init.d/$HPD_CMD $HPD_ROOT/bin/hpd
+cp /etc/init.d/$RSYNC_CMD $HPD_ROOT/bin/rsync_daemon
+# Added this check for adding controller using nsu_manage_controller
+# This is to prevent starting of server as config files do not have correct ports
+if [ "$CONFIG" == "NS>NO" -o "$CONFIG" == "NS" -o "$CONFIG" == "NDE" -o "$CONFIG" == "NC" -o  "$CONFIG" == "NCH" ];then
+  msgout_both "Not Starting HPD engine and not setting to auto restart on reboot as this is not NO machine. The configuration of this Machine is $CONFIG"
+  exit 0
+fi
+#check if TR no. not preset in config.ini then enter it.
+TR_NUM=`egrep -m1 "^nde.testRunNum" $NS_WDIR/webapps/sys/config.ini 2>/dev/null|sed 's/^.*=\s*\([0-9]*\).*$/\1/'`
+if [ -z $TR_NUM ];then
+  TR_NUM=`nsi_get_next_test_run_id`
+  DATE=`date`
+  echo "#Test run is entered by hpd build upgrade shell on $DATE" >> $NS_WDIR/webapps/sys/config.ini 
+  echo "nde.testRunNum=$TR_NUM" >> $NS_WDIR/webapps/sys/config.ini
+fi
+
+#Update hpd service
+sudo $CavService $BASENAME 5 hpd
+
+if [ -f /etc/init.d/$HPD_CMD ];then
+  # The check for configuration has been moved since we are doing in the nsi_upgade.sh, so no need of doing it again here :Anuj
+  msgout_both "Starting $HPD_CMD "
+  HPD_CLUSTER_NEW_MODE=`cat $HPD_ROOT/conf/hpd.conf | grep "HPD_CLUSTER" | grep -v ^#| awk -F' ' '{print $2}'`
+  if [ "XX$HPD_CLUSTER_NEW_MODE" == "XX2" ]; then
+     pkill -f $HPD_ROOT/bin/nv_cluster_controller
+     pkill -f $HPD_ROOT/bin/nv_cluster_controller_check_run
+  fi
+  /etc/init.d/$HPD_CMD start | tee -a $LOG_FILE_NAME
+#  sudo update-rc.d $HPD_CMD  defaults
+fi
+
+if [ -f /etc/init.d/$SCHEDULER_CMD ]; then
+  /etc/init.d/$SCHEDULER_CMD restart
+fi
+
+if [ -f /etc/init.d/$RSYNC_CMD ]; then
+  /etc/init.d/$RSYNC_CMD restart
+fi
+
+#To update the details of server.pem and client.pem in cert_list.dat
+update_cert_list
+
+
+#Currently it is not starting Apache and Image Server if stopped by it
+exit 0

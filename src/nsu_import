@@ -1,0 +1,217 @@
+#!/bin/bash
+# Modification History:
+#   18/11/10: Abhishek Sharan- Add code to handle one more argument from command input as test duration
+#   10/07/12: Manmeet - Enhanced echo strings
+#
+
+check_and_create_dummy_page_dump_csv()
+{
+  if [ -f $NS_WDIR/logs/TR$TRNUM/.curPartition ]; then
+    FIRST_PARTITION=`grep "FirstPartitionIdx" $NS_WDIR/logs/TR$TRNUM/.curPartition | cut -d= -f2`
+    if [ "X$FIRST_PARTITION" != "X" ];then
+      ls -l $NS_WDIR/logs/TR$TRNUM/$FIRST_PARTITION/reports/csv/page_dump.csv > /dev/null 2>&1
+      if [ $? -eq  0 ];then 
+        return
+      fi
+      CSV_PATH=$NS_WDIR/logs/TR$TRNUM/*/reports/csv
+    fi
+  else
+    CSV_PATH=$NS_WDIR/logs/TR$TRNUM/reports/csv
+    if [ -f $CSV_PATH/page_dump.csv ];then
+      return
+    fi
+  fi
+
+  find $CSV_PATH -type d -exec touch {}/page_dump.csv \;
+  if [ $? -eq 0 ];then
+    echo "Pagedump.csv successfully created"
+  fi
+}
+
+TRNUM=$1
+
+# set a flag to define TR type for partitions in case of continuous monitoring
+FLAG_FOR_OLD_TR="" #NOT being used
+# Including nsi_db_utils
+. $NS_WDIR/bin/nsi_db_utils
+
+#Clean cache directory
+clean_cache_dir $1
+
+get_db_trace_level
+
+BASE_DIR=""
+CSV_ARRAY="hat.csv  hrt.csv  pgt.csv  prc.csv  rpf.csv  spf.csv  src.csv  sst.csv  trc.csv  trt.csv  upf.csv  urc.csv  urt.csv ect.csv log_phase_table.csv tprc.csv"
+MISSING_FILE=""
+LC_FLAG=0
+
+#Checking Test number is valid or not
+echo "nsu_import: Verifying test run directory ..."
+if [ -d $PWD/TR$1 ]; then
+  BASE_DIR=$PWD
+elif [ -d $NS_WDIR/logs/TR$1 ]; then
+  BASE_DIR=$NS_WDIR/logs
+else
+  echo "Error: Test run number $1 is not a valid test run number"
+  exit -1
+fi
+
+echo "... found test run directory: '$BASE_DIR/TR$1'."
+
+# checking whether the test is of ND or NS
+check_is_nd_enabled
+
+# checking the TR whether it is older or newer with repect to contionuos monitoring
+# Considering that if the test is run before 2014, then consider it as old TR   
+# and migrate will be done for that TR otherwise not
+read_start_time_and_set_flag $1
+
+check_and_create_dummy_page_dump_csv
+
+ND_APPSERVER_INSTANCE_THREAD_CHECK_FLAG=0
+#Migrate csv's
+. $NS_WDIR/bin/nsi_migrate_csv $1
+
+# Create database tables for test run
+# Creating tables based on the new design of partitions in continuous monitoring
+# Here if the test run is old, then create tables according to old fields, otherwise create new tables with new field  
+# Removing the csv.offset for test run
+echo "nsu_import: Removing ND and NS csv.offset......"
+find -L $NS_WDIR/logs/TR$1/ -type f -name .*.csv.offset -exec rm {} \;
+CHECK=`find -L $NS_WDIR/logs/TR$1/ -type f -name .*.csv.offset -exec ls {} \;`
+if [ "X$CHECK" = "X" ]; then
+  echo "nsu_import: NS and ND csv.offset successful removed"
+else
+  echo "nsu_import: Error in removing offset files"
+  exit 1
+fi
+echo "nsu_import: Dropping NS Tables......"
+$NS_WDIR/bin/db_tbl_mgr -t $1 -m NS -d
+echo "nsu_import: Creating NS database tables and indexes ..."
+$NS_WDIR/bin/db_tbl_mgr -t $1 -m NS -c -i 
+echo "nsu_import: ... Done NS creating tables and indexes."
+
+# creating tables for ND enabled tests
+if [ $ISND != 0 ];then
+  NDP_PID=`cat $BASE_DIR/TR$1/.ndp.pid` 
+  if [ "X$NDP_PID" != "X" ];then
+    echo "nsu_import: Dropping ND Tables......"
+    $NS_WDIR/bin/db_tbl_mgr -t $1 -m ND -d
+    echo "nsu_import: Creating ND database tables and indexes ..."
+    $NS_WDIR/bin/db_tbl_mgr -t $1 -m ND -c -i
+    echo "nsu_import: ND database tables and indexes created succesfully ..."
+
+    if [ -d "/proc/${NDP_PID}" ];then
+      #NDP still running 
+      echo "nsu_import: Now going to run ndu_db_upload with running mode 1 as ndp is still running."
+      START=`date +%s`
+      get_topology_name_and_vector_separator
+      ndu_db_upload -t $1 -P $NDP_PID -m 1 -N $TOPOLOGY_NAME -V $VECTOR_SEPARATOR -r 1 -f $ND_APPSERVER_INSTANCE_THREAD_CHECK_FLAG
+      END=`date +%s`
+      DIFF=`expr $END - $START`
+      echo "nsu_import: ndu_db_upload finished in $DIFF seconds."
+      ISND=0
+    fi 
+  fi
+fi
+
+echo "nsu_import: Running nsu_db_upload"
+START=`date +%s`
+nsu_db_upload -t $1 -l $TRACE_LEVEL
+
+if [ -f $NS_WDIR/logs/TR$TRNUM/.curPartition ]; then
+  nsi_upload_tmp_table $1 $NS_WDIR "common_files"
+else 
+  nsi_upload_tmp_table $1 $NS_WDIR
+fi 
+
+END=`date +%s`
+DIFF=`expr $END - $START`
+echo "nsu_import: nsu_db_upload finished in $DIFF seconds"
+if [ "X$ISND" == "X1" ]; then
+  echo "nsu_import: Running ndu_db_upload"
+  START=`date +%s`
+  get_topology_name_and_vector_separator
+  ndu_db_upload -t $1 -N $TOPOLOGY_NAME -V $VECTOR_SEPARATOR -f $ND_APPSERVER_INSTANCE_THREAD_CHECK_FLAG 
+  END=`date +%s`
+  DIFF=`expr $END - $START`
+  echo "nsu_import: ndu_db_upload finished in $DIFF seconds"
+fi
+
+sleep 1 #Sleep for 1 second to let database digest the recent updates
+echo "Checking number of records in all tables ..."
+psql test cavisson <<+
+SELECT count(*) AS RunProfile_$1          FROM RunProfile_$1;
+SELECT count(*) AS UserProfile_$1         FROM UserProfile_$1;
+SELECT count(*) AS SessionProfile_$1      FROM SessionProfile_$1;
+SELECT count(*) AS SessionTable_$1        FROM SessionTable_$1;
+SELECT count(*) AS TransactionTable_$1    FROM TransactionTable_$1;
+SELECT count(*) AS PageTable_$1           FROM PageTable_$1;
+SELECT count(*) AS URLTable_$1            FROM URLTable_$1;
+SELECT count(*) AS RecordedServerTable_$1 FROM RecordedServerTable_$1;
+SELECT count(*) AS ActualServerTable_$1   FROM ActualServerTable_$1;
+SELECT count(*) AS SessionRecord_$1       FROM SessionRecord_$1;
+SELECT count(*) AS TransactionRecord_$1   FROM TransactionRecord_$1;
+SELECT count(*) AS PageRecord_$1          FROM PageRecord_$1;
+SELECT count(*) AS URLRecord_$1           FROM URLRecord_$1;
+SELECT count(*) AS ErrorCodes_$1          FROM ErrorCodes_$1;
+SELECT count(*) AS LogPhaseTable_$1       FROM LogPhaseTable_$1;
+SELECT count(*) AS TransPageRecord_$1     FROM TransPageRecord_$1;
+SELECT count(*) AS PageDumpRecord_$1      FROM PageDumpRecord_$1;
+SELECT count(*) AS AlertHistory_$1        FROM AlertHistory_$1;
+SELECT count(*) AS AlertActions_$1        FROM AlertActions_$1;
++
+
+if [ $ISND != 0 ];then
+  echo "nsu_import: Checking number of records in all tables ..."
+  psql test cavisson <<+
+  SELECT count(*) AS FlowPath_$1				FROM FlowPath_$1;
+  SELECT count(*) AS MetaData_$1				FROM MetaData_$1;
+  SELECT count(*) AS MethodTiming_$1				FROM MethodTiming_$1;
+  SELECT count(*) AS NDFunctionalGroup_$1			FROM NDFunctionalGroup_$1;
+  SELECT count(*) AS NDAppLogs_$1				FROM NDAppLogs_$1;
+  SELECT count(*) AS NDSQL_$1					FROM NDSQL_$1;
+  SELECT count(*) AS NDSQLRecord_$1 				FROM NDSQLRecord_$1;
+  SELECT count(*) AS NDSQLTiming_$1 				FROM NDSQLTiming_$1;
+  SELECT count(*) AS NDTier_$1					FROM NDTier_$1;
+  SELECT count(*) AS NDAppServer_$1				FROM NDAppServer_$1;
+  SELECT count(*) AS NDAppInstance_$1				FROM NDAppInstance_$1;
+  SELECT count(*) AS NDBCIArg_$1				FROM NDBCIArg_$1;
+  SELECT count(*) AS NDAutoSensorHotSpotThreads_$1		FROM NDAutoSensorHotSpotThreads_$1;
+  SELECT count(*) AS NDHTTPHeaderMetaData_$1			FROM NDHTTPHeaderMetaData_$1;
+  SELECT count(*) AS NDHTTPCaptureHeader_$1			FROM NDHTTPCaptureHeader_$1;
+  SELECT count(*) AS NDExceptionClass_$1			FROM NDExceptionClass_$1;
+  SELECT count(*) AS NDExceptionThrowingClass_$1		FROM NDExceptionThrowingClass_$1;
+  SELECT count(*) AS NDExceptionThrowingMethod_$1		FROM NDExceptionThrowingMethod_$1;
+  SELECT count(*) AS NDExceptionStackTrace_$1			FROM NDExceptionStackTrace_$1;
+  SELECT count(*) AS NDExceptionMessage_$1			FROM NDExceptionMessage_$1;
+  SELECT count(*) AS NDExceptionCause_$1			FROM NDExceptionCause_$1;
+  SELECT count(*) AS NDExceptions_$1				FROM NDExceptions_$1;
+  SELECT count(*) AS NDMethodTiming_$1				FROM NDMethodTiming_$1;
+  SELECT count(*) AS NDJMS_$1					FROM NDJMS_$1;
++
+fi
+
+echo "nsu_import: ... Done checking number of records in all tables."
+
+#Bug 64825 -- If user runs nsu_import again on same testrun and testrun is imported from machine whose build is older than reuse normalised                  changes
+
+CSV_PATH="$NS_WDIR/logs/TR$TRNUM/nd/csv"
+
+if [ -d $CSV_PATH -a "X$ND_APPSERVER_INSTANCE_THREAD_CHECK_FLAG" == "X1" ];then
+  ACT_FIELD=`head -1 "$CSV_PATH/NDAppServer.csv" | awk -F ',' '{ print NF }'`
+  if [ "X$ACT_FIELD" != "X" ]; then
+    if [ $ACT_FIELD -eq 6 ]; then
+      sed -i 's/,,$//g' "$CSV_PATH/NDAppServer.csv"
+    fi
+  fi
+
+  ACT_FIELD=`head -1 "$CSV_PATH/NDAppInstance.csv" | awk -F ',' '{ print NF }'`
+  if [ "X$ACT_FIELD" != "X" ]; then
+    if [ $ACT_FIELD -eq 8 ]; then
+      sed -i 's/,,$//g' "$CSV_PATH/NDAppInstance.csv"
+    fi
+  fi
+fi
+
+exit 0

@@ -1,0 +1,16 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Elastic Search Cluster Stats|10324|vector|8|0|Application Metrics|Tier>Server>Cluster|"Elastic Search Cluster Stats" provides cluster health information, available nodes, data nodes and shards information etc.
+Graph|Health Status|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Health Status of the cluster. Status is 3 = OK (Cluster is 100% operational), 2 = Warning (In cluster, all primary shards are allocated, but at least one replica is missing. Search results will still be complete), 1 = Critical (In cluster, at least one primary shard (and all of its replicas) is missing. Searches will return partial results, and indexing into that shard will return an exception).
+Graph|Number of Nodes|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of nodes in the cluster.
+Graph|Number of Data Nodes|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of data nodes in the cluster.
+Graph|Active Primary Shards|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of primary shards which are aggregate total across all indices in cluster.
+Graph|Active Shards|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|An aggregate total of all shards across all indices in cluster, which includes replica shards.
+Graph|Relocated Shards|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of shards that are currently moving from one node to another node. This number is often zero, but can increase when Elasticsearch decides that a cluster is not properly balanced, a new node is added, or a node is taken down.
+Graph|Initializing Shards|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of shards that are being freshly created. For example, when you first create an index, the shards will all briefly reside in initializing state.
+Graph|Unassigned Shards|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of shards that in the cluster state, but cannot be found in the cluster itself.

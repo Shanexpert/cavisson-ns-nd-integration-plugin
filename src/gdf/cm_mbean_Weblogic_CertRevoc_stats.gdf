@@ -1,0 +1,16 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+
+#ObjectName :com.bea:Name=admin_domain,Type=CertRevoc,SecurityConfiguration=admin_domain
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Weblogic CertRevoc Stats|14193|vector|2|0|Weblogic Metrics|Tier>Server>Instance>Name>SecurityConfig|This stats provides information related to Certificate Revocation.
+
+Graph|Weblogic Ocsp Response Timeout (sec)|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Determines the timeout for the OCSP(Online Certificate Status Protocol) response, expressed in seconds.
+
+Graph|Weblogic CrlDp Download Timeout (sec)|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Determines the overall timeout for the Distribution Point CRL(Certificate Revocation Lists) download, expressed in seconds.

@@ -1,0 +1,388 @@
+#
+# Name      : nsu_change_page_name
+# Author    : Achint/Vikas
+# Purpsose  : To change the page name in script  (script.c, script.h, script.capture, script.detail) files.
+#
+# Usage     :  nsu_change_page_name [ -s scriptName ] [ -p oldPageName_1,oldPageName_2,..oldPageName_n ] [ -n newPageName_1,newPageName_2,..newPageName_n ] -w <workspace>/<PROFILEile>
+#   e.g.  nsu_change_page_name -s <workspace>/<PROFILEile>/proj/subProj/tours -p login,reservation -n reLogin,reReservation
+#
+# Modification History:
+#   01/03/06: Achint/Vikas - Initial Version
+#   14/03/09: Atul/Arun Nishad - Enahancement to support more than one rename at a time 
+#   6/07/11: Saloni - Enahancement to support change page name in c type script 
+#   18/03/21:Anup Singh: - w option added Support new test assets dir struc
+#
+#!/bin/sh
+
+if [ "XX$NS_WDIR" == "XX" ];then
+  echo "NS_WDIR must be defined"
+  exit 1
+fi
+
+PROJECT=
+SUB_PROJECT=
+SCRIPT_NAME=
+#DefultWorkspace
+DW="admin"
+#DefaultProfile
+DP="default"
+WORKSPACE=
+PROFIEL=
+#relative test assets dir
+NS_RTA_DIR="workspace"
+usage()
+{
+  echo "Usage: nsu_change_page_name [ -s proj/subProj/scriptName ] [ -p oldPageName_1,oldPageName_2,..oldPageName_n ] [ -n newPageName_1,newPageName_2,..newPageName_n ] -w <workspace>/<PROFILEile>"
+  exit 1
+}
+
+#Check and get script type and call appropriate class in case of c type script
+SCRIPT_NAME_WITH_PATH=$2
+WORK_PROFILE=$4
+PROJ_SUBPROJ=`dirname $SCRIPT_NAME_WITH_PATH | cut -d '/' '-f1-2'`
+SCRIPT_NAME=`basename $SCRIPT_NAME_WITH_PATH`
+NS_TA_DIR="$NS_WDIR/workspace/$WORK_PROFILE/cavisson"
+if [ ! -d $NS_TA_DIR/$PROJ_SUBPROJ/scripts/$SCRIPT_NAME ]; then
+  echo "Error in getting script directory $SCRIPT_NAME_WITH_PATH"
+  echo "Script may not be present"
+  exit -1
+fi
+
+SCRIPT_TYPE=`nsu_script_tool -o GetScriptType -s $PROJ_SUBPROJ/"scripts"/$SCRIPT_NAME -w $WORK_PROFILE`
+if [ $? != 0 ]; then
+echo "Error in getting script type of script $SCRIPT_NAME_WITH_PATH"
+  echo "Script may not be present"
+fi
+
+if [ "X$SCRIPT_TYPE" == "XC" ] || [  "X$SCRIPT_TYPE" == "XJAVA"  ];then
+  if [ -d /home/cavisson/monitors ];then
+    java -cp $NS_WDIR/webapps/netstorm/WEB-INF/lib/netstorm_bean.jar:/home/cavisson/monitors/lib/java-getopt-1.0.9.jar -DNS_WDIR=$NS_WDIR pac1.Bean.ChangePageName $*
+  else
+    java -cp $NS_WDIR/webapps/netstorm/WEB-INF/lib/netstorm_bean.jar:/opt/cavisson/monitors/lib/java-getopt-1.0.9.jar -DNS_WDIR=$NS_WDIR pac1.Bean.ChangePageName $*
+  fi
+  exit $?
+fi
+
+valOldNewPageName()
+{
+
+  # Validate newPageName
+  # - Must start with alpha character. 
+  # - All other characters can be alphanumeric or _
+  # - Maximum length can be 32 chars
+  # - Should not have been used in the script
+
+  #echo "newPageName=$newPageName"
+  echo $newPageName >ftemp
+  b=${#newPageName}
+  k=`expr $b - 1`
+  grep "[a-zA-Z][a-zA-Z0-9_]\{$k\}" ftemp >/dev/null
+  if [ $? == 0 ];then
+    rm -f ftemp
+  else 
+    echo "New page name is not valid."
+    echo "Must start with alpha character.All other characters can be alphanumeric or _ "
+    rm -f ftemp
+    exit 1
+  fi
+
+  if [ "$b" -gt 32 ];then
+    echo "New page name is not valid."
+    echo "Maximum length of a page name can be 32 characters."
+    exit 1
+  fi
+
+  # validate oldPaneName and newPageName
+  # - oldPageName should be in the script 
+  # - newPageName should not be in the script
+  
+  #echo "XXXXXXXXXX oldPageName=$oldPageName XXXXXXXXx"
+  if [ -f script.capture ];then
+    grep -w "case\ $oldPageName:$" script.capture >/dev/null 2>&1
+    if [ $? != 0 ];then
+      echo "Old page name is not present in the script.capture file."
+      exit 1
+    fi
+
+    grep -w "case\ $newPageName:$" script.capture >/dev/null 2>&1
+    if [ $? == 0 ];then
+      echo "New page already exists, use different new page name."
+      exit 1
+    fi
+  else
+    echo "script.capture file does not exist."
+    exit 1
+  fi
+
+#  In script generated for replay access log, we return page from API, so we cannot do this check
+#  int check_page_Index(void) {
+#   int page = ns_get_replay_page();
+#   return(page);
+#}
+
+  if [ -f script.c ];then
+    grep -w "ns_get_replay_page" script.c >/dev/null 2>&1
+    if [ $? != 0 ];then
+      grep -w $oldPageName script.c >/dev/null 2>&1
+      if [ $? != 0 ];then
+        echo "Old page name is not present in the script.c file."
+        exit 1
+      fi
+    fi
+
+    grep -w "check_page_$newPageName" script.c || grep -w "pre_page_$newPageName" script.c >/dev/null 2>&1
+    if [ $? == 0 ];then
+      echo "New page already exists, use different new page name."
+      exit 1
+    fi
+  else
+    echo "script.c file does not exist."
+    exit 1
+  fi
+
+  if [ -f script.detail ];then
+    grep -w "\-\-Page\ $oldPageName" script.detail >/dev/null 2>&1
+    if [ $? != 0 ];then
+      echo "Old page name is not present in the script.detail file."
+      exit 1
+    fi
+
+    grep -w "Page\ $newPageName" script.detail >/dev/null 2>&1
+    if [ $? == 0 ];then
+      echo "New page already exists, use different new page name."
+      exit 1
+    fi
+  else
+    echo "script.detail file does not exist."
+    exit 1
+  fi
+
+  if [ -f script.h ];then
+    grep -w $oldPageName script.h >/dev/null 2>&1
+    if [ $? != 0 ];then
+      echo "Old page name is not present in the script.h file."		 
+      exit 1
+    fi
+    
+    grep -w $newPageName script.h >/dev/null 2>&1
+    if [ $? == 0 ];then
+      echo "New page already exists, use different new page name."
+      exit 1
+    fi
+  else 
+    echo "script.h file does not exist."
+    exit 1
+  fi
+}
+
+modifyHFile()
+{
+  #change page name in script.h file
+  #echo "modifyHFile : called"
+  sed "s/#define $oldPageName /#define $newPageName /"  $TEMP_H_FILE > script.h
+  if [ $? != 0 ];then
+    exit 1
+  fi
+}
+
+modifyCFile()
+{
+  TEMP_C_FILE1=$NS_TA_DIR/scripts/$SCRIPT_NAME/.$USER_NAME.script.c.bak.1
+  TEMP_C_FILE2=$NS_TA_DIR/scripts/$SCRIPT_NAME/.$USER_NAME.script.c.bak.2
+  #change page name in script.c file
+  #echo "modifyCFile : called"
+  sed "s/$oldPageName;/$newPageName;/" $TEMP_C_FILE > $TEMP_C_FILE1
+  sed "s/\<pre_page_${oldPageName}\>/pre_page_${newPageName}/" $TEMP_C_FILE1 > $TEMP_C_FILE2
+  sed "s/\<check_page_${oldPageName}\>/check_page_${newPageName}/" $TEMP_C_FILE2 > script.c
+  rm -f $TEMP_C_FILE1 $TEMP_C_FILE2
+}
+
+modifyCaptureFile()
+{
+  TEMP_CAPTURE_FILE1=$NS_TA_DIR/scripts/$SCRIPT_NAME/.$USER_NAME.script.capture.bak.1
+  TEMP_CAPTURE_FILE2=$NS_TA_DIR/scripts/$SCRIPT_NAME/.$USER_NAME.script.capture.bak.2
+  TEMP_CAPTURE_FILE3=$NS_TA_DIR/scripts/$SCRIPT_NAME/.$USER_NAME.script.capture.bak.3
+  #change page name in script.capture file
+  #echo "modifyCaptureFile : called"
+  sed "s/$oldPageName:$/$newPageName:/" $TEMP_CAPTURE_FILE > $TEMP_CAPTURE_FILE1
+  sed "s/($oldPageName,$/($newPageName,/" $TEMP_CAPTURE_FILE1 > $TEMP_CAPTURE_FILE2
+  sed "s/pre_page_$oldPageName();/pre_page_$newPageName();/" $TEMP_CAPTURE_FILE2 > $TEMP_CAPTURE_FILE3 
+  sed "s/check_page_$oldPageName();/check_page_$newPageName();/" $TEMP_CAPTURE_FILE3 > script.capture
+  rm -f $TEMP_CAPTURE_FILE1 $TEMP_CAPTURE_FILE2 $TEMP_CAPTURE_FILE3
+}
+
+modifyDetailFile()
+{
+  #echo "modifyDetailFile Called"
+  #change page name in script.detail file
+  sed "s/\-\-Page $oldPageName$/\-\-Page $newPageName/g" $TEMP_DETAIL_FILE > script.detail
+}
+
+modifyPagesListFile()
+{
+  sed "s/>$oldPageName</>$newPageName</g" $TEMP_PAGES_LIST_FILE > dump/pagesList.html
+}
+
+modifyIndexFile()
+{
+  sed "s/,$oldPageName,/,$newPageName,/g" $TEMP_INDEX_FILE > dump/index
+}
+
+delScriptFile()
+{
+  rm -f script.*
+}
+
+makeScriptFile()
+{
+  mv $TEMP_H_FILE script.h
+  mv $TEMP_C_FILE script.c
+  mv $TEMP_CAPTURE_FILE script.capture
+  mv $TEMP_DETAIL_FILE script.detail
+  mv $TEMP_PAGES_LIST_FILE dump/pagesList.html
+}
+
+delTempFile()
+{
+  rm -f $TEMP_C_FILE2
+  rm -f $TEMP_CAPTURE_FILE2 $TEMP_CAPTURE_FILE3
+}
+
+createBakFile()
+{
+  cp $NS_TA_DIR/scripts/$SCRIPT_NAME/script.capture $NS_TA_DIR/scripts/$SCRIPT_NAME/.${USER_NAME}.script.capture.bak
+  cp $NS_TA_DIR/scripts/$SCRIPT_NAME/script.c $NS_TA_DIR/scripts/$SCRIPT_NAME/.${USER_NAME}.script.c.bak
+  cp $NS_TA_DIR/scripts/$SCRIPT_NAME/script.detail $NS_TA_DIR/scripts/$SCRIPT_NAME/.${USER_NAME}.script.detail.bak
+  cp $NS_TA_DIR/scripts/$SCRIPT_NAME/script.h $NS_TA_DIR/scripts/$SCRIPT_NAME/.${USER_NAME}.script.h.bak
+  if [ -f dump/pagesList.html ];then
+    cp $NS_TA_DIR/scripts/$SCRIPT_NAME/dump/pagesList.html $NS_TA_DIR/scripts/$SCRIPT_NAME/dump/.${USER_NAME}.pagesList.html.bak
+  fi
+
+  if [ -f dump/index ];then
+    cp $NS_TA_DIR/scripts/$SCRIPT_NAME/dump/index $NS_TA_DIR/scripts/$SCRIPT_NAME/dump/.${USER_NAME}.index.bak
+  fi
+}
+
+create_old_page_arr()
+{
+   #echo "create_old_page_arr called"
+   NUM_OLD_FIELDS=`echo $oldPageNames  | awk -F',' '{print NF}'` 
+   #echo "NUM_OLD_FIELDS=$NUM_OLD_FIELDS"
+   for (( i=0; i<$NUM_OLD_FIELDS; i=`expr $i + 1` ))
+   do
+      FIELD=`expr $i + 1` 
+      OLD_PAGE_ARR[i]=`echo $oldPageNames | cut -d',' -f$FIELD`
+   done
+}
+
+create_new_page_arr()
+{
+   #echo "create_new_page_arr called"
+   NUM_NEW_FIELDS=`echo $newPageNames  | awk -F',' '{print NF}'` 
+   #echo "NUM_NEW_FIELDS=$NUM_NEW_FIELDS"
+   for (( i=0; i<$NUM_NEW_FIELDS; i=`expr $i + 1` ))
+   do
+      FIELD=`expr $i + 1` 
+      NEW_PAGE_ARR[i]=`echo $newPageNames | cut -d',' -f$FIELD`
+   done
+
+  CHK_DUP=`echo ${NEW_PAGE_ARR[@]} | awk '{split($0, array, " "); n=asort(array); for(i=1; i < n - 1; i++) if(array[i] == array[i + 1]) printf array[i] " "}'`
+
+   if [ "XX$CHK_DUP" != "XX" ];then
+     echo "Error: page $CHK_DUP duplicate in given new page list"
+     exit 1
+   fi
+}
+
+##########################################################
+
+#check and get login user name
+USER_NAME=`whoami 2>/dev/null`
+if [ $? != 0 ];then
+  echo "Error: Unable to get the real user name"
+  exit 1
+fi
+
+if [ $# -ne 6 ];then
+  usage
+  exit 1
+fi
+
+#detproj and sub_proj name 
+set_proj_subproj_script_name()
+{
+
+  PROJECT=`echo $1 | egrep "/" | cut -d'/' -f1`
+  SUB_PROJECT=`echo $1 | egrep "/" | cut -d'/' -f2`
+  SCRIPT_NAME=`echo $1 | egrep "/" | cut -d'/' -f3`
+
+}
+
+worokspace_profile=""
+while getopts s:p:n:w: c
+do
+        case $c in
+        s) scriptName="$OPTARG";;
+        p) oldPageNames="$OPTARG";;
+        n) newPageNames="$OPTARG";;
+        w) worokspace_profile="$OPTARG";;
+        ?) usage;;
+        esac
+done
+
+set_proj_subproj_script_name $scriptName
+
+#set absolute test assets path
+NS_TA_DIR=`nsi_get_work_space_path.sh $worokspace_profile $PROJECT/$SUB_PROJECT`
+if [ ! -d $NS_TA_DIR/scripts/$SCRIPT_NAME ];then
+  echo "Script $SCRIPT_NAME does not exist."
+  exit 1
+fi
+
+cd $NS_TA_DIR/scripts/$SCRIPT_NAME
+
+TEMP_H_FILE=$NS_TA_DIR/scripts/$SCRIPT_NAME/.$USER_NAME.script.h.bak
+TEMP_C_FILE=$NS_TA_DIR/scripts/$SCRIPT_NAME/.$USER_NAME.script.c.bak
+TEMP_DETAIL_FILE=$NS_TA_DIR/scripts/$SCRIPT_NAME/.$USER_NAME.script.detail.bak
+TEMP_CAPTURE_FILE=$NS_TA_DIR/scripts/$SCRIPT_NAME/.$USER_NAME.script.capture.bak
+TEMP_PAGES_LIST_FILE=$NS_TA_DIR/scripts/$SCRIPT_NAME/dump/.$USER_NAME.pagesList.html.bak
+TEMP_INDEX_FILE=$NS_TA_DIR/scripts/$SCRIPT_NAME/dump/.$USER_NAME.index.bak
+
+create_old_page_arr
+create_new_page_arr
+
+if [ "$NUM_OLD_FIELDS" != "$NUM_NEW_FIELDS" ];then
+  echo "Number of old page(s) and new page(s) must be equal."
+  exit -1
+fi
+
+for (( i=0; i<$NUM_OLD_FIELDS; i=`expr $i + 1` ))
+do
+  oldPageName="${OLD_PAGE_ARR[$i]}"  
+  newPageName="${NEW_PAGE_ARR[$i]}"  
+  #echo "oldPageName=$oldPageName, newPageName=$newPageName"
+  valOldNewPageName
+done
+
+for (( i=0; i<$NUM_OLD_FIELDS; i=`expr $i + 1` ))
+do
+  oldPageName="${OLD_PAGE_ARR[$i]}"
+  newPageName="${NEW_PAGE_ARR[$i]}"
+  createBakFile
+  modifyHFile
+  modifyCFile
+  modifyCaptureFile
+  modifyDetailFile
+  if [ -f dump/pagesList.html ];then
+    modifyPagesListFile
+  fi
+  if [ -f dump/index ];then
+    modifyIndexFile 
+  fi
+  if [ -d /home/cavisson/monitors ];then
+    java -cp $NS_WDIR/webapps/netstorm/WEB-INF/lib/netstorm_bean.jar:/home/cavisson/monitors/lib/java-getopt-1.0.9.jar -DNS_WDIR=$NS_WDIR pac1.Bean.ScriptUrlBean -s $SCRIPT_NAME_WITH_PATH -o rename -p $oldPageName -n $newPageName  
+  else
+    java -cp $NS_WDIR/webapps/netstorm/WEB-INF/lib/netstorm_bean.jar:/opt/cavisson/monitors/lib/java-getopt-1.0.9.jar -DNS_WDIR=$NS_WDIR pac1.Bean.ScriptUrlBean -s $SCRIPT_NAME_WITH_PATH -o rename -p $oldPageName -n $newPageName  
+  fi
+done 
+exit 0

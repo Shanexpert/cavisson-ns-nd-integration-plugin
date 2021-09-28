@@ -1,0 +1,51 @@
+# --- GDF Version History ---
+# # 1.0 - Initial version
+# # 2.0 - Change done for match Long_data and Long_long_data to double
+# # 3.0 - Changes done for Dynamic data in Execution GUI
+# # 3.1 - Use future1 field of group line for Metric group name
+
+# Note: Please Use the Group Name and Graph Name having no special character like {%, !, ^, &, + } etc..
+
+# General information line
+# Info|msgVersion|numGroups|startIndex|testRun|sizeOfMsgData|interval|testRunStartDate/Time
+#
+# Group information line
+# Group|groupName|rptGrpId|groupType|numGraphs|numVectors
+#
+# Graph information line
+# Graph|graphName|rptId|graphType|dataType|graphDataIndex|formula|numVectors
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|IOStat (Cumulative)|10006|vector|26|0|System Metrics|Tier>Server>Device|CPU statistics and input/output statistics for devices and partitions.
+
+Graph|User CPU Busy (Pct)|1|scalar|sample|-|DBH|0|NA|-1|-1|NA|NA|Percentage of CPU utilization that occurred while executing at the user level (application).
+Graph|Nice CPU Busy (Pct)|2|scalar|sample|-|DBH|0|NA|-1|-1|NA|NA|Percentage of CPU utilization that occurred while executing at the user level with nice priority.
+Graph|System CPU Busy (Pct)|3|scalar|sample|-|DBH|0|NA|-1|-1|NA|NA|Percentage of CPU utilization that occurred while executing at the system level (kernel).
+Graph|IOWait CPU (Pct)|4|scalar|sample|-|DBH|0|NA|-1|-1|NA|NA|Percentage of time that the CPU or CPUs were idle during which the system had an outstanding disk I/O request.
+Graph|Steal CPU (Pct)|5|scalar|sample|-|DBH|0|NA|-1|-1|NA|NA|Show the percentage of time spent in involuntary wait by the virtual CPU or CPUs while the hypervisor was servicing another virtual processor.
+Graph|Idle CPU (Pct)|6|scalar|sample|-|DBH|0|NA|-1|-1|NA|NA|Percentage of time that the CPU or CPUs were idle and the system did not have an outstanding disk I/O  request.
+
+Graph|Disk Transfers/Sec (sda)|7|scalar|sample|-|DBH|0|NA|-1|-1|NA|NA|Number  of  transfers per second that were issued to the device sda. 
+Graph|Disk Blocks Read/Sec (sda)|8|scalar|sample|-|DBH|0|NA|-1|-1|NA|NA|Amount of data read from the drive sda in a number of blocks per second
+Graph|Disk Blocks Written/Sec (sda)|9|scalar|sample|-|DBH|0|NA|-1|-1|NA|NA|Amount of data written to the drive sda in a number of blocks per second
+Graph|Total Disk Blocks Read (sda)|10|scalar|sample|-|DBH|0|NA|-1|-1|NA|NA|Total number of blocks read from device sda.
+Graph|Total Disk Blocks Written (sda)|11|scalar|sample|-|DBH|0|NA|-1|-1|NA|NA|Total number of blocks written to device sda.
+
+Graph|Disk Transfers/Sec (dm-0)|12|scalar|sample|-|DBH|0|NA|-1|-1|NA|NA|Number  of  transfers per second that were issued to the device dm-0. 
+Graph|Disk Blocks Read/Sec (dm-0)|13|scalar|sample|-|DBH|0|NA|-1|-1|NA|NA|Amount of data read from the drive sda in a number of blocks per dm-0.
+Graph|Disk Blocks Written/Sec (dm-0)|14|scalar|sample|-|DBH|0|NA|-1|-1|NA|NA|Amount of data written to the drive sda in a number of blocks per dm-0.
+Graph|Total Disk Blocks Read (dm-0)|15|scalar|sample|-|DBH|0|NA|-1|-1|NA|NA|Total number of blocks read from device dm-0.
+Graph|Total Disk Blocks Written (dm-0)|16|scalar|sample|-|DBH|0|NA|-1|-1|NA|NA|Total number of blocks written to device dm-0.
+
+Graph|Disk Transfers/Sec (dm-1)|17|scalar|sample|-|DBH|0|NA|-1|-1|NA|NA|Number  of  transfers per second that were issued to the device dm-01. 
+Graph|Disk Blocks Read/Sec (dm-1)|18|scalar|sample|-|DBH|0|NA|-1|-1|NA|NA|Amount of data read from the drive sda in a number of blocks per dm-01.
+Graph|Disk Blocks Written/Sec (dm-1)|19|scalar|sample|-|DBH|0|NA|-1|-1|NA|NA|Amount of data written to the drive sda in a number of blocks per dm-01.
+Graph|Total Disk Blocks Read (dm-1)|20|scalar|sample|-|DBH|0|NA|-1|-1|NA|NA|Total number of blocks read from device dm-01.
+Graph|Total Disk Blocks Written (dm-1)|21|scalar|sample|-|DBH|0|NA|-1|-1|NA|NA|Total number of blocks written to device dm-01.
+
+Graph|Disk Transfers/Sec (dm-2)|22|scalar|sample|-|DBH|0|NA|-1|-1|NA|NA|Number  of  transfers per second that were issued to the device dm-01. 
+Graph|Disk Blocks Read/Sec (dm-2)|23|scalar|sample|-|DBH|0|NA|-1|-1|NA|NA|Amount of data read from the drive sda in a number of blocks per dm-01.
+Graph|Disk Blocks Written/Sec (dm-2)|24|scalar|sample|-|DBH|0|NA|-1|-1|NA|NA|Amount of data written to the drive sda in a number of blocks per dm-01.
+Graph|Total Disk Blocks Read (dm-2)|25|scalar|sample|-|DBH|0|NA|-1|-1|NA|NA|Total number of blocks read from device dm-01.
+Graph|Total Disk Blocks Written (dm-2)|26|scalar|sample|-|DBH|0|NA|-1|-1|NA|NA|Total number of blocks written to device dm-01.

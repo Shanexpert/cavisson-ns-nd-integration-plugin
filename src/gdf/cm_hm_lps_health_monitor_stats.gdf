@@ -1,0 +1,17 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-1|-|-1|-1|-
+Group|LPS Health Stats|10864|vector|9|0|Cavisson Metrics|Tier>Server>Instance|It will give runtime stats of LPS
+Graph|Number of AL monitors|1|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Number of access log monitor applied in the running test.
+Graph|Number of Log monitors|2|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Number of Log monitors applied in the running test.
+Graph|Number of GetLogFile monitors|3|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Number of GetLogFile monitors applied in the running test.
+Graph|Number of Threads|4|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Number of active  threads in the running test.
+Graph|Number of Monitors|5|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Number of active Monitors.
+Graph|LPS CMON closed connection|6|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of closed connections with CMON.
+Graph|LPS NS closed connection|7|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of closed connections with NS.
+Graph|LPS Data Throughput(kbps)|8|scalar|rate|-|-|0|AS|-1|-1|NA|NA|LPS data received on all data connections in kbps
+Graph|Number of GenericDb monitors|9|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Number of genericDb monitors applied in the running test.

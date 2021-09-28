@@ -1,0 +1,22 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Jboss Nio Worker|14123|vector|4|0|Application Metrics|Tier>Server>Instance>worker|This stats provide information about Thread and their size detailsof Jboss Environment. 
+
+#G1
+Graph|Jboss Io Thread Count|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Specify the number of I/O threads to create for the worker. If not specified, a default will be chosen, which is calculated by cpuCount * 2.
+
+#G2
+Graph|Jboss Core Worker Pool Size|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Minimum number of threads to keep in the underlying thread pool Worker even if they are idle. Threads over this limit will be terminated over time specified by task-keepalive attribute.
+
+#G3
+Graph|Jboss Max Worker Pool Size|3|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The maximum number of threads to allow in the thread pool Worker. Depending on implementation, when this limit is reached, tasks which cannot be queued may be rejected
+
+#G4
+Graph|Jboss Worker Queue Size|4|scalar|sample|-|None|0|AS|-1|-1|NA|NA|An estimate of the number of tasks in the worker queue.
+
+

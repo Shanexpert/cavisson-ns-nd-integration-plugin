@@ -1,0 +1,6 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+Info|3.1|1|-|-|-1|-1|-
+
+Group|IBM MQ Queue Manager Stats|10706|vector|1|0|IBM MQ Metrics|Tier>Server>QueueManager|IBM MQ Queue Manager Statistics.
+Graph|Queue Manager Status|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current state of the queue manager with following status. Status would be 1 = "Starting", 2 = "Running", 3 = "quiescing".

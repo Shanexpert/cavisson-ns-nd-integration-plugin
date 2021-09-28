@@ -1,0 +1,19 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Apache Nifi Flow Status|10865|vector|11|0|Application Metrics|Tier|Apache Nifi Flow Status stats.
+Graph|Nifi Queued Flow Files|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of FlowFiles queued across the entire flow. 
+Graph|Nifi Queued Flow Files Size (KB)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The size of the FlowFiles queued across the entire flow in kilo bytes.
+Graph|Nifi Running Components|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of running components in NiFi.
+Graph|Nifi Stopped Components|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of stopped components in NiFi.
+Graph|Nifi Invalid Components|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of Invalid components in NiFi.
+Graph|Nifi Disable Components|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of disabled components in NiFi.
+Graph|Nifi Up To Date Flows|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of flows that have latest version in NiFi.
+Graph|Nifi Locally Modified Flows|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of flows that have local changes in NiFi.
+Graph|Nifi Stale Flows|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of flows that have an older version in NiFi but newer version is available.
+Graph|Nifi Locally Modified And Stale Flows|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of flows that have local changes and an older version in NiFi.
+Graph|Nifi Sync Failure Flows|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of flows that are unable to synchronize with the registry in NiFi.

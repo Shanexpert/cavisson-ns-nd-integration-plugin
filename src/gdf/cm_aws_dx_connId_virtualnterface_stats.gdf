@@ -1,0 +1,15 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS Direct Connect ConnectionID Virtual Interface Stats|11367|vector|4|0|AWS Metrics|AccountName>Region>ConnectionId>VirtualInterfaceId|AWS Direct Connect makes it easy to establish a dedicated network connection from your premises to AWS.
+
+Graph|AWS DX Virtual Interface Egress Bits/Sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The bitrate for outbound data from the AWS side of the virtual interface.
+
+Graph|AWS DX Virtual Interface Ingress Bits/Sec|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The bitrate for inbound data to the AWS side of the virtual interface.
+
+Graph|AWS DX Virtual Interface Egress Packets/Sec|3|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The packet rate for outbound data from the AWS side of the virtual interface.
+
+Graph|AWS DX Virtual Interface Ingress Packets/Sec|4|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The packet rate for inbound data to the AWS side of the virtual interface.

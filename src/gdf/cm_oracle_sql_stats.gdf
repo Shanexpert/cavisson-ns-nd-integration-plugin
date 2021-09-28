@@ -1,0 +1,10 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Oracle SQL Stats|10237|vector|3|0|Oracle Metrics|Tier>Server>DBName|Oracle sql stats monitor
+
+Graph|Number of queries executed|1|scalar|cumulative|-|-|0|NA|-1|-1|H|NA|Total number of queries executed since the instance started.
+Graph|Query execution/Sec|2|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Query executed per second.
+Graph|Average execution time (ms)|3|scalar|rate|-|-|0|NA|-1|-1|H|NA|Average time taken by an query to execute (in miliseconds).

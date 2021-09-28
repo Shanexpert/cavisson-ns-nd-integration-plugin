@@ -1,0 +1,444 @@
+#!/bin/sh
+
+#----------------------------------------------------------------------
+# Name    :    nsu_delete_project
+# Author  :    Archana
+# Note    :    This command only can run by root
+#              From GUI, admin user will run this command using Bean which runs as root
+# Purpose :    This command will delete project/sub-project from scenarios and scripts directories
+# Usage   :    nsu_delete_project -p <Project/Subproject> [-S gui|cli] [-f] 
+# where   :
+#  -p <project/subproject>: Project and sub-project name
+#  -S gui|cli (default cli)
+#  -f forcefully delete
+# Modification History:
+#   02/16/09:  Archana - Initial Version
+#----------------------------------------------------------------------
+
+. $NS_WDIR/bin/ns_user_admin_lib
+
+#To check uid call check_root_uid
+#check_root_uid "nsu_delete_project"
+
+SCENARIO_PATH=
+SCRIPT_PATH=
+TESTCASE_PATH=
+TESTSUITE_PATH=
+#PROFILE_PATH=$NS_WDIR/replay_profiles
+REPLAYACCESSLOGS=
+PROFILE_PATH=
+CHECKPROFILE_PATH=
+#SCENARIO_PROFILE_PATH=$NS_WDIR/scenario_profiles
+SCENARIO_PROFILE_PATH=
+USER_NAME="admin"
+WORK_PROFILE="default"
+NS_TA_DIR=
+#flag to check if scenario profile deleted
+SCEN_PROF_DELETED=0
+PROJ_SUBPROJ=
+
+#This method to check format of project and subproject, it should be "project/subproject"
+check_format_of_proj_subproj()
+{
+    PROJECT=`echo $PROJ_SUB_PROJ | awk -F'/' '{print $1}'` 
+    SUB_PROJECT=`echo $PROJ_SUB_PROJ | awk -F'/' '{print $2}'` 
+    if [ "$PROJECT" == "" -a "$SUB_PROJECT" == "" ];then
+      err_msgout "-p <Project/Subproject> is not given in proper format."
+      exit -1
+    fi
+}
+
+
+deletion_project()
+{
+  if [ "XX$SUB_PROJECT" != "XX" ];then
+    echo "Project '$PROJECT/$SUB_PROJECT' has been successfully deleted"
+  else
+   echo "Project '$PROJECT' has been successfully deleted."
+  fi
+}
+ 
+#This method is to delete project, if all subproject has been deleted and project dir is empty
+delete_if_project_is_empty()
+{
+  #EMPTY_SCENARIO_PROJ=`ls -1 $SCENARIO_PATH/$PROJECT/ | wc -l`
+  EMPTY_SCENARIO_PROJ=0
+  if [ -d $SCENARIO_PATH ]; then
+          EMPTY_SCENARIO_PROJ=`ls -1 $SCENARIO_PATH |wc -l`
+        fi
+  #EMPTY_SCENARIO_PROJ=`ls -1 $SCENARIO_PATH | wc -l`
+  #EMPTY_SCRIPT_PROJ=`ls -1 $SCRIPT_PATH/$PROJECT/ | wc -l`
+  EMPTY_SCRIPT_PROJ=0
+  if [ -d $SCRIPT_PATH ]; then
+          EMPTY_SCRIPT_PROJ=`ls -1 $SCRIPT_PATH |wc -l`
+        fi
+  #EMPTY_SCRIPT_PROJ=`ls -1 $SCRIPT_PATH | wc -l`
+  # If testcases project is not present, treat it as empty
+  EMPTY_TESTCASE_PROJ=0
+	if [ -d $TESTCASE_PATH ]; then
+	  EMPTY_TESTCASE_PROJ=`ls -1 $TESTCASE_PATH |wc -l`
+	fi
+  
+  EMPTY_REPLAYACCESSLOGS_PROJ=0
+        if [ -d $REPLAYACCESSLOGS_PATH ]; then
+          EMPTY_REPLAYACCESSLOGS_PROJ=`ls -1 $REPLAYACCESSLOGS_PATH |wc -l`
+        fi
+
+  # If testsuites project is not present, treat it as empty
+	EMPTY_TESTSUITE_PROJ=0
+  if [ -d $TESTSUITE_PATH ]; then
+    EMPTY_TESTSUITE_PROJ=`ls -1 $TESTSUITE_PATH |wc -l`
+  fi
+
+  # If profile project is not present, treat it as empty  
+  EMPTY_PROFILE_PROJ=0
+  if [ -d $PROFILE_PATH ]; then
+    EMPTY_PROFILE_PROJ=`ls -1 $PROFILE_PATH |wc -l`
+  fi
+	# If check_profile project is not present, treat it as empty
+  EMPTY_CHECKPROFILE_PROJ=0
+	if [ -d $CHECKPROFILE_PATH ]; then
+	  EMPTY_CHECKPROFILE_PROJ=`ls -1 $CHECKPROFILE_PATH |wc -l`
+	fi
+
+  # If scenario_profile project is not present, treat it as empty
+  EMPTY_SCENARIO_PROFILE_PROJ=0
+  if [ -d $SCENARIO_PROFILE_PATH ]; then
+    EMPTY_SCENARIO_PROFILE_PROJ=`ls -1 $SCENARIO_PROFILE_PATH |wc -l`
+  fi
+
+
+  if [ $EMPTY_SCENARIO_PROJ == 0 -o $EMPTY_SCRIPT_PROJ == 0 -o $EMPTY_PROFILE_PROJ == 0 -o $EMPTY_CHECKPROFILE_PROJ == 0 -o $EMPTY_TESTCASE_PROJ == 0 -o $EMPTY_TESTSUITE_PROJ == 0 -o $EMPTY_SCENARIO_PROFILE_PROJ == 0 -o $EMPTY_REPLAYACCESSLOGS_PROJ == 0 ]; then
+     rm -rf $NS_WDIR/$NS_TA_DIR/$PROJECT
+     echo "Successfully deleted all Files and Directories"
+    #rm -rf $SCENARIO_PATH
+    #rm -rf $SCRIPT_PATH
+    #rm -rf $TESTCASE_PATH
+    #rm -rf $TESTSUITE_PATH
+    #rm -rf $PROFILE_PATH
+    #rm -rf $CHECKPROFILE_PATH
+    #rm -rf $SCENARIO_PROFILE_PATH
+    #rm -rf $REPLAYACCESSLOGS_PATH
+  fi 
+}
+
+# This method is for when run from CLI, to check if specified <project/sub-project> is not empty
+# in scenarios and scripts directory then check if not forcefully then show y/n option 
+# If press 'y/Y' then delete specified project/sub-project from scenarios and scripts directory
+# if forcefully then delete specified project/sub-project from scenarios and scripts directory
+intractive_cli_delete()
+{
+  SCENARIO_DIR="$1"
+  SCRIPT_DIR="$2"
+  PROFILE_DIR="$3"
+  CHECK_PROFILE_DIR="$4"
+  TESTCASES_DIR="$5"
+  TESTSUITES_DIR="$6"
+  SCENARIO_PROFILE_DIR="$7"
+  REPLAYACCESSLOGS_DIR="$8"
+  EMPTY_SCENARIO=`ls -1 $SCENARIO_DIR | wc -l`
+  EMPTY_SCRIPT=`ls -1 $SCRIPT_DIR | wc -l`
+ 
+  # If profile dir for the proj subproj is not present, treat it as empty 
+  EMPTY_PROFILE=0
+  if [ -d $PROFILE_DIR ]; then
+    EMPTY_PROFILE=`ls -1 $PROFILE_DIR/ | wc -l`
+  fi
+
+  EMPTY_CHECKPROFILE=0
+  if [ -d $CHECK_PROFILE_DIR ]; then
+    EMPTY_CHECKPROFILE=`ls -1 $CHECK_PROFILE_DIR/ | wc -l`
+  fi
+  
+   EMPTY_REPLAYACCESSLOGS=0
+  if [ -d $REPLAYACCESSLOGS_DIR ]; then
+    EMPTY_REPLAYACCESSLOGS=`ls -1 $REPLAYACCESSLOGS_DIR/ | wc -l`
+  fi
+
+  EMPTY_TESTCASES=0
+  if [ -d $TESTCASES_DIR ]; then
+    EMPTY_TESTCASES=`ls -1 $TESTCASES_DIR/ | wc -l`
+  fi
+  
+  EMPTY_TESTSUITES=0
+  if [ -d $TESTSUITES_DIR ]; then
+    EMPTY_TESTSUITES=`ls -1 $TESTSUITES_DIR/ | wc -l`
+  fi
+
+  EMPTY_SCENARIO_PROFILE=0
+  if [ -d $SCENARIO_PROFILE_DIR ]; then
+    EMPTY_SCENARIO_PROFILE=`ls -1 $SCENARIO_PROFILE_DIR/ | wc -l`
+  fi
+
+  if [ $EMPTY_SCENARIO != 0 -o $EMPTY_SCRIPT != 0  -o $EMPTY_PROFILE != 0 -o $EMPTY_CHECKPROFILE != 0 -o $EMPTY_TESTCASES != 0 -o $EMPTY_TESTSUITES != 0 -o $EMPTY_SCENARIO_PROFILE != 0 -o $EMPTY_REPLAYACCESSLOGS != 0 ];then
+   if [ "$FORCE" == "no" ]; then
+      if [ "XX$SUB_PROJECT" != "XX" ];then
+        echo -n "Project $PROJECT/$SUB_PROJECT is not empty. Do you want to delete all files or directories (y/n) ?"
+      else
+        echo -n "Project $PROJECT is not empty. Do you want to delete all files or directories (y/n) ?"
+      fi
+      read input
+      if [ "XX$input" == "XXY" -o "XX$input" == "XXy" ];then
+        rm -rf $NS_WDIR/$NS_TA_DIR/$PROJECT
+        echo "All files and Directories deleted successfully" #ashwini
+      else
+        exit -1
+      fi
+   else
+      rm -rf $NS_WDIR/$NS_TA_DIR/$PROJECT  #ashwini
+      echo "Successfully deleted all Files and Directories" 
+      deletion_project
+   fi
+    #if [ "XX$SUB_PROJECT" != "XX" ];then
+      #delete_if_project_is_empty
+    #fi
+  else
+    rm -rf $SCENARIO_DIR
+    rm -rf $SCRIPT_DIR
+    rm -rf $PROFILE_DIR
+    rm -rf $CHECK_PROFILE_DIR
+    rm -rf $TESTCASES_DIR
+    rm -rf $TESTSUITES_DIR
+    rm -rf $SCENARIO_PROFILE_DIR
+    rm -rf $REPLAYACCESSLOGS_DIR
+    deletion_project
+
+    if [ "XX$SUB_PROJECT" != "XX" ];then
+      delete_if_project_is_empty
+    fi
+  fi
+  #if [ "XX$SUB_PROJECT" != "XX" ];then
+   #   echo "Project '$PROJECT/$SUB_PROJECT' has been successfully deleted"
+  #else
+   #  echo "Project '$PROJECT' has been successfully deleted."
+  #fi
+rm -f $tmp_file
+}
+
+# This method is for when run from GUI, to check if specified <project/sub-project> is not empty
+# in scenarios and scripts directory then do not delete specified project/sub-project, 
+# if forcefully then delete specified project/sub-project from scenarios and scripts directory
+intractive_gui_delete()
+{
+  SCENARIO_DIR="$1"
+  SCRIPT_DIR="$2"
+  PROFILE_DIR="$3"
+  CHECK_PROFILE_DIR="$4"
+  TESTCASES_DIR="$5"
+  TESTSUITES_DIR="$6"
+  SCENARIO_PROFILE_DIR="$7"
+  REPLAYACCESSLOGS_DIR="$8"
+
+  EMPTY_SCENARIO=`ls -1 $SCENARIO_DIR/ | wc -l`
+  EMPTY_SCRIPT=`ls -1 $SCRIPT_DIR/ | wc -l`
+  
+  # If profile dir is not present then treat it as empty
+  EMPTY_PROFILE=0
+  if [ -d $PROFILE_DIR ]; then
+    EMPTY_PROFILE=`ls -1 $PROFILE_DIR/ | wc -l`
+  fi
+  
+  EMPTY_CHECKPROFILE=0
+  if [ -d $CHECK_PROFILE_DIR ]; then
+    EMPTY_CHECKPROFILE=`ls -1 $CHECK_PROFILE_DIR/ | wc -l`
+  fi
+  
+  EMPTY_REPLAYACCESSLOGS=0
+  if [ -d $REPLAYACCESSLOGS_DIR ]; then
+    EMPTY_REPLAYACCESSLOGS=`ls -1 $REPLAYACCESSLOGS_DIR/ | wc -l`
+  fi
+
+  EMPTY_TESTCASES=0
+  if [ -d $TESTCASES_DIR ]; then
+    EMPTY_TESTCASES=`ls -1 $TESTCASES_DIR/ | wc -l`
+  fi
+  
+  EMPTY_TESTSUITES=0
+  if [ -d $TESTSUITES_DIR ]; then
+    EMPTY_TESTSUITES=`ls -1 $TESTSUITES_DIR/ | wc -l`
+  fi
+  
+  EMPTY_SCENARIO_PROFILE=0
+  if [ -d $SCENARIO_PROFILE_DIR ]; then
+    EMPTY_SCENARIO_PROFILE=`ls -1 $SCENARIO_PROFILE_DIR/ | wc -l`
+  fi
+
+  if [ $EMPTY_SCENARIO != 0 -o $EMPTY_SCRIPT != 0 -o $EMPTY_PROFILE != 0 -o $EMPTY_CHECKPROFILE != 0 -o $EMPTY_TESTCASES != 0 -o $EMPTY_TESTSUITES != 0 -o $EMPTY_SCENARIO_PROFILE != 0 -o $EMPTY_REPLAYACCESSLOGS != 0 ];then
+    if [ "$FORCE" == "no" ]; then
+      if [ "XX$SUB_PROJECT" != "XX" ];then
+        echo "Project $PROJECT/$SUB_PROJECT is not empty. If you want to delete all scenarios or scripts then click 'Delete Forcefully' button"
+        exit -1
+      else
+        echo "Project $PROJECT is not empty. If you want to delete all scenarios or scripts then click 'Delete Forcefully' button"
+        exit -1
+      fi
+    else
+        rm -rf $NS_WDIR/$NS_TA_DIR/$PROJECT  #ashwini 
+          deletion_project
+    fi
+    #if [ "XX$SUB_PROJECT" != "XX" ];then
+      #delete_if_project_is_empty
+    #fi
+  else
+    rm -rf $SCENARIO_DIR
+    rm -rf $SCRIPT_DIR
+    rm -rf $PROFILE_DIR
+    rm -rf $CHECK_PROFILE_DIR
+    rm -rf $TESTCASES_DIR
+    rm -rf $TESTSUITES_DIR
+    rm -rf $SCENARIO_PROFILE_DIR
+    rm -rf $REPLAYACCESSLOGS_DIR
+
+    if [ "XX$SUB_PROJECT" != "XX" ];then
+      delete_if_project_is_empty
+    fi
+  fi
+ rm -f $tmp_file
+}
+
+update_user_default_projects()
+{
+  TMP_FILE="/tmp/user_defualt_projects.$$"
+  cp $USER_DEFAULT_PROJECTS $TMP_FILE 
+  
+  grep -v "$PROJECT|$SUB_PROJECT" $USER_DEFAULT_PROJECTS > $TMP_FILE
+  #cp $TMP_FILE $USER_DEFAULT_PROJECTS
+   cp $TMP_FILE $USER_DEFAULT_PROJECTS
+  rm -f $TMP_FILE
+}
+
+check_and_del_proj_subproj()
+{
+  if [ ! -d $NS_WDIR/$NS_TA_DIR/$PROJECT ];then
+   echo "This '$PROJECT' does not exist in $NS_WDIR/$NS_TA_DIR directory"
+   return 1
+  fi
+  
+  if [ "XX$SUB_PROJECT" != "XX" ];then
+    if [ ! -d  $NS_WDIR/$NS_TA_DIR/$PROJECT/$SUB_PROJECT ];then
+      echo "This '$SUB_PROJECT' does not exist in $NS_WDIR/$NS_TA_DIR/$PROJECT directory"
+      return 1
+    fi
+    
+    if [ "XX$INVOKER" == "XXcli" ];then
+      intractive_cli_delete "$SCENARIO_PATH" "$SCRIPT_PATH" "$PROFILE_PATH" "$CHECKPROFILE_PATH" "$TESTCASE_PATH" "$TESTSUITE_PATH" "$SCENARIO_PROFILE_PATH" "$REPLAYACCESSLOGS_PATH"
+    elif [ "XX$INVOKER" == "XXgui" ];then
+      intractive_gui_delete "$SCENARIO_PATH" "$SCRIPT_PATH" "$PROFILE_PATH" "$CHECKPROFILE_PATH" "$TESTCASE_PATH" "$TESTSUITE_PATH" "$SCENARIO_PROFILE_PATH" "$REPLAYACCESSLOGS_PATH"
+    fi
+  else
+    if [ "XX$INVOKER" == "XXcli" ];then
+      intractive_cli_delete "$NS_WDIR/$NS_TA_DIR/$PROJECT" "$PROFILE_PATH/$PROJECT" "$SCENARIO_PROFILE_PATH"
+    elif [ "XX$INVOKER" == "XXgui" ];then
+      intractive_gui_delete "$NS_WDIR/$NS_TA_DIR/$PROJECT" "$PROFILE_PATH/$PROJECT" "$SCENARIO_PROFILE_PATH"
+    fi
+  fi
+  
+  #update_user_default_projects
+}
+
+display_help_and_exit()
+{
+  err_msgout "$1"
+  err_msgout "Usage: nsu_delete_project -p <Project/Subproject> [-S gui|cli] [-f][-u][-w]"
+  err_msgout "Where:"
+  err_msgout "  -p is used to delete Project/Subproject from scenarios and scripts directories"
+  err_msgout "  -S is used to specify who run this command. Default is cli."
+  err_msgout "     cli is used when command is run from CLI."
+  err_msgout "     gui is used when command is run from GUI."
+  err_msgout "  -f is used to delete forcefully."
+  err_msgout "  -u ACL user name."
+  err_msgout "  -w Work Profile name."
+  exit 1
+}
+
+PFLAG=0
+SFLAG=0
+fFLAG=0
+#uFLAG=0
+wFLAG=0
+
+check_mandatory_options()
+{
+  if [ $PFLAG -eq 0 ];then
+    err_msgout "nsu_delete_project: -p option is mandatory"
+    display_help_and_exit
+  fi
+
+  #if [ "XX$PROJECT" == "XXAll" -o "XX$SUB_PROJECT" == "XXAll" -o "XX$PROJECT" == "XXdefault" -o "XX$SUB_PROJECT" == "XXdefault" ];then
+  if [ "XX$PROJECT" == "XXdefault" -o "XX$SUB_PROJECT" == "XXdefault" ];then
+    if [ "XX$SUB_PROJECT" != "XX" ];then
+      err_msgout "Error: '$PROJECT/$SUB_PROJECT' cannot be deleted"
+    else
+      err_msgout "Error: '$PROJECT' cannot be deleted"
+    fi
+    exit -1
+  fi
+ 
+}
+
+check_option()
+{
+  OPTION_FLAG=$1
+  if [ $OPTION_FLAG -gt 0 ];then
+    err_msgout "nsu_delete_project: $2 option cannot be specified more than once."
+    display_help_and_exit
+  fi
+}
+#set test assets direcotry, relative to $NS_WDIR
+set_ta_dir()
+{
+  NS_TA_DIR="workspace/$USER_NAME/$WORK_PROFILE/cavisson"
+  SCENARIO_PATH=$NS_WDIR/$NS_TA_DIR/$PROJECT/$SUB_PROJECT/scenarios
+  SCRIPT_PATH=$NS_WDIR/$NS_TA_DIR/$PROJECT/$SUB_PROJECT/scripts
+  TESTCASE_PATH=$NS_WDIR/$NS_TA_DIR/$PROJECT/$SUB_PROJECT/testcases
+  TESTSUITE_PATH=$NS_WDIR/$NS_TA_DIR/$PROJECT/$SUB_PROJECT/testsuites
+  CHECKPROFILE_PATH=$NS_WDIR/$NS_TA_DIR/$PROJECT/$SUB_PROJECT/checkprofile
+  PROFILE_PATH=$NS_WDIR/$NS_TA_DIR/$PROJECT/$SUB_PROJECT/replay_profiles
+  REPLAYACCESSLOGS_PATH=$NS_WDIR/$NS_TA_DIR/$PROJECT/$SUB_PROJECT/ReplayAccessLogs
+  SCENARIO_PROFILE_PATH=$NS_WDIR/$NS_TA_DIR/$PROJECT/$SUB_PROJECT/scenario_profiles
+}
+INVOKER="cli"
+FORCE="no"
+NS_TA_DIR="workspace/$USER_NAME/$WORK_PROFILE/cavisson"
+while getopts p:S:fw:? c
+do
+  case $c in
+    p) check_option $PFLAG "-p"
+       PFLAG=`expr $PFLAG + 1`
+       PROJ_SUB_PROJ="$OPTARG"
+       check_format_of_proj_subproj "$PROJ_SUB_PROJ" ;;
+    S) check_option $SFLAG "-S"
+       SFLAG=`expr $SFLAG + 1`
+       INVOKER="$OPTARG" 
+       if [ $INVOKER != "cli" -a $INVOKER != "gui" ];then
+         err_msgout "-S option can be use by cli/gui only"
+         exit -1
+       fi
+       ;; 
+    f) check_option $fFLAG "-f"
+       fFLAG=`expr $fFLAG + 1`
+       FORCE="yes" 
+       ;;
+    #u) check_option $uFLAG "-u"
+       #uFLAG=`expr $uFLAG + 1`
+       #if [ "X$OPTARG" != "X" ];then
+        #USER_NAME="$OPTARG"
+       #fi
+       #;;
+    w) check_option $wFLAG "-w"
+       wFLAG=`expr $wFLAG + 1`
+       if [ "X$OPTARG" != "X" ];then
+         USER_NAME=`echo "$OPTARG" | cut -d"/"  -f1`
+         WORK_PROFILE=`echo "$OPTARG" | cut -d"/"  -f2`
+       fi
+       ;;
+    ?) display_help_and_exit ;;
+    *) display_help_and_exit ;;
+  esac
+done
+check_mandatory_options
+set_ta_dir
+check_and_del_proj_subproj
+
+#msgout "----------------------------------------------------------------------"
+exit 0

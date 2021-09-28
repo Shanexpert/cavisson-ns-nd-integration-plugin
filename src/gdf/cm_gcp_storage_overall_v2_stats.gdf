@@ -1,0 +1,11 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP Storage Overall|11538|vector|4|0|GCP Metrics|ProjectID|GCP storage overall monitor provides metrics related to GCP overall storage.
+
+Graph|GCP Storage Buckets Count|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of storage buckets. 
+Graph|GCP Storage Locations Count|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of storage locations.  
+Graph|GCP Storage Bucket Size (GB)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total storage of all buckets in gigabytes.   
+Graph|GCP Storage Objects Count|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of objects in all buckets.

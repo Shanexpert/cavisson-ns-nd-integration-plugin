@@ -1,0 +1,25 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+
+#ObjectName :Coherence:type=Platform,Domain=java.lang,subType=MemoryPool,name=*,nodeId=*
+
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Coherence Memory Pool Stats|14168|vector|4|0|Coherence Metrics|Tier>Server>Instance>name>nodeId|This stats provides information about Memory Pool.
+
+
+Graph|Coherence Usage Threshold|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Returns the usage threshold value of this memory pool in bytes. Each memory pool has a platform-dependent default threshold value. The current usage threshold can be changed via the setUsageThreshold method.
+
+Graph|Coherence Usage Threshold Count|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Returns the number of times that the memory usage has crossed the usage threshold.
+
+Graph|Coherence Collection Usage Threshold|3|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Sets the collection usage threshold of this memory pool to the given threshold value. When this threshold is set to positive, the Java virtual machine will check the memory usage at its best appropriate time after it has expended effort in recycling unused objects in this memory pool.
+
+Graph|Coherence Collection Usage Threshold Count|4|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Returns the number of times that the Java virtual machine has detected that the memory usage has reached or exceeded the collection usage threshold.
+
+
+

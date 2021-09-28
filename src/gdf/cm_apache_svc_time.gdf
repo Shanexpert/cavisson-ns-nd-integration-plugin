@@ -1,0 +1,11 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Apache Request Stats|10178|vector|2|0|Application Metrics|Tier>Server>Instance|To keep the record of all requests processed by the Apache server
+
+Graph|Number of requests/second|1|scalar|rate|-|None|0|NA|-1|-1|NA|NA|To get the number of request in a second.
+Graph|Average service time (Sec)|2|scalar|times|-|None|0|NA|-1|-1|NA|NA|To get the average service time.

@@ -1,0 +1,5 @@
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Kubernetes Components HTTP Request Stats|14150|vector|1|0|Kubernetes Control Plane Metrics|Cluster>MasterNode>Job>StatusCode>Method|Kubernetes Components HTTP Request Stats
+
+Graph|HTTP Requests/Sec |1|scalar|sample_4B|-|CumToPS|0|NA|-1|-1|H|NA|Number of HTTP requests, partitioned by status code, method, and host.

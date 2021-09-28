@@ -1,0 +1,35 @@
+# fileName  : nsi_change_url_in_main_page
+# Author    : Neha Rastogi 
+# Purpsose  :  This is done so that we can test script with contents on NO machine.
+#              Since there are restrictions in the name of the file, files are created
+#              with different names and hence main page repsone file is changed by recorder
+#              to show the correct page dump.
+#
+# Usage     :  nsi_change_url_in_main_page -s <scriptName> -D
+#!/bin/sh
+#Check and get login user name
+USER_NAME=`whoami 2>/dev/null`
+if [ $? != 0 ];then
+  echo "Error: Unable to get the real user name"
+  exit 1
+fi
+
+SCRIPT_NAME_WITH_PATH=$2
+WORK_PROFILE=`echo $SCRIPT_NAME_WITH_PATH | cut -d '/' '-f1-2'`
+PROJ_SUBPROJ=`echo $SCRIPT_NAME_WITH_PATH | cut -d '/' '-f3-4'`
+SCRIPT_NAME=`basename $SCRIPT_NAME_WITH_PATH`
+NS_TA_DIR="$NS_WDIR/workspace/$WORK_PROFILE/cavisson/$PROJ_SUBPROJ"
+
+if [ ! -s $NS_TA_DIR/scripts/$SCRIPT_NAME ]; then
+  echo "Error in getting script directory $SCRIPT_NAME_WITH_PATH"
+  echo "Script may not be present"
+  exit -1
+fi
+
+#cd $NS_WDIR/webapps/netstorm/WEB-INF/classes
+if [ -d /home/cavisson/monitors ];then
+  java -cp $NS_WDIR/webapps/netstorm/WEB-INF/lib/netstorm_bean.jar:/home/cavisson/monitors/lib/java-getopt-1.0.9.jar -DNS_WDIR=$NS_WDIR pac1.Bean.ChangeUrlInMainPage  $*
+else
+  java -cp $NS_WDIR/webapps/netstorm/WEB-INF/lib/netstorm_bean.jar:/opt/cavisson/monitors/lib/java-getopt-1.0.9.jar -DNS_WDIR=$NS_WDIR pac1.Bean.ChangeUrlInMainPage  $*
+fi
+exit $?

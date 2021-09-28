@@ -1,0 +1,23 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+#
+# Command to get data for this gdf on windows server : 
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# wmic path Win32_PerfFormattedData_NETFramework_NETCLRJit.Name='_Global_' get NumberofILBytesJitted,NumberofMethodsJitted,PercentTimeinJit,ILBytesJittedPersec,StandardJitFailures,TotalNumberofILBytesJitted /every:10
+#
+# Entry in mprof to get data :
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# CUSTOM_MONITOR 192.168.1.52 cm_win_NETCLRJit_stats.gdf Win_Mon_NETCLRJit 2 wmic path Win32_PerfFormattedData_NETFramework_NETCLRJit.Name='_Global_' get NumberofILBytesJitted,NumberofMethodsJitted,PercentTimeinJit,ILBytesJittedPersec,StandardJitFailures,TotalNumberofILBytesJitted /every:10
+#
+
+Info|3.1|1|-|-|-1|-1|-
+Group|.NET CLR JIT Stats|10040|vector|5|0|Application Metrics|Tier>Server>Instance|.NET CLR JIT stats. Microsoft intermediate language (MSIL) are compiled by a .NET framework Just-In-Time (JIT) compiler to machine code. 
+
+Graph|JIT IL Jitted Size (MB)|1|scalar|sample|-|-|0|NA|-1|-1|L|NA|Microsoft intermediate language compiled by the just-in-time (JIT) compilers since the application started. It is shown in Megabytes.
+Graph|JIT Methods Jitted/Sec|2|scalar|rate|-|-|0|NA|-1|-1|L|NA|Rate at which methods compiled.
+Graph|JIT Time (Pct)|3|scalar|sample|-|-|0|NA|-1|-1|L|NA|Percentage of elapsed time spent in JIT compilation since the last JIT compilation phase.
+Graph|JIT IL Jitted (MB)/Sec|4|scalar|rate|-|-|0|NA|-1|-1|L|NA|rate at which Microsoft intermediate language (MB) compiled per second.
+Graph|JIT Method Jitted Failure/Sec|5|scalar|rate|-|CumToPS|0|NA|-1|-1|L|NA|Number of methods per second, JIT compiler has failed to JIT.

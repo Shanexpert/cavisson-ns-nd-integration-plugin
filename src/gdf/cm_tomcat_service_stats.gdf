@@ -1,0 +1,10 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Tomcat Service Stats|10345|vector|4|0|Tomcat Metrics|Tier>Server>Instance>RequestProcessor|Tomcat Service Stats monitors metrics related to request processing by the request processor.
+Graph|Tomcat Average Request Processing Time (ms)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average time taken in milliseconds for processing all requests.
+Graph|Tomcat Requests/Sec|2|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of requests served per second.
+Graph|Tomcat Bytes Received/Sec|3|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of bytes received per second.
+Graph|Tomcat Bytes Sent/Sec|4|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of bytes sent per second.

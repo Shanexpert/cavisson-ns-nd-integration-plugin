@@ -1,0 +1,43 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Kafka Broker Topic Stats|10757|vector|12|0|Kafka Metrics|Tier>Server>Instance>Monitor>Vector|Kafka Broker Topic Stats monitors metrics related to messaging pipeline, message fetching rate etc on the broker.
+
+#G1 : Value of this graph is hidden
+Graph|Kafka Broker Topic Bytes Read|1|scalar|sample|-|None|0|I|-1|-1|NA|NA|Number of bytes read per second across all the topics by the consumer.
+
+#G2 : Converting into Per Second
+Graph|Kafka Broker Topic Bytes Read/Sec|2|scalar|rate|-|PS|0|D|-1|-1|NA|DIFF(G1,PREV_G1)|Number of bytes read per second across all the topics by the consumer.
+
+#G3 : Value of this graph is hidden
+Graph|Kafka Broker Topic Bytes Write|3|scalar|sample|-|None|0|I|-1|-1|NA|NA|Number of bytes written to all the topics per second.
+
+#G4 : Converting into Per Second
+Graph|Kafka Broker Topic Bytes Write/Sec|4|scalar|rate|-|PS|0|D|-1|-1|NA|DIFF(G3,PREV_G3)|Number of bytes written to all the topics per second.
+
+#G5 : Value of this graph is hidden
+Graph|Kafka Broker Topic Bytes Rejected|5|scalar|sample|-|None|0|I|-1|-1|NA|NA|Number of bytes in messages rejected per second by broker.
+
+#G6 : Converting into Per Second
+Graph|Kafka Broker Topic Bytes Rejected/Sec|6|scalar|rate|-|PS|0|D|-1|-1|NA|DIFF(G5,PREV_G5)|Number of bytes in messages rejected per second by broker.
+
+#G7 : Value of this graph is hidden
+Graph|Kafka Broker Topic Fetch Request Failed|7|scalar|sample|-|None|0|I|-1|-1|NA|NA|Number of data read requests per second from consumers that brokers failed to process for topics.
+
+#G8 : Converting into Per Second
+Graph|Kafka Broker Topic Fetch Request Failed/Sec|8|scalar|rate|-|PS|0|D|-1|-1|NA|DIFF(G7,PREV_G7)|Number of data read requests per second from consumers that brokers failed to process for topics.
+
+#G9 : Value of this graph is hidden
+Graph|Kafka Broker Topic Produce Request Failed|9|scalar|sample|-|None|0|I|-1|-1|NA|NA|Number of data write requests per second from consumers that brokers failed to process for topics.
+
+#G10 : Converting into Per Second
+Graph|Kafka Broker Topic Produce Request Failed/Sec|10|scalar|rate|-|PS|0|D|-1|-1|NA|DIFF(G9,PREV_G9)|Number of data write requests per second from consumers that brokers failed to process for topics.
+
+#G11 : Value of this graph is hidden
+Graph|Kafka Broker Topic Message Recieved|11|scalar|sample|-|None|0|I|-1|-1|NA|NA|Number of messages written to topics on this broker per second.
+
+#G12 : Converting into Per Second
+Graph|Kafka Broker Topic Message Recieved/Sec|12|scalar|rate|-|PS|0|D|-1|-1|NA|DIFF(G11,PREV_G11)|Number of messages written to topics on this broker per second.

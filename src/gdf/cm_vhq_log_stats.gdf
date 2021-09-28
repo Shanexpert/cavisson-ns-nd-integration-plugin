@@ -1,0 +1,42 @@
+Info|3.1|1|-|-|-1|-1|-
+Group|VHQ Log Stats|10289|vector|40|0|Application Metrics|Tier>Server>Instance|Information related to All the attributes of VHQ Logs Stats Monitor.
+Graph|Admin Requests/Sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of Admin requests per second.
+Graph|Admin Encryption Time (ms)|2|scalar|times|-|-|0|NA|-1|-1|NA|NA|Encryption time of Admin requests in ms.
+Graph|Admin Decryption Time (ms)|3|scalar|times|-|-|0|NA|-1|-1|NA|NA|Decryption time of Admin requests in ms.
+Graph|Admin POS Authentication Time (ms)|4|scalar|times|-|-|0|NA|-1|-1|NA|NA|Pos authentication time of Admin requests in ms.
+Graph|Admin Response Time (ms)|5|scalar|times|-|-|0|NA|-1|-1|NA|NA|Response time of Admin requests in ms.
+Graph|Device Requests/Sec|6|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of Device requests per second.
+Graph|Device Encryption Time (ms)|7|scalar|times|-|-|0|NA|-1|-1|NA|NA|Encryption time of Device requests in ms.
+Graph|Device Decryption Time (ms)|8|scalar|times|-|-|0|NA|-1|-1|NA|NA|Decryption time of Device requests in ms.
+Graph|Device POS Authentication Time (ms)|9|scalar|times|-|-|0|NA|-1|-1|NA|NA|Pos authentication time of Device requests in ms.
+Graph|Device Response Time (ms)|10|scalar|times|-|-|0|NA|-1|-1|NA|NA|Response time of Device requests in ms.
+Graph|Line Item Requests/Sec|11|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of Line Item requests per second.
+Graph|Line Item Encryption Time (ms)|12|scalar|times|-|-|0|NA|-1|-1|NA|NA|Encryption time of Line Item requests in ms.
+Graph|Line Item Decryption Time (ms)|13|scalar|times|-|-|0|NA|-1|-1|NA|NA|Decryption time of Line Item requests in ms.
+Graph|Line Item POS Authentication Time (ms)|14|scalar|times|-|-|0|NA|-1|-1|NA|NA|Pos authentication time of Line Item requests in ms.
+Graph|Line Item Response Time (ms)|15|scalar|times|-|-|0|NA|-1|-1|NA|NA|Response time of Line Item requests in ms.
+Graph|Payment Requests/Sec|16|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of Payment requests per second.
+Graph|Payment Encryption Time (ms)|17|scalar|times|-|-|0|NA|-1|-1|NA|NA|Encryption time of Payment requests in ms.
+Graph|Payment Decryption Time (ms)|18|scalar|times|-|-|0|NA|-1|-1|NA|NA|Decryption time of Payment requests in ms.
+Graph|Payment POS Authentication Time (ms)|19|scalar|times|-|-|0|NA|-1|-1|NA|NA|Pos authentication time of Paymentrequests in ms.
+Graph|Payment Response Time (ms)|20|scalar|times|-|-|0|NA|-1|-1|NA|NA|Response time of Payment requests in ms.
+Graph|Secondary Port Requests/Sec|21|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of Secondary Port requests per second.
+Graph|Secondary Port Encryption Time (ms)|22|scalar|times|-|-|0|NA|-1|-1|NA|NA|Encryption time of Secondary Port requests in ms.
+Graph|Secondary Port Decryption Time (ms)|23|scalar|times|-|-|0|NA|-1|-1|NA|NA|Decryption time of Secondary Port requests in ms.
+Graph|Secondary Port POS Authentication Time (ms)|24|scalar|times|-|-|0|NA|-1|-1|NA|NA|Pos authentication time of Secondary Port requests in ms.
+Graph|Secondary Port Response Time (ms)|25|scalar|times|-|-|0|NA|-1|-1|NA|NA|Response time of Secondary Port requests in ms.
+Graph|Security Requests/Sec|26|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of Payment Security per second.
+Graph|Security Encryption Time (ms)|27|scalar|times|-|-|0|NA|-1|-1|NA|NA|Encryption time of Security requests in ms.
+Graph|Security Decryption Time (ms)|28|scalar|times|-|-|0|NA|-1|-1|NA|NA|Decryption time of Security requests in ms.
+Graph|Security POS Authentication Time (ms)|29|scalar|times|-|-|0|NA|-1|-1|NA|NA|Pos authentication time of Security requests in ms.
+Graph|Security Response Time (ms)|30|scalar|times|-|-|0|NA|-1|-1|NA|NA|Response time of Security requests in ms.
+Graph|Session Requests/Sec|31|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of Session requests per second.
+Graph|Session Encryption Time (ms)|32|scalar|times|-|-|0|NA|-1|-1|NA|NA|Encryption time of Session requests in ms.
+Graph|Session Decryption Time (ms)|33|scalar|times|-|-|0|NA|-1|-1|NA|NA|Decryption time of Session requests in ms.
+Graph|Session POS Authentication Time (ms)|34|scalar|times|-|-|0|NA|-1|-1|NA|NA|Pos authentication time of Session requests in ms.
+Graph|Session Response Time (ms)|35|scalar|times|-|-|0|NA|-1|-1|NA|NA|Response time of Session requests in ms.
+Graph|Others Requests/Sec|36|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of Others requests per second.
+Graph|Others Encryption Time (ms)|37|scalar|times|-|-|0|NA|-1|-1|NA|NA|Encryption time of Others requests in ms.
+Graph|Others Decryption Time (ms)|38|scalar|times|-|-|0|NA|-1|-1|NA|NA|Decryption time of Others requests in ms.
+Graph|Others POS Authentication Time (ms)|39|scalar|times|-|-|0|NA|-1|-1|NA|NA|Pos authentication time of Others requests in ms.
+Graph|Others Response Time (ms)|40|scalar|times|-|-|0|NA|-1|-1|NA|NA|Response time of Others requests in ms.

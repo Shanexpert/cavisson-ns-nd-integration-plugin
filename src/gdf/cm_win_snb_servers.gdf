@@ -1,0 +1,41 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Windows SMB Server Shares|10933|vector|36|0|Application Metrics|Tier>Server>Instance|Windows SMB Server Shares provide information about SMB server share that are shared using SMB protocol version 2 or higher.
+Graph|Current Data Queue Length|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current number of read or write requests outstanding on the share. Perfmon metric name: Current Data Queue Length.
+Graph|Data Requests/Sec|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Rate at which read or write requests are being received for the share. Perfmon metric name: Data Requests/sec.
+Graph|Data KBytes/Sec|3|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Rate at which data is being written to or read from the share. Perfmon metric name: Data Bytes/sec.
+Graph|Average Data Queue Length|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average number of read and write requests that were queued for the share. Perfmon metric name: Avg. Data Queue Length.
+Graph|Average Write Queue Length|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average number of write requests that were queued for the share. Perfmon metric name: Avg. Write Queue Length.
+Graph|Average Read Queue Length|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average number of read requests that were queued for the share. Perfmon metric name: Avg. Read Queue Length.
+Graph|Average Bytes/Write Request|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average number of bytes per write request. Perfmon metric name: Avg. Bytes/Write.
+Graph|Average Bytes/Read Request|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average number of bytes per read request. Perfmon metric name: Avg. Bytes/Read.
+Graph|Average Data Bytes/Request|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average number of bytes per read or write request. Perfmon metric name: Avg. Data Bytes/Request.
+Graph|Average Processing Time/Data Request (secs)|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average time (seconds) that elapse between the time at which a read or write request to the share is received and the time at which the SMB File Server processes the request. Perfmon metric name: Avg. Sec/Data Request.
+Graph|Metadata Requests/Sec|11|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Rate at which metadata requests are being sent to the share.Perfmon metric name: Metadata Requests/Sec.
+Graph|Persistent Handles (Pct)|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percentage of total handles for which clients requested persistency. Perfmon metric name: % Persistent Handles.
+Graph|Resilient Handles (Pct)|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percentage of total opens for which clients requested resiliency. Perfmon metric name: % Resilient Handles.
+Graph|Total Failed Persistent Handle Reopen Count|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of persistent opens on the share that could not be recovered after a temporary network disconnect since the SMB File Server Started. Perfmon metric name: Total Failed Persistent Handle Reopen Count.
+Graph|Total Persistent Handle Reopen Count|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of persistent opens on the share that have been recovered after a temporary network disconnect since the SMB File Server started. Perfmon metric name: Total Persistent Handle Reopen Count.
+Graph|Total Failed Resilient Handle Reopen Count|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of resilient opens on the share that could not be recovered after a temporary network disconnect since the SMB File Server Started. Perfmon metric name: Total Failed Resilient Handle Reopen Count.
+Graph|Total Resilient Handle Reopen Count|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of resilient opens on the share that have been recovered after a temporary network disconnect since the SMB File Server started. Perfmon metric name: Total Resilient Handle Reopen Count.
+Graph|Total Failed Durable Handle Reopen Count|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of durable opens on the share that could not be recovered after a temporary network disconnect since the SMB File Server Started. Perfmon metric name: Total Failed Durable Handle Reopen Count.
+Graph|Total Durable Handle Reopen Count|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of durable opens on the share that have been recovered after a temporary network disconnect since the SMB File Server started. Perfmon metric name: Total Durable Handle Reopen Count. 
+Graph|Current Durable Open File Count|20|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of durable file handles that are currently open on the share. Perfmon metric name: Current Durable Open File Count.
+Graph|Current Open File Count|21|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of file handles that are currently open in the share. Perfmon metric name: Current Open File Count.
+Graph|Files Open/Sec|22|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Rate at which files are being opened for the SMB File Server’s clients on the share.Perfmon metric name: Files Opened/sec.
+Graph|Total File Open Count|23|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of files that have been opened by the SMB File Server on behalf of its clients on the share since the server started. Perfmon metric name: Total File Open Count.
+Graph|Data Read/Sec (KB)|24|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Rate at which data is being read from the share. Perfmon metric name: Read Bytes/sec.
+Graph|Average Read Processing Time (secs)|25|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average time (seconds) elapse between the time at which a read request to the share is received and the time at which the SMB File Server sends the corresponding response. Perfmon metric name: Average sec/Read.
+Graph|Read Requests/Sec|26|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Read requests processed per sec related to the share. Perfmon metric name: Read Requests/sec.
+Graph|Data Written/Sec (KB)|27|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Rate at which data is being written to the share. Perfmon metric name: Write Bytes/sec.
+Graph|Average Write Processing Time (secs)|28|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average number of seconds that elapse between the time at which a write request to the share is received and the time at which the SMB File Server sends the corresponding response. Perfmon metric name: Average sec/Write.
+Graph|Write Requests/Sec|29|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Write requests processed per second related to this share. Perfmon metric name: Write Requests/sec
+Graph|Average Request Processing Time|30|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average number of seconds that elapse between the time at which the SMB File Server receives a request for this share and the time at which the SMB File Server sends the corresponding response. Perfmon metric name: Average sec/Request.
+Graph|Current Pending Requests|31|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of requests related to the share that are waiting to be processed by the SMB File Server. Perfmon metric name: Current Pending Requests.
+Graph|Transferred Bytes/Sec|32|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Sum of Sent Bytes per second and Received Bytes per second for the share. Perfmon metric name: Transferred Bytes/sec.
+Graph|Sent Bytes/Sec|33|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Rate at which bytes are being sent from the SMB File Server related to the share to its clients. Perfmon metric name: Sent Bytes/sec.
+Graph|Tree Connect Count|34|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current number of tree connects to this share. Perfmon metric name: Tree Connect Count.
+Graph|Requests/Sec|35|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Rate at which requests are being received for the share. Perfmon metric name: Requests/sec.
+Graph|Received Bytes/Sec|36|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Rate at which bytes are being received for requests related to the share. Perfmon metric name: Received Bytes/sec.

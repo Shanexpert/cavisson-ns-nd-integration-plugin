@@ -1,0 +1,12 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Kafka Consumer Extended Stats|10470|vector|6|0|Kafka Metrics|Tier>Server>Instance>Consumer|Kafka Consumer Extended Stats monitors metrics related to consumer messaging policy.
+Graph|Kafka Consumer Consumption Lag|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum number of consumer messages consumption is behind from producer messages production.
+Graph|Kafka Consumer Fetch Request/Sec|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of fetch requests per second. If a consumer is dead, this value drops to roughly 0.
+Graph|Kafka Consumer Bytes Consumed/Sec|3|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of bytes consumed per second.
+Graph|Kafka Consumer Records Consumed/Sec|4|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of records consumed per second.
+Graph|Kafka Commits/Sec|5|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of offset commits per second by the consumer.
+Graph|Kafka ZooKeeper Commits/Sec|6|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of offset commits per second by the zookeeper.

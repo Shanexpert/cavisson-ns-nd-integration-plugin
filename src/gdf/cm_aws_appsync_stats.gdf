@@ -1,0 +1,10 @@
+# --- GDF Version History ---
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS AppSync Stats|11288|vector|3|0|AWS Metrics|AccountName>Region>GraphQLAPIID|AWS AppSync is an enterprise level, fully managed GraphQL service with real-time data synchronization and offline programming features.
+
+Graph|AWS Appsync 4xx Error|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of errors captured as a result of invalid requests due to an incorrect client configuration.
+Graph|AWS Appsync 5xx Error|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Errors encountered during the execution of a GraphQL query.
+Graph|AWS Appsync Latency (ms)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The time between when AWS AppSync receives a request from a client and when it returns a response to the client.

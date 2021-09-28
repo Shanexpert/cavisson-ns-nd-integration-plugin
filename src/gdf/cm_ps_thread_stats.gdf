@@ -1,0 +1,6 @@
+Info|3.1|1|-|-|-1|-1|-
+Group|Process Thread Stats|10243|vector|3|0|Application Metrics|Tier>Server>Instance>Thread|Process threads stats such as CPU Time
+
+Graph|Thread Elapsed Time (Sec)|1|scalar|cumulative|-|None|0|NA|-1|-1|NA|NA|Elapsed time by the thread in seconds
+Graph|Thread CPU Time (Sec)|2|scalar|cumulative|-|None|0|NA|-1|-1|NA|NA|CPU time consumed by the thread in seconds
+Graph|Thread CPU Time (Pct)|3|scalar|sample|-|None|0|NA|-1|-1|NA|NA|CPU time used by thread in percentage

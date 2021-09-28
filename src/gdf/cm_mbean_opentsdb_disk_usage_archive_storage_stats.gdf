@@ -1,0 +1,14 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+
+# Graph information line
+# Graph|graphName|rptId|graphType|dataType|graphDataIndex|formula|numVectors
+
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Database Archive Storage Stats|10833|vector|1|0|SecA Metrics|Tier>Component>BucketType|Fetching Disk Usage Metrics for Archive Storage from OpenTSDB.
+
+Graph|Disk Usage Bytes/Sec|1|scalar|cumulative|-|CumToPS|0|NA|-1|-1|NA|NA|Disk Usage of Archive Storage with BucketType(Hot/Cold) in Bytes/sec for SecA Metrics.

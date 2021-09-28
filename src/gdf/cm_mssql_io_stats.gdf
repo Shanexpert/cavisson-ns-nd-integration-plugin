@@ -1,0 +1,26 @@
+#LAST_MAX_ASSIGNED_GRAPH_ID = 22
+#LAST_MODIFIED_DATE = 09/01/16 01:56:09
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+         
+Info|3.1|1|-|-|-1|-1|-
+Group|MSSQL IO Activity Stats|10474|vector|14|0|MSSQL Metrics|Tier>Server>DBName|MSSQL database IO activity statitstics.
+Graph|MSSQL Data File Avg Read Size (KB)|1|scalar|sample|-|-|0|NA|-1|-1|H|NA|Data file average read size in Kilobytes.
+Graph|MSSQL Data File Avg Write Size (KB)|2|scalar|sample|-|-|0|NA|-1|-1|H|NA|Data file average write size in Kilobytes.
+Graph|MSSQL Data File Bytes Read/Sec|3|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Data file bytes read per second.
+Graph|MSSQL Data File Bytes Write/Sec|4|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Data file bytes write per second.
+Graph|MSSQL Data File IO Stall (ms)/Sec|5|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Time(in milliseconds), users waited for I/O to be completed on the file per second.
+#Graph|MSSQL Data File IO Wait|6|scalar|sample|-|-|0|NA|-1|-1|H|NA|Data file IO wait.
+Graph|MSSQL Data File Read/Sec|6|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of read per second from data file.
+Graph|MSSQL Data File Write/Sec|7|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of write per second into data file.
+Graph|MSSQL Log File Avg Read Size (KB)|8|scalar|sample|-|-|0|NA|-1|-1|H|NA|Log file average read size in Kilobytes.
+Graph|MSSQL Log File Avg Write Size (KB)|9|scalar|sample|-|-|0|NA|-1|-1|H|NA|Log file average write size in Kilobytes..
+Graph|MSSQL Log File Bytes Read/Sec|10|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Log file bytes read per second.
+Graph|MSSQL Log File Bytes Write/Sec|11|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Log file bytes write per second.
+Graph|MSSQL Log File IO Stalls|12|scalar|sample|-|-|0|NA|-1|-1|H|NA|Log file io stalls.
+#Graph|MSSQL Log File IO Wait|14|scalar|sample|-|-|0|NA|-1|-1|H|NA|Log file IO wait.
+Graph|MSSQL Log File Read/Sec|13|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of read per second from log file.
+Graph|MSSQL Log File Write/Sec|14|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|Number of write per second into log file.

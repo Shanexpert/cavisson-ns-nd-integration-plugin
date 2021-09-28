@@ -1,0 +1,16 @@
+
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+#
+#cm_nd_nodejs_async_event
+#Note - Group Id and graph should not be changed as these are used in Dashboard GUI
+
+Info|3.1|1|-|-|-1|-1|-
+Group|NodeJS Events Execution Stats|10562|vector|3|0|Application Metrics|Tier>Server>Instance>Event Category|Exposes stats of Event execution of different categories
+
+Graph|NodeJS Events per sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Rate of events execution per second
+Graph|NodeJS Average Event Execution Time (ms)|2|scalar|times|-|-|0|NA|-1|-1|NA|NA|Average time taken in events execution
+Graph|NodeJS Average Event Execution Delay (ms)|3|scalar|times|-|-|0|NA|-1|-1|NA|NA|Average delay in executing events

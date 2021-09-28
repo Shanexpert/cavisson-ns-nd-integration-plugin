@@ -1,0 +1,106 @@
+{
+  "templateName": "_VuserReports",
+  "description": "Template for Vuser reports as simple Report",
+  "creationDate": "10/15/07 15:51:16",
+  "modifiedDate": "10/15/07 15:51:16",
+  "owner": "cavisson",
+  "isConverted": true,
+  "reportSetArray": [
+    {
+      "reportSetName": "Running Vusers",
+      "dataType": 0,
+      "chartType": 0,
+      "formulaType": "0",
+      "scaling": 0,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 1,
+          "graphId": 1,
+          "vecName": "NA"
+        }
+      ]
+    },
+    {
+      "reportSetName": "Active Vusers",
+      "dataType": 0,
+      "chartType": 0,
+      "formulaType": "0",
+      "scaling": 0,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 1,
+          "graphId": 2,
+          "vecName": "NA"
+        }
+      ]
+    },
+    {
+      "reportSetName": "Thinking Vusers",
+      "dataType": 0,
+      "chartType": 0,
+      "formulaType": "0",
+      "scaling": 0,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 1,
+          "graphId": 3,
+          "vecName": "NA"
+        }
+      ]
+    },
+    {
+      "reportSetName": "Waiting Vusers",
+      "dataType": 0,
+      "chartType": 0,
+      "formulaType": "0",
+      "scaling": 0,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 1,
+          "graphId": 4,
+          "vecName": "NA"
+        }
+      ]
+    },
+    {
+      "reportSetName": "Idling Vusers",
+      "dataType": 0,
+      "chartType": 0,
+      "formulaType": "0",
+      "scaling": 0,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 1,
+          "graphId": 5,
+          "vecName": "NA"
+        }
+      ]
+    },
+    {
+      "reportSetName": "Number Of Connections",
+      "dataType": 0,
+      "chartType": 0,
+      "formulaType": "0",
+      "scaling": 0,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 1,
+          "graphId": 6,
+          "vecName": "NA"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:soap-enc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:cwmp="urn:dslforum-org:cwmp-1-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soapenv:Header>
+    <cwmp:ID soap:mustUnderstand="1" xsi:type="xsd:string">1234</cwmp:ID>
+  </soapenv:Header>
+  <soapenv:Body soap:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+    <cwmp:GetParameterAttributesResponse>
+      <ParameterList xsi:type="soap-enc:Array" soap-enc:arrayType="cwmp:ParameterAttributeStruct[3]">
+        <ParameterAttributeStruct xsi:type="cwmp:ParameterAttributeStruct">
+          <Name xsi:type="xsd:string">.a.b.a</Name>
+          <Notification xsi:type="xsd:int">0</Notification>
+          <AccessList/>
+        </ParameterAttributeStruct>
+        <ParameterAttributeStruct xsi:type="cwmp:ParameterAttributeStruct">
+          <Name xsi:type="xsd:string">.a.b.b</Name>
+          <Notification xsi:type="xsd:int">0</Notification>
+          <AccessList>
+            <xsd:string xsi:type="xsd:string">Subscriber</xsd:string>
+          </AccessList>
+        </ParameterAttributeStruct>
+        <ParameterAttributeStruct xsi:type="cwmp:ParameterAttributeStruct">
+          <Name xsi:type="xsd:string">.a.b.c</Name>
+          <Notification xsi:type="xsd:int">0</Notification>
+          <AccessList>
+            <xsd:string xsi:type="xsd:string">Subscriber</xsd:string>
+          </AccessList>
+        </ParameterAttributeStruct>
+      </ParameterList>
+    </cwmp:GetParameterAttributesResponse>
+  </soapenv:Body>
+</soapenv:Envelope>

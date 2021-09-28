@@ -1,0 +1,62 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+#
+# Note: Please Use the Group Name and Graph Name having no special character like {%, !, ^, &, + } etc..
+
+# General information line
+# Info|msgVersion|numGroups|startIndex|testRun|sizeOfMsgData|interval|testRunStartDate/Time
+#
+# Group information line
+# Group|groupName|rptGrpId|groupType|numGraphs|numVectors
+#
+# Graph information line
+# Graph|graphName|rptId|graphType|dataType|graphDataIndex|formula|numVectors
+# ---  Mbean Reference Link :https://docs.oracle.com/javase/7/docs/jre/api/management/extension/com/sun/management/OperatingSystemMXBean.html#method_detail ---#
+# --- Reference Link:https://www.ibm.com/support/knowledgecenter/SSYKE2_7.1.0/com.ibm.java.api.71.doc/com.ibm.lang.management/com/ibm/lang/management/OperatingSystemMXBean.html?view=embed#method_detail ---#
+# This Mbean is applicable to all JVM except few attributes which are available in WAS only(7,9,10,11) #
+
+
+Group|JVM Operating System Stats|11031|vector|13|0|JVM Metrics|Tier>Server>Instance|This stats provides operating system statitics, where Java process is running.
+
+#G1
+Graph|JVM System CPU Load|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|This represents "recent cpu usage" for the whole system.Its value varies in the [0.0,1.0] interval. A value of 0.0 means that all CPUs were idle during the recent period of time observed, while a value of 1.0 means that all CPUs were actively running 100% of the time during the recent period being observed. All values betweens 0.0 and 1.0 are possible depending of the activities going on in the system.
+
+#G2
+Graph|JVM Process CPU Time (NS)|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Total amount of time the process has been scheduled or executed so far in both kernel and user modes (in nano seconds).
+
+#G3
+Graph|JVM Free Swap Space Size (Bytes)|3|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The amount of free swap space in bytes.
+
+#G4
+Graph|JVM Total Physical Memory (Bytes)|4|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Total available physical memory on the system in bytes.
+
+#G5
+Graph|JVM Available Processors|5|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of processors available to the Java virtual machine.
+
+#G6
+Graph|JVM System Load Average|6|scalar|sample|-|None|0|AS|-1|-1|NA|NA|System load average for the last minute.It is the sum of the number of runnable entities queued to the available processors and the number of runnable entities running on the available processors averaged over a period of time.
+
+#G7
+Graph|JVM Process Physical Memory Size (Bytes)|7|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Amount of physical memory being used by the process in byte.
+
+#G8
+Graph|JVM Committed Virtual Memory Size (Bytes)|8|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Amount of virtual memory that is guaranteed to be available to the running process in bytes.
+
+#G9
+Graph|JVM Free Physical Memory Size (Bytes)|9|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Amount of physical memory that is available on the system in bytes.
+
+#G10
+Graph|JVM Processing Capacity|10|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Collective capacity of the virtual processors in the partition the VM is running in.The value is in units of 1% of a physical processor's capacity, so a value of 100 is equal to 1 physical processor.
+
+#G11
+Graph|JVM Process Private Memory Size (Bytes)|11|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The amount of private memory used by the process in bytes.
+
+#G12
+Graph|JVM Process CPU Load|12|scalar|sample|-|None|0|AS|-1|-1|NA|NA|It represents "recent cpu usage" for the Java Virtual Machine process.Its value varies in the [0.0,1.0] interval. A value of 0.0 means that none of the CPUs were running threads from the JVM process during the recent period of time observed, while a value of 1.0 means that all CPUs were actively running threads from the JVM 100% of the time during the recent period being observed. Threads from the JVM include the application threads as well as the JVM internal threads. All values betweens 0.0 and 1.0 are possible dependingof the activities going on in the JVM process and the whole system.
+
+#G13
+Graph|JVM Total Swap Space Size (Bytes)|13|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Total amount of swap space in bytes.
+

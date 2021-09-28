@@ -1,0 +1,18 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|VMWare ESXi Host Memory Stats|10250|vector|11|0|VMWare Metrics|Tier>Server>Instance|VMWare ESXi Host Memory Stats
+
+Graph|Memory Consumed (KB)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of memory consumed by a virtual machine, host, or cluster (KB).
+Graph|Active Write Memory (KB)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of memory actively being written to by the VM (KB).
+Graph|Memory Granted (KB)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of memory granted. For hosts this can be represented on a per Virtual Machine basis as a stacked graph.
+Graph|Memory Unreserved (KB)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of memory that is unreserved (KB).
+Graph|Memory Heap (KB)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of memory allocated for heap (KB).
+Graph|Low Free Threshold (average)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Threshold of free host physical memory below which ESX will begin reclaiming memory from VMs through ballooning and swapping (average).
+Graph|Memory Usage (Percent)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memory usage as percentage of total configured or available memory (Percent).
+Graph|Memory Active (KB)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of memory that is actively used (KB).
+Graph|Memory Heap Free (KB)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Free space in memory heap (KB) 
+Graph|Memory Used by VMKernel (KB)|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of memory used by the vmKernel (KB).
+Graph|Memory Shared Common (KB)|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of memory that is shared by common (KB).

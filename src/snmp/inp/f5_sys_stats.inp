@@ -1,0 +1,56 @@
+.1.3.6.1.4.1.3375.2.1.1.2.1.2.0|cumulative|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Client Pkts In|The number of packets received by the system from client side
+.1.3.6.1.4.1.3375.2.1.1.2.1.3.0|cumulative|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Client Bytes In|The number of bytes received by thesystem from client-side
+.1.3.6.1.4.1.3375.2.1.1.2.1.4.0|cumulative|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Client Pkts Out|The number of packets sent to client-side from the system
+.1.3.6.1.4.1.3375.2.1.1.2.1.5.0|cumulative|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Client Bytes Out|The number of bytes sent to client-side from the system
+.1.3.6.1.4.1.3375.2.1.1.2.1.6.0|cumulative|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Client Max Conns|The maximum connections from client-side to the system
+.1.3.6.1.4.1.3375.2.1.1.2.1.7.0|cumulative|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Client Tot Conns|The total connections from client-side to the system
+.1.3.6.1.4.1.3375.2.1.1.2.1.8.0|sample|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Client Cur Conns|The current connections from client-side to the system
+.1.3.6.1.4.1.3375.2.1.1.2.1.9.0|cumulative|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Server Pkts In|The number of packets received by the system from server-side
+.1.3.6.1.4.1.3375.2.1.1.2.1.10.0|cumulative|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Server Bytes In|The number of bytes received by the system from server-side
+.1.3.6.1.4.1.3375.2.1.1.2.1.11.0|cumulative|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Server Pkts Out|The number of packets sent to server-side from the system
+.1.3.6.1.4.1.3375.2.1.1.2.1.12.0|cumulative|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Server Bytes Out|The number of bytes sent to server-side from the system
+.1.3.6.1.4.1.3375.2.1.1.2.1.13.0|cumulative|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Server Max Conns|The maximum connections from server-side to the system
+.1.3.6.1.4.1.3375.2.1.1.2.1.14.0|cumulative|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Server Tot Conns|The total connections from server-side to the system
+.1.3.6.1.4.1.3375.2.1.1.2.1.15.0|sample|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Server Cur Conns|The current connections from server-side to the system
+.1.3.6.1.4.1.3375.2.1.1.2.1.59.0|rate|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Client Pkts In 5s|The average number of packets received by the system from client-side in the last five seconds
+.1.3.6.1.4.1.3375.2.1.1.2.1.60.0|rate|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Client Bytes In 5s|The average number of bytes received by the system from client-side in the last five seconds
+.1.3.6.1.4.1.3375.2.1.1.2.1.61.0|rate|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Client Pkts Out 5s|The average number of packets sent to client-side from the system in the last five seconds
+.1.3.6.1.4.1.3375.2.1.1.2.1.62.0|rate|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Client Bytes Out 5s|The average number of bytes sent to client-side from the system in the last five seconds
+.1.3.6.1.4.1.3375.2.1.1.2.1.63.0|rate|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Client Max Conns 5s|The average maximum connections from client-side to the system in the last five seconds
+.1.3.6.1.4.1.3375.2.1.1.2.1.64.0|rate|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Client Tot Conns 5s|The average total connections from client-side to the system in the last five seconds
+.1.3.6.1.4.1.3375.2.1.1.2.1.65.0|rate|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Client Cur Conns 5s|The average current connections from client-side to the system in the last five seconds
+.1.3.6.1.4.1.3375.2.1.1.2.1.66.0|rate|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Server Pkts In 5s|The average number of packets received by the system from server-side in the last five seconds
+.1.3.6.1.4.1.3375.2.1.1.2.1.67.0|rate|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Server Bytes In 5s|The average number of bytes received by the system from server-side in the last five seconds
+.1.3.6.1.4.1.3375.2.1.1.2.1.68.0|rate|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Server Pkts Out 5s|The average number of packets sent to server-side from the system in the last five seconds
+.1.3.6.1.4.1.3375.2.1.1.2.1.69.0|rate|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Server Bytes Out 5s|The average number of bytes sent to server-side from the system in the last five seconds
+.1.3.6.1.4.1.3375.2.1.1.2.1.70.0|rate|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Server Max Conns 5s|The average maximum connections from server-side to the system in the last five seconds
+.1.3.6.1.4.1.3375.2.1.1.2.1.71.0|rate|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Server Tot Conns 5s|The average total connections from server-side to the system in the last five seconds
+.1.3.6.1.4.1.3375.2.1.1.2.1.72.0|rate|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Server Cur Conns 5s|The average current connections from server-side to the system in the last five seconds
+.1.3.6.1.4.1.3375.2.1.1.2.1.73.0|rate|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Client Pkts In 1m|The average number of packets received by the system from client-side in the last one minute
+.1.3.6.1.4.1.3375.2.1.1.2.1.74.0|rate|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Client Bytes In 1m|The average number of bytes received by the system from client-side in the last one minute
+.1.3.6.1.4.1.3375.2.1.1.2.1.75.0|rate|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Client Pkts Out 1m|The average number of packets sent to client-side from the system in the last one minute
+.1.3.6.1.4.1.3375.2.1.1.2.1.76.0|rate|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Client Bytes Out 1m|The average number of bytes sent to client-side from the system in the last one minute
+.1.3.6.1.4.1.3375.2.1.1.2.1.77.0|rate|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Client Max Conns 1m|The average maximum connections from client-side to the system in the last one minute
+.1.3.6.1.4.1.3375.2.1.1.2.1.78.0|rate|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Client Tot Conns 1m|The average total connections from client-side to the system in the last one minute
+.1.3.6.1.4.1.3375.2.1.1.2.1.79.0|rate|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Client Cur Conns 1m|The average current connections from client-side to the system in the last one minute
+.1.3.6.1.4.1.3375.2.1.1.2.1.80.0|rate|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Server Pkts In 1m|The average number of packets received by the system from server-side in the last one minute
+.1.3.6.1.4.1.3375.2.1.1.2.1.81.0|rate|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Server Bytes In 1m|The average number of bytes received by the system from server-side in the last one minute
+.1.3.6.1.4.1.3375.2.1.1.2.1.82.0|rate|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Server Pkts Out 1m|The average number of packets sent to server-side from the system in the last one minute
+.1.3.6.1.4.1.3375.2.1.1.2.1.83.0|rate|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Server Bytes Out 1m|The average number of bytes sent to server-side from the system in the last one minute
+.1.3.6.1.4.1.3375.2.1.1.2.1.84.0|rate|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Server Max Conns 1m|The average maximum connections from server-side to the system in the last one minute
+.1.3.6.1.4.1.3375.2.1.1.2.1.85.0|rate|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Server Tot Conns 1m|The average total connections from server-side to the system in the last one minute
+.1.3.6.1.4.1.3375.2.1.1.2.1.86.0|rate|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Server Cur Conns 1m|The average current connections from server-side to the system in the last one minute
+.1.3.6.1.4.1.3375.2.1.1.2.1.87.0|rate|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Client Pkts In 5m|The average number of packets received by the system from client-side in the last five minutes
+.1.3.6.1.4.1.3375.2.1.1.2.1.88.0|rate|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Client Bytes In 5m|The average number of bytes received by the system from client-side in the last five minutes
+.1.3.6.1.4.1.3375.2.1.1.2.1.89.0|rate|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Client Pkts Out 5m|The average number of packets sent to client-side from the system in the last five minutes
+.1.3.6.1.4.1.3375.2.1.1.2.1.90.0|rate|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Client Bytes Out 5m|The average number of bytes sent to client-side from the system in the last five minutes
+.1.3.6.1.4.1.3375.2.1.1.2.1.91.0|rate|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Client Max Conns 5m|The average maximum connections from client-side to the system in the last five minutes
+.1.3.6.1.4.1.3375.2.1.1.2.1.92.0|rate|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Client Tot Conns 5m|The average total connections from client-side to the system in the last five minutes
+.1.3.6.1.4.1.3375.2.1.1.2.1.93.0|rate|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Client Cur Conns 5m|The average current connections from client-side to the system in the last five minutes
+.1.3.6.1.4.1.3375.2.1.1.2.1.94.0|rate|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Server Pkts In 5m|The average number of packets received by the system from server-side in the last five minutes
+.1.3.6.1.4.1.3375.2.1.1.2.1.95.0|rate|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Server Bytes In 5m|The average number of bytes received by the system from server-side in the last five minutes
+.1.3.6.1.4.1.3375.2.1.1.2.1.96.0|rate|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Server Pkts Out 5m|The average number of packets sent to server-side from the system in the last five minutes
+.1.3.6.1.4.1.3375.2.1.1.2.1.97.0|rate|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Server Bytes Out 5m|The average number of bytes sent to server-side from the system in the last five minutes
+.1.3.6.1.4.1.3375.2.1.1.2.1.98.0|rate|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Server Max Conns 5m|The average maximum connections from server-side to the system in the last five minutes
+.1.3.6.1.4.1.3375.2.1.1.2.1.99.0|rate|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Server Tot Conns 5m|The average total connections from server-side to the system in the last five minutes
+.1.3.6.1.4.1.3375.2.1.1.2.1.100.0|rate|Yes|NA|NA|NA|NA|NA|NA|NA|NA|Server Cur Conns 5m|The average current connections from server-side to the system in the last five minutes

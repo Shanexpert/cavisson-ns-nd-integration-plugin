@@ -1,0 +1,1039 @@
+#!/bin/bash
+
+################################################################################################
+# Name  :   generator_shell
+# Usage :
+# Purpose:  This shell generates tar of all the files present in generator directory for each generator and tar of all the scripts 
+#           and copy site_keywords.default file in .controller/ directory
+# Output :  
+#           generator.tar.gz   ->  contains scenarios
+#           scripts.tar.gz     ->  contains all the scripts
+#
+# Initial version : Wednesday, March 28 2012
+# Modification    : Friday, March 22 2013
+# Modification    : Thursday, October 31 2019
+# Author Name     :  Prachi Kumari
+###############################################################################################
+
+DEBUG_LEVEL=1
+TEST_RUN_NUMBER=""
+TYPE="internal"
+scenario_setting_profile_path_flag=0
+SCENARIO_SETTINGS_PROFILE_PATH=""
+NS_ADMIN_IP=""
+
+Usage()
+{
+  echo "$*"
+  echo "Usage: generator_shell -g <generators file> -s <scenario-name with project/subproject> -t <Test Run No.> -w <workspace>/<profile> -D <debug_log 0/1 (default value is 0)>]"
+
+  exit -1
+}
+
+error_log_and_exit()
+{
+  echo "$*"
+  error_log "$*"
+  exit -1
+}
+
+error_log()
+{
+  echo "`date +"%F %X"`|$*" >> $ERROR_LOG_FILE
+  echo "`date +"%D %T"`|$*" >> $TIS_LOG_FILE
+}
+
+debug_log()
+{
+  if [ "X$DEBUG_LEVEL" == "X0" ]; then
+    return
+  else
+    echo "`date +"%F %X"`|$*" >> $DEBUG_LOG_FILE
+  fi
+}
+
+set_error_log_file()
+{
+  DEBUG_LOG_FILE="$BASE_CTRL_DIR/generator_debug.log"
+  ERROR_LOG_FILE="$BASE_CTRL_DIR/generator_error.log"
+  TIS_LOG_FILE="$NS_WDIR/logs/TR$TEST_RUN_NUMBER/ready_reports/TestInitStatus/2_generatorValidation.log"
+  make_directories $BASE_CTRL_DIR
+}
+
+
+#************************************************************************************************
+WORKSPACE=""
+PROFILE=""
+#WORKSPACE_PROFILE ==> WORKSPACE + PROFILE
+WORKSPACE_PROFILE="admin/default"
+NS_TA_DIR=""
+NS_RTA_DIR="workspace"
+ERROR="ERROR!!! "
+SCENARIOS="scenarios"
+SCRIPTS="scripts"
+scen_prof_project=""
+scen_prof_sub_project=""
+scen_prof_scenario_settings_profile_name=""
+
+set_scenario_profile_args()
+{
+  scen_prof_project=`echo $SCENARIO_SETTINGS_PROFILE_PATH | awk -F'/' '{print $9}'`
+  scen_prof_sub_project=`echo $SCENARIO_SETTINGS_PROFILE_PATH | awk -F'/' '{print $10}'`
+  scen_prof_scenario_settings_profile_name=`echo $SCENARIO_SETTINGS_PROFILE_PATH | awk -F'/' '{print $12}'`
+}
+
+check_if_woekspace_profile_exists()
+{
+  if [ "X${WORKSPACE}" == "X" -o "X${PROFILE}" == "X" ];then
+   error_log_and_exit "$ERROR workspace or profile_name can not be empty"
+  elif [ ! -d "${NS_WDIR}/workspace/${WORKSPACE}/${PROFILE}" ];then
+   error_log_and_exit "$ERROR workspace $WORKSPACE or profile $PROFILE} doesn't exists "
+  fi
+}
+
+PROJ=""
+SUB_PROJ=""
+SCRIPT_DIR=""
+SCENARIO_NAME=""
+
+set_proj_subproj()
+{  
+   PROJ=`echo ${1} | egrep "/" | cut -d'/' -f1`
+   SUB_PROJ=`echo ${1} | egrep "/" | cut -d'/' -f2`
+}
+
+#i/p would be <prj>/<subproj>/<scenario_name>
+set_proj_subproj_scenario()
+{
+   set_proj_subproj $1
+   SCENARIO_NAME=`echo ${1} | egrep "/" | cut -d'/' -f3`
+}
+
+#i/p would be <prj>/<subproj>/<script_dir>
+set_proj_subproj_script_dir()
+{
+   set_proj_subproj $1
+   SCRIPT_DIR=`echo ${1} | egrep "/" | cut -d'/' -f3`
+}
+
+
+#i/p would be <prj>/<subproj>/<testsuit_dir>
+set_proj_subproj_testsuit_dir()
+{
+   set_proj_subproj $1
+   TESTSUIT_DIR=`echo ${1} | egrep "/" | cut -d'/' -f3`
+}
+
+#check for workspace/profile name and RetlativeTestAsset Dir
+check_and_set_workspace_profile()
+{
+  #if empty aregument passed
+  if [ "X${1}" == "X" ];then
+   error_log_and_exit "$ERROR -w option i.e. Workspace_name/profile_name can not be empty"
+  fi
+
+  #if default workspace/profile
+   
+  WORKSPACE=`echo $1 | egrep "/" | cut -d'/' -f1`
+  PROFILE=`echo $1 | egrep "/" | cut -d'/' -f2`
+
+  #<workspace> i.e. profile no given
+  #<workspace>/ i.e. profile no given
+  #/<profile> i.e. profile no given
+  check_if_woekspace_profile_exists 
+
+}
+
+#set relative test assets dir
+set_rta_dir()
+{
+  NS_RTA_DIR="workspace/$1/$2/cavisson"
+}
+
+#************************************************************************************************
+
+# Extracting a. scenario_name.conf  
+#            b. project (if exists)
+#            c. subproject 
+# from '/' separated path i.e. project/subproject/scenario_name.conf
+extract_scenario_name_from_scenario_with_path ()
+{
+  debug_log "extract_scenario_name_from_scenario_with_path called."
+  ScenName=$SCENARIO_WITH_PATH
+   
+  FirstChar=`echo $ScenName | cut -c1`
+  if [ $FirstChar == "/" ];then
+    if [ ! -f $ScenName ]; then
+        ScenFileName=${ScenName}.conf
+    else
+        ScenFileName=$ScenName
+    fi
+  else
+    NUM=`echo $ScenName | awk -F "/" '{print NF}'`
+    if [ $NUM == 1 ];then
+      #SFileName=scenarios/default/default/$ScenName
+      project="default"
+      sub_project="default"
+      scenario_name=$ScenName
+    elif [ $NUM == 3 ];then
+      #SFileName=scenarios/$ScenName
+      project=`echo $SCENARIO_WITH_PATH | awk -F'/' '{print $1}'`
+      sub_project=`echo $SCENARIO_WITH_PATH | awk -F'/' '{print $2}'`
+      scenario_name=`echo $SCENARIO_WITH_PATH | awk -F'/' '{print $3}'` 
+    elif [ $NUM == 7 ];then
+      #SFileName=scenarios/$ScenName
+      #admin/default/cavisson/default/default/scenarios/nc.conf
+      project=`echo $SCENARIO_WITH_PATH | awk -F'/' '{print $4}'`
+      sub_project=`echo $SCENARIO_WITH_PATH | awk -F'/' '{print $5}'`
+      scenario_name=`echo $SCENARIO_WITH_PATH | awk -F'/' '{print $7}'` 
+    else  
+      error_log_and_exit "'Project/Subproject/<ScenarioName>' is not given in proper format."
+    fi
+
+    SFileName="$project/$sub_project/$SCENARIOS/$scenario_name"
+    if [ ! -f $NS_TA_DIR/$SFileName ]; then
+      ScenFileName=${SFileName}.conf
+      scenario_name="${scenario_name}.conf"
+    else
+      ScenFileName=$SFileName
+    fi
+  fi
+
+  if [ ! -f $NS_TA_DIR/$ScenFileName ];then
+    error_log_and_exit "Scenario file not found, $ScenFileName"
+  fi
+
+  debug_log "extract_scenario_name_from_scenario_with_path end."
+}
+
+# Purpose: archive provided pdf files and transfer to LGs
+get_pdf_file()
+{
+  debug_log "get_pdf_file() called"
+  egrep -w '^URL_PDF|^PAGE_PDF|^SESSION_PDF|^TRANSACTION_RESPONSE_PDF|^TRANSACTION_TIME_PDF' $NS_TA_DIR/$ScenFileName >$TMP_FILE
+  [ $scenario_setting_profile_path_flag -eq 1 ] && egrep -w '^URL_PDF|^PAGE_PDF|^SESSION_PDF|^TRANSACTION_RESPONSE_PDF|^TRANSACTION_TIME_PDF' "$NS_TA_DIR/$scen_prof_project/$scen_prof_sub_project/scenario_profiles/$scen_prof_scenario_settings_profile_name" >>$TMP_FILE
+  #if file is empty
+  if [ ! -s "$TMP_FILE" ];then
+    rm -f $TMP_FILE
+    return
+  fi
+  cd $NS_WDIR
+  pdf_count=0
+  while read line
+  do
+    FILENAME=`echo $line|cut -d' ' -f2`
+    if [ "X$FILENAME" == "X" ]; then
+      continue
+    fi
+    debug_log "FILENAME = $FILENAME"
+    if [ -f pdf/$FILENAME ];then
+      PDF_FILE_LIST[$pdf_count]=pdf/$FILENAME
+    else
+      rm -f $TMP_FILE
+      error_log_and_exit "PDF file ($FILENAME) does not exists"
+    fi
+    pdf_count=$((pdf_count+1))
+  done <$TMP_FILE
+  cd - >/dev/null
+  rm -f $TMP_FILE
+  debug_log "get_pdf_file() exit, PDF_FILE_LIST = ${PDF_FILE_LIST[@]}"
+}
+
+get_cert_file()
+{
+  if [ -d $NS_WDIR/cert ];then
+    CERT_FILE=cert/custom
+  fi
+}
+
+# Put generators into an array from generator_file. 
+create_generator_array()
+{
+  debug_log "create_generator_array called."
+  IDX=0
+  while read line
+  do
+    var=`echo $line | cut -d'|' -f1`
+    ip=`echo $line | cut -d'|' -f2`
+    work=`echo $line | cut -d'|' -f3`
+    gen_id=`echo $line | cut -d'|' -f5`
+    loc_id=`echo $line | cut -d'|' -f6`
+    gen_array[$IDX]=$var
+    work_array[$IDX]=`basename $work`
+    ip_array[$IDX]=$ip
+    gen_id_array[$IDX]=$gen_id
+    loc_id_array[$IDX]=$loc_id
+    IDX=`expr $IDX + 1`
+  done < $GENERATOR_FILE
+
+  TOTAL_GEN=${#gen_array[@]}
+  COMPLETE_ARRAY=${gen_array[@]}
+  debug_log "total no. of generators = $TOTAL_GEN"
+  debug_log "COMPLETE_ARRAY of generators is : $COMPLETE_ARRAY"
+  debug_log "create_generator_array end."
+}
+
+
+# Read scenario.conf and create array of scripts.
+create_script_array()
+{
+  debug_log "create_script_array called."
+
+  SCRIPT_IDX=0
+  grep SGRP $NS_TA_DIR/$ScenFileName | grep "^SGRP" >$BASE_CTRL_DIR/file_without_comments
+  while read scenario_line 
+  do
+    debug_log "create_script_array: Line = $scenario_line"
+    first_field=`echo $scenario_line | cut -d' ' -f1`
+    debug_log "first_field of scenario is : $first_field"
+    if [ "X$first_field" == "XSGRP" ];then
+      SCRIPT_OR_URL=`echo $scenario_line | cut -d' ' -f6`
+      if [ $SCRIPT_OR_URL -ne 1 ];then
+        SCRIPT_NAME=`echo $scenario_line | cut -d' ' -f7` 
+
+        debug_log "SCRIPT_NAME = $SCRIPT_NAME"
+        NUM=`echo $SCRIPT_NAME |awk -F'/' '{print NF}'`
+        if [ $NUM -eq 3 ];then
+          set_proj_subproj_script_dir $SCRIPT_NAME
+          #SCRIPT_ARRAY[$SCRIPT_IDX]=$SCRIPT_NAME
+          SCRIPT_ARRAY[$SCRIPT_IDX]=$PROJ/$SUB_PROJ/$SCRIPTS/$SCRIPT_DIR
+        else
+          SCRIPT_ARRAY[$SCRIPT_IDX]=$project/$sub_project/$SCRIPTS/$SCRIPT_NAME
+        fi
+        debug_log "script_name = ${script_array[$SCRIPT_IDX]}"
+        SCRIPT_IDX=`expr $SCRIPT_IDX + 1`
+      fi
+    fi
+  done < $BASE_CTRL_DIR/file_without_comments
+
+  debug_log "Before sorting scripts array is : ${SCRIPT_ARRAY[@]}"
+  #TODO: Need to find a better way to sort an array without IO
+  script_array=(`echo "${SCRIPT_ARRAY[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' '`)
+  debug_log "After sorting scripts array is : ${script_array[@]}"
+  TOTAL_SCRIPTS=${#script_array[@]}
+  debug_log "total no. of scripts : $TOTAL_SCRIPTS"
+
+  rm -f $TMP_SCRIPT_FILE
+  rm -f /tmp/file_without_comments
+  debug_log "create_script_array end."
+}
+
+create_data_dir_array()
+{
+  
+  debug_log "create_data_dir_array calledyy."
+  scenario=$NS_TA_DIR/$ScenFileName
+  #Grp name G1
+  sgrp_array=`grep "^SGRP" $scenario|awk '{print $2}'`
+  #script name <file_and_fileparam>
+  script_array=`grep "^SGRP" $scenario|awk '{print $7}'`
+  #data dir name if it for all group
+  data_dir_all=`grep "^G_DATADIR ALL 1" $scenario|awk '{print $NF}'`
+  grp_data_dir=`grep "^G_DATADIR" $scenario| grep -v "G_DATADIR ALL"| awk '($3 == 1){print $2}'`
+  grp_data_dirname=`grep "^G_DATADIR" $scenario| grep -v "G_DATADIR ALL"| awk '($3 == 1){print $4}'`
+  D_IFS="$IFS" IFS=$'\n' sgrp_array=($sgrp_array) IFS="$D_IFS"
+  D_IFS="$IFS" IFS=$'\n' script_array=($script_array) IFS="$D_IFS"
+  D_IFS="$IFS" IFS=$'\n' grp_data_dir=($grp_data_dir) IFS="$D_IFS"
+  D_IFS="$IFS" IFS=$'\n' grp_data_dirname=($grp_data_dirname) IFS="$D_IFS"
+
+  debug_log "sgrp_array = [${sgrp_array[@]}] script_array = [${script_array[@]}] grp_data_dir = [${grp_data_dir[@]}] grp_data_dirname = [${grp_data_dirname[@]}]."
+  for (( i=0; i<${#sgrp_array[@]}; i++ ))
+  do
+    script_path=`dirname ${script_array[$i]}`
+    script_name=`basename ${script_array[$i]}`
+    if [ "${script_name}" == "${script_array[$i]}" ];then
+      script_array[$i]="$project/$sub_project/scripts/$script_name"
+    else
+      script_array[$i]="$script_path/scripts/$script_name"
+    fi
+
+    if [ "XX$data_dir_all" != "XX" ]; then
+      data_dir_array[$i]="${script_array[$i]}|$data_dir_all"
+    else 
+      data_dir_array[$i]="${script_array[$i]}|-"
+    fi
+
+    for (( j=0; j<${#grp_data_dir[@]}; j++ ))
+    do 
+      if [ "${grp_data_dir[$j]}" == "${sgrp_array[$i]}" ];then
+        data_dir_array[$i]="${script_array[$i]}|${grp_data_dirname[$j]}"
+        break
+      fi
+    done
+  done
+  data_dir_array=`echo "${data_dir_array[@]}"|tr ' ' '\n'|awk -F'|' '!seen[$1]++'`
+  debug_log "data_dir_array =  ${data_dir_array[@]}."
+  D_IFS="$IFS" IFS=$'\n' data_dir_array=($data_dir_array) IFS="$D_IFS"
+  debug_log "create_data_dir_array end."
+}
+
+# This function * creates directory 
+#               * copy required data into their respective path 
+#               * generate tar of all the data present in the generator directory
+multi_task_function()
+{ 
+  debug_log "multi_task_function called."
+  debug_log "Total no of scripts = $TOTAL_SCRIPTS"
+  debug_log "Total no of generators = $TOTAL_GEN"
+
+  get_cert_file
+  get_pdf_file
+  copy_site_keyword_file
+  #this rel tar will contain scenarios, scenario settings profile, uniq-useonce datafile
+  for (( j=0; j<$TOTAL_GEN; j++ ))
+  do
+    PATH_WITH_GENERATOR=$BASE_CTRL_DIR/${gen_array[$j]}/rel
+    copy_scenario ${gen_array[$j]} ${ip_array[$j]} ${gen_id_array[$j]} ${loc_id_array[$j]}
+    if [ $scenario_setting_profile_path_flag -eq 1 ];then
+      copy_scenario_settings_profile
+    fi
+    archive_gen_data ${gen_array[$j]}
+  done
+
+  #Found the Group name in which G_DATADIR using
+  create_data_dir_array
+  copy_script
+  copy_c_files
+  copy_data_files
+
+  #Make tar of data file if present 
+  #These data files are exclusive for USE_ONCE and UNIQUE mode with relative path
+  #In relative pathi, data files given in script directory. IN USE_ONCE and UNIQUE we make tar of data files. In releative path case it was breaking the link of scripts. 
+  for (( j=0; j<$TOTAL_GEN; j++ ))
+  do
+    PATH_WITH_GENERATOR=$BASE_CTRL_DIR/${gen_array[$j]}
+    if [ -d $PATH_WITH_GENERATOR/abs ];then
+      #Need to make tar of absolute data files
+      debug_log "Creating archive $BASE_CTRL_DIR/nc_${gen_array[$j]}_abs_$NS_ADMIN_IP.tar.lz4"
+      cd $PATH_WITH_GENERATOR/abs
+      tar --owner='cavisson' --group='cavisson' -I$LZ4_PATH -hcf $BASE_CTRL_DIR/nc_${gen_array[$j]}_abs_$NS_ADMIN_IP.tar.lz4 *
+      cd - >/dev/null 2>&1
+    fi
+  done
+
+  #creating nc_common_abs.tar.lz4
+  debug_log "Creating archive nc_common.tar Files: ${USER_MON_GDF[$@]} $CERT_FILE $SITE_KEYWORD_FILE ${PDF_FILE_LIST[@]} ${EXCLUDE_FILE_LIST[@]}"
+  cd $NS_WDIR
+  tar -hrf $BASE_CTRL_DIR/nc_common.tar ${USER_MON_GDF[$@]} $CERT_FILE $SITE_KEYWORD_FILE ${PDF_FILE_LIST[@]} ${EXCLUDE_FILE_LIST[@]} 2>>$ERROR_LOG_FILE
+
+  #zip will be done when metadata_files will be appended on nc_common_rel.tar
+  cd - >/dev/null
+  copy_nc_dependency_files
+
+  debug_log "Creating archive nc_common_abs.tar Files: ${ABSOULTE_INCLUDE_FILES[@]}"
+  if [ ! -z "${ABSOULTE_INCLUDE_FILES[0]}" ];then 
+    cd $HOME_DIR
+    
+    find ${ABSOULTE_INCLUDE_FILES[@]} 2>>$ERROR_LOG_FILE| tar -I$LZ4_PATH -hcf $BASE_CTRL_DIR/nc_common_abs_$NS_ADMIN_IP.tar.lz4 -T -
+    if [ $? -ne 0 ];then
+      rm -rf $TEMP_C_FILES $TEMP_DATA_FILE $TEMP_MODE_FILE $TEMP_MERGE_FILE
+      error_log_and_exit "Failed to create absolute path archive as files are not present"
+    fi
+    cd - >/dev/null
+  fi
+
+  rm -rf $TEMP_C_FILES $TEMP_DATA_FILE $TEMP_MODE_FILE $TEMP_MERGE_FILE
+  debug_log "multi_task_function end."
+}
+
+# Create Generator Directory if not available
+make_directories()
+{
+  debug_log "make_directories| path: $1"
+  mkdir -p $1
+}
+
+# Copy scenario for each generator after removing some KEYWORDS.
+copy_scenario()
+{
+  debug_log "copy_scenario called."
+  local GEN_NAME=$1
+  local GEN_IP=$2
+  local GEN_ID=$3
+  local GEN_LOC=$4
+  local SCENARIO_PATH=$PATH_WITH_GENERATOR/$project/$sub_project/$SCENARIOS/
+  make_directories $SCENARIO_PATH
+#SCHEDULE keyword need to be reframed by controller 
+#Added ^ before SCHEDULE because in MODULEMASK keyword one can use SCHEDULE as mask and as we are ignoring SCHEDULE keyword, modulemask keyword gets deleted
+  # Here we cannot ignore USER_MONITOR keyword because NVM's bring data from child. 
+  egrep -v -w "^SCHEDULE|SGRP|PROF_PCT_MODE|MONITOR_PROFILE|SERVER_PERF_STATS|CUSTOM_MONITOR|SPECIAL_MONITOR|LOG_MONITOR|DYNAMIC_VECTOR_MONITOR|SERVER_SIGNATURE|CHECK_MONITOR|MONITOR|STANDARD_MONITOR|TARGET_RATE|NUM_USERS|NS_GENERATOR|BATCH_JOB_GROUP|NETCLOUD_MODE|ENABLE_NS_MONITORS|ENABLE_NO_MONITORS|DISABLE_NS_MONITORS|DISABLE_NO_MONITORS|NS_GENERATOR_FILE|NS_GENERATOR_MODE|CONTROLLER_MODE|CONTROLLER_IP|NETCLOUD_CONTROLLER|MACHINE_NAME|TNAME|CONTINUE_TEST_ON_GEN_FAILURE|ND_ENABLE_FP_MONITOR|ND_ENABLE_HOT_SPOT_MONITOR|NET_DIAGNOSTICS_SERVER|HIERARCHICAL_VIEW|G_USE_SRC_IP|G_SRC_IP_LIST|MULTIDISK_PATH|ENABLE_ALERT_LOG_MONITOR|ENABLE_FCS_SETTINGS|ENABLE_AUTO_JSON_MONITOR|PROGRESS_MSECS|ENABLE_AUTO_MONITOR_REGISTRATION|ENABLE_ALERT|HEALTH_MONITOR_DISK_FREE|HEALTH_MONITOR_INODE_FREE|GEN_LOCATION|GEN_LOCATION_MODE|RUNTIME_USER_SESSION_PCT|ENABLE_CMON_AGENT|ENABLE_AUTO_SERVER_SIGNATURE" $NS_TA_DIR/$ScenFileName | egrep -v "^#" >> $SCENARIO_PATH/${GEN_NAME}_$scenario_name
+
+  #PROF_PCT_MODE in scenario, as in PCT mode we are converting users into numbers.
+  echo "PROF_PCT_MODE NUM" >> $SCENARIO_PATH/${GEN_NAME}_$scenario_name
+  echo "ENABLE_NS_MONITORS 0" >> $SCENARIO_PATH/${GEN_NAME}_$scenario_name
+  echo "ENABLE_AUTO_MONITOR_REGISTRATION 0" >> $SCENARIO_PATH/${GEN_NAME}_$scenario_name
+  echo "ENABLE_AUTO_SERVER_SIGNATURE 0" >> $SCENARIO_PATH/${GEN_NAME}_$scenario_name
+  echo "ENABLE_CMON_AGENT 0" >> $SCENARIO_PATH/${GEN_NAME}_$scenario_name
+  # Added keyword in generator scenario to fill event generating host in NS
+  echo "MACHINE_NAME $GEN_NAME $GEN_IP $GEN_ID $GEN_LOC" >> $SCENARIO_PATH/${GEN_NAME}_$scenario_name
+  
+  #Response Code User defined file handling
+  scenario=`echo $scenario_name|cut -d'.' -f1`  #to cut .conf from scenario name
+  if [ -f $NS_TA_DIR/$project/$sub_project/$SCENARIOS/$scenario/http_response_codes.dat ] ;then
+    make_directories $SCENARIO_PATH/${GEN_NAME}_$scenario
+    cp $NS_TA_DIR/$project/$sub_project/$SCENARIOS/$scenario/http_response_codes.dat $SCENARIO_PATH/${GEN_NAME}_$scenario
+  fi
+  #Need to add controller test run number in generator scenario, hence adding TR in TNAME 
+  #Here we are using sorted scenario file to grep TNAME
+  if [ "X$TEST_RUN_NUMBER" != "X" ];then
+    TNAME_VALUE=`egrep -w "TNAME" $NS_WDIR/logs/TR$TEST_RUN_NUMBER/sorted_scenario.conf | cut -d' ' -f2` 
+    #Added GENTR: as prefix to determine generator testrun for retention policy
+    echo "TNAME GENTR:${TNAME_VALUE}_CTRL_TR${TEST_RUN_NUMBER}" >> $SCENARIO_PATH/${GEN_NAME}_$scenario_name 
+  fi
+  if [ -f $NS_WDIR/logs/TR$TEST_RUN_NUMBER/additional_kw.conf ] ;then
+    make_directories $SCENARIO_PATH/${GEN_NAME}_$scenario
+    cp $NS_WDIR/logs/TR$TEST_RUN_NUMBER/additional_kw.conf $SCENARIO_PATH/${GEN_NAME}_$scenario
+  fi
+  debug_log "copy_scenario end."
+}
+
+# Copy scenario for each generator after removing some KEYWORDS.
+copy_scenario_settings_profile()
+{
+  debug_log "copy_scenario_settings_profile called."
+
+  SCENARIO_SETTINGS_PROFILE_FILE_PATH=$PATH_WITH_GENERATOR/$scen_prof_project/$scen_prof_sub_project/scenario_profiles
+  ORIGINAL_FILE_PATH=$NS_TA_DIR/$scen_prof_project/$scen_prof_sub_project/scenario_profiles
+  make_directories $SCENARIO_SETTINGS_PROFILE_FILE_PATH
+  # Following keywords should be remove before creating scenario for generator
+  # Here we cannot ignore USER_MONITOR keyword because NVM's bring data from child. 
+  egrep -v -w "^SCHEDULE|SGRP|PROF_PCT_MODE|MONITOR_PROFILE|SERVER_PERF_STATS|CUSTOM_MONITOR|SPECIAL_MONITOR|LOG_MONITOR|DYNAMIC_VECTOR_MONITOR|SERVER_SIGNATURE|CHECK_MONITOR|MONITOR|STANDARD_MONITOR|TARGET_RATE|NUM_USERS|NS_GENERATOR|BATCH_JOB_GROUP|NETCLOUD_MODE|ENABLE_NS_MONITORS|ENABLE_NO_MONITORS|DISABLE_NS_MONITORS|DISABLE_NO_MONITORS|NS_GENERATOR_FILE|NS_GENERATOR_MODE|CONTROLLER_MODE|CONTROLLER_IP|NETCLOUD_CONTROLLER|MACHINE_NAME|TNAME|CONTINUE_TEST_ON_GEN_FAILURE|ND_ENABLE_FP_MONITOR|ND_ENABLE_HOT_SPOT_MONITOR|NET_DIAGNOSTICS_SERVER|G_USE_SRC_IP|G_SRC_IP_LIST|MULTIDISK_PATH|HIERARCHICAL_VIEW|ENABLE_ALERT_LOG_MONITOR|ENABLE_AUTO_JSON_MONITOR|ENABLE_ALERT|HEALTH_MONITOR_DISK_FREE|HEALTH_MONITOR_INODE_FREE|ENABLE_FCS_SETTINGS|PROGRESS_MSECS|ENABLE_AUTO_MONITOR_REGISTRATION|GEN_LOCATION|GEN_LOCATION_MODE|RUNTIME_USER_SESSION_PCT" $ORIGINAL_FILE_PATH/$scen_prof_scenario_settings_profile_name| egrep -v "^#" >> $SCENARIO_SETTINGS_PROFILE_FILE_PATH/$scen_prof_scenario_settings_profile_name
+
+  debug_log "copy_scenario_settings_profile end."
+}
+
+# Copy site_keywords.default file for each generator
+copy_site_keyword_file()
+{
+  debug_log "copy_site_keyword_file called."
+
+  #find whether file exist or not
+  if [ -e $NS_WDIR/sys/site_keywords.default ];then
+    SITE_KEYWORD_FILE=sys/site_keywords.default
+  fi
+  
+  debug_log "copy_site_keyword_file end."
+}
+
+copy_nc_dependency_files()
+{
+  debug_log "copy_nc_dependency_files called."
+  grep -w '^NC_DEPENDENCY' $NS_TA_DIR/$ScenFileName >$TMP_FILE
+  #if file is empty
+  if [ ! -s "$TMP_FILE" ];then
+    rm -f $TMP_FILE
+    return
+  fi
+
+  cd $NS_TA_DIR
+  while read line
+  do
+    FILENAME=`echo $line | cut -d' ' -f2`
+    if [ "X$FILENAME" == "X" ]; then
+      continue
+    fi
+    debug_log "FILENAME= $FILENAME" 
+    #custom path or rel path
+    if [ -f $FILENAME ];then
+      make_path_and_copy_file_at_path $FILENAME
+    else
+      error_log_and_exit "NC_DEPENDENCY file ($FILENAME) does not exists"
+    fi
+  done < $TMP_FILE
+  cd - >/dev/null
+  rm -f $TMP_FILE
+  debug_log "copy_nc_dependency_files exit."
+}
+
+NEW_SCRIPT_PATH=""
+# Copy script and remove /dump & /temp folders
+copy_script()
+{
+  [ $TOTAL_SCRIPTS -eq 0 ] && return
+  debug_log "copy_script called"
+  cd $NS_TA_DIR
+  #TODO: Checking script exists or not
+  for (( i=0; i<$TOTAL_SCRIPTS; i++ ))
+  do
+    debug_log "Checking script ${script_array[$i]}"
+    if [ ! -d ${script_array[$i]} ]; then
+      error_log_and_exit "Script name '${script_array[$i]}' does not exists"
+    fi
+  done
+
+  find ${script_array[@]} -mindepth 1 -maxdepth 1 ! -name .version ! -name dump ! -name temp 2>>$ERROR_LOG_FILE| tar -hcf $BASE_CTRL_DIR/nc_common_rel.tar -T -
+  cd - >/dev/null
+  debug_log "copy_script end."
+}
+
+make_path_and_copy_file_at_path ()
+{
+  local FILE=$1
+  debug_log "make_path_and_copy_file_at_path called, file = $FILE"
+  dir_path=`echo $FILE|cut -d'/' -f4-`
+  debug_log "dir_path = $dir_path" 
+  ABSOULTE_INCLUDE_FILES[$ABS_FILE_IDX]=$dir_path
+  ABS_FILE_IDX=`expr $ABS_FILE_IDX + 1`
+  debug_log "make_path_and_copy_file_at_path end"
+}
+
+#If C files are inside script then no need to copy C files explicitly
+#they will get copied while copying scripts
+#If C files are at abosulte path then need to copy C files with absolute path
+path_is_relative_or_abs ()
+{
+  local FILE_TO_READ=$1 
+  local SCRIPT=$2 
+  local IS_STATIC=$3
+ 
+  debug_log "path_is_relative_or_abs called. file to read  = $FILE_TO_READ IS_STATIC = $IS_STATIC script = $SCRIPT"
+
+  if [ ! -s $FILE_TO_READ ];then
+    debug_log "File $FILE_TO_READ is empty, returning." 
+    return
+  fi
+
+  while read inputline
+  do
+    if [ "XX$inputline" == "XX" ];then
+      debug_log "Ignoring empty line"
+      continue
+    fi
+
+    DATADIR=""
+    #This is static file , so check for mode 
+    if [ $IS_STATIC == 1 ]; then
+      MODE=`echo $inputline| cut -d',' -f2`
+      DATADIR=`echo $inputline| cut -d',' -f3`
+    fi
+
+    ABS_OR_REL_PATH=1
+    ABS_OR_REL_PATH=`echo $inputline | awk -F "/" '{print NF}'`
+    debug_log "ABS_OR_REL_PATH = $ABS_OR_REL_PATH"
+    if [ "$ABS_OR_REL_PATH" != 1 -o "XX$DATADIR" != "XX" ];then
+      debug_log "File is at abosolute path, and file mode = $IS_STATIC"
+
+      if [ $IS_STATIC == 1 ];then
+        if [ "$MODE" == "USE_ONCE" -o "$MODE" == "UNIQUE" -o "XX$DATADIR" != "XX" ];then
+          continue;
+        else
+          DEL_FILE_NAME=`echo $inputline| cut -d',' -f1`
+          make_path_and_copy_file_at_path $DEL_FILE_NAME 
+        fi
+      else
+        make_path_and_copy_file_at_path $inputline
+      fi
+    else
+
+      debug_log "Its relative and we assume that it already exists in the script folder."
+      if [ $IS_STATIC == 1 ];then 
+        if [ "$MODE" == "USE_ONCE" -o "$MODE" == "UNIQUE" ];then
+          DEL_FILE_NAME=`echo $inputline| cut -d',' -f1`
+          #EXCLUDE_FILE_LIST will skip UNIQUE and USE_ONCE static data from tar
+          #Resolved bug 20735
+          EXCLUDE_FILE_LIST[$EXCLUDE_FILE_IDX]="--exclude ${SCRIPT}/$DEL_FILE_NAME --exclude ${SCRIPT}/$DEL_FILE_NAME.used --exclude ${SCRIPT}/$DEL_FILE_NAME.unused"
+          EXCLUDE_FILE_IDX=`expr $EXCLUDE_FILE_IDX + 1`
+        fi
+      fi
+    fi
+  done < $FILE_TO_READ
+  debug_log "path_is_relative_or_abs end."
+}
+
+# Copy all the C files having absolute path.
+# Remove "ns_string.h"
+# Ignore C files having relative path(assume these files are present in script folder).
+# create an array of absolute files which will be added to absolute path tar
+copy_c_files()
+{
+  cd $NS_TA_DIR
+  for (( i=0; i<$TOTAL_SCRIPTS; i++ ))
+  do
+    TEMP_C_FILES=$BASE_CTRL_DIR/c_files.$i.$$
+    debug_log "copy_c_files called."
+    SCRIPT_NAME=`echo ${script_array[$i]} | sed 's/\//-/g'`
+    find ${script_array[$i]} -type f -name "*.c" -exec grep '^#include \"' {} \; | egrep -v "ns_string.h|runlogic.h" | awk -F'#include \"' '{print $2}' | awk -F'\"' '{print $1}' > $TEMP_C_FILES
+
+    while read inputline
+    do
+      if [ "XX$inputline" == "XX" ];then
+        debug_log "Ignoring empty line"
+        continue
+      fi
+      ABS_OR_REL_PATH=1
+      ABS_OR_REL_PATH=`echo $inputline | awk -F "/" '{print NF}'`
+      debug_log "ABS_OR_REL_PATH = $ABS_OR_REL_PATH"
+      if [ "$ABS_OR_REL_PATH" != 1 ];then
+        debug_log "File is at abosolute path"
+        make_path_and_copy_file_at_path $inputline
+      fi
+    done <$TEMP_C_FILES
+    rm -f $TEMP_C_FILES
+  done
+  cd - >/dev/null
+  debug_log "copy_c_files end."
+}
+
+#Search and copy all var value files 
+copy_var_value_files ()
+{
+  debug_log "copy_c_files called."
+  VAR_VALUE_FILE=$1 
+  VAR_VALUE_DATA_FILE=$BASE_CTRL_DIR/var_value_data_file.$$ 
+  SORTED_VAR_VALUE_DATA_FILE=$BASE_CTRL_DIR/sorted_var_value_data_file.$$ 
+  while read inputline
+  do
+    FILE=`echo $inputline | awk -F "FILE=|File=|file=|" '{print $2}' | awk -F ',|)| ' '{print $1}'`
+    MODE=`echo $inputline | awk -F "MODE=|Mode=|mode=|" '{print $2}' | awk -F ',|)| ' '{if ($1 == "") {print "SEQ"} else {print $1}}'`
+    DELIMITER=`echo $inputline | awk -F "COLUMNDELIMITER=|ColumnDelimiter=|columndelimiter=|" '{print $2}' | awk -F ',|)| ' '{print $1}'`
+    DATADIR=`echo $inputline | awk -F "DATADIR=|Datadir=|datadir=|" '{print $2}' | awk -F ',|)| ' '{print $1}'`
+    if [ "X$DELIMITER" == "X" ];then
+      DELIMITER=","
+    fi
+     
+    if [ "X$DATADIR" != "X" -a "X$SCEN_DATADIR" != "X-" ];then
+      DATADIR=$SCEN_DATADIR
+    fi
+   
+    if [ "X$DATADIR" != "X" ];then
+      DATA_FILE_PATH=data/$DATADIR
+      mkdir -p $BASE_CTRL_DIR/rel/$DATA_FILE_PATH 
+    else
+      DATA_FILE_PATH=$SCRIPT_NAME
+    fi
+    USE_ONCE_FLAG=0
+    ABS_OR_REL_PATH=1
+    ABS_OR_REL_PATH=`echo $FILE | awk -F "/" '{print NF}'`
+
+    debug_log "FILE = [$FILE] MODE = [$MODE] DELIMITER = [$DELIMITER] DATADIR = [$DATADIR]."
+    echo $MODE |egrep -i "USE_ONCE|UNIQUE" > /dev/null
+    if [ $? -eq 0 ];then
+      USE_ONCE_FLAG=1
+      if [ "$ABS_OR_REL_PATH" != 1 ];then
+        FILE=`echo $FILE|cut -d'/' -f4-`
+        script_path=abs/$FILE
+        debug_log "File is at abosolute path, and file mode = [$MODE] script_path = [$script_path]"
+      else
+        script_path=rel/${DATA_FILE_PATH}/$FILE
+        debug_log "File is at releative path, and file mode = [$MODE] script_path = [$script_path]"
+      fi
+    else
+      if [ "$ABS_OR_REL_PATH" == 1 ];then
+        FILE_WITH_FULL_PATH=${DATA_FILE_PATH}/$FILE
+        debug_log "File is at releative path, and file mode = [$MODE] FILE_WITH_FULL_PATH = [$FILE_WITH_FULL_PATH]"
+      else
+        FILE_WITH_FULL_PATH=$FILE
+        debug_log "File is at abosolute path, and file mode = [$MODE] FILE_WITH_FULL_PATH = [$FILE_WITH_FULL_PATH]"
+      fi
+    fi
+    VAR_VALUE_FIELD=`echo $inputline| awk -F "VAR_VALUE=|Var_Value=|var_value=|" '{print $2}' | awk -F ',|)| ' '{print $1}'`
+    COUNT=`echo "$VAR_VALUE_FIELD" |awk -F ";" '{print NF}'`
+    debug_log "File = $FILE Mode = $MODE DELIMITER = $DELIMITER ABS_OR_REL_PATH = $ABS_OR_REL_PATH Field = $VAR_VALUE_FIELD COUNT = $COUNT"
+    local i=0 
+    for (( i=0; i<$COUNT; i=`expr $i + 1` ))
+    do
+      FIELD=`expr $i + 1`
+      VAR_VALUE_TYPE=`echo $VAR_VALUE_FIELD | cut -d';' -f$FIELD|cut -d'=' -f2`
+      debug_log "var_value_type = $VAR_VALUE_TYPE"
+      echo $VAR_VALUE_TYPE |egrep -i "FILE|FILE_PARAM" > /dev/null
+      if [ $? -eq 0 ];then
+        VAR_VALUE_COLUMN=`echo $VAR_VALUE_FIELD | cut -d';' -f$FIELD|cut -d'=' -f1`
+        VAR_VALUE_COLUMN=${VAR_VALUE_COLUMN:1}
+        debug_log "var_value_column = $VAR_VALUE_COLUMN, use_once_flag= $USE_ONCE_FLAG"
+        if [ $USE_ONCE_FLAG -eq 1 ];then 
+          for (( j=0; j<$TOTAL_GEN; j++ ))
+          do
+            PATH_WITH_GENERATOR=$BASE_CTRL_DIR/${gen_array[$j]}
+            FILE_WITH_FULL_PATH=$PATH_WITH_GENERATOR/$script_path
+            debug_log "file_with_full_path = $FILE_WITH_FULL_PATH"
+            awk -F "$DELIMITER" -v myvar=$VAR_VALUE_COLUMN '{print $myvar}' $FILE_WITH_FULL_PATH  >> $VAR_VALUE_DATA_FILE 
+          done
+        else
+          debug_log "file_with_full_path = $FILE_WITH_FULL_PATH"
+          awk -F "$DELIMITER" -v myvar=$VAR_VALUE_COLUMN '{print $myvar}' $FILE_WITH_FULL_PATH  >> $VAR_VALUE_DATA_FILE
+        fi
+      fi
+    done
+    if [ -s $VAR_VALUE_DATA_FILE ];then
+      sort $VAR_VALUE_DATA_FILE |uniq| grep -v "^[[:space:]]*$" > $SORTED_VAR_VALUE_DATA_FILE
+      while read inputline
+      do
+        if [ "XX$inputline" == "XX" ];then
+          debug_log "Ignoring empty line"
+          continue
+        fi
+
+        ABS_OR_REL_PATH=1
+        ABS_OR_REL_PATH=`echo $inputline | awk -F "/" '{print NF}'`
+        debug_log "file is abs or rel ABS_OR_REL_PATH=$ABS_OR_REL_PATH"
+        if [ "$ABS_OR_REL_PATH" != 1 ];then
+          #File should be present inside /home/cavisson
+          FILE_PATH=`echo $inputline | awk -F"/" '{print "/" $2 "/" $3}'`
+          debug_log "File '$inputline' is at abosolute path"
+          if [ "X$FILE_PATH" != "X/home/cavisson" ];then
+            error_log_and_exit "Invalid path of var value data file '$inputline' for script '$SCRIPT_NAME', Data file should be present inside '/home/cavisson'"
+          elif [ ! -f $inputline ];then
+            error_log_and_exit "Var vaule date file '$inputline' does not exist for script '$SCRIPT_NAME'."
+          fi
+          make_path_and_copy_file_at_path $inputline
+        elif [ "X$DATADIR" != "X" ];then
+          debug_log "$NS_TA_DIR/$DATA_FILE_PATH/$inputline $BASE_CTRL_DIR/rel/$DATA_FILE_PATH"
+          cp $NS_TA_DIR/$DATA_FILE_PATH/$inputline $BASE_CTRL_DIR/rel/$DATA_FILE_PATH
+        else
+          debug_log "File is at relative path which is already inside script"
+        fi
+      done < $SORTED_VAR_VALUE_DATA_FILE
+    fi
+    >$VAR_VALUE_DATA_FILE
+  done < $VAR_VALUE_FILE
+}
+
+get_data_dir_path()
+{
+  debug_log "get_data_dir_path called."
+  SCRIPT_NAME=$1
+  local i=0
+  for (( i=0; i<${#data_dir_array[@]}; i++ )) 
+  do
+    D_IFS="$IFS" IFS=$'|' script_name_data_dir=(${data_dir_array[$i]}) IFS="$D_IFS"
+    debug_log "script_name_data_dir = ${script_name_data_dir[@]}"
+    if [ "X${script_name_data_dir[0]}" == "X$SCRIPT_NAME" ];then
+      SCEN_DATADIR=${script_name_data_dir[1]}
+      break
+    fi
+  done  
+  debug_log "get_data_dir_path end."
+}
+ 
+# Search and copy all the DATA FILES, if exists
+copy_data_files()
+{
+  cd $NS_TA_DIR
+
+  TEMP_DATA_FILE=$BASE_CTRL_DIR/data_files.$$
+  TEMP_MODE_FILE=$BASE_CTRL_DIR/mode.$$
+  TEMP_DATADIR_FILE=$BASE_CTRL_DIR/datadir.$$
+  TEMP_MERGE_FILE=$BASE_CTRL_DIR/data_files_and_mode.$$
+  TEMP_VAR_VALUE_FILE=$BASE_CTRL_DIR/var_value_file.$$
+  for (( i=0; i<$TOTAL_SCRIPTS; i++ ))
+  do
+    local SCRIPT_NAME=${script_array[$i]}
+    debug_log "copy_data_files called."
+ 
+    if [ ! -s $SCRIPT_NAME/registrations.spec ];then
+      debug_log "${SCRIPT_NAME}/registrations.spec file is either empty or does not exist. returning."
+      continue
+    fi
+
+    #get data dir path It can be absolute or relative (inside the script) relative to datadir    
+    get_data_dir_path $SCRIPT_NAME
+  
+    grep -v "^//" ${SCRIPT_NAME}/registrations.spec| egrep "nsl_index_file_var" | awk -F "FILE=|File=|file=|" '{print $2}' | awk -F ',|)| ' '{print $1}' > $TEMP_DATA_FILE
+    
+    path_is_relative_or_abs $TEMP_DATA_FILE $SCRIPT_NAME 0
+  
+    #Check for static var
+    #TODO: need to check if below two commands can combine in one command
+    grep -v "^//" ${SCRIPT_NAME}/registrations.spec| egrep "nsl_static_var" | awk -F "FILE=|File=|file=|" '{print $2}' | awk -F ',|)| ' '{print $1}' > $TEMP_DATA_FILE
+ 
+    grep -v "^//" ${SCRIPT_NAME}/registrations.spec| egrep "nsl_static_var" | awk -F "MODE=|Mode=|mode=|" '{print $2}' | awk -F ',|)| ' '{if ($1 == "") {print "SEQ"} else {print $1}}' > $TEMP_MODE_FILE
+ 
+    grep -v "^//" ${SCRIPT_NAME}/registrations.spec| egrep "nsl_static_var" | awk -F "DATADIR=|Datadir=|datadir=|" '{print $2}' | awk -F ',|)| ' '{print $1}' > $TEMP_DATADIR_FILE
+
+    paste -d ',' $TEMP_DATA_FILE $TEMP_MODE_FILE $TEMP_DATADIR_FILE >$TEMP_MERGE_FILE
+    debug_log "TEMP_MERGE_DATA = $TEMP_MERGE_FILE"
+    path_is_relative_or_abs $TEMP_MERGE_FILE $SCRIPT_NAME 1
+ 
+    grep -v "^//" ${SCRIPT_NAME}/registrations.spec| egrep "nsl_sql_var" | awk -F "[ |(|,]+[F|f][I|i][L|l][E|e][ ]*=[ |\"]*" '{print $2}' | awk -F '\"|,|)| ' '{print $1}' > $TEMP_DATA_FILE
+ 
+    grep -v "^//" ${SCRIPT_NAME}/registrations.spec| egrep "nsl_sql_var" | awk -F "[ |(|,]+[M|m][O|o][D|d][E|e][ ]*=[ |\"]*" '{print $2}' | awk -F '\"|,|)| ' '{if ($1 == "") {print "SEQ"} else {print $1}}' > $TEMP_MODE_FILE
+ 
+    paste -d ',' $TEMP_DATA_FILE $TEMP_MODE_FILE >$TEMP_MERGE_FILE
+    debug_log "TEMP_MERGE_DATA = $TEMP_MERGE_FILE"
+    path_is_relative_or_abs $TEMP_MERGE_FILE $SCRIPT_NAME 1
+
+    #Check for var_value option in nsl_static_var
+    #sed -r ':a; s%(.*)/\*.*\*/%\1%; ta; /\/\*/ !b; N; ba' ${SCRIPT_NAME}/registrations.spec|egrep "nsl_static_var" |grep -i "VAR_VALUE" > $TEMP_VAR_VALUE_FILE
+    #sed 's/a/aA/g; s/__/aB/g; s/#/aC/g' "$file" |gcc -P -E - |sed 's/aC/#/g; s/aB/__/g; s/aA/a/g' |egrep "nsl_static_var" |grep -i "VAR_VALUE" > $TEMP_VAR_VALUE_FILE 
+    grep -v "^[[:blank:]]*//" ${SCRIPT_NAME}/registrations.spec| egrep "nsl_static_var" |grep -i "VAR_VALUE" > $TEMP_VAR_VALUE_FILE
+    debug_log "TEMP_VAR_VALUE_FILE = $TEMP_VAR_VALUE_FILE"
+
+    if [ -s $TEMP_VAR_VALUE_FILE ];then
+      copy_var_value_files $TEMP_VAR_VALUE_FILE
+    fi 
+  done
+
+  cd - >/dev/null
+  
+  if [ -d $BASE_CTRL_DIR/rel/data ]; then
+    cd $BASE_CTRL_DIR/rel 
+    tar -hrf $BASE_CTRL_DIR/nc_common_rel.tar data 2>>$ERROR_LOG_FILE
+    cd - >/dev/null
+  fi
+  debug_log "copy_data_files end."
+}
+
+# Generator tar of all the files present in the generator directory.  
+archive_gen_data()
+{ 
+  local GENERATOR=$1
+  debug_log "archive_gen_data called for generator $GENERATOR"
+  cd $PATH_WITH_GENERATOR
+  tar --owner='cavisson' --group='cavisson' -I$LZ4_PATH -hcf $BASE_CTRL_DIR/nc_${GENERATOR}_rel_$NS_ADMIN_IP.tar.lz4 *
+  cd - >/dev/null
+  debug_log "archive_gen_data end."
+}
+
+TMP_FILE="/tmp/myfile.$$"
+read_user_monitor_keyword()
+{
+  debug_log "scenario file name = $NS_TA_DIR/$ScenFileName"
+  grep -w "^USER_MONITOR" $NS_TA_DIR/$ScenFileName >$TMP_FILE
+
+  #if file is empty
+  if [ ! -s "$TMP_FILE" ];then
+    rm -f $TMP_FILE
+    return
+  fi
+
+  cd $NS_WDIR
+  i=0
+  while read line
+  do
+    GDF_NAME=`echo $line | cut -d ' ' -f2`
+    if [ "X$GDF_NAME" == "X" ]; then
+      return
+    fi
+    debug_log "GDF_NAME= $GDF_NAME" 
+    #custom path or rel path
+    if [ -f $GDF_NAME ];then
+      make_path_and_copy_file_at_path $GDF_NAME
+    elif [ -f sys/$GDF_NAME ];then
+      USER_MON_GDF[$i]=sys/$GDF_NAME
+      i=`expr $i + 1`
+    else
+      rm -f $TMP_FILE
+      error_log_and_exit "User Monitor gdf ($GDF_NAME) does not exists. Please create gdf file and re-run the test."
+    fi
+  done < $TMP_FILE
+  cd - >/dev/null
+  rm -f $TMP_FILE
+}
+
+#############################################################################################
+LZ4_PATH=$NS_WDIR/thirdparty/bin/lz4
+
+while getopts g:s:t:T:D:p:i:w:? args  2>/dev/null
+do
+  case $args in
+    g) GENERATOR_FILE=$OPTARG;;
+
+    s) SCENARIO_WITH_PATH=$OPTARG;;
+    t) TEST_RUN_NUMBER=$OPTARG;;
+    T) TYPE=$OPTARG;;
+
+    D) DEBUG_LEVEL=$OPTARG;;     # default value is : 0
+    p) scenario_setting_profile_path_flag=1;
+       SCENARIO_SETTINGS_PROFILE_PATH=$OPTARG;;
+    i) NS_ADMIN_IP=$OPTARG;;
+
+    w) WORKSPACE_PROFILE=$OPTARG;;
+    ?) Usage "Invalid arguments";;
+    *) Usage "Invalid arguments";;
+  esac
+done
+
+#validate_generator_file
+if [ "X$GENERATOR_FILE" == "X" ]; then
+  Usage "generator_file argument -g <gen_file> is missing"
+fi
+
+#TODO: Add check for validation project/subproject and scerio file
+#validate_scenario
+if [ "X$SCENARIO_WITH_PATH" == "X" ];then
+  Usage "scenario_file argument -s <scen_file> is missing"
+fi
+
+if [ $scenario_setting_profile_path_flag -eq 1 ];then
+  if [ "X$SCENARIO_SETTINGS_PROFILE_PATH" == "X" ];then
+    scenario_setting_profile_path_flag=0
+  else
+    set_scenario_profile_args $SCENARIO_SETTINGS_PROFILE_PATH
+  fi
+fi
+
+# set generator directory : when controller is running standalone.
+if [ "X$TEST_RUN_NUMBER" == "X" ];then
+  BASE_CTRL_DIR="$NS_WDIR/.tmp/.controller"
+else
+# set generator directory : when controller TestRun no. is available.
+  BASE_CTRL_DIR="$NS_WDIR/logs/TR$TEST_RUN_NUMBER/.controller"
+  NS_ADMIN_IP="${NS_ADMIN_IP}_$TEST_RUN_NUMBER"
+fi
+
+#BEFORE THIS LINE DONT USE DEBUG MESSAGE
+# set debug/error log file 
+set_error_log_file
+
+debug_log "Controller starts."
+debug_log "Tool options passed: $*"
+
+NUM=`echo $SCENARIO_WITH_PATH | awk -F "/" '{print NF}'`
+if [ $NUM -eq 7 ];then
+  WORKSPACE_PROFILE=`echo $SCENARIO_WITH_PATH | awk -F'/' '{print $1"/"$2}'`
+fi
+#************************************************************************************************
+check_and_set_workspace_profile $WORKSPACE_PROFILE
+set_rta_dir $WORKSPACE $PROFILE
+#set absolute test assets path
+NS_TA_DIR=$NS_WDIR/$NS_RTA_DIR
+NS_WP_DIR=$NS_WDIR/workspace/$WORKSPACE_PROFILE
+#************************************************************************************************
+
+# Extract name.conf from project/subproject/name.conf
+extract_scenario_name_from_scenario_with_path
+
+# Array of generators has been created
+create_generator_array
+
+ABS_FILE_IDX=0
+# Read USER_MONITOR keyword form scenario file and make tar
+read_user_monitor_keyword
+
+# Array of scripts has been created
+create_script_array
+
+# Function used to copy original scenario in controller directory and create tar
+# Here we remove monitor keywords, MACHINE_NAME and NETCLOUD_CONTROLLER from original 
+# scenario and add MACHINE_NAME keyword to provide external controller's name
+# Here we cannot ignore USER_MONITOR keyword because NVM's bring data from child. 
+create_scenario_for_ext_controller()
+{
+  mkdir -p $BASE_CTRL_DIR/scenario/$project/$sub_project/$SCENARIOS
+  controller_ip=`grep "^NETCLOUD_CONTROLLER" $NS_TA_DIR/$ScenFileName |cut -d" " -f2| cut -d":" -f1`
+  egrep -v -w "^MONITOR_PROFILE|^MACHINE_NAME|^NETCLOUD_CONTROLLER|^CUSTOM_MONITOR|^SPECIAL_MONITOR|^LOG_MONITOR|^DYNAMIC_VECTOR_MONITOR|^SERVER_SIGNATURE|^CHECK_MONITOR|^MONITOR|^STANDARD_MONITOR|ND_ENABLE_FP_MONITOR|ND_ENABLE_HOT_SPOT_MONITOR|G_USE_SRC_IP|G_SRC_IP_LIST|MULTIDISK_PATH|ENABLE_AUTO_JSON_MONITOR" $NS_TA_DIR/$ScenFileName > $BASE_CTRL_DIR/scenario/$ScenFileName 
+  echo "MACHINE_NAME $controller_ip" >> $BASE_CTRL_DIR/scenario/$ScenFileName 
+  cd $BASE_CTRL_DIR/scenario
+  tar --owner='cavisson' --group='cavisson' -hczf external_scenario.tar.gz *
+  mv external_scenario.tar.gz ../
+  rm -fr scenario
+  cd - >/dev/null 
+}
+ 
+# This Function is responsible to do multiple TASK which includes * making copy of all the data
+#                                                                 * creation of tar file, etc
+multi_task_function
+
+# For external controller we need to create tar which comprise of scripts, generator data,
+# external controller scenario, list of used external generator ans site_keyword.default
+if [ "X$TYPE" = "Xexternal" ];then
+  create_scenario_for_ext_controller 
+  cd $BASE_CTRL_DIR
+  gen_file_name=`basename $GENERATOR_FILE`
+  tar --owner='cavisson' --group='cavisson' -hczf external_controller.tar.gz *.tar.gz $gen_file_name
+  cd - 1>/dev/null 2>/dev/null
+fi
+
+debug_log "Controller stops."
+
+exit 0

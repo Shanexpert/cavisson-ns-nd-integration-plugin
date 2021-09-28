@@ -1,0 +1,10 @@
+# --- GDF Version History ---
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS Application ELB Target Group Stats|11354|vector|4|0|AWS Metrics|AccountName>Region>TargetGroup|The load balancer distributes incoming application traffic across multiple targets, such as EC2 instances, in multiple Availability Zones. 
+Graph|AWS Application ELB Requests/Target|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The average number of requests received by each target in a target group.
+Graph|AWS Application ELB Lambda Internal Error|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The number of requests to a Lambda function that failed because of an issue internal to the load balancer or AWS Lambda.
+Graph|AWS Application ELB Lambda Target Processed (Bytes)|3|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The total number of bytes processed by the load balancer for requests to and responses from a Lambda function.
+Graph|AWS Application ELB Lambda User Error|4|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The number of requests to a Lambda function that failed because of an issue with the Lambda function.

@@ -1,0 +1,366 @@
+#!/bin/sh
+
+#############################################################################################################
+# Name   	: ndi_db_get_percentile 
+#
+# Author 	: Rupinder Singh Sidhu
+#
+# Description 	: Calculate t_digest precentile for response time
+#
+# Usage 	: 
+#############################################################################################################
+
+
+########################################Variables and init settings###########################################################################
+
+# Including nsi_db_utils
+. $NS_WDIR/bin/nsi_db_utils
+. $NS_WDIR/bin/ndi_db_utils
+
+# Set default values of variables
+TRNUM=""
+LIMIT=""
+
+DEBUG=0 # 0 --> off
+        # 1 --> on
+
+########################################Functions's Definitions###############################################################################
+debug_logs()
+{
+  if [ "X$DEBUG" != "X0" ];then
+    echo "$*"
+  fi
+}
+
+usage()
+{
+  echo "$*"
+  echo
+  echo "USAGE:"
+  echo "====="
+  echo
+  echo "$0 --testrun <value> --starttime <value> --endtime <value> --abs_starttime <value> --abs_endtime <value> --allflowpath <value> --urlidx/--urlname <value> --tierid/--tiername <value> --serverid/--servername <value> --appid/--appname <value> --limit <value> --offset <value>"
+  echo ""
+  echo "Where"
+  echo "  --testrun is test run number, which is mandatory argument."
+  echo "  --starttime and -endtime is for selecting result that comes under the given range, which is mandatory argument."
+  tput setaf 2
+  echo "  --allflowpath if user passes its value 1 then all flowpaths will be shown otherwise if this argument is not passed normal flowpaths            will not be shown"
+  tput sgr0
+  tput bold
+  echo "  user can either pass id or name for following options:"
+  tput setaf 4
+  echo "  --urlidx/--urlname"
+  echo "  --tierid/--tiername"
+  echo "  --serverid/--servername"
+  echo "  --appid/--appname"
+  tput sgr0
+  echo "  --abs_starttime is for selecting result based on absolute start time in flowpath table. Please note that if this is provided, --starttime and --endtime should not be present."
+  echo "  --limit is for limit (This is the number of results returned by query statment (e.g. 10 it will show first 10 records)), which is optional argument"
+  echo " --offset is for offset (This is used to skip rows as specified by offset (e.g suppose you wanted to show results 11-20 then you can use offset 10)), which is optional argument"
+  exit 1
+}
+
+chk_args_of_option()
+{
+  if [ "X$2" == "X" ];then
+    echo "Option $1 required a value."
+    usage
+    exit -1
+  fi
+}
+
+chk_args()
+{
+  if [ "X$TRNUM" == "X" ]; then
+    usage "Test run argument is missing"
+  fi
+}
+
+
+  #********************************************** Adding various functions **********************************************#
+
+add_select()
+{
+  if [ "X$SELECT" != "X" ]; then
+    SELECT="$SELECT, $NEWLINE "
+  else
+    SELECT="SELECT $NEWLINE "
+  fi
+}
+
+add_inn_select()
+{
+  if [ "X$INN_SELECT" != "X" ]; then
+    INN_SELECT="$INN_SELECT, $NEWLINE "
+  else
+    INN_SELECT="SELECT $NEWLINE "
+  fi
+}
+
+add_from()
+{
+  if [ "X$FROM" != "X" ]; then
+    FROM="$FROM, $NEWLINE "
+  else
+    FROM="FROM $NEWLINE "
+  fi
+}
+
+add_inn_from()
+{
+  if [ "X$INN_FROM" != "X" ]; then
+    INN_FROM="$INN_FROM, $NEWLINE "
+  else
+    INN_FROM="FROM $NEWLINE "
+  fi
+}
+
+add_where()
+{
+  if [ "X$WHERE" != "X" ]; then
+    WHERE="$WHERE $NEWLINE  AND "
+  else
+    WHERE="WHERE $NEWLINE "
+  fi
+}
+
+add_inn_where()
+{
+  if [ "X$INN_WHERE" != "X" ]; then
+    INN_WHERE="$INN_WHERE $NEWLINE  AND "
+  else
+    INN_WHERE="WHERE $NEWLINE "
+  fi
+}
+
+add_order()
+{
+  ORDER="ORDER BY $NEWLINE "
+}
+
+
+################################################### ARGUMENTS CHECK ###############################
+
+while [ "$1" != "" ];do
+  debug_logs "ARGS=$1"
+  case $1 in
+    "--testrun")
+      shift
+      chk_args_of_option "--testrun" "$1"
+      TRNUM=$1;;
+    "--starttime")
+      shift
+      chk_args_of_option "--starttime" "$1"
+      STARTTIME=$1;;
+    "--endtime")
+      shift
+      chk_args_of_option "--endtime" "$1"
+      ENDTIME=$1;;
+    "--abs_starttime")
+      shift
+      chk_args_of_option "--abs_starttime" "$1"
+      ABS_STARTTIME=$1;;
+    "--abs_endtime")
+      shift
+      chk_args_of_option "--abs_endtime" "$1"
+      ABS_ENDTIME=$1;;
+    "--urlidx")
+      shift
+      chk_args_of_option "--urlidx" "$1"
+      URLID=$1;;
+    "--urlname")
+      shift
+      chk_args_of_option "--urlname" "$1"
+      URLNAME=$1;;
+    "--tierid")
+      shift
+      chk_args_of_option "--tierid" "$1"
+      TIERID=$1;;
+    "--tiername")
+      shift
+      chk_args_of_option "--tiername" "$1"
+      TIERNAME=$1;;
+    "--serverid")
+      shift
+      chk_args_of_option "--serverid" "$1"
+      SERVERID=$1;;
+    "--servername")
+      shift
+      chk_args_of_option "--servername" "$1"
+      SERVERNAME=$1;;
+    "--appid")
+      shift
+      chk_args_of_option "--appid" "$1"
+      APPID=$1;;
+    "--appname")
+      shift
+      chk_args_of_option "--appname" "$1"
+      APPNAME=$1;;
+    "--limit")
+      shift
+      chk_args_of_option "--limit" "$1"
+      LIMIT=$1;;
+    "--allflowpath")
+      shift
+      chk_args_of_option "--allflowpath" "$1"
+      ALLFLOWPTH=$1;;
+    "--offset")
+      shift
+      chk_args_of_option "--offset" "$1"
+      OFFSET=$1;;
+    --*) usage "Invalid options";;
+    *) usage ;;
+ esac
+ shift
+done
+
+if [ "X$URLNAME" != "X" -o "X$TIERNAME" != "X" -o "X$SERVERNAME" != "X" -o "X$APPNAME" != "X" ];then
+ if [ "X$URLNAME" != "X" ];then
+    add_inn_select
+    INN_SELECT="$INN_SELECT  urlindex"
+    add_inn_from
+    INN_FROM="$INN_FROM  urltable_$TRNUM"
+    add_inn_where
+    INN_WHERE="$INN_WHERE  urlname = '$URLNAME'"
+    add_where
+    WHERE="$WHERE FlowPath_$TRNUM.urlindex = INN.urlindex"
+  fi
+  
+  if [ "X$TIERNAME" != "X" ];then
+    add_inn_select
+    INN_SELECT="$INN_SELECT  ndtier_$TRNUM.tierid"
+    add_inn_from
+    INN_FROM="$INN_FROM  ndtier_$TRNUM"
+    add_inn_where
+    INN_WHERE="$INN_WHERE  tiername = '$TIERNAME'"
+    add_where
+    WHERE="$WHERE FlowPath_$TRNUM.tierindex = INN.tierid"
+  fi
+
+  if [ "X$TIERNAME" != "X" -a "X$SERVERNAME" != "X" ];then
+    add_inn_select
+    INN_SELECT="$INN_SELECT  ndappserver_$TRNUM.serverid"
+    add_inn_from
+    INN_FROM="$INN_FROM  ndappserver_$TRNUM"
+    add_inn_where
+    INN_WHERE="$INN_WHERE  servername = '$SERVERNAME'"
+    add_where
+    WHERE="$WHERE FlowPath_$TRNUM.serverindex = INN.serverid"
+  fi
+
+  if [ "X$TIERNAME" != "X" -a "X$SERVERNAME" != "X" -a "X$APPNAME" != "X" ];then
+    add_inn_select
+    INN_SELECT="$INN_SELECT  appid"
+    add_inn_from
+    INN_FROM="$INN_FROM  ndappinstance_$TRNUM"
+    add_inn_where
+    INN_WHERE="$INN_WHERE  appname = '$APPNAME'"
+    add_where
+    WHERE="$WHERE FlowPath_$TRNUM.appindex = INN.appid"
+  fi
+  add_from
+  FROM="$FROM ($NEWLINE  $INN_SELECT $NEWLINE  $INN_FROM $NEWLINE  $INN_WHERE $NEWLINE  )As INN"
+fi
+
+#checking for mandatory Testrun number argument
+chk_args
+
+debug_logs "TRNUM = $TRNUM, LIMIT=$LIMIT"
+
+#this will handle time passed by user which is in ms
+handle_time_filters $TRNUM
+
+set_query_files $TRNUM
+
+# Check if limit argument is given or not. It will limit number of rows to max this number
+if [ "X$LIMIT" != "X" ];then
+  LIMIT="LIMIT $LIMIT"
+fi
+
+# Check if Offset argument is given or not. This is used to skip rows as specified by offset.
+# For example, if offset is 1, then first row is skipped. If offset is 100, then first 100 rows are skipped
+if [ "X$OFFSET" != "X" ];then
+  OFFSET="OFFSET $OFFSET"
+fi
+
+#making query
+
+add_select
+SELECT="$SELECT responsetime"
+
+add_from
+FROM="$FROM FlowPath_$TRNUM"
+
+if [ "X$TIERID" != "X" ];then
+add_where
+WHERE="$WHERE FlowPath_$TRNUM.tierindex = $TIERID"
+fi 
+
+if [ "X$SERVERID" != "X" ];then
+add_where
+WHERE="$WHERE FlowPath_$TRNUM.serverindex = $SERVERID"
+fi 
+
+
+if [ "X$APPID" != "X" ];then
+add_where
+WHERE="$WHERE FlowPath_$TRNUM.appindex = $APPID"
+fi 
+
+if [ "X$URLID" != "X" ];then
+add_where
+WHERE="$WHERE FlowPath_$TRNUM.urlindex = $URLID"
+fi 
+
+if [ "X$ALLFLOWPTH" == "X" ];then
+add_where
+WHERE="$WHERE FlowPath_$TRNUM.methodscount != 1"
+fi
+
+if [ "X$ABS_STARTTIME" != "X" ]; then
+ add_where
+  WHERE="$WHERE (FlowPath_$TRNUM.FlowPathInstance, FlowPath_$TRNUM.flowpathendtimestamp) >= (FlowPath_$TRNUM.FlowPathInstance, $ABS_STARTTIME)"
+ add_where
+  WHERE="$WHERE FlowPath_$TRNUM.flowpathendtimestamp >= $ABS_STARTTIME"
+fi
+
+if [ "X$ABS_ENDTIME" != "X" ];then
+  add_where
+   WHERE="$WHERE (FlowPath_$TRNUM.FlowPathInstance, FlowPath_$TRNUM.flowpathendtimestamp) <= (FlowPath_$TRNUM.FlowPathInstance, $ABS_ENDTIME)"
+  add_where
+   WHERE="$WHERE FlowPath_$TRNUM.flowpathendtimestamp <= $ABS_ENDTIME"
+fi
+
+if [ "X$STARTTIME" != "X" ]; then
+ add_where
+  WHERE="$WHERE (FlowPath_$TRNUM.FlowPathInstance, FlowPath_$TRNUM.flowpathendtimestamp) >= (FlowPath_$TRNUM.FlowPathInstance, $STARTTIME)"
+ add_where
+  WHERE="$WHERE FlowPath_$TRNUM.flowpathendtimestamp >= $STARTTIME"
+fi
+
+if [ "X$ENDTIME" != "X" ];then
+  add_where
+   WHERE="$WHERE (FlowPath_$TRNUM.FlowPathInstance, FlowPath_$TRNUM.flowpathendtimestamp) <= (FlowPath_$TRNUM.FlowPathInstance, $ENDTIME)"
+  add_where
+   WHERE="$WHERE FlowPath_$TRNUM.flowpathendtimestamp <= $ENDTIME"
+fi
+
+add_order
+ORDER="$ORDER FlowPath_$TRNUM.responsetime"
+
+ns_run_query
+
+show_query_result_comma_sep |tail -n+2 >resptime_output.$$
+
+#gcc -Wall -g -o get_all_percentiles get_all_percentiles.c libnscore/nslb_t_digest_quantile.c libnscore/tdigest/tdigest.c
+if [ -s resptime_output.$$ ];then
+  get_all_percentiles -f resptime_output.$$
+else
+  tput setaf 1
+  echo "_ _ _ _ _ _ _ _ _ _ _NO DATA AVAILABLE_ _ _ _ _ _ _ _ _ _ _ _ "
+  tput sgr0
+fi
+
+#exit 0
+

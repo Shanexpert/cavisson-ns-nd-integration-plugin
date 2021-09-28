@@ -1,0 +1,9 @@
+# --- GDF Version History ---
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Pgpool Connection Stats|10887|vector|1|0|Pgpool Metrics|Tier>Server>Node>Database>State|Showing stats regarding connection state of databases on the Node(clien_addr)
+
+Graph|Pgpool Connections|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|count of state profile. state could be idle, idle in transaction, idle in transaction (aborted), fastpath function call, disabled. active: The backend is executing a query. idle: The backend is waiting for a new client command. idle in transaction: The backend is in a transaction, but is not currently executing a query. idle in transaction (aborted): This state is similar to idle in transaction, except one of the statements in the transaction caused an error. fastpath function call: The backend is executing a fast-path function. disabled: This state is reported if track_activities is disabled in this backend
+	

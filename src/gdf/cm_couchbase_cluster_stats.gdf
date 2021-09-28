@@ -1,0 +1,28 @@
+# Author : Dharmendra Singh	
+
+# General information line
+# Info|msgVersion|numGroups|startIndex|testRun|sizeOfMsgData|interval|testRunStartDate/Time
+
+# Group information line
+# Group|groupName|rptGrpId|groupType|numGraphs|numVectors|future1|future2|Group_Description 
+
+# Graph information line
+# Graph|graphName|rptId|graphType|dataType|graphDataIndex|formula|numVectors|future1|PDF_ID|Percentile_Data_Idx|future2|future3|GRAPH_DESCRIPTION
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Couchbase(CB) Cluster Stats|10603|vector|15|0|Couchbase Metrics|Tier>Server>Cluster|Couchbase Cluster Stats provides metrics related to Memory(RAM) and Disk(HDD) used by cluster.
+Graph|CB Memory Total (GB)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total Memory(RAM) available to cluster in Gigabytes.
+Graph|CB Memory Used (GB)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memory(RAM) used across the cluster in Gigabytes.
+Graph|CB Memory Used (Pct)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percentage of memory(RAM) used across the cluster.
+Graph|CB Memory Used By Data (GB)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memory(RAM) used for the data in the cluster in Gigabytes.
+Graph|CB Memory Quota (GB)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memory(RAM) quota total for the couch base servers in Gigabytes.
+Graph|CB Memory Quota Used (GB)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memory(RAM) quota used by the couch base servers in Gigabytes.
+Graph|CB Memory Quota Used (Pct)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percentage of Memory(RAM) quota used by the couch base servers.
+Graph|CB Memory Quota Used Per Node (GB)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memory(RAM) quota used by the cluster per node in Gigabytes.
+Graph|CB Memory Quota Per Node (GB)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memory(RAM) quota total for the cluster per node in Gigabytes.
+Graph|CB Disk Total (GB)|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total harddrive space available to cluster in Gigabytes.
+Graph|CB Disk Used (GB)|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Harddrive space used by the couch base servers in Gigabytes.
+Graph|CB Disk Used (Pct)|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percentage of Harddrive space used by the couch base servers.
+Graph|CB Disk Used By Data (GB)|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Harddrive used for the data in the cluster in Gigabytes.
+Graph|CB Disk Quota (GB)|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Harddrive quota total for the couch base servers in Gigabytes.
+Graph|CB Disk Free (GB)|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Free harddrive space in the cluster in Gigabytes.

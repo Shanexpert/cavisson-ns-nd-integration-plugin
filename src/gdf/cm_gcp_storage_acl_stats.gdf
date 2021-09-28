@@ -1,0 +1,7 @@
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP Storage ACL Stats|11513|vector|3|0|GCP Metrics|ProjectID>Location>BucketName|GCP Storage ACL stats provided metrics related to storage acl.
+
+Graph|GCP ACL Operations/Sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The number of ACL operations per second.
+Graph|GCP ACL Object Access Count/Sec|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Count of requests that result in an object being granted access solely due to object ACLs per second.
+Graph|GCP ACL Object Mutation Count/Sec|3|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Count of changes made to object specific ACLs per second.

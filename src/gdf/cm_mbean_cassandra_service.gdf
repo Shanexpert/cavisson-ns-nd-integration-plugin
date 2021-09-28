@@ -1,0 +1,16 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+#ObjectName :org.apache.cassandra.service:type=GCInspector
+info|3.1|1|-|-|-1|-1|-
+Group|Apache Cassandra Garbage Collector|14101|vector|3|0|Apache Cassandra Metrics|Tier>Server>Instance|This stats gives information about garbage collector service.
+#G1
+Graph|Apache Cassandra Garbage Collector Log Threshold(ms)|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|It provides log within threshold.
+#G2
+Graph|Apache Cassandra Garbage Collector Warn Threshold(ms)|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|It provides warning  of threshold for garbage collector.
+#G3
+Graph|Apache Cassandra Garbage Collector Status Threshold(ms)|3|scalar|sample|-|None|0|AS|-1|-1|NA|NA|It gives status  of garbage collector threshold.
+
+

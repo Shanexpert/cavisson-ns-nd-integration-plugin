@@ -1,0 +1,16 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Server Info|10132|vector|6|0|Application Metrics|-|JBoss Server Info Stats
+
+Graph|Active Thread Count|1|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Number of active threads.
+Graph|Active Thread Group Count|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of active thread groups.
+Graph|Available Processors|3|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Number of available processors.
+Graph|Free Memory|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of free memory available from the allocated Heap.
+Graph|Max Memory|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of maximum memory available from the allocated Heap.
+Graph|Total Memory|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Amount of total memory available.

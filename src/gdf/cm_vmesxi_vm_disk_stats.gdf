@@ -1,0 +1,11 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|VMWare ESXi VM Disk Stats|10255|vector|4|0|VMWare Metrics|Tier>Server>Instance>VMName|VMWare ESXi VM Disk Stats
+
+Graph|Disk Usage (KBps)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Aggregated storage performance statistics. For hosts this can be represented on a per Virtual Machine basis as a stacked graph.
+Graph|Disk Write Rate (KBps)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Rate of writing data to the disk (KBps).
+Graph|Disk Read Rate (KBps)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Rate of reading data from the disk (KBps).
+Graph|Highest Disk Latency (Millisecond)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Highest latency value across all disks used by the host (Millisecond).

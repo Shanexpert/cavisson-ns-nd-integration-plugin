@@ -1,0 +1,13 @@
+while getopts k:p:h:i: option
+do
+case "${option}"
+in
+k) KEY=${OPTARG};;
+p) PORT=${OPTARG};;
+h) HOST=${OPTARG};;
+i) IDENT=${OPTARG};;
+esac
+done
+
+$NS_WDIR/RDT/BrowserStackLocal --key $KEY --local-proxy-host $HOST --local-proxy-port $PORT --force-local --force-proxy --force --local-identifier ${IDENT}
+

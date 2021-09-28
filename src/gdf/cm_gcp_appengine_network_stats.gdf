@@ -1,0 +1,6 @@
+# 1.0 - Initial version
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP App Engine Network|11596|vector|2|0|GCP Metrics|ProjectID>Zone>ModuleID>VersionID>Cached|It provide metrics related to sent and received bytes.
+Graph|GCP App Engine Sent Bytes/Sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Count of outgoing network bytes across all VMs in an app engine flexible environment version in bytes per seconds.
+Graph|GCP App Engine Received Bytes/Sec|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Count of incoming network bytes across all VMs in an app engine flexible environment version in bytes per seconds.

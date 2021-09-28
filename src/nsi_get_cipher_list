@@ -1,0 +1,27 @@
+#!/bin/sh
+#-----------------------------------------------------------------------------
+# Name       : nsi_get_cipher_list
+#
+# Purpose    : This tool will do following task -
+#              1) Available SSL Ciphers
+#
+# Author     : Ashok Kumar Mohanty
+#
+# Copyright  : (C) Cavisson System
+#
+# Date       : 07/07/2021
+#Modifications :
+#--------------------------------------------------------------------------------
+
+TLS_VERSION=$1
+
+cipher1=TLS_AES_128_CCM_8_SHA256
+cipher2=TLS_AES_128_CCM_SHA256
+cipher3=AES_128_CBC_SHA256
+cipher4=AES_256_CBC_SHA384
+cipher5=AES_128_CBC_SHA
+cipher6=AES_256_CBC_SHA
+
+ssl_ciphers=$(openssl ciphers) 
+echo $ssl_ciphers:$cipher1:$cipher2:$cipher3:$cipher4:$cipher5:$cipher6
+

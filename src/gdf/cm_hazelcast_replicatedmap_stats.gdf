@@ -1,0 +1,22 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Hazelcast Replicated Map Stats|10328|vector|14|0|Hazelcast Metrics|Tier>Server>Node>Instance>ReplicatedMap|Statistics related to reading and writing from/to a Hazelcast replicated map with the get and put methods.
+Graph|Map Entries|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of entries owned by this member.
+Graph|Events/Sec|2|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of events received on this member per second.
+Graph|Operations/Sec|3|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Total number of operations performed per second.
+Graph|Hits/Sec|4|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of hits (reads) of the locally owned entries per second.
+Graph|Puts/Sec|5|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of put operations performed per second.
+Graph|Average Put Time (ms)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average time of put operations in milliseconds.
+Graph|Maximum Put Time (ms)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum time of put operations in milliseconds.
+Graph|Gets/Sec|8|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of get operations performed per second.
+Graph|Average Get Time (ms)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average time of get operations in milliseconds.
+Graph|Maximum Get Time (ms)|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum time of get operations in milliseconds.
+Graph|Removes/Sec|11|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of remove operations performed per second.
+Graph|Average Remove Time (ms)|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average time of remove operations in milliseconds.
+Graph|Maximum Remove Time (ms)|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum time of remove operations in milliseconds.
+Graph|Other Operation/sec|14|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of other operations performed per second.It includes opration other than get, put, hit and remove.

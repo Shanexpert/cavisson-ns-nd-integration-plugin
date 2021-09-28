@@ -1,0 +1,349 @@
+#!/usr/bin/perl
+#Perl programe nsi_page_log renamed to nsi_page_log_perl, Currently it is not being used : Saloni Tyagi
+
+use File::Basename;
+
+#Creates the page dump out of log
+if ("$#ARGV" < 0)
+{
+  printf "usage: nsu_page_dump test_run_number\n";
+  exit 0;
+}
+
+$NS_WDIR = "$ENV{'NS_WDIR'}";
+#print "DIR is $NS_WDIR\n";
+if ("XX$NS_WDIR" eq "XX")
+{
+  $NS_WDIR = "/home/cavisson/work";
+}
+
+$TRDIR = "$NS_WDIR/logs/TR$ARGV[0]";
+$base = "$NS_WDIR/logs/TR$ARGV[0]/scripts";
+$ddir = "$NS_WDIR/logs/TR$ARGV[0]/docs";
+$log = "$NS_WDIR/logs/TR$ARGV[0]/log";
+$indextxt = "$NS_WDIR/logs/TR$ARGV[0]/page_dump.txt";
+$sessStatusLog = "$NS_WDIR/logs/TR$ARGV[0]/sess_status_log";
+$script_type="";
+$proj="";
+$subproj="";
+
+sub get_proj_subproject_from_summary_top {
+  $summary_top=`cat $NS_WDIR/logs/TR$ARGV[0]/summary.top`;
+  @tokens=split(/\|/, $summary_top, 16); 
+  @temp=split(/\//, $tokens[1], 3);
+  $proj=$temp[0]; 
+  $subproj=$temp[1]; 
+}
+
+#AddPath passed to this function is like
+# ./../../dump/192.168.1.73_81/tours/
+#
+sub encode_replace_links_and_urls {
+
+   #print  "Line=$_\n";
+   $line=$_[0];
+   $AddPathAbs=$_[1];
+   $AddPathRel=$_[2];
+
+   #print "---AddPath-----------$AddPath\n";
+   if (!/^\s+$/) {  # Do not do replacement if line is empty 
+     # Get All href & src  (Excluding fully qualified urls)
+    # @all_urls= $line =~ m{(?:href|src|SRC)\s*=\s*["\']([^http].*?)["\']}g;
+      @all_urls= $line =~ m{(?:href|src|SRC)\s*=\s*["\']([^(http|javascript:)].*?)["\']}g;
+
+     #@all_urls= $line =~ m{(?:href|src)\s*=\s*"(.*?)"}g;
+
+     #inValidCharForFile = {'/', '\\', ':', '*', '?', '"', '<', '>', '|', ',', '^', '#', ';', '$', '%', '&', ',', '\''};
+     #inValidCharForDir = {'\\', ':', '*', '"', '<', '>', '|', '?', ',', '#', ';'};
+     for (@all_urls) {
+        #print "Link=======================$_\n\n";
+        $OLD=$_;
+        # This is just to escape ? & . chars as these chars have special meaning. So converting . to \.
+        $OLD=~ s/([?.])/\\$1/ig;
+        #print "OLD=$OLD\n";
+        # Parse embedded URl is two parts - dir and filename
+        # e.g.
+        # /Merc10-dev/images/sun_swede.gif?x=y will be separated in
+        # /Merc10-dev/images/ and sun_swede.gif?x=y
+        #
+        ($tmp1, $tmp2 ) = fileparse($_);
+        $Path=$tmp1;
+        #print "Path====Before===================$Path\n";
+        #Encode Charaters for path
+        $Path=~ s/([\/\\:*?"<>|\,^#;\$%&'])/_/ig; 
+        #print "Path====After====================$Path\n";
+        #print "Path========================$_\n";
+        $Dir=$tmp2;
+
+        #If Dir starts with / then is is abs path
+        if (!/^\//) {  # Check start with /   
+          $AddPath=$AddPathRel;
+        } else {
+          $AddPath=$AddPathAbs;
+          $Dir= substr($Dir, 1);  # Remove first /
+        }
+
+        #print "Dir===Before ====================$Dir\n";
+        #Encode Charaters for Dir
+        $Dir=~ s/([\\:*?"<>|\,#;&'])/_/ig; 
+        #print "Dir===After ====================$Dir\n";
+        #
+        $NEW="$AddPath$Dir$Path";
+        #print "NEW=$NEW\n";
+        $_=$line;
+        #Replace Host & encoded path & dir
+        $line =~ s/$OLD/$NEW/ig;
+        #print  "Line=$_\n";
+     }
+     $_=$line;
+   }
+
+   print DOCFILE "$_\n";
+}
+
+=for comment
+sub create_per_page_cmd {
+  
+  $script_name = $_[0];
+  $page_name   = $_[1];
+  $page_num    = $_[2];
+  $base_dir    = $_[3];
+  $tmp_cmd     = "";
+
+  $change_url_file = "$base_dir/$script_name/temp/changed_url.txt";
+  open (CHANGE_URL_FILE, "$change_url_file") || return;
+
+  while (<CHANGE_URL_FILE>) {
+    next if (/^$/); # ignore null lines
+    next if (/^\s*#/); # ignore comment lines
+    chomp;
+    ($change_url_file_pg_num, $tmp1, $tmp2, $old, $new) = split(/\|/);
+    next if ("$tmp1" eq "script.capture"); # ignore "script.capture" 
+
+    @tokens=split(/\//, $old, 1000); 
+    $size =  @tokens;
+    $old = $tokens[$size - 1];
+    $old =~ s/([?.])/\\$1/ig; 
+
+    @tokens=split(/\//, $new, 1000); 
+    $size =  @tokens;
+    $new = $tokens[$size - 1];
+    $new =~ s/([?.])/\\$1/ig; 
+
+    #print "OLD=$old, NEW=$new\n"; 
+    if($old ne "") {
+      if ("$old" ne "$new") {
+        $tmp_cmd = "${tmp_cmd}\ns\/$old\/$new\/g;"; 
+      }
+    }
+  }
+  #print "tmp_cmd=$tmp_cmd\n";
+  $pgcmd{"$script_name:$page_name"} = "$tmp_cmd";
+  close (CHANGE_URL_FILE);
+}
+=cut
+
+#get depth to search as in Legacy we have index file in dump dir 
+#but in C type scripts it is in flow dir under dump so depth is 2 
+sub get_index_file_depth {
+  $script_name=$_[0];
+  $script_type=`$NS_WDIR/bin/nsu_script_tool -o GetScriptType -s $proj/$subproj/$script_name`; 
+  chomp($script_type);
+
+  #if ($script_type eq "Legacy") {
+  if ($script_type =~ /^Legacy$/i) {
+    $IndexFileDepth=1;
+  } elsif ($script_type eq "C"){
+    $IndexFileDepth=2;
+  } else {
+    printf "Invalid script type ($script_type) found for script ($proj/$subproj/$script_name).\n";
+    exit 0;
+  }
+}
+
+sub load_index_file {
+
+$index_file = $_[0];
+$flow_name  = $_[1];
+
+  open (INDEX_FILE, "$index_file") || die "cannot open input index file, $index_file";
+
+  while (<INDEX_FILE>) {
+    chomp;
+    ($pgnum, $pgname, $ppath, $phost, $rootpath) = split(/,/);
+
+    $pgpath{"$dir:$pgname"} = "$phost$ppath";
+    $pghost{"$dir:$pgname"} = "$phost";
+    $pgroot{"$dir:$pgname"} = "$rootpath";
+    
+    #create_per_page_cmd($dir, $pgname, $pgnum, $base);
+    $tmp = $phost;
+    $tmp =~ s/:/_/;
+
+    if($flow_name eq "NA") {
+      $flow_path = "";
+    } else {
+      $flow_path = "$flow_name/";
+    }
+
+    if($rootpath eq "./") {
+      $AbsolutePaths{"$dir:$pgname"} = "../dump/$flow_path$tmp$ppath";
+      $RelativePaths{"$dir:$pgname"} = "../dump/$flow_path$tmp$ppath";
+    } else {
+      $AbsolutePaths{"$dir:$pgname"} = "$rootpath../dump/$flow_path$tmp$ppath$rootpath";
+      $RelativePaths{"$dir:$pgname"} = "$rootpath../dump/$flow_path$tmp$ppath";
+    }
+
+  }
+  close(INDEX_FILE);
+}
+
+# if test run does not exists it will exit with error
+if ( ! -e $TRDIR) {die "TR$ARGV[0] does not exists."};
+  `mkdir -p $ddir`;
+
+#Get the list of all scripts. All scripts are under logs/TRxxx/scripts dir
+`cd $base; ls >/tmp/t1.$ARGV[0]`;
+#@dirs contains list of scripts
+@dirs=`cat /tmp/t1.$ARGV[0]`;
+`rm -f /tmp/t1.$ARGV[0]`;
+$num = 0;
+
+get_proj_subproject_from_summary_top();
+
+# copying script dump folder in docs
+for (@dirs) {
+  chomp;
+  $dir = $_;
+
+  $dump_path="$base/$dir/dump/";
+
+  get_index_file_depth($dir);
+
+  @index_files=`find $dump_path -maxdepth $IndexFileDepth -mindepth $IndexFileDepth -type f -name index`;
+  $num_index_files=@index_files;
+
+  if($num_index_files == 0) {
+    die "Script $dir don't have index file.\n";
+  }
+
+  #$cur_index_file="$base/$dir/dump/index";
+  # Remove all new line
+  chomp(@index_files);
+
+  #print space seperated values
+  #$index_files_list=join(" ", @index_files); 
+  #if($IndexFileDepth == 2) { #CType
+     #Append all index files
+    #`cat $index_files_list >$cur_index_file`;
+  #} else
+   #$flow_name = "NA";
+
+  #capture hash indexed on scripts has name of script capture file
+  #Look inside each capture index  file and get the host name and path of each url
+  #Hash pgpath is indexed on script:page and contains the URL dir path (not including the page name itself)
+  #Hash pghost is indexed on script:page and contains the host
+  $capdirs{$dir} = "scripts/$dir/";
+  
+  #open (INPFILE, "$cur_index_file") || die "cannot open input index file, $cur_index_file";
+
+  #In a loop, load all index file
+  for(@index_files) {
+    $index_file = $_;
+    if($IndexFileDepth == 2) { #CType
+      @file_parts = split(/\//, $index_file, 50);
+      $size = @file_parts;
+      $flow_name = $file_parts[$size - 2];
+    } else {
+      $flow_name = "NA";
+    }
+    load_index_file($index_file, $flow_name);
+  }
+
+  #Copy scripts dump to docs dump
+  #$to_copy_into_docs  = `dirname $cur_index_file`;
+  $to_copy_into_docs  = "$base/$dir/dump";
+  #chomp($to_copy_into_docs); 
+  `cp -r $to_copy_into_docs $ddir`;
+}
+
+foreach $pname (sort keys %pgpath) {
+	#print "List: $pname: $pgpath{$pname}\n";
+	`mkdir -p $ddir/$pgpath{$pname}`;
+        #print "$pgpath{$pname}\n";
+}
+
+open (INDEXTXT, ">$indextxt");
+print INDEXTXT "StartTime|SessionInstance|UserId|Group|ScriptName|ScriptURL|PageName|PageDumpUrl|PageStatus|SessStatus|Req|RepBody|Rep|ParameterSubstitution\n";
+
+#@lines=`cat $log`;
+#for (@lines) {
+
+open(MYINPUTFILE, "<$log");
+while(<MYINPUTFILE>) {
+       my($line) = $_;
+
+       #chomp($line);
+	chomp;
+         # Added 5 new fields PageInstance, SessId, PageId, GroupNum, MyPortIndex
+	if (/^START_LOG:(.*): thread_idx=(\S+); sess_instance=(\S+); user-id=(\S+); Group=(\S+); Script=(\S+); Page=(\S+); page_status=(\S+); PageInstance=(\S+); SessId=(\S+); PageId=(\S+); GroupNum=(\S+); MyPortIndex=(\S+); (.*)$/) {
+		#print "line:$_\n";
+		$ttime = "$1";
+		$sess_id = "$2:$3";
+		$user_id = "$2:$4";
+		$status = "$8";
+
+                #To search .dat file in the $NSWDIR/logs/TR*/, if *.dat found then write in to page_dump.txt else write "NA"
+                $req_file = "url_req_$13_$4_$3_$9_0_$12_$10_$11_0.dat";
+                $rep_body_file = "url_rep_body_$13_$4_$3_$9_0_$12_$10_$11_0.dat";
+                $rep_file = "url_rep_$13_$4_$3_$9_0_$12_$10_$11_0.dat";
+                $req = "NA";
+                $rep_body = "NA";
+                $rep = "NA";
+                
+                if (-e "$TRDIR/$req_file") {
+                   $req = "$req_file";
+                }
+                if (-e "$TRDIR/$rep_body_file") {
+                   $rep_body = "$rep_body_file";
+                }
+		if (-e "$TRDIR/$rep_file") {
+                   $rep = "$rep_file";
+                }
+
+                if (-e $sessStatusLog) {
+                    $sess_status = `cat $sessStatusLog | grep "^$sess_id|" | cut -d'|' -f2`;
+                } else {
+                    $sess_status = "Success";
+                }
+                chomp($sess_status);
+		$param = "$14";
+		$grp = "$5";
+	        $script = "$6";
+	        $script_and_flow = "$6";
+               
+                $script = `echo -n $script_and_flow | cut -d':' -f1`;
+                chomp($script);
+
+		$id= "$2:$3:$script:$7:$9";
+	        $page = "$7";
+                
+		$pg = "$script:$7";
+		#print "$id\n";
+		$flag  = 1;
+		open (DOCFILE, ">$ddir/$pgpath{$pg}/$id");
+		$tpath = "docs/$pgpath{$pg}$id";
+                #$recorderPath = "scripts/$script/dump/$phost$ppath$page";
+		print INDEXTXT "$ttime|$sess_id|$user_id|$grp|$script_and_flow|$capdirs{$script}|$page|$tpath|$status|$sess_status|$req|$rep_body|$rep|$param\n";
+	} elsif (/^END_LOG$/) {
+		$flag = 0;
+		close (DOCFILE);
+	} elsif ($flag == 1) {
+               
+                encode_replace_links_and_urls($_, $AbsolutePaths{$pg}, $RelativePaths{$pg});
+	}
+}
+
+close (INDEXTXT);
+close (MYINPUTFILE);
+exit 0;

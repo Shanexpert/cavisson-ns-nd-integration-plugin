@@ -1,0 +1,8 @@
+# 1.0 - Initial version
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP App Engine System|11594|vector|4|0|GCP Metrics|ProjectID>Zone>ModuleID>VersionID|It provide metrics related to system and server.
+Graph|GCP App Engine System Memory Used (MB)|1|scalar|sample|-|-|0|D|-1|-1|NA|DIV(G1,1048576)|Total memory used by running instances in megabytes.
+Graph|GCP App Engine System Estimated Instance Count|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Estimate of the number of instances that the customer is charged for.
+Graph|GCP App Engine Server Quota Denial/Sec|3|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Count of requests that failed due to the app being over quota per seconds.
+Graph|GCP App Engine Server Dos Interception/Sec|4|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Count of interceptions performed to prevent DoS attacks per Seconds.

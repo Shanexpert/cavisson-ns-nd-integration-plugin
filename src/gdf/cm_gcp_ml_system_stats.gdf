@@ -1,0 +1,7 @@
+# 1.0 - Initial version
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP ML System|11607|vector|3|0|GCP Metrics|ProjectID>Region>JobID>TaskIndex>TaskType|ML(Machine Learning) System provides metrics related to cpu and network.
+Graph|GCP ML CPU Utilization (Pct)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percentage of allocated CPU that is currently in use.
+Graph|GCP ML Sent KB/Sec|2|scalar|rate|-|-|0|D|-1|-1|NA|DIV(G2,1024)|Number of kilobytes sent by the training job over the network per seconds.
+Graph|GCP ML Received KB/Sec|3|scalar|rate|-|-|0|D|-1|-1|NA|DIV(G3,1024)|Number of kilobytes received by the training job over the network per seconds.

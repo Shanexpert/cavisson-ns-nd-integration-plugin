@@ -1,0 +1,5 @@
+# 1.0 - Initial version
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP Service Runtime Request|11603|vector|1|0|GCP Metrics|ProjectID>Location>Version>Method>Protocol>ResponseCode>GRPCStatusCode|It provide metric related to request count.
+Graph|GCP Service Runtime Request Count/Sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Count of completed requests per seconds.

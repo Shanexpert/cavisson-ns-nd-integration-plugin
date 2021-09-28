@@ -1,0 +1,14 @@
+{
+  "metaData": "Tier>Server>SharedMemory",
+  "agent-type": "CMON",
+  "program-name": "cm_generic_rest_monitor_extended",
+  "mhp": "0",
+  "cfg": ".system/rest/NginxPlusSlabPages.json.enc",
+  "custom-mon-name": "NginxPlusSlabPages",
+  "pgm-type": "java",
+  "options": "",
+  "gdf-name": "cm_cav_rest_nginx_plus_slab_pages.gdf",
+  "type": "rest",
+  "category": "NginX",
+  "djn": "GenericRestMonitorExtended.json"
+}

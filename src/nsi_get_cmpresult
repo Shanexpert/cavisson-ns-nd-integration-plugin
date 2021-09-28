@@ -1,0 +1,47 @@
+#
+# Name     : nsi_get_cmpresult
+# Author   : Neeraj Jain
+# Purpsose : To get results of test runs
+#
+# Ouput    : Output of this shell is shown on stdout
+#            
+# Arguments:  2 or more trest runs
+#
+# Modification History:
+#   04/05/05: Neeraj - Initial Version
+
+
+#!/bin/sh
+if [ $# -lt 2 ];then
+  echo "Usage: nsi_get_cmpresult TestRunNumber1 TestRunNumber2 .."
+  exit 1
+fi
+
+if [ "X$NS_WDIR" = "X" ];then
+  echo "NS_WDIR env var must be defined"
+  exit 1
+fi
+
+NSLogsPath=$NS_WDIR/logs
+
+cd $NSLogsPath
+NumTestRuns=$#
+
+#Total of 56 fields (1 + (12 * 4) + 17)
+echo "Test Run|URL Min|URL Avg|URL Max|URL Median|URL 80%|URL 90%|URL 95%|URL 99%|URL Total|URL Success|URL Failure|URL FailPct|Page Min|Page Avg|Page Max|Page Median|Page 80%|Page 90%|Page 95%|Page 99%|Page Total|Page Success|Page Failure|Page FailPct|Tx Min|Tx Avg|Tx Max|Tx Median|Tx 80%|Tx 90%|Tx 95%|Tx 99%|Tx Total|Tx Success|Tx Failure|Tx FailPct|Ses Min|Ses Avg|Ses Max|Ses Median|Ses 80%|Ses 90%|Ses 95%|Ses 99%|Ses Total|Ses Success|Ses Failure|Ses FailPct|AvgVUsers|AvgSesRate|EthRxTh|EthTxTh|AppRxTh|AppTxTh|Test Name|Misc1|Misc2|Misc3|Misc4|Misc5|Misc6|Misc7|Misc8|Misc9|Misc10" 
+
+while [ $NumTestRuns != 0 ]
+do
+  TRNum=$1
+  shift
+  TRNumDir=TR$TRNum
+  if [ -f $TRNumDir/summary.data ]
+  then
+    cat $TRNumDir/summary.data 
+  else
+    echo "$TRNum|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|$TRNum|-|-|-|-|-|-|-|-|-|-" 
+  fi
+  NumTestRuns=`expr $NumTestRuns - 1`
+done
+
+exit 0

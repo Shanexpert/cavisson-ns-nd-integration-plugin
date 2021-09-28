@@ -1,0 +1,6 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+Info|3.1|1|-|-|-1|-1|-
+
+Group|IBM MQ Listener Stats|10707|vector|1|0|IBM MQ Metrics|Tier>Server>QueueManager>Listener|IBM MQ Listener Statistics.
+Graph|Listener Status|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current state of the Listener with following status. Status would be 1 = "starting", 2 = "Running", 3 = "Stopping".

@@ -1,0 +1,75 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Azure Machine Learning WorkSpace Stats|11273|vector|34|0|Azure Metrics|AccountName>Region>ResourceGroup>WorkSpace|An azure machine learning workspace is a foundational resource in the cloud that you use to experiment, train, and deploy machine learning models. It ties your azure subscription and resource group to an easily consumed object in the service.
+
+Graph|Azure Workspace Cancelled Runs|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of runs cancelled for this workspace.
+
+Graph|Azure Workspace Cancel Requested Runs|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of runs where cancel was requested for this workspace.
+
+Graph|Azure Workspace Completed Runs|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of runs completed successfully for this workspace.
+
+Graph|Azure Workspace Failed Runs|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of runs failed for this workspace.
+
+Graph|Azure Workspace Finalizing Runs|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of runs entered finalizing state for this workspace.
+
+Graph|Azure Workspace Not Responding Runs|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of runs not responding for this workspace.
+
+Graph|Azure Workspace Not Started Runs|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of runs in not started state for this workspace.
+
+Graph|Azure Workspace Preparing Runs|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of runs that are preparing for this workspace.
+
+Graph|Azure Workspace Provisioning Runs|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of runs that are provisioning for this workspace.
+
+Graph|Azure Workspace Queued Runs|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of runs that are queued for this workspace.
+
+Graph|Azure Workspace Started Runs|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of runs started for this workspace.
+
+Graph|Azure Workspace Starting Runs|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of runs starting for this workspace.
+
+Graph|Azure Workspace Errors|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of run errors in this workspace.
+
+Graph|Azure Workspace Warnings|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of run warnings in this workspace.
+
+Graph|Azure Workspace Model Register Succeeded|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of model registrations that succeeded in this workspace.
+
+Graph|Azure Workspace Model Register Failed|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of model registrations that failed in this workspace.
+
+Graph|Azure Workspace Model Deploy Started|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of model deployments started in this workspace.
+
+Graph|Azure Workspace Model Deploy Succeeded|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of model deployments that succeeded in this workspace.
+
+Graph|Azure Workspace Model Deploy Failed|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of model deployments that failed in this workspace.
+
+Graph|Azure Workspace Total Nodes|20|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of total nodes. This total includes some of Active Nodes, Idle Nodes, Unusable Nodes, Premepted Nodes, Leaving Nodes.
+
+Graph|Azure Workspace Active Nodes|21|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of Acitve nodes. These are the nodes which are actively running a job.
+
+Graph|Azure Workspace Idle Nodes|22|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of idle nodes.
+
+Graph|Azure Workspace Unusable Nodes|23|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of unusable nodes
+
+Graph|Azure Workspace Preempted Nodes|24|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of preempted nodes.
+
+Graph|Azure Workspace Leaving Nodes|25|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of leaving nodes.
+
+Graph|Azure Workspace Total Cores|26|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of total cores.
+
+Graph|Azure Workspace Active Cores|27|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of active cores.
+
+Graph|Azure Workspace Idle Cores|28|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of idle cores.
+
+Graph|Azure Workspace Unusable Cores|29|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of unusable cores.
+
+Graph|Azure Workspace Preempted Cores|30|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of preempted cores.
+
+Graph|Azure Workspace Leaving Cores|31|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of leaving cores.
+
+Graph|Azure Workspace Quota Utilization (pct)|32|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percent of quota utilized.
+
+Graph|Azure Workspace CpuUtilization|33|scalar|sample|-|-|0|NA|-1|-1|NA|NA|CPU utilization.
+
+Graph|Azure Workspace GpuUtilization|34|scalar|sample|-|-|0|NA|-1|-1|NA|NA|GPU utilization.

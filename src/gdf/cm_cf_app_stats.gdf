@@ -1,0 +1,8 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Cloud Foundry App Stats|14254|vector|1|Cloud Foundry Metrics|Tier>Server>AppName|Cloud Foundry Apps metrics.
+
+Graph|App State|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|App state (STARTED = 1, STOPPED = 1).

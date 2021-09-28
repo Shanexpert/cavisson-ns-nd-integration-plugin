@@ -1,0 +1,54 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS Redshift Stats|14011|vector|24|0|AWS Metrics|AccountName>Region|Amazon Redshift is a data warehouse product which forms part of the larger cloud-computing platform Amazon Web Services.
+
+Graph|AWS Redshift CPU Utilization (%)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of CPU utilization. For clusters, this metric represents an aggregation of all nodes (leader and compute) CPU utilization values.
+
+Graph|AWS Redshift Maintenance Mode|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Indicates whether the cluster is in maintenance mode. 1 indicates on, and 0 indicates off.
+
+Graph|AWS Redshift Concurrency Scaling Active Cluster|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of concurrency scaling clusters that are actively processing queries at any given time.
+
+Graph|AWS Redshift Commit Waiting Queue|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of transactions waiting to commit at a given point in time.
+
+Graph|AWS Redshift Max Configured Concurrency Scaling Cluster|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum number of concurrency scaling clusters configured from the parameter group.
+
+Graph|AWS Redshift Database Connection|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of database connections to a cluster.
+
+Graph|AWS Redshift Health Status|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Indicates the health of the cluster. 1 indicates healthy, and 0 indicates unhealthy.
+
+Graph|AWS Redshift Network Received Throughput (Bytes/Sec)|8|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The rate at which the node or cluster receives data.
+
+Graph|AWS Redshift Network Transmitted Throughput (Bytes/Sec)|9|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The rate at which the node or cluster writes data.
+
+Graph|AWS Redshift Write Throughput (Bytes/Sec)|10|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The average number of bytes written to disk per second.
+
+Graph|AWS Redshift Write Latency (Sec)|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average amount of time taken for disk write I,O operations.
+
+Graph|AWS Redshift Write IO/Sec|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of write operations per second.
+
+Graph|AWS Redshift Read Throughput (Bytes/Sec)|13|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The average number of bytes read from disk per second.
+
+Graph|AWS Redshift Read IO/Sec|14|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The average number of disk read operations per second.
+
+Graph|AWS Redshift Read Latency (Sec)|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average amount of time taken for disk read I,O operations.
+
+Graph|AWS Redshift Total Table|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of user tables open at a particular point in time. This total doesn't include Amazon Redshift Spectrum tables.
+
+Graph|AWS Redshift Disk Space Used (%)|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percent of disk space used.
+
+Graph|AWS Redshift Concurrency Scaling (Sec)|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of seconds used by concurrency scaling clusters that have active query processing activity.
+
+Graph|AWS Redshift WLM Waiting Queue|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of queries waiting to enter a workload management (WLM) queue.
+
+Graph|AWS Redshift WLM Queue Wait Time (ms)|20|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total time queries spent waiting in the workload management (WLM) queue. Reported in 5-minute intervals.
+
+Graph|AWS Redshift WLM Queries Completed/Sec|21|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The average number of queries completed per second for a workload management (WLM) queue. Reported in 5-minute intervals.
+
+Graph|AWS Redshift WLM Query Duration (Sec)|22|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average length of time to complete a query for a workload management (WLM) queue. 
+
+Graph|AWS Redshift WLM Running Querie|23|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of queries running from both the main cluster and concurrency scaling cluster per WLM queue.
+

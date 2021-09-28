@@ -1,0 +1,13 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Azure Automation Account Stats|11286|vector|3|0|Azure Metrics|AccountName>Region>ResourceGroup>AutomationAccount|Azure comprises process automation, configuration management, update management, shared capabilities, and heterogeneous features. Automation gives you complete control during deployment, operations, and decommissioning of workloads and resources.
+
+Graph|Azure Automation Total Jobs|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of jobs.
+
+Graph|Azure Automation Total Update Deployment Runs|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total software update deployment runs.
+
+Graph|Azure Automation Total Update Deployment Machine Runs|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total software update deployment machine runs in a software update deployment run.

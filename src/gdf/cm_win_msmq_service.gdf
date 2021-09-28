@@ -1,0 +1,16 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Windows MSMQ Service Stats|10850|vector|11|0|MSMQ Metrics|Tier>Server|Windows MSMQ Service provides information about the Message Queuing service on the selected computer.
+Graph|MSMQ Total messages in all queues|1|scalar|sample|-|-|0|NA|-1|-1|L|NA|Total number of Message Queuing messages residing in active queues on the selected computer.
+Graph|MSMQ Total bytes in all queues|2|scalar|sample|-|-|0|NA|-1|-1|L|NA|Total number of bytes in all Message Queuing messages residing in active queues on the selected computer.
+Graph|MSMQ Sessions|3|scalar|sample|-|-|0|NA|-1|-1|L|NA|Total number of open network sessions involving the selected computer.
+Graph|MSMQ Outgoing Multicast Sessions|4|scalar|sample|-|-|0|NA|-1|-1|L|NA|Number of open outgoing multicast sessions involving the selected computer.
+Graph|MSMQ Outgoing Messages/sec|5|scalar|sample|-|-|0|NA|-1|-1|L|NA|Rate at which outgoing Message Queuing messages are sent from the selected computer by the Message Queuing service.
+Graph|MSMQ Outgoing HTTP Sessions|6|scalar|sample|-|-|0|NA|-1|-1|L|NA|Number of open outgoing HTTP sessions involving the selected computer.
+Graph|MSMQ Outgoing Messages|7|scalar|sample|-|-|0|NA|-1|-1|L|NA|Total number of outgoing Message Queuing messages sent from the selected computer by the Message Queuing service.
+Graph|MSMQ Incoming Messages|8|scalar|sample|-|-|0|NA|-1|-1|L|NA|Total number of incoming Message Queuing messages placed in queues on the selected computer by the Message Queuing service.
+Graph|MSMQ IP Sessions|9|scalar|sample|-|-|0|NA|-1|-1|L|NA|Number of open IP sessions involving the selected computer.
+Graph|MSMQ Incoming Multicast Sessions|10|scalar|sample|-|-|0|NA|-1|-1|L|NA|Number of open incoming multicast sessions involving the selected computer.
+Graph|MSMQ Incoming Messages/sec|11|scalar|sample|-|-|0|NA|-1|-1|L|NA|Rate at which incoming Message Queuing messages are placed in queues on the selected computer by the Message Queuing service.

@@ -1,0 +1,356 @@
+#!/bin/sh
+# Name      : nsu_show_address
+# Author    : Sanjay/Achint/Neeraj
+# Purpsose  : To show the assigned ip addresses.
+#
+# Usage     :  nsu_show_address [-s] [ [-r] or [-g] or [-l num-of-ips] ]
+# -s option prints server data. else it prints client data
+# If -r option is given,Script will show all the data from the IP entries file
+#           Admin IP info is not printed in this case. It is the long format.
+# If -l option is given, Script will show list of IP addresses upto first num-of-ips
+#
+# Exit Values:
+#    0 - OK
+#   -1 - Bad Arguments
+#   -2 - Total number of IP Addresses are less than number of IP Addresses (For -l option)
+#
+# Example: nsu_show_address -r
+#     Entity|Network_id|Netbits|Start_ip|End_ip|Ip_range|Vlan|Gateway|Exclude_IP|Primary_IP
+#     C|172.16.0.0|16|172.16.4.0|172.16.4.5|6|-|-|172.16.4.3|172.16.4.0
+# If -r option is given with -s option,Script will show all the data from the IP entries file related to Server.
+# Example:  nsu_show_address -s -r
+#     Entity|Network_id|Netbits|Start_ip|End_ip|Ip_range|Vlan|Gateway|Exclude_IP|Primary_IP
+#     S|172.16.0.0|16|172.16.4.0|172.16.4.5|6|-|-|172.16.4.3|172.16.4.0
+# If there is no IP entries file and -r option is given to script then output will be
+#     Entity|Network_id|Netbits|Start_ip|End_ip|Ip_range|Vlan|Gateway|Exclude_IP|Primary_IP
+# If -r option is not given, out put is in short format (only start ip and num IP)
+#	In this case, Admin IP is also printed
+#	-g modifies the output format. Used by Controller.
+#	If Exclude IP is present, output is broken in two ranges arroud exclude IP 
+#	
+#	Output for -g (without -r)
+#  	Start IP:192.168.0.10 Max IP:1 
+#
+#	Output for nsu_show_address (no -r or -g)
+#	Admin IP:	192.168.0.10
+#	Additional Assigned IP Addresses:
+#   	Start IP Address    Number of addresses"
+#	192.168.0.11	5
+#	192.168.10.10	25
+#
+# Example: nsu_show_address -l ALL (List all IP Addresses)
+#   192.168.1.1
+#   192.168.1.2
+#   192.168.1.3
+# Example: nsu_show_address -l 2 (List first 2 IP Addresses)
+#   192.168.1.1
+#   192.168.1.2
+#
+# Modification History:
+#   04/01/06: Sanjay/Achint - Initial Version
+#   07/05/06: Achint - Script will not show admin IP for -g option
+
+
+#Client Or Server
+entity=C
+RawFormat="No"
+GUIFormat="No"
+ListFormat="No"
+ListFormatWithIf="No"
+NumOfIps=""
+IP_VERSION_TYPE=1
+
+
+IP_ENTRIES=/home/cavisson/work/sys/ip_entries
+IPListFile=/tmp/IPListFile.$$
+
+usage()
+{
+  echo $1
+  echo "Usage: nsu_show_address [-s] [ [-r] or [-g] or [-v] or [-l num-of-ips] ]"
+  echo ""
+  echo "-s < Server >"
+  echo "-r < Raw format >"
+  echo "-g < GUI (used by GUI) >"
+  echo "-v < IP version filter to display 0=All; 1=IPv4; 2=IPv6 >"
+  echo "-l < list >"
+  exit -1
+}
+check_ip_version()
+{
+  if [ "$1" != "${1#*[0-9].[0-9]}" ]; then
+    return 1
+  elif [ "$1" != "${1#*:[0-9a-fA-F]}" ]; then
+    return 2
+  else
+    echo "Unrecognized IP format '$1'"
+  fi
+}
+
+get_ip_fields()
+{
+  ENTITY=`echo $1 | cut -d "|" -f1`
+  START_IP=`echo $1 | cut -d "|" -f4`
+  END_IP=`echo $1 | cut -d "|" -f5`
+  NUM_IP=`echo $1 | cut -d "|" -f6`
+  EXCLUDE_IP=`echo $1 | cut -d "|" -f9`
+  INTERFACE=`echo $1 | cut -d "|" -f10`
+  EXCLUDE_IP_FALLING_IN_RANGE=1
+
+  #check for IP VERSION TYPE here . whether ipv version is ipv6/ipv4
+  check_ip_version $START_IP
+  IP_VERSION_TYPE=$?
+
+ if [ "X$IP_VERSION_TO_SHOW" != "X0" ]; then
+   if [ "X$IP_VERSION_TYPE" != "X$IP_VERSION_TO_SHOW" ]; then
+      ENTITY="VersionMismatch"
+      return    
+   fi
+ fi
+
+  #if exclude ip do not fall in range of start-ip & above then exclude ip will not b use to show ip's
+  if [ "XX$EXCLUDE_IP" != "XX-" ];then
+     START_IP_INT=`$NS_WDIR/bin/nsi_check_format  -v $IP_VERSION_TYPE -I $START_IP`
+     EXCLUDE_IP_INT=`$NS_WDIR/bin/nsi_check_format -v $IP_VERSION_TYPE -I $EXCLUDE_IP`
+     if [ $START_IP_INT -gt $EXCLUDE_IP_INT ];then
+       EXCLUDE_IP="-"
+       EXCLUDE_IP_FALLING_IN_RANGE=0
+     fi
+  fi
+}
+
+#Show ip ranges 
+display_ip_range()
+{       
+  if [ "$GUIFormat" == "Yes" ];then
+    printf "Start IP:%-15s Max IP:%-8s Interface:%-8s\n" $1 $2 $3 
+  else
+    printf "    %-25s %-15s %-s\n" $1 $2 $3
+  fi
+}    
+
+#Exclude IP is in ip entries file.  Break the range around exclude IP
+# Following variables are set by the calling function
+#  - EXCLUDE_IP, START_IP
+split_ip_range()
+{
+  #End IP of First Range.
+  FRangeEnd_IP=`$NS_WDIR/bin/nsu_seq_ip  -v $IP_VERSION_TYPE -b $EXCLUDE_IP 1`
+  #Maximum IPs in First Range
+  FMAX_IP=`$NS_WDIR/bin/nsu_seq_ip -v $IP_VERSION_TYPE -n $START_IP $FRangeEnd_IP`
+  #Start IP of First Range.
+  SRangestart_ip=`$NS_WDIR/bin/nsu_seq_ip -v $IP_VERSION_TYPE -f $EXCLUDE_IP 1`
+  #Maximum IPs in Second Range
+  SMAX_IP=`expr $NUM_IP - $FMAX_IP - 1`
+}
+
+show_long_form()
+{
+  #Print header
+  echo "Entity|Network Id|Netbits|Start IP|End IP|Number of IPs|Vlan ID|Gateway|Exclude IP|Interface"
+  if [ -f $IP_ENTRIES ];then
+    while read line
+    do
+      get_ip_fields $line
+      if [ "$ENTITY" == $entity ];then
+        echo "$line"
+      fi
+    done <$IP_ENTRIES
+  fi
+}
+
+show_short_form()
+{
+  #PRINT ADMIN Address
+  #Taking Admin IPs from cav.conf file
+  if [ $entity == "C" ];then
+    #For Netstorm
+    AdminIP=`cat $HOME_DIR/etc/cav.conf | grep -e NSAdminIP | cut -d " " -f2 | cut -d"/" -f1`
+  else
+    #For netocean
+    AdminIP=`cat $HOME_DIR/etc/cav.conf | grep -e SRAdminIP | cut -d " " -f2 | cut -d"/" -f1`
+  fi
+
+  ##############################################################
+  # Show Admin IPs
+  # Date: 07th May 2016
+  # By: Tanmay
+  # Change: '-g' argument is not used by GUI now
+  #          now support '-r' option to get pipe format output
+  #           and for server : '-r -s'
+  ##############################################################
+  if [ $GUIFormat != "Yes" ];then
+    #printf "Start IP:%-15s Max IP:1%-7s\n" $AdminIP 
+  #else  
+    echo "Admin IP:   $AdminIP"
+    echo "Additional Assigned IP Addresses:"
+    echo "    Start IP Address    Number of addresses  Interface"
+  fi
+
+  #IP Entries File is given.
+  if [ -f $IP_ENTRIES ];then
+    #Reading IP Entries File
+    while read line
+    do
+      #Extracting the Entity,Start IP,Number of IPs and Exclude IP from particular line of IP Entries file.
+      get_ip_fields $line
+      if [ "$ENTITY" != "$entity" ];then
+        continue
+      fi
+      #Given Entity is equal to the entity in ip entries file
+      #if [ "$EXCLUDE_IP" == "-" ];then
+      if [ "$EXCLUDE_IP" == "-" -o $EXCLUDE_IP_FALLING_IN_RANGE == 0 ];then
+        display_ip_range $START_IP $NUM_IP $INTERFACE
+      else
+        #Exclude IP is in ip entries file.  Break the range around exclude IP
+        split_ip_range
+        display_ip_range $START_IP $FMAX_IP $INTERFACE
+        display_ip_range $SRangestart_ip $SMAX_IP $INTERFACE
+      fi
+    done <$IP_ENTRIES
+  fi
+}
+
+show_ip_list()
+{
+  #IP Entries File is given.
+  if [ -f $IP_ENTRIES ];then
+    #Reading IP Entries File
+    while read line
+    do
+      #Extracting the Entity,Start IP,Number of IPs and Exclude IP from particular line of IP Entries file.
+      get_ip_fields $line
+      if [ "$ENTITY" != "$entity" ];then
+        continue
+      fi
+      #Given Entity is equal to the entity in ip entries file
+      if [ $IP_VERSION_TYPE = 1 ];then
+        if [ "$EXCLUDE_IP" == "-" -o $EXCLUDE_IP_FALLING_IN_RANGE == 0 ];then
+          $NS_WDIR/bin/nsu_seq_ip $IP_VERSION_TYPE $START_IP $NUM_IP >> $IPListFile
+        else
+          #Exclude IP is in ip entries file.  Break the range around exclude IP
+          split_ip_range
+          $NS_WDIR/bin/nsu_seq_ip $IP_VERSION_TYPE $START_IP $FMAX_IP >> $IPListFile
+          $NS_WDIR/bin/nsu_seq_ip $IP_VERSION_TYPE $SRangestart_ip $SMAX_IP >> $IPListFile
+      fi
+      elif [ $IP_VERSION_TYPE = 2 ];then
+        $NS_WDIR/bin/nsu_seq_ip $IP_VERSION_TYPE $START_IP $END_IP >> $IPListFile
+     fi
+    done < $IP_ENTRIES
+    if [ ${NumOfIps}X == "X" ]; then
+      cat $IPListFile
+    else
+      TotalIps=`wc -l $IPListFile | awk '{print $1}'`
+      if [ $NumOfIps -gt $TotalIps ]; then
+        echo "Total number of IP Addresses are less than number of IP Addresses"
+        exit -2
+      fi
+      head -$NumOfIps $IPListFile
+    fi
+    rm $IPListFile
+  fi
+}
+
+show_ip_list_with_if()
+{
+  #IP Entries File is given.
+  if [ -f $IP_ENTRIES ];then
+    #Reading IP Entries File
+    while read line
+    do
+      #Extracting the Entity,Start IP,Number of IPs and Exclude IP from particular line of IP Entries file.
+      get_ip_fields $line
+      if [ "$ENTITY" != "$entity" ];then
+        continue
+      fi
+      #Given Entity is equal to the entity in ip entries file
+      #if [ "$EXCLUDE_IP" == "-" ];then
+      if [ "$EXCLUDE_IP" == "-" -o $EXCLUDE_IP_FALLING_IN_RANGE == 0 ];then
+        $NS_WDIR/bin/nsu_seq_ip $IP_VERSION_TYPE $START_IP $NUM_IP | sed s/^/$INTERFACE:/ >> $IPListFile
+      else
+        #Exclude IP is in ip entries file.  Break the range around exclude IP
+        split_ip_range
+        $NS_WDIR/bin/nsu_seq_ip $IP_VERSION_TYPE $START_IP $FMAX_IP | sed s/^/$INTERFACE:/ >> $IPListFile
+        $NS_WDIR/bin/nsu_seq_ip $IP_VERSION_TYPE $SRangestart_ip $SMAX_IP | sed s/^/$INTERFACE:/ >> $IPListFile
+      fi
+    done < $IP_ENTRIES
+    if [ ${NumOfIps}X == "X" ]; then
+      cat $IPListFile
+    else
+      TotalIps=`wc -l $IPListFile | awk '{print $1}'`
+      if [ $NumOfIps -gt $TotalIps ]; then
+        echo "Total number of IP Addresses are less than number of IP Addresses"
+        exit -2
+      fi
+      head -$NumOfIps $IPListFile
+    fi
+    rm $IPListFile
+  fi
+}
+
+show_address()
+{
+  if [ $ListFormat = "Yes" ];then
+    show_ip_list
+  elif [ $ListFormatWithIf = "Yes" ];then
+    show_ip_list_with_if
+  elif [ $RawFormat = "Yes" ];then
+    show_long_form
+  else
+    show_short_form
+  fi
+}
+
+# Parse and validate arguments
+  while getopts :srgi:l:v: arg
+  do
+    case $arg in
+      s) entity=S;;
+      r) RawFormat="Yes";;
+      g) GUIFormat="Yes";;
+      v) IP_VERSION_TO_SHOW=$OPTARG;;
+      i) ListFormatWithIf="Yes";;
+      l) ListFormat="Yes"
+         > $IPListFile
+         NumOfIps=$OPTARG
+         if [ $NumOfIps == "999999999" -o $NumOfIps == "ALL" ]; then
+           NumOfIps=""
+         else
+           nsi_check_format -v $IP_VERSION_TYPE -n $NumOfIps
+           if [ $? != 0 ];then
+             echo "Argument given with -l should be ALL, 999999999 or positive integer."
+             exit -1
+           fi
+         fi
+         ;;
+      ?) usage "Bad argument";;
+    esac
+  done
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # IP_VERSION_TO_SHOW : This variable is used when '-v' argument is passed by user, it is used to show IP entries from file
+  #			 0 = used to show both IPv4 and IPv6(All enteries)
+  #			 1 = for IPv4
+  #			 2 = for IPv6
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  if [ "X$IP_VERSION_TO_SHOW" == "X" ]; then  
+    IP_VERSION_TO_SHOW=0
+  fi
+
+  if [ \( "X$IP_VERSION_TO_SHOW" != "X0" \) -a \( "X$IP_VERSION_TO_SHOW" != "X1" \) -a \( "X$IP_VERSION_TO_SHOW" != "X2" \) ]; then
+
+     echo "Error:IP version filter can only be 0,1 and 2 i.e -v 0 or -v 1 or -v 2" 
+     exit -1 
+  fi
+  if [ $RawFormat == "Yes" -a $GUIFormat == "Yes" ];then
+    usage "-r and -g options cannot be specified together."
+  fi
+  if [ $RawFormat == "Yes" -a $ListFormat == "Yes" ];then
+    usage "-r and -l options cannot be specified together."
+  fi
+  if [ $GUIFormat == "Yes" -a $ListFormat == "Yes" ];then
+    usage "-g and -l options cannot be specified together."
+  fi
+
+show_address
+
+exit 0

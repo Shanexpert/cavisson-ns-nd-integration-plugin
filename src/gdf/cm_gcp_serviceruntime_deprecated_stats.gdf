@@ -1,0 +1,5 @@
+# 1.0 - Initial version
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP Service Runtime Deprecated|11599|vector|1|0|GCP Metrics|ProjectID>Location>Param3>Param4>CredentialID>QuotaName|It provide metric whose class or method is no longer considered important.
+Graph|GCP Service Runtime Deprecated/Sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Deprecate metric per seconds whose class or method is no longer considered important.

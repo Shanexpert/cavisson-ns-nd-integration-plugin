@@ -1,0 +1,9 @@
+Name|Description|Creation Date|Modified Date
+_PageDownloadReports|Template for Page Download reports as simple Report|10/15/07 15:35:54|10/15/07 15:37:07
+Report Description|Graph View Type|Graph Type|Granularity|X-Axis Time Format|Time|Time Selection Format|Start Date|Start Time|End Date|End Time|Report Info
+Page Download Started/Second|Simple Graph|Normal|0|Elapsed|Total Run|Elapsed|NA|NA|NA|NA|RptGrpId=4:RptId=9:SSO=NA:SN=NA
+Page Download Completed/Second|Simple Graph|Normal|0|Elapsed|Total Run|Elapsed|NA|NA|NA|NA|RptGrpId=4:RptId=10:SSO=NA:SN=NA
+Success Page Responses/Second|Simple Graph|Normal|0|Elapsed|Total Run|Elapsed|NA|NA|NA|NA|RptGrpId=4:RptId=11:SSO=NA:SN=NA
+Average Page Response Time (Seconds)|Simple Graph|Normal|0|Elapsed|Total Run|Elapsed|NA|NA|NA|NA|RptGrpId=4:RptId=3:SSO=NA:SN=NA
+Failed Page Responses (All Errors)/Minute|Simple Graph|Normal|0|Elapsed|Total Run|Elapsed|NA|NA|NA|NA|RptGrpId=8:RptId=1:SSO=NA:SN=NA
+Failed Page Responses/Minute|Simple Graph|Normal|0|Elapsed|Total Run|Elapsed|NA|NA|NA|NA|RptGrpId=8:RptId=2:SSO=1:SN=All

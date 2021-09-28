@@ -1,0 +1,20 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+          
+Group|PocTransactionStats|10517|vector|9|0|POC Transaction|Tier>Server>Instance|Poc transaction status stats.
+          
+Graph|New Transactions|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of transactions are either created on Instore/Simulator, and yet to be replayed by OrderSyncServer Agent.
+Graph|Successful Transactions|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of transactions are successfully replayed by OrderSyncServer Agent. This is final state for transaction(s) received from Simulator(Non-Existing ISS).
+Graph|Error Transactions|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of transactions fails to replay Order sent from a ISS/Simulator.
+Graph|Synched Transactions|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of transactions are successfully replayed by OrderSyncServer at Corp, the same is notified to ISS and then the corresponding order at ISS is marked as Synched.
+Graph|Order Header|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of order headers count.
+Graph|Offline Transaction|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of offline transactions count.
+Graph|Purge Order Header History|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of purge order header history count.
+Graph|Purge Order Header|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of purge order header count.
+Graph|Purge Task Queue|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of purge task queue count.
+

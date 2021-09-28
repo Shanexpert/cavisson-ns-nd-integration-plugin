@@ -1,0 +1,13 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|1.0|1|-|-|-1|-1|-
+
+Group|ThreadPoolMonitorGlassFish|10153|vector|7|0|-|Tier>Server>Instance|ThreadPoolMonitorGlassFish
+Graph|CurrrentAverageTimeInQueue|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current Average amount of time (in milliseconds) a request waited in the queue before being processed 
+Graph|CurrentAverageWorkCompletionTime|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current Average amount of time (in milliseconds) taken to complete an assignment 
+Graph|CurrentBusyThreads|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of busy threads 
+Graph|CurrentNumberofThreads|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current number of request processing threads 
+Graph|NumberofAvailableThreads|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of available threads 
+Graph|NumberofWorkItemsInqueue|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current number of work items waiting in queue 
+Graph|TotalWorkItemsadded|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of work items added to the work queue as of last sampling 

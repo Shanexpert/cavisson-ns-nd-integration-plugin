@@ -1,0 +1,102 @@
+#!/usr/bin/perl
+#converts index file generaeted by capture to create a page dump file of the script 
+#pages.html creation
+$NS_WDIR = "$ENV{'NS_WDIR'}";
+$NS_DIR = "$NS_WDIR/workspace/admin/default/cavisson/default/default/scripts";
+$sname = "$ENV{'NS_SCRIPT_NAME'}";
+print "sname is $sname\n";
+#print "arg1 is $ARGV[0]\n";
+$inp="$NS_DIR/$sname/dump/index";
+$out="$NS_DIR/$sname/dump/pages.html";
+#$basedir="/scripts/$sname/dump";
+#print "basedir  base is $basedir\n";
+#$host="$ARGV[2]";
+
+`echo $NS_SDIR >/tmp/scrout`;
+open (INDEXFILE, ">$out") || die "cannot open out index file, $out";
+
+print INDEXFILE "<!-- Netstorm GUI4  -->\n";
+
+print INDEXFILE "<html>\n";
+print INDEXFILE "<head><title>Page Response Snapshots for recorded script</title></head>\n";
+
+print INDEXFILE "<!-- Title of the screen -->\n";
+print INDEXFILE "	<link rel=\"stylesheet\" href=\"/netstorm/css/Netstorm.css\" type=\"text/css\" /link>\n";
+
+print INDEXFILE "</head>\n";
+print INDEXFILE "<body>\n";
+print INDEXFILE "	<form id=\"form1\" name=\"form1\" method=\"post\" action=\"\">\n";
+print INDEXFILE "       <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" id=\"header\">\n";
+print INDEXFILE "       <tr><td width=\"95%\" align=\"left\" valign=\"top\"><img src=\"/netstorm/images/logo.png\"/></td>\n";
+print INDEXFILE "       <tr><td align=\"center\" colspan=\"2\">\n";
+
+print INDEXFILE "       <table width=\"98%\" cellpadding=\"0\" cellspacing=\"0\">\n";
+print INDEXFILE "       <tr ><td colspan=\"2\" align=\"left\" class=\"screenTitle\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Response Page Snapshots </td></tr></table></td></tr></table><table  cellpadding=\"0\" cellspacing=\"0\" id=\"text\">\n";
+print INDEXFILE "       <tr><td align=\"center\">\n";
+print INDEXFILE "       <br /><br /></table>\n";
+
+print INDEXFILE "	<table cellpadding=\"0\" cellspacing=\"0\" class=\"table\" width=\"98%\" align=\"center\" max-width=1200px>\n";
+
+print INDEXFILE "	<tr>\n";
+print INDEXFILE "	<td align=\"center\"></a></td>\n";
+print INDEXFILE "       <td width=\"970\" align=\"center\" class=\"tableTitle\">Page Dump Table</td>";
+
+print INDEXFILE "       </tr><tr>\n";
+
+print INDEXFILE "       <td colspan=\"2\" align=\"center\" valign=\"top\">\n";
+print INDEXFILE "       <table width =\" 100%\" border=\"0\"  align =\" center\" cellpadding =\" 0\" cellspacing =\" 0\" id=\"table02\" style=\"width:100%; max-width:1200px; display;\">\n";
+print INDEXFILE "       <tr><td width=\"10%\" >&nbsp;</td><td width=\"5%\">&nbsp;</td></tr>\n";
+print INDEXFILE "       <tr align=\"center\" class=\"tableHeader\">\n";
+print INDEXFILE "       <td height=\"20\"><b>Page Number</b></td>\n";
+print INDEXFILE "       <td><b>Page Name</b></td>\n";
+
+$linenum = 0;
+open (INPFILE, "$inp") || die "cannot open input index file, $inp";
+while (<INPFILE>) {
+    chomp;
+    ($pgnum, $pgname, $pgpath, $pghost, $rootpath) = split(/,/);
+
+#    print "Setting $pgnum name $pgname  path $pgpath host $pghost with $rootpath\n";
+		if ($linenum%2 == 0) {
+      		    print INDEXFILE "	<tr align=\"center\" class=\"tableRowOdd\" >\n";
+		} else {
+      		    print INDEXFILE "	<tr align=\"center\" class=\"tableRowEven\" >\n";
+		}
+		$linenum = $linenum +1;
+		
+	        if ( -e "$NS_DIR/$sname/dump/headers/page_${pgnum}.txt" ) {
+		    printf INDEXFILE "     <td height=\"20\" valign =\" middle\"><a href=./headers/page_${pgnum}.txt>%02d</a></td>\n<td valign =\" middle\" ><a href=./$pghost$pgpath$pgname>$pgname</a></td>\n", ${pgnum};
+		} else {
+		    printf INDEXFILE "     <td valign =\" middle\" ><a href=./$pghost$pgpath$pgname>$pgname</a></td>\n", ${pgnum};
+		}
+
+    @lines=`cat $NS_DIR/$sname/dump/$pghost$pgpath$pgname`;
+                                                                                                                                                            
+    open (DOCFILE, ">/tmp/doout$pgnum");
+    for (@lines) {
+        chomp;
+
+		if (s/src\s*=(['"]?)\s*\//src = $1$rootpath/ig)
+                {
+      			#print "Found $pgname at with $rootpath\n";
+                        print DOCFILE "$_\n";
+                } else {
+                        print DOCFILE "$_\n";
+                }
+    }
+    close (DOCFILE);
+    `cp /tmp/doout$pgnum $NS_DIR/$sname/dump/$pghost$pgpath$pgname`;
+}
+print INDEXFILE "	</td></tr>\n";
+print INDEXFILE "	</table>\n";
+print INDEXFILE "	</table>\n";
+print INDEXFILE "	<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n";
+print INDEXFILE "	<br>\n<br>\n<tr>\n";
+
+print INDEXFILE "	<td background=\"/netstorm/images/bg_footer.png\"><img src=\"/netstorm/images/bg_footer.png\" /></td>\n";
+print INDEXFILE "	</table>\n";
+print INDEXFILE "<br/>\n</form>\n";
+print INDEXFILE "</body>\n";
+print INDEXFILE "</html>\n";
+close (INDEXLOG);
+exit 0;

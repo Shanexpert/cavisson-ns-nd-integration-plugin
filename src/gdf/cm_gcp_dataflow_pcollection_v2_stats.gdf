@@ -1,0 +1,8 @@
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP Dataflow PCollection Stats V2|11309|vector|4|0|GCP Metrics|ProjectID>Region>Job>PCollection|GCP Dataflow job pcollection metrics such as elements and estimated_element_size.
+
+Graph|GCP Dataflow PCollection Elements/Sec|1|scalar|cumulative|-|CumToPS|0|NA|-1|-1|NA|NA|Number of elements/sec added to the pcollection.
+Graph|GCP Dataflow PCollection Estimated Element Size (KB)|2|scalar|sample|-|-|0|D|-1|-1|NA|DIV(G2,1024)|An estimated element size (in Kilobytes) added to the pcollection.
+Graph|GCP Dataflow Elements Produced/Sec|3|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The number of elements produced by each PTransform.
+Graph|GCP Dataflow Estimated Produced Size (MB)|4|scalar|rate|-|-|0|D|-1|-1|NA|DIV(G4,1048576)|The estimated total byte size of elements produced by each PTransform.

@@ -1,0 +1,6 @@
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP Kubernetes Pod Network|14032|vector|2|0|GCP Metrics|ProjectID>Location>Cluster>NameSpace>Pod|It provides metrics related to kubernetes pod network stats.
+
+Graph|GCP Kubernetes Pod Received Bytes/Sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of bytes received by the pod over the network per second.
+Graph|GCP Kubernetes Pod Transmitted Bytes/Sec|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of bytes transmitted by the pod over the network per second.

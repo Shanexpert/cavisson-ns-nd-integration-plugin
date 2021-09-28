@@ -1,0 +1,26 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+# Command to get data for this gdf on windows server :
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# wmic path Win32_PerfFormattedData_PerfOS_Processor.Name='_Total' get DPCRate,DPCsQueuedPersec,InterruptsPersec,PercentDPCTime,PercentIdleTime,PercentInterruptTime,PercentPrivilegedTime,PercentProcessorTime,PercentUserTime /every:10
+#
+# Entry in mprof to get data :
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# CUSTOM_MONITOR 192.168.1.52 cm_win_processor_stats.gdf Win_Mon_Processor 2 wmic path Win32_PerfFormattedData_PerfOS_Processor.Name='_Total' get DPCRate,DPCsQueuedPersec,InterruptsPersec,PercentDPCTime,PercentIdleTime,PercentInterruptTime,PercentPrivilegedTime,PercentProcessorTime,PercentUserTime /every:10
+#
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Windows Processor Stats|10033|vector|9|0|System Metrics|Tier>Server>Proccessor|Windows Processor stats. Processor is the part of the computer that performs arithmetic and logical computations, initiates operations on peripherals, and runs the threads of processes. A computer can have multiple processors.
+
+Graph|Processor DPC Rate|1|scalar|sample|-|-|0|NA|-1|-1|L|NA|Processor DPC Rate is the rate at which deferred procedure calls (DPCs) were added to the processors DPC queues between the timer ticks of the processor clock.
+Graph|Processor DPCs Queued/Sec|2|scalar|rate|-|-|0|NA|-1|-1|L|NA|Rate in incidents per second, at which deferred procedure calls (DPCs) were added to the processor's DPC queue.
+Graph|Processor Interrupts/Sec|3|scalar|rate|-|-|0|NA|-1|-1|L|NA|rate in incidents per second, at which the processor received and serviced hardware interrupts.
+Graph|Processor DPC Time (Pct)|4|scalar|sample|-|-|0|NA|-1|-1|L|NA|DPC time is the percentage of time that the processor spent receiving and servicing deferred procedure calls (DPCs) during the sample interval.
+Graph|Processor Idle Time (Pct)|5|scalar|sample|-|-|0|NA|-1|-1|L|NA|Idle Time is the percentage of time the processor is idle during the sample interval
+Graph|Processor Interrupt Time (Pct)|6|scalar|sample|-|-|0|NA|-1|-1|L|NA|Interrupt Time is the time the processor spends receiving and servicing hardware interrupts during sample intervals. 
+Graph|Processor Privileged Time (Pct)|7|scalar|sample|-|-|0|NA|-1|-1|L|NA|Privileged Time is the percentage of elapsed time that the process threads spent executing code in privileged mode.
+Graph|Processor Time (Pct)|8|scalar|sample|-|-|0|NA|-1|-1|H|NA|Percentage of elapsed time that the processor spends to execute a non-Idle thread.
+Graph|Processor User Time (Pct)|9|scalar|sample|-|-|0|NA|-1|-1|H|NA|Percentage of elapsed time that the processor spends in the user mode.

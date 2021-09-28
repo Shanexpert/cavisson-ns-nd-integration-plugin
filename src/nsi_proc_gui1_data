@@ -1,0 +1,67 @@
+#
+# Name     : nsi_proc_gui1_data
+# Author   : Neeraj Jain
+# Purpsose : Process gui.data and store in /tmp/gui1.???.txt files
+#            THIS IS A TEST TOOL FOR GUI1 ONLY
+# Arguments:  Optional - TestRun (e.g TR123)
+#
+# Modification History:
+#   01/14/05: Neeraj - Initial Version
+
+#source this file for NS_WDIR
+. /home/cavisson/.bashrc
+
+if [ "XX" = "XX$NS_WDIR" ]
+then
+  NS_WDIR=/home/cavisson/work
+fi
+
+NSLogsPath=$NS_WDIR/logs
+TRNumsOutputFile=/tmp/NSTRNums.txt
+> $TRNumsOutputFile
+
+testRun="NA"
+
+GetLastTestRun()
+{
+  cd $NSLogsPath
+  testRun=`ls | grep TR | cut -c3- | sort -n | tail -1`
+  testRun=TR$testRun
+}
+
+if [ $# == 1 ]
+then
+  testRun=TR$1
+else
+  GetLastTestRun
+fi
+
+
+
+GUIDataFile=$NSLogsPath/$testRun/gui.data
+GUIDataWorkFile=$NSLogsPath/$testRun/gui.data.work
+
+ProcGuiDataFile()
+{
+  echo "TestRun = $testRun"
+  if [ ! -f $GUIDataFile ]
+  then
+    echo "gui.data file not present, exiting"
+    exit -1
+  fi
+
+  sed '1,7d' $GUIDataFile | sed 's/\t//g' >  $GUIDataWorkFile
+
+  grep TX $GUIDataWorkFile > /tmp/gui1.TX.txt
+  grep PAGE $GUIDataWorkFile > /tmp/gui1.PAGE.txt
+  grep SESSION $GUIDataWorkFile > /tmp/gui1.SESSION.txt
+  grep URL $GUIDataWorkFile > /tmp/gui1.URL.txt
+  grep num_active_users $GUIDataWorkFile | grep num_thinking_users > /tmp/gui1.ActThinkIdle.txt
+  grep num_connections $GUIDataWorkFile > /tmp/gui1.NumConRcvThroughput.txt
+}
+
+
+ProcGuiDataFile
+
+rm $GUIDataWorkFile 
+exit 0

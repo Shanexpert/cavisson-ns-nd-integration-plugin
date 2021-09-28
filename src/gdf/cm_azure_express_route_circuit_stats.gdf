@@ -1,0 +1,20 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Azure ExpressRoute Circuit Stats|11460|vector|6|0|Azure Metrics|AccountName>Region>ResourceGroup>AzureExpressRouteCircuit|ExpressRoute is an Azure service that lets you create private connections between Microsoft datacenters and infrastructure that's on your premises or in a colocation facility.
+
+Graph|Azure ExpressRoute Circuit Bits In (Count/Sec)|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Azure ExpressRoute Circuit Bits In PerSecond
+
+Graph|Azure ExpressRoute Circuit Bits Out(Count/Sec)|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Azure ExpressRoute Circuit Bits Out PerSecond
+
+Graph|Azure ExpressRoute Circuit Bgp Availability(Count/Sec)|3|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Azure ExpressRoute Circuit Bgp Availability
+
+Graph|Azure ExpressRoute Circuit Arp Availability(%)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Azure ExpressRoute Circuit Arp Availability
+
+Graph|Azure ExpressRoute Circuit Qos Drop Bits (Count/Sec)|5|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Azure ExpressRoute Circuit Dropped In Bits PerSecond
+
+Graph|Azure ExpressRoute Circuit Qos Drop Bits Out(Count/Sec)|6|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Azure ExpressRoute Circuit Dropped Out BitsPerSecond
+

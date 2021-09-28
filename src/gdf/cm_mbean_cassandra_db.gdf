@@ -1,0 +1,31 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+#ObjectName :org.apache.cassandra.db:type=BatchlogManager, ObjectName :org.apache.cassandra.db:type=Commitlog, ObjectName :org.apache.cassandra.db:type=CompactionManager
+#ObjectName :org.apache.cassandra.db:type=DynamicEndpointSnitch, ObjectName :org.apache.cassandra.db:type=IndexSummaries
+info|3.1|1|-|-|-1|-1|-
+Group|Apache Cassandra Database|14114|vector|19|0|Apache Cassandra Metrics|Tier>Server>Instance|BatchlogManager =all batches in the batchlog, Commitlog =append only log of all mutations local to a Cassandra node,Commitlog =append only log of all mutations local to a Cassandra node and will be applied to memtable,CompactionManager = it takes one or more sstables and output new sstables,DynamicEndpointSnitch =read latencies to avoid reading from hosts that have slowed down.
+#Graphs
+Graph|Apache Cassandra Database Total Batches Replayed|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Total batches in the batchlog.
+Graph|Apache Cassandra Database Active Content Size|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Content of logs  being actively append  to cassandra node.
+Graph|Apache Cassandra Database Active Disk Size|3|scalar|sample|-|None|0|AS|-1|-1|NA|NA| Active disk size for cassandra database.
+Graph|Apache Cassandra Database Restore Point In Time|4|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Restore logs on time.
+Graph|Apache Cassandra Database Validator Maximum Threads|5|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Validate  maximum number of threads.
+Graph|Apache Cassandra Database Core View Threads |6|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Core thread execution  for compaction.
+Graph|Apache Cassandra Database Concurrent Maximum Auto Upgrade Tasks|7|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Maximum number of concurrent tasks automatically upgraded for the compaction.
+Graph|Apache Cassandra Database Core Compactor Threads|8|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Thread execution of core  compacted.
+Graph|Apache Cassandra Database Maximum Compactor Threads|9|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Maximum thread execution of core  compacted.
+Graph|Apache Cassandra Database Core Validation Threads|10|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Validate core of threads.
+Graph|Apache Cassandra Database Maximum View Build Threads|11|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Maximum thread execution  for compaction.
+Graph|Apache Cassandra Database Severity|12|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Determine which replica a coordinator will send the read's DATA and DIGEST requests to.
+Graph|Apache Cassandra Database Reset Interval|13|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Allow ‘pinning’ of replicas to hosts in order to increase cache capacity if it set greater than zero.
+Graph|Apache Cassandra Database Badness Threshold|14|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Control how much worse the pinned host has to be before the dynamic snitch will prefer other replicas over it. 
+Graph|Apache Cassandra Database Update Interval|15|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Controls how often to perform the more expensive part of host score calculation.
+Graph|Apache Cassandra Database Memory Pool Capacity(MB)|16|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Total amount of memory in MB that can be used by index summary.
+Graph|Apache Cassandra Database Average Index Interval|17|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Average index interval.
+Graph|Apache Cassandra Database Resize Interval(min)|18|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Interval can be resized in minutes.
+Graph|Apache Cassandra Database Memory Pool Size(MB)|19|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Amount of memory in MB that can be used by index summary.
+
+

@@ -1,0 +1,12 @@
+# --- GDF Version History ---
+# # 1.0 - Initial version
+#
+Info|3.1|1|-|-|-1|-1|-
+#
+Group|TransactionStats|10455|vector|5|0|UX Metrics|Channel>TransactionGroup|NetVision ActionStats
+#
+Graph|Transaction Started/Min|1|scalar|rate|-|CumToPM|0|A|-1|-1|NA|NA|Number of transaction started per minute
+Graph|Transaction Failed/Min|2|scalar|rate|-|CumToPM|0|A|-1|-1|NA|NA|Number of transaction failed per minute
+Graph|Transaction Completed/Min|3|scalar|rate|-|CumToPM|0|AS|-1|-1|NA|NA|Number of transaction completed per minute
+Graph|Duration|4|scalar|times|-|-|0|A|-1|-1|NA|NA|Duration of transaction, and measure in seconds
+Graph|Start Time|5|scalar|times|-|-|0|A|-1|-1|NA|NA|Start Time of transaction, mark, and measure in seconds since navigation start

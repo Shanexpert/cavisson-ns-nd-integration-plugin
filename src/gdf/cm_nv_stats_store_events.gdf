@@ -1,0 +1,8 @@
+# --- GDF Version History ---
+# # 1.0 - Initial version
+#
+Info|3.1|1|-|-|-1|-1|-
+#
+Group|EventStats By Stores|10480|vector|1|0|UX Metrics|Country>State>City>Store>Events|NetVision EventStats By Stores
+#
+Graph|Events/Min|1|scalar|rate|-|CumToPM|0|A|-1|-1|NA|NA|Number of events received per minute

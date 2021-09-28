@@ -1,0 +1,48 @@
+TABLE_NAME NDStorewiseaggrtable
+CREATE_TABLE_SQL NDStorewiseaggrtable
+--start
+create table NDStorewiseaggrtable_$TRNO (
+        timestamp bigint,
+        tierid smallint,
+        serverid int,
+        appid int,
+        BtId int,
+        storeid int,
+        TotalCount int, 
+        Responsetime_min int,
+        Responsetime_max int,
+        Responsetime_avg int,
+        Normalcount int,
+        SlowCount int,
+        VerySlowCount int,
+        FailureCount int,
+        PercentageFailure int,
+        ff1 int,  
+        ff2 int,
+        ff3 int,
+        ff4 int,
+        ffs1 text,
+        ffs2 text,
+        ffs3 text,
+        ffs4 text
+        );
+create index ndStimestamp_$TRNO ON NDStorewiseaggrtable_$TRNO (timestamp);
+create index ndSBtId_$TRNO ON NDStorewiseaggrtable_$TRNO (BtId);
+create index ndStierid_$TRNO ON NDStorewiseaggrtable_$TRNO (tierid);
+create index ndSserverid_$TRNO ON NDStorewiseaggrtable_$TRNO (serverid);
+create index ndSappid_$TRNO ON NDStorewiseaggrtable_$TRNO (appid);
+--end
+DATA_COLLECTION_SQL
+--start
+select timestamp, a.flowpathinstance, tierindex, serverindex, appindex, urlindex, nameid, valuetype, valueint, httpheadervalue, responsetime, btcategory from ndcustomdata_$TRNO as a, flowpath_$TRNO as b where  nameid = (select headerid from ndhttpheadermetadata_$TRNO where lower(headernameorvalue) like lower('%storeid%') limit 1) and a.flowpathinstance = b.flowpathinstance and timestamp >= $STARTTIME and timestamp < $ENDTIME and flowpathbegintimestamp >= $STARTTIME and flowpathbegintimestamp < $ENDTIME;
+--end
+PROGRESS_INTERVAL 600
+G_MAX_SESSION_DURATION 600
+PRIMARY_KEY_COLUMN 1
+CALLBACK_FILE ndstorewiseaggregateparser.c
+PROCESS_OLD_DATA 0
+TEST_STATE 0
+RECORD_TIMESTAMP_SQL
+--start
+select min(flowpathbegintimestamp), max(flowpathbegintimestamp) from flowpath_$TRNO as a , ndcustomdata_$TRNO as b where a.flowpathinstance = b.flowpathinstance and timestamp >= $STARTTIME and timestamp < $ENDTIME and flowpathbegintimestamp >= $STARTTIME and flowpathbegintimestamp < $ENDTIME
+--end

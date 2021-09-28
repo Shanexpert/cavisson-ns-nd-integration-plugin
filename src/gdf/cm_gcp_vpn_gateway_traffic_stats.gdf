@@ -1,0 +1,9 @@
+# 1.0 - Initial version
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP VPN Gateway Traffic|11587|vector|5|0|GCP Metrics|ProjectID>Region>GatewayName>TunnelName|VPN gateway traffic provide metrics related to network traffic.
+Graph|GCP VPN Incoming Packets Dropped/Sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Ingress packets dropped for tunnel.
+Graph|GCP VPN Outgoing Packets Dropped/Sec|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Egress packets dropped for tunnel.
+Graph|GCP VPN Received Bytes/Sec|3|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Ingress bytes for tunnel.
+Graph|GCP VPN Sent Bytes/Sec|4|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Engress bytes for tunnel.
+Graph|GCP VPN Tunnel Established|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Indicates successful tunnel establishment(0 - failed, other than 0 - success ).

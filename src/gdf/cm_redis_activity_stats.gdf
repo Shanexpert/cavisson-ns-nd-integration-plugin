@@ -1,0 +1,13 @@
+# --- GDF Version History ---
+#  1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Redis Activity Stats|10305|vector|7|0|Redis Metrics|Tier>Server>Instance|Redis server Activity stats monitor measure health of redis server. It provides metrics related to evicted keys, expired keys, connected slaves, block clients.
+
+Graph|Redis Evicted keys/sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of keys removed due to reaching the max memory limit.
+Graph|Redis Connected Clients|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of clients connected to Redis.
+Graph|Redis Expired keys/sec|3|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Total number of key expiration events per second.
+Graph|Redis Connected Slaves|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of slaves connected to current master instance.
+Graph|Redis Blocked clients|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of clients pending on a blocking call.
+Graph|Redis Client Longest Output List|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Longest output list among current client connections.
+Graph|Redis Client Biggest Input Buffer|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Biggest input buffer among current client connections.

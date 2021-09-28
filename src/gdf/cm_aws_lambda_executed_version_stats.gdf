@@ -1,0 +1,12 @@
+# --- GDF Version History ---
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS Lambda Function Resource ExeVersion Stats|11330|vector|5|0|AWS Metrics|AccountName>Region>FunctionName>Resource>ExecutedVersion|AWS Lambda is a compute service that lets you run code without provisioning or managing servers.
+
+Graph|AWS Lambda Concurrent Executions|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Measures the average of concurrent executions for a given function at a given point in time.
+Graph|AWS Lambda Duration (ms)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Measures the average elapsed wall clock time from when the function code starts executing as a result of an invocation to when it stops executing
+Graph|AWS Lambda Errors|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Measures the number of invocations that failed due to errors in the function (response code 4XX).
+Graph|AWS Lambda Invocations|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Measures the number of times a function is invoked in response to an event or invocation API call.
+Graph|AWS Lambda Throttles|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Measures the number of Lambda function invocation attempts that were throttled due to invocation rates exceeding the customer's concurrent limits (error code 429). Failed invocations may trigger a retry attempt that succeeds

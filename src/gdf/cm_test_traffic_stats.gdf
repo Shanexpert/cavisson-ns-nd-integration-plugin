@@ -1,0 +1,29 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+
+Info|1.0|1|-|-|-1|-1|-
+Group|HTTP Test Traffic Stats|10843|vector|17|0|Test Metrics|Tier>Server|HTTP information.
+
+Graph|Total HTTP Request Started/Sec|6|scalar|rate|-|PS|0|A|-1|-1|NA|NA|Number of HTTP requests started per second, this will include requests which are initiated from NS box, i.e., successfull as well as failed requests
+Graph|Total HTTP Request Sent/Sec|10|scalar|rate|-|PS|0|A|-1|-1|NA|NA|Number of HTTP requests sent per second, this will include requests which are successfully sent to server, i.e., connection successfully established
+Graph|Total HTTP Request Completed/Sec|1|scalar|rate|-|PS|0|AS|-1|-1|NA|NA|Number of HTTP requests completed per sec, this will include requests which are completed.
+Graph|Total HTTP Request Successful/Sec|2|scalar|rate|-|PS|0|AS|-1|-1|NA|NA|Number of HTTP requests per sec for which a successful response was received.
+Graph|Total HTTP Response Time (Secs)|3|scalar|times|-|SEC|0|AS|1|-1|NA|NA|Average response time taken by HTTP requests in seconds. This includes both successful and failure responses
+Graph|Total HTTP Successful Response Time (Secs)|11|scalar|times|-|SEC|0|AS|-1|-1|NA|NA|Average response time taken by successful HTTP requests in seconds.
+Graph|Total HTTP Failure Response Time (Secs)|12|scalar|times|-|SEC|0|AS|-1|-1|NA|NA|Average response time taken by failed HTTP requests, in seconds.
+Graph|Total HTTP DNS time (Secs)|13|scalar|times|-|SEC|0|AS|-1|-1|NA|NA|Time taken by request to resolve a host name, in seconds.
+Graph|Total HTTP Connect Time (Secs)|14|scalar|times|-|SEC|0|AS|-1|-1|NA|NA|Time taken by request to connect, in seconds.
+Graph|Total HTTP SSL Time (Secs)|15|scalar|times|-|SEC|0|AS|-1|-1|NA|NA|Time taken by request for SSL/TLS negotiation, in seconds.
+Graph|Total HTTP First Byte Time (Secs)|16|scalar|times|-|SEC|0|AS|-1|-1|NA|NA|Time taken by request to receive first byte from server, in seconds.
+Graph|Total HTTP Download Time (Secs)|17|scalar|times|-|SEC|0|AS|-1|-1|NA|NA|Time taken by request to read entire response from the server, in seconds.
+Graph|Total HTTP Requests Completed|4|scalar|cumulative|-|-|0|A|-1|-1|NA|NA|Number of completed HTTP requests.
+Graph|Total HTTP Requests Successful|5|scalar|cumulative|-|-|0|A|-1|-1|NA|NA|Number of successful HTTP requests.
+Graph|Total HTTP Requests Failure (%)|9|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Percentage of failed HTTP requests.
+Graph|Total HTTP Body receive throughput (Kbps)|7|scalar|rate|-|KBPS|0|AS|-1|-1|NA|NA|HTTP Body data received per second in kilo bits per second (kbps).
+Graph|HTTP Body Total receive bytes|8|scalar|cumulative|-|-|0|A|-1|-1|NA|NA|Total HTTP Body received since start of the test.
+
+
+
+ 
+

@@ -1,0 +1,10 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|HBase Cluster Stats|10334|vector|4|0|Application Metrics|Tier>Server>Cluster|HBase Cluster Stats monitors metrics related to region servers health and load across the cluster.
+Graph|Region Servers|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of region servers.
+Graph|Dead Region Servers|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of dead region servers.
+Graph|Average Number Of Regions|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average regions served by each region servers.
+Graph|Requests/Sec|4|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of requests per second from all region servers.

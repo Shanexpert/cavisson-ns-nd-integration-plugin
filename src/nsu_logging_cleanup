@@ -1,0 +1,13 @@
+#!/bin/bash
+
+if [ $# -ne 1 ]; then
+   echo "usage:  ./nsu_logging_cleanup [test number]"
+   exit 1
+fi
+
+DIR=$PWD/logs/TR$1
+
+./nsu_rm_trun $1
+rm -f $DIR/reports/raw_data/dlog
+rm -f $DIR/reports/raw_data/slog
+rm -f $DIR/reports/csv/*.csv

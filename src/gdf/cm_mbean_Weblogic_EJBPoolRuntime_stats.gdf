@@ -1,0 +1,23 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+
+#ObjectName :com.bea:ServerRuntime=AdminServer,Name=*,ApplicationRuntime=*,Type=EJBPoolRuntime,EJBComponentRuntime=*,StatelessEJBRuntime=*
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Weblogic EJBPool Runtime Stats|14203|vector|5|0|Weblogic Metrics|Tier>Server>Instance>Name>ApplicationRuntime|This interface contains accessor methods for all free pool runtime information collected for an EJB.
+
+Graph|Weblogic Destroyed Total Count|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Provides a count of the total number of times a bean instance from this pool was destroyed due to a non-application Exception being thrown from it.
+
+Graph|Weblogic Miss Total Count|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Provides a count of the total number of times a failed attempt was made to get an instance from the free pool. An Attempt to get a bean from the pool will fail if there are no available instances in the pool.
+
+Graph|Weblogic Access Total Count|3|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Provides a count of the total number of times an attempt was made to get an instance from the free pool.
+
+Graph|Weblogic Timeout Total Count|4|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Provides a count of the total number of Threads that have timed out waiting for an available bean instance from the free pool.
+
+Graph|Weblogic Waiter Total Count|5|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Provides a count of the total number of Threads currently waiting for an available bean instance from the free pool.
+

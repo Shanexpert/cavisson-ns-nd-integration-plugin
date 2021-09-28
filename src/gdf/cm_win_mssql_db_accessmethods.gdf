@@ -1,0 +1,16 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# Command to get data for this gdf on windows server:
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# wmic path Win32_PerfFormattedData_MSSQLSTOREDB_MSSQLSTOREDBAccessMethods
+
+Info|3.1|1|-|-|-1|-1|-
+Group|MS SQL DB Access Methods Stats|10359|vector|8|0|MSSQL Metrics|Tier>Server|MS SQL DB Access Methods provides metrics related to logical data within the database is accessed.
+Graph|Full Scans/Sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of unrestricted full scans per second. These can be either base-table or full-index scans.
+Graph|Page Splits/Sec|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of page splits per second that occur as the result of overflowing index pages.
+Graph|Table Lock Escalations/Sec|3|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of times locks on a table were escalated per second to the TABLE granularity.
+Graph|Free Space Scans/Sec|4|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of scans per second that were initiated to search for free space within pages already allocated to an allocation unit to insert or modify record fragment.
+Graph|Index Searches/Sec|5|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of index searches per second. 
+Graph|Scan Point Revalidations/sec|6|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of scan point had to be revalidated per second to continue the scan.
+Graph|Work Files Created/Sec|7|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of work files created per second.
+Graph|Work Tables Created/Sec|8|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of work tables created per second.

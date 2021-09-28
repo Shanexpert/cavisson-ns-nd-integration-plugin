@@ -1,0 +1,24 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+
+#ObjectName :com.bea:ServerRuntime=AdminServer,Name=AdminServer,Type=ServerSecurityRuntime
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Weblogic Server Security Runtime Stats|14192|vector|6|0|Weblogic Metrics|Tier>Server>Instance>Name|This stats provides information related to WebLogic Security.
+
+Graph|Weblogic User Lockout Total Count|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The total number of user lockouts that have occurred on this server instance.
+
+Graph|Weblogic Login Attempts While Locked Total Count|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The total number of invalid logins that have been attempted on this server instance while a user was locked.
+
+Graph|Weblogic Unlocked Users Total Count|3|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The total number of times a user of this server instance has been unlocked.
+
+Graph|Weblogic Locked Users Current Count|4|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The current number of locked users on this server instance.
+
+Graph|Weblogic Invalid Login Attempts Total Count|5|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The total number of invalid logins that have been attempted on this server instance.
+
+Graph|Weblogic Invalid Login Users High Count|6|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The highest number of users with outstanding invalid login attempts on this server instance.

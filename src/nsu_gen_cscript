@@ -1,0 +1,33 @@
+# Name      : nsu_gen_cscript
+# Author    : Saloni
+# Purpsose  : To generate C Type script from url and from file. 
+#
+# Usage     : nsu_gen_cscript
+#
+#             nsu_gen_cscript -s <scriptname> [ -f <url file name> | -u URL1,URL2,... ]
+#             nsu_gen_cscript -s <scriptname> [ -f <url file name> | -u URL1,URL2,... -u URL3]
+# 
+#             e.g.  nsu_gen_cscript -s project/subproject/hpd_tours -f /tmp/urlFile
+#
+#             e.g.  nsu_gen_cscript -s project/subproject/hpd_tours -u http://www.google.com/index.html,http://www.yahoomail.com/index.html -u http://www.gmail.com/test.htm
+#
+# Modification History:
+#
+#!/bin/sh
+
+#Check and get login user name
+USER_NAME=`whoami 2>/dev/null`
+if [ $? != 0 ];then
+  echo "Error: Unable to get the real user name"
+  exit 1
+fi
+
+#Check and get script type and call appropriate class
+
+if [ -d /home/cavisson/monitors ];then
+  java -cp $NS_WDIR/webapps/netstorm/WEB-INF/lib/netstorm_bean.jar:$NS_WDIR/webapps/netstorm/lib/commons-io-2.2.jar:/home/cavisson/monitors/lib/java-getopt-1.0.9.jar:$NS_WDIR/webapps/netstorm/lib/runlogic.jar:$NS_WDIR/webapps/netstorm/lib/jmimemagic-0.1.0.jar:$NS_WDIR/webapps/netstorm/WEB-INF/lib/apache-jakarta-oro.jar:$NS_WDIR/webapps/netstorm/WEB-INF/lib/commons-logging-1.1.1.jar:$NS_WDIR/webapps/netstorm/lib/swingx-all-1.6.4.jar:$NS_WDIR/webapps/netstorm/lib/log4j-1.2.15.jar -Dlog4j.configuration=$NS_WDIR/webapps/netstorm/config/cavLog.xml -Djava.awt.headless=true -DNS_WDIR=$NS_WDIR pac1.Bean.GenerateScriptForCType $* -U $USER_NAME
+else
+  java -cp $NS_WDIR/webapps/netstorm/WEB-INF/lib/netstorm_bean.jar:$NS_WDIR/webapps/netstorm/lib/commons-io-2.2.jar:/opt/cavisson/monitors/lib/java-getopt-1.0.9.jar:$NS_WDIR/webapps/netstorm/lib/runlogic.jar:$NS_WDIR/webapps/netstorm/lib/jmimemagic-0.1.0.jar:$NS_WDIR/webapps/netstorm/WEB-INF/lib/apache-jakarta-oro.jar:$NS_WDIR/webapps/netstorm/WEB-INF/lib/commons-logging-1.1.1.jar:$NS_WDIR/webapps/netstorm/lib/swingx-all-1.6.4.jar:$NS_WDIR/webapps/netstorm/lib/log4j-1.2.15.jar -Dlog4j.configuration=$NS_WDIR/webapps/netstorm/config/cavLog.xml -Djava.awt.headless=true -DNS_WDIR=$NS_WDIR pac1.Bean.GenerateScriptForCType $* -U $USER_NAME
+fi
+exit $?
+

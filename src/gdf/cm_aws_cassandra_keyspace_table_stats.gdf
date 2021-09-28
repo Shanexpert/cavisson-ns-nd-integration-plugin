@@ -1,0 +1,12 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS Cassandra KeySpaces Table Stats|11498|vector|3|0|AWS Metrics|AccountName>Region>Keyspace>TableName|Amazon Keyspaces (for Apache Cassandra) is a scalable, highly available, and managed Apache Cassandra–compatible database service.
+
+Graph|AWS Cassandra Consumed Read Capacity Unit|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of read capacity units consumed over the specified time period.
+Graph|AWS Cassandra Consumed Write Capacity Unit|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of write capacity units consumed over the specified time period.
+Graph|AWS Cassandra Conditional Check Failed Request|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of failed lightweight transaction (LWT) write requests. The INSERT, UPDATE, and DELETE operations let you provide a logical condition that must evaluate to true before the operation can proceed. If this condition evaluates to false, ConditionalCheckFailedRequests is incremented by one.
+

@@ -1,0 +1,135 @@
+#!/bin/sh
+# Name             nsu_cmon_upgrade 
+# Purpose         : This shell is internally used in ns_server_admin.c to upgrade cmon build in servers 
+#                 : 1) Untar the package 
+#                 : 2) Update Version history
+#                 : 3) Restart cmon    
+#                 This is first FTPed to server and then it is run
+
+# Usage           : To upgrade
+#                   nsi_cmon_upgrade -u <InstallDir> -p <package> -s <server name>
+#                 : To Restart
+#                   nsi_cmon_upgrade -s <server name> -r
+#                   package MUST be tar (Not tar.gz)
+
+LOG_FILE=/tmp/nsu_cmon_auto_upgrade.$$
+print_on_stderr()
+{
+  echo $* 2>&1
+  echo "`date +'%m/%d|%r'`|nsu_cmon_auto_upgrade|$*" >>$LOG_FILE 
+}
+
+debug_log()
+{
+  echo "`date +'%m/%d|%r'`|nsu_cmon_auto_upgrade|$*" >>$LOG_FILE
+}
+
+usage()
+{
+  echo " Usage  : To upgrade"
+  echo "   nsi_cmon_upgrade -u <cmon_home_dir> -p <cmon_build> -r"
+  echo "   Where: "
+  echo "     cmon_home_dir - provide cmon home directory"
+  echo "     cmon_build    - provide cmon build name"
+  exit 1
+}
+
+restart_server()
+{
+  debug_log "Restarting cmon" 
+  nohup $CAV_MON_HOME/bin/cmon restart_from_cmon >/dev/null 2>&1 &
+  if [ $? -ne 0 ];then
+    CMON_LAST_BUILD=$(ls -t $BACKUP_DIR | head -1)
+    print_on_stderr "Error: restarting cmon failed, hence rolling back from build $PACKAGE to $CMON_LAST_BUILD"
+
+    tar -xvzf $BACKUP_DIR/$CMON_LAST_BUILD -C $CAV_MON_HOME >/dev/null  
+    if [ $? -ne 0 ];then
+      print_on_stderr "Error: rolling back failed, package $PACKAGE can't untar on path $CAV_MON_HOME" 
+    fi
+
+    nohup $CAV_MON_HOME/bin/cmon restart_from_cmon >/dev/null 2>&1 &  
+    if [ $? -ne 0 ];then
+      print_on_stderr "Error: rolling back failed, cmon can't restart" 
+    fi
+
+    exit 1
+  fi
+  
+  debug_log "Cmon restarted successfully."
+}
+
+upgrade_server()
+{
+  debug_log "Upgrading cmon build $PACKAGE on path $CAV_MON_HOME"
+  cd $CAV_MON_HOME
+
+  #Create backup directory on path $CAV_MON_HOME/.. 
+  if [ ! -d $BACKUP_DIR ];then
+    mkdir -p $BACKUP_DIR
+    if [ $? -ne 0 ];then
+      print_on_stderr "Error: unable to create backup dir $BACKUP_DIR" 
+      exit 1
+    fi
+  fi
+
+  #Get cmon current build and version 
+  build_info=(`cut -d " " -f 2 etc/version`) 
+  num=${#build_info[@]}
+  if [ $num -ne 2 ];then
+    print_on_stderr "Error: unable to get runing cmon release#build info, etc/version is not in proper format. " 
+    exit 1
+  fi
+
+  debug_log "creating backup of running cmon on path $BACKUP_DIR"
+  tar -cvzf $BACKUP_DIR/cmon.${build_info[0]}.${build_info[1]}.tar.gz --exclude=logs --exclude=upgrade --exclude=*.tar.gz * >/dev/null
+  if [ $? -ne 0 ];then
+    print_on_stderr "Error: uable to take backup of running cmon build" 
+    exit 1
+  fi
+  
+  tar -xvzf $PACKAGE >/dev/null 
+  if [ $? != 0 ];then
+    print_on_stderr "Error: unable to upgrade cmon build $PACKAGE, Hence rolling back to running one" 
+    tar -xvzf ../backup/cmon.${build_info[0]}.${build_info[1]}.tar.gz >/dev/null
+    if [ $? != 0 ]; then
+      print_on_stderr "Error: rolling back failed"
+    fi
+    exit 1
+  fi
+
+  debug_log "package $PACKAGE upgraded succssfully on path $CAV_MON_HOME"
+}
+
+RESTART=0
+while getopts p:ru:? arg
+do
+  case $arg in
+    p) PACKAGE=$OPTARG"";;
+    r) RESTART=1;;
+    u) CAV_MON_HOME="$OPTARG";;
+    ?) usage;;
+  esac
+done
+
+if [ $RESTART -eq 0 ];then
+  usage
+fi
+
+#Validation 
+if [ ! -d $CAV_MON_HOME ];then
+  print_on_stderr "Error: upgrade can't be done. Installation dir '$CAV_MON_HOME' does not exist." 
+  exit 1
+fi
+
+if [ ! -f $PACKAGE ];then
+  print_on_stderr "Error: upgrade can't be done. Cmon package $PACKAGE' does not exist."
+  exit 1
+fi
+
+BACKUP_DIR="`dirname $CAV_MON_HOME`/backup"
+LOG_FILE="$CAV_MON_HOME/logs/cmon.log"
+
+upgrade_server
+restart_server
+
+exit 0

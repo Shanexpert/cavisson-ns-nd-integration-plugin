@@ -1,0 +1,14 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+#ObjectName :org.apache.cassandra.request:type=ReadStage
+info|3.1|1|-|-|-1|-1|-
+Group|Apache Cassandra Request|14118|vector|2|0|Apache Cassandra Metrics|Tier>Server>Instance|This stats gives information about request.
+#G1
+Graph|Apache Cassandra Request Core Pool Size|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Minimum number of threads requested by the pool.
+#G2
+Graph|Apache Cassandra Request Maximum Pool Size |2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Maximum number of threads requested by the pool.
+
+

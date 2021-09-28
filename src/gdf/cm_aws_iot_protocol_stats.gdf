@@ -1,0 +1,62 @@
+# --- GDF Version History ---
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS IoT Protocol Stats|14051|vector|28|0|AWS Metrics|AccountName>Region>Protocol|A message broker is software that enables applications, systems, and services to communicate with each other and exchange information. The message broker does this by translating messages between formal messaging protocols.
+
+Graph|AWS Iot Connect Auth Error|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of connection requests that could not be authorized by the message broker
+
+Graph|AWS Iot Connect Client Error|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of connection requests rejected 
+
+Graph|AWS Iot Connect ClientID Throttle|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of connection requests throttled because the client exceeded the allowed connect request rate for a specific client ID
+
+Graph|AWS Iot Connect Server Error|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of connection requests that failed because an internal error occurred
+
+Graph|AWS Iot Connect Throttle|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of connection requests that were throttled because the account exceeded the allowed connect request rate
+
+Graph|AWS Iot Connect Success|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of publish requests the message broker was unable to connect
+
+Graph|AWS Iot PublishIn Client Error|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of publish requests rejected by the message broker
+
+Graph|AWS Iot PublishIn Server Error|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of publish requests the message broker failed to process because an internal error occurred
+
+Graph|AWS Iot PublishIn Success|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of publish requests successfully processed by the message broker
+
+Graph|AWS Iot PublishIn Throttle|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of publish request that were throttled
+
+Graph|AWS Iot PublishIn Auth Error|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of publish requests the message broker was unable to authorize
+
+Graph|AWS Iot PublishOut Auth Error|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of publish requests made by the message broker that could not be authorized by AWS IoT
+
+Graph|AWS Iot PublishOut Client Error|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of publish requests made by the message broker that were rejected
+
+Graph|AWS Iot PublishOut Success|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of publish requests successfully made by the message broker
+
+Graph|AWS Iot PublishOut Throttle|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of publish requests that were throttled because the client exceeded the allowed outbound message rate
+
+Graph|AWS Iot Subscribe Auth Error|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of subscription requests made by a client that could not be authorized
+
+Graph|AWS Iot Subscribe Client Error|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of subscribe requests that were rejected
+
+Graph|AWS Iot Subscribe Server Error|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of subscribe requests that were rejected because an internal error occurred
+
+Graph|AWS Iot Subscribe Throttle|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of subscribe requests that were throttled 
+
+Graph|AWS Iot Subscribe Success|20|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of unsubscribe requests that were successfully processed by the message broker
+
+Graph|AWS Iot Unsubscribe Client Error|21|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of unsubscribe requests that were rejected
+
+Graph|AWS Iot Unsubscribe Server Error|22|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of unsubscribe requests that were rejected
+
+Graph|AWS Iot Unsubscribe Success|23|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of unsubscribe requests that were successfully processed by the message broker
+
+Graph|AWS Iot Unsubscribe Throttle|24|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of unsubscribe requests that were rejected
+
+Graph|AWS Iot Ping Success|25|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of ping messages received by the message broker
+
+Graph|AWS Iot Get Thing Shadow Accepted|26|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Gets the shadow for the specified thing
+
+Graph|AWS Iot Update Thing Shadow Accepted|27|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Updates the shadow for the specified thing
+
+Graph|AWS Iot List Named Shadows For Thing Accepted|28|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Lists the shadows for the specified thing.

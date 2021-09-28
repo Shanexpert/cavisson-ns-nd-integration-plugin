@@ -1,0 +1,49 @@
+###############################################################################
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+#
+# General information line
+# Info|msgVersion|numGroups|startIndex|testRun|sizeOfMsgData|interval|testRunStartDate/Time
+# 
+# Group information line
+# Group|groupName|rptGrpId|groupType|numGraphs|numVectors|future1|future2|Group_Description 
+#
+# Graph information line
+# Graph|graphName|rptId|graphType|dataType|graphDataIndex|formula|numVectors|graphState|PDF_ID|Percentile_Data_Idx|future2|future3|GRAPH_DESCRIPTION
+#
+# graphState --> (AS for active system| A for active| I for inactive| NA & - is also treated as active)
+# Numeric data is filled as -1 in the infoline
+###############################################################################
+
+Info|3.1|1|-1|-|-1|-1|-
+
+Group|UDP Client|47|scalar|26|0|Test Metrics|NA|UDP Client Metrics
+
+Graph|UDP Client Connections Initiated/Sec|1|scalar|rate|-|-|0|AS|-1|-1|NA|NA|UDP connections initiated per second by client
+Graph|UDP Client Total Connections Initiated|2|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Total number of UDP connections initiated by client
+Graph|UDP Client Connections Opened/Sec|3|scalar|rate|-|-|0|AS|-1|-1|NA|NA|UDP connections opened per second by client
+Graph|UDP Client Total Connections Opened|4|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Total number of UDP connections opened by client
+Graph|UDP Client Connections Failed/Sec|5|scalar|rate|-|-|0|AS|-1|-1|NA|NA|UDP connections failed per second by client
+Graph|UDP Client Total Connections Failed|6|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Total number of UDP connections failed by client
+Graph|UDP Client Connections Closed/Sec|7|scalar|rate|-|-|0|AS|-1|-1|NA|NA|UDP connections closed per second by client
+Graph|UDP Client Total Connections Closed|8|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Total number of UDP connections closed by client
+Graph|UDP Client Connections Closed By Server/Sec|9|scalar|rate|-|-|0|AS|-1|-1|NA|NA|UDP connections closed per second by server
+Graph|UDP Client DNS Time (ms)|10|scalar|times|-|-|0|AS|-1|-1|NA|NA|DNS  lookup time  in millisecond
+Graph|UDP Client Connect Time (ms)|11|scalar|times|-|-|0|AS|-1|-1|NA|NA|UDP Connect time in millisecond
+Graph|UDP Client SSL Time (ms)|12|scalar|times|-|-|0|AS|-1|-1|NA|NA|SSL handshake time in millisecond
+Graph|UDP Client Messages Sent/Sec|13|scalar|rate|-|-|0|AS|-1|-1|NA|NA|UDP send API call per second by client
+Graph|UDP Client Total Messages Sent|14|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Total number of send API call by client
+Graph|UDP Client Send Failures/Sec|15|scalar|rate|-|-|0|AS|-1|-1|NA|NA|UDP send API call failed per second by client
+Graph|UDP Client Total Send Failures|16|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Total number of  send API failed by client
+Graph|UDP Client Send Time (ms)|17|scalar|times|-|-|0|AS|-1|-1|NA|NA|Time to send message in millisecond
+Graph|UDP Client Receive Calls/Sec|18|scalar|rate|-|-|0|AS|-1|-1|NA|NA|UDP receive API call per second by client
+Graph|UDP Client Total Received Calls|19|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Total number of receive API call by client
+Graph|UDP Client Receive Failures/Sec|20|scalar|rate|-|-|0|AS|-1|-1|NA|NA|UDP receive API call failed per second by client
+Graph|UDP Client Total Receive Failures|21|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Total receive API call failed by client
+Graph|UDP Client Messages Received/Sec|22|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Messages received by client per second. 
+Graph|UDP Client First Byte Time (ms)|23|scalar|times|-|-|0|AS|-1|-1|NA|NA|UDP time to first byte 
+Graph|UDP Client Receive Time (ms)|24|scalar|times|-|-|0|AS|-1|-1|NA|NA|UDP data receive time in millisecond 
+Graph|UDP Client Send Throughput (Kbps)|25|scalar|rate|-|-|0|AS|-1|-1|NA|NA|UDP data sent throughput in Kilobytes per second
+Graph|UDP Client Receive Throughput (Kbps)|26|scalar|rate|-|-|0|AS|-1|-1|NA|NA|UDP data received throughput in Kilobytes per second

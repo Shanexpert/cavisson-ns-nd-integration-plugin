@@ -1,0 +1,47 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Tomcat WebModule|14141|vector|13|0|Application Metrics|Tier>Server>Instance>name|This stats provide information about extraction of processing time for each web module in Apache Tomcat.
+
+#G1
+Graph|Tomcat Max Time|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Maximum execution time of all servlets in this context.
+
+#G2
+Graph|Tomcat Cache Object Max Size(KB)|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Maximum cached object size in KB.
+
+#G3
+Graph|Tomcat Error Count|3|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Cumulative error count of all servlets in this context.
+
+#G4
+Graph|Tomcat Unload Delay|4|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Amount of ms that the container will wait for servlets to unload.
+
+#G5
+Graph|Tomcat Cache TTL|5|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Time interval in ms between cache refeshes.
+
+#G6
+Graph|Tomcat rocessing Time|6|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Cumulative execution times of all servlets in this context. 
+
+#G7
+Graph|Tomcat Timeout(min)|7|scalar|sample|-|None|0|AS|-1|-1|NA|NA|he session timeout (in minutes) for this web application.
+
+#G8
+Graph|Tomcat max Size(KB)|8|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Maximum cache size in KB.
+
+#G9
+Graph|Tomcat Min Time|9|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Minimum execution time of all servlets in this context.
+
+#G10
+Graph|Tomcat Start Time(ms)|10|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Time (in milliseconds since January 1, 1970, 00:00:00) when this context was started.
+
+#G11
+Graph|Tomcat Request Count|11|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Cumulative request count of all servlets in this context.
+
+#G12
+Graph|Tomcat TLD Scan Time|12|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Time spend scanning jars for TLDs for this context.
+
+#G13
+Graph|Tomcat Startup Time(ms)|13|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Time (in milliseconds) it took to start this context

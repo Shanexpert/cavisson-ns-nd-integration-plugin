@@ -1,0 +1,33 @@
+###################################################################
+#This shell is a support shell which will run the nsu_server_admin API which is written in JAVA. We are passing all the arguemrent recevived from the shell directly to that API.
+#
+###################################################################
+
+#!/bin/bash
+
+#Set CAV_MON_HOME to allow testing from command line
+if [ "X$CAV_MON_HOME" = "X" ]; then
+  if [ -d /home/cavisson/monitors ];then
+    export CAV_MON_HOME="/home/cavisson/monitors"
+  elif [ -d /opt/cavisson/monitors ];then
+    export CAV_MON_HOME="/opt/cavisson/monitors"
+  elif [ -d ~/cavisson/monitors ];then
+    export CAV_MON_HOME=~/cavisson/monitors
+  else
+    echo "CAV_MON_HOME is not set"
+    exit -1
+  fi
+fi
+
+cmd="java -Djava.ext.dirs=$CAV_MON_HOME/lib -jar $CAV_MON_HOME/lib/CmonLib.jar"
+
+flag=0
+NUMBER_OF_ARGS=$#
+
+for (( i=1; i<=$NUMBER_OF_ARGS; i++ ))
+do
+  eval field="\${$i}"
+  cmd="$cmd '$field'"
+done
+
+eval $cmd

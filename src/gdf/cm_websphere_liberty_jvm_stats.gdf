@@ -1,0 +1,11 @@
+#LAST_MAX_ASSIGNED_GRAPH_ID = 7
+#LAST_MODIFIED_DATE = 10/18/14 20:50:24
+Info|3.1|1|-|-|-1|-1|-
+Group|Websphere Liberty JVM Stats|10220|vector|7|0|WebSphere Metrics|Tier>Server>Instance|Websphere Liberty JVM Stats
+Graph|JVM Heap Free Memory (KB)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Free heap available for current JVM in killo bytes
+Graph|JVM GC Count|2|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Number of times that GC happened since JVM started.
+Graph|JVM GC Time (Seconds)|3|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total time that is taken by GC activity in Seconds.
+Graph|JVM Heap Size (KB)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Heap size that is used for current JVM  in killo bytes.
+Graph|CPU Percentage consumed by JVM|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percentage of CPU consumed by this JVM
+Graph|Up Time (Days)|6|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Time in days, since JVM started.
+Graph|JVM Heap Used Memory (KB)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Used heap for current JVM in killo bytes.

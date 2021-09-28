@@ -1,0 +1,139 @@
+#! /bin/sh
+
+BASE_DIR=""
+
+Usage()
+{
+  echo $*
+  echo "Usage: neu_nd_create_partition_table <Test Run Number> <Partition Name> <all/Particular csv>"
+  echo "Example:"
+  echo "  neu_nd_create_partition_table 1234 201402201000 flowpath.csv"
+  exit -1
+}
+
+if [ $# -ne 3 ]; then
+  Usage "INVALID ARGUMENTS"
+fi
+
+#Checking if test number is numeric
+echo $1 | egrep '^[0-9]+$' >/dev/null 2>&1
+if [ "$?" -eq "1" ]; then
+  Usage "Test run number is not numeric"
+fi
+
+#Checking Test number is valid or not
+if [ -d $PWD/TR$1 ]; then
+  BASE_DIR=$PWD
+elif [ -d $NS_WDIR/logs/TR$1 ]; then
+  BASE_DIR=$NS_WDIR/logs
+else
+  echo "Error: Test run number $1 is not a valid test run number"
+  exit -1
+fi
+
+#echo "ndu_create_table: Deleting existing tables, if any present and creating tables ..."
+
+#ndu_drop_index $1
+
+echo
+#if [ "$3" == "all" -o "$3" == "ALL" ];then 
+#  echo "Running Command : neu_nd_drop_partition_table $1 $2"
+#  neu_nd_drop_partition_table $1 $2
+#else
+  #Just delete that perticular table
+#  echo "Running Command : neu_nd_drop_partition_table $1 $2 $3" 
+#  neu_nd_drop_partition_table $1 $2 $3
+#fi
+
+echo 
+echo "Running Command : neu_nd_create_partition_table $1 $2 $3"
+# Since we dont know whether nsu_db_upload will be spawned first or not. So we create partition table for URLRecord table in case nd_db_upload is spwaned first
+if [ "$3" == "all" -o "$3" == "ALL" ];then
+  psql test cavisson <<+
+
+  create table URLRecord_$1_$2
+  (
+    like URLRecord_$1 including indexes
+  )
+    INHERITS (URLRecord_$1);
+
+  create table FlowPath_$1_$2
+  (
+    like FlowPath_$1 including indexes
+  )
+    INHERITS (FlowPath_$1);
+
+  create table NDAppLogs_$1_$2
+  (
+    like NDAppLogs_$1 including indexes
+  )
+    INHERITS (NDAppLogs_$1);
+
+  create table NDSQLRecord_$1_$2
+  (
+    like NDSQLRecord_$1 including indexes
+  )
+    INHERITS (NDSQLRecord_$1);
+
+  create table NDAutoSensorHotSpotThreads_$1_$2
+  (
+    like NDAutoSensorHotSpotThreads_$1 including indexes
+  )
+    INHERITS (NDAutoSensorHotSpotThreads_$1);
+
+  create table NDHTTPCaptureHeader_$1_$2
+  (
+    like NDHTTPCaptureHeader_$1 including indexes
+  )
+    INHERITS (NDHTTPCaptureHeader_$1);
+
+  create table NDExceptions_$1_$2
+  (
+    like NDExceptions_$1 including indexes
+  )
+    INHERITS (NDExceptions_$1);
+
+  create table NDBCIArg_$1_$2
+  (
+    like NDBCIArg_$1 including indexes
+  )
+    INHERITS (NDBCIArg_$1);
+
+  create table NDMethodTiming_$1_$2
+  (
+    like NDMethodTiming_$1 including indexes
+  )
+    INHERITS (NDMethodTiming_$1);
+
+  create table NDJMS_$1_$2
+  (
+    like NDJMS_$1 including indexes
+  )
+    INHERITS (NDJMS_$1);
++
+else
+  # Case where only particular partition name needs to be created based on the csv passed
+  ND_PARTITION_ARRAY=("flowpath_" "ndapplogs_" "ndsqlrecord_" "ndautosensorhotspotthreads_" "ndhttpcaptureheader_" "ndexceptions_" "ndbciarg_"  "urlrecord_" "ndjms_" "ndmethodtiming_")
+
+  ND_CSV_NAMES_ARRAY=("NDFlowPath.csv" "NDAppLogs.csv" "NDSQLRecord.csv" "NDAutoSensorHotSpotThreads.csv" "NDHTTPCaptureHeader.csv" "NDExceptions.csv" "NDBCIArg.csv" "NDURLRecord.csv" "NDJMS.csv" "NDMethodTiming.csv")
+  count=0
+  while [ $count -le ${#ND_CSV_NAMES_ARRAY[@]} ] ; do
+    if [ "X${ND_CSV_NAMES_ARRAY[$count]}" == "X$3" ] ; then
+      ND_PARTITION_TABLE_NAME=`echo ${ND_PARTITION_ARRAY[$count]}`"$1_$2"
+      ND_PARTITION_MASTER_TABLE_NAME=`echo ${ND_PARTITION_ARRAY[$count]}`"$1"
+      CHECK_TABLE=`psql --user=cavisson -d test -t -c "SELECT table_name from information_schema.tables where  table_name ~ '$ND_PARTITION_TABLE_NAME$';"` 
+      if [ "X$CHECK_TABLE" == "X" ];then 
+        psql test cavisson <<+
+        create table $ND_PARTITION_TABLE_NAME
+        (
+          like $ND_PARTITION_MASTER_TABLE_NAME including indexes
+        )
+        INHERITS ($ND_PARTITION_MASTER_TABLE_NAME);
++
+      fi
+    fi
+  count=`expr $count + 1`
+  done
+fi
+
+echo "neu_nd_create_partition_table: ... Done creating partition tables."

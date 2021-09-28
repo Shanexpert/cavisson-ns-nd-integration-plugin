@@ -1,0 +1,448 @@
+#!/bin/bash
+#
+# Name:    nsu_check_cont_test
+# Author:  Gaurav
+# Purpose: This shell called by Master Process to restart the test when killed
+ 
+# include sendmail_utils
+. $NS_WDIR/bin/sendmail_utils
+MAX_TIME_MIN=30
+SLEEP_TIME_SEC=10
+CUR_BUILD_VERSION=`nsu_get_version -n | cut -d' ' -f2-`
+CONFIG=`$NS_WDIR/bin/nsi_show_config`
+SUB_CONFIG=`$NS_WDIR/bin/nsi_show_config -s`
+BOLD=`tput bold`
+RESET=`tput sgr0`
+CONTROLLER_NAME=""
+SLEEP_BTW_STOP_AND_START_TIME_SEC=30
+CONVERT_TO_MB=$((1024 * 1024))
+NDC_ENABLED=0
+
+#Function to write into log file with log level 1-High 2-Medium
+#DateTime|Build Version|Comments
+#when size is greater then 10MB then renaming to test_trace.log.prev file
+write_log_file()
+{
+  if [ $1 -le $TRACE_LOG_LEVEL ];then
+    echo "$(date)|$CUR_BUILD_VERSION|$2" >>$TRACE_LOGS
+  fi
+
+  if [ $(( $( stat -c '%s' $TRACE_LOGS ) / $CONVERT_TO_MB )) -gt $ROLL_OVER_SIZE_OF_TRACE ];then
+    mv ${TRACE_LOGS} ${TRACE_LOGS}.prev
+  fi
+}
+
+create_cmd_logs()
+{
+  CMD=$1
+  MAIL_LOGS_FILE=$2
+  (
+    echo ""
+    echo "Output of command: $CMD"
+    echo "---------------------------------------------------------------"
+    if [ "$CMD" = "dmesg" ];then
+      $CMD -T|tail -100
+    else
+      $CMD
+    fi
+  ) |tee -a $MAIL_LOGS_FILE $TRACE_LOGS >/dev/null
+}
+
+dump_strace_out()
+{
+  (
+    echo ""
+    echo "Starting Strace"
+    echo "---------------------------------------------------------------"
+    STRACE_FILE_NAME=$NS_WDIR/logs/TR$trnum/ns_logs/strace.out_`date +'%Y%m%d%H%M%S'`
+    echo "Output file '$STRACE_FILE_NAME' Command 'sudo timeout 120 strace -tT -f -p $netstorm_pid 2>$STRACE_FILE_NAME'"
+    echo "---------------------------------------------------------------"
+    sudo timeout 120 strace -tT -f -p $netstorm_pid 2>$STRACE_FILE_NAME
+    echo "Strace Done"
+  ) |tee -a $TRACE_LOGS >/dev/null
+
+}
+
+
+dump_cmd_logs()
+{
+  #create_cmd_logs 'shell_parent_pid' $NETSTORM_PID
+  create_cmd_logs 'ps -lf' $$1
+  create_cmd_logs 'pstree' $$1
+  create_cmd_logs 'dmesg'
+  create_cmd_logs 'ps -elf'
+  create_cmd_logs 'netstat -na'
+  create_cmd_logs 'df -h' $_TR_PATH/mail_logs.$$
+  create_cmd_logs 'free -lm' $_TR_PATH/mail_logs.$$
+}
+
+stop_test ()
+{
+  TRNUM=$CONTINUES_TEST_NUM
+  flag=0
+  while true; 
+  do
+    if [ $flag -eq 0 ]; then
+
+        dump_strace_out $_TR_PATH/mail_logs.$$
+
+        gdb -batch -ex 'thread apply all bt' -p $netstorm_pid >> $_TR_PATH/nsu_stop_netstorm.log
+        gcore  $netstorm_pid 
+        nsi_core_pattern $netstorm_pid
+      flag=1
+      #sending signal kill -35 to stop gracefully
+      export STOP_TEST_BY_DAEMON=1
+      # Need to do kill -9 as we have changed design to take core using gcore instead kill -11, kill -11 takes core and kill the process too so nsu_stop_test never got the process running. nsu_stop_test uses pkill so all child of process got killed along with the continuous monitoring shell. so to avoid killing nsu_check_cont_test we are using kill -9.
+      kill -9 $netstorm_pid
+      nsu_stop_test -f $TRNUM -C "nsu_check_cont_test" 
+    fi
+ 
+    sleep 5
+    check_if_test_is_running_or_not
+    if [[ "X$NETSTORM_PID" == "X0" ]] || [[ "X$NETSTORM_PID" == "X-1" ]];then
+      write_log_file 1 "$CONTINUES_TEST_NUM test has been stopped."
+      return
+    fi
+  done
+}
+
+#Check if rtgMessage.dat file is updating
+check_if_rtg_is_updating_or_not ()
+{
+  trnum=$1
+  curpartition=$(tail -1 $_TR_PATH/.curPartition |cut -d = -f2)
+  scenario=`ls -tr $_TR_PATH/${curpartition}/*.conf 2>/dev/null | grep -v sorted | awk -F'/' '{print $NF}'`
+  [ "XX$scenario" = "XX" ] && return
+  netstorm_pid=`ps -ef | grep $scenario | awk '($3 == 1) {print $2}'`
+  if [ ! -f $_TR_PATH/${curpartition}/rtgMessage.dat ];then
+    RTG_NOT_FOUND=$((RTG_NOT_FOUND + 1))
+    write_log_file 1 "Testrun: $trnum, rtgMessage.dat not found so returning"
+    if [ $RTG_NOT_FOUND -gt $RTG_DIFF_COUNT ];then
+      write_log_file 1 "Testrun: $trnum, rtgMessage.dat not found since $MAX_RTG_DIFF seconds. Stopping test"
+      dump_cmd_logs
+      make_send_mail $CONTINUES_TEST_NUM "$MAIL_CMD_LOGS" "Starting test again, RTG file not found from $MAX_RTG_DIFF seconds."
+      rm $MAIL_CMD_LOGS 2>/dev/null
+      stop_test $trnum
+      sleep $SLEEP_BTW_STOP_AND_START_TIME_SEC
+
+      #Starting the CM Test again
+      start_test $_SCENARIO
+    fi
+    return
+  fi
+  RTG_NOT_FOUND=0
+  last_rtg_file=$(ls -tr $_TR_PATH/${curpartition}/rtgMessage.dat* 2>/dev/null |tail -1)
+  #Last modified rtg file time in sec 
+  last_modified_time_of_rtg_file=$( stat -c '%Y' $last_rtg_file)
+ 
+  #Current time in sec
+  current_date_in_sec=$(date +%s)
+  timediff=$(($current_date_in_sec - $last_modified_time_of_rtg_file))
+  if [ $DIFF_RESET_FLAG -eq 2 ];then
+    RTG_EXTRA_DIFF=$timediff
+    DIFF_RESET_FLAG=1
+  fi
+  write_log_file 2 "Current Partition: ${curpartition}, Latest RTG file: ${last_rtg_file}, Last modified: ${last_modified_time_of_rtg_file}"
+  write_log_file 2 "Current Timestamp: $current_date_in_sec, timdiff: $timediff"
+
+  if [[ $timediff -gt $MAX_RTG_DIFF ]];then
+    write_log_file 1 "Time diff is greater than $MAX_RTG_DIFF, stopping test"
+    #Passing blank file as if file not found then no attachment will go in mail
+    dump_cmd_logs
+    make_send_mail $CONTINUES_TEST_NUM "$MAIL_CMD_LOGS" "Starting test again, RTG file is not updating from $MAX_RTG_DIFF seconds."
+    rm $MAIL_CMD_LOGS 2>/dev/null
+    stop_test $trnum
+    sleep $SLEEP_BTW_STOP_AND_START_TIME_SEC
+
+    #Starting the CM Test again
+    start_test $_SCENARIO
+  fi
+}
+
+#Check IF test is running
+#using netstorm pid to start and stop test 
+check_if_test_is_running_or_not ()
+{
+  count=0
+  success=0
+  pid=0
+  #to store pid of netstorm for the first time when test is started
+  eval check_count=`expr $PROGRESS_SEC \* 2`
+  if [ "X$NETSTORM_PID" == "X0" ]; then
+    NETSTORM_PID=`echo $PPID`
+  else
+    while [ $count -le $check_count ]
+    do
+      pid=`cat $NS_WDIR/logs/TR${CONTINUES_TEST_NUM}/.pidfiles/.CavMain.pid` 2>/dev/null
+      write_log_file 1 "$pid is the pid read from Cavmain.pid"
+      binary=`ps -p ${pid} -h -o 'comm'`
+      write_log_file 1 "$binary running with above pid"
+      if [ "X${binary}" == "Xnetstorm" ] || [ "X${binary}" == "Xnetstorm.debug" ]; then
+        NETSTORM_PID=$pid
+        write_log_file 1 "$NETSTORM_PID is the running netstorm pid"
+        break
+      else
+        pid=0
+      fi
+      eval count=`expr $count + $PROGRESS_SEC`
+      # to prevent looping multiple times.
+      sleep $PROGRESS_SEC
+    done
+    write_log_file 1 "$pid running pid found "
+    
+    if [[ "XX$pid" == "XX" ]] || [[ "XX$pid" == "XX0" ]]; then
+      write_log_file 1 "$NETSTORM_PID Netstorm pid is not running so test is stopped"
+      NETSTORM_PID=-1
+      return
+    fi
+  fi
+  return
+}
+
+#Restart NDC
+check_ndc_and_restart()
+{
+  if [ $NDC_PORT == -1 ];then
+    return
+  fi
+
+  if [ "X$CONTROLLER" = "Xwork" ];then
+    NDC_CONT=ndc
+  else
+    NDC_CONT=ndc_$CONTROLLER
+  fi
+  ndc_count=0
+  #ndi_send_msg <server> <port> <message>
+  REC_MSG=`ndi_send_msg "$NDC_IP" "$NDC_PORT" "ndc_status_req:pid=$$;testidx=$CONTINUES_TEST_NO;
+"`
+  #receive msg from ndc ===> ndc_reboot_rep:status=Free/Restarting;pid=1234; 
+  write_log_file 1 "Getting msg from $NDC_CONT: $REC_MSG"
+  MSG_STATUS=`echo $REC_MSG|awk -F'=' '{print $2}' |awk -F';' '{print $1}'`
+  NDC_PID=`echo $REC_MSG|awk -F';' '{print $2}'|awk -F'=' '{print $2}'`
+  write_log_file 1 "MSG_STATUS = $MSG_STATUS, NDC_PID = $NDC_PID"
+  if [ "X$MSG_STATUS" = "XFree" ];then
+    write_log_file 1 "$NDC_CONT is free"
+  else
+    [ "X$MSG_STATUS" = "XRestarting" ] && write_log_file 1 "$NDC_CONT is restarting going to wait."
+    [ "X$MSG_STATUS" = "X" ] && write_log_file 1 "$NDC_CONT sends invalid message = $REC_MSG"
+
+    while true
+    do
+      if [ $ndc_count -eq $NDC_START_COUNT ];then
+        write_log_file 1 "Failed to start $NDC_CONT as maximum retry count [$NDC_START_COUNT] reached, Need to start manually. Exiting.."
+        dump_cmd_logs
+        make_send_mail $CONTINUES_TEST_NUM $MAIL_CMD_LOGS "Failed to start $NDC_CONT, Need to start manually, exiting"
+        rm $MAIL_CMD_LOGS 2>/dev/null
+        exit
+      fi
+   
+      ndc_status=`/etc/init.d/$NDC_CONT forcerestart`
+      echo "$ndc_status" |grep "ND Collector is started with pid"
+      if [ $? == 0 ]; then
+        write_log_file 1 "$NDC_CONT restarted successfully [$((ndc_count + 1))] times"
+        break
+      else
+        write_log_file 1 "$NDC_CONT starting failed [$((ndc_count + 1))] times, error = $ndc_status"
+      fi
+      sleep $PROCESS_START_WAIT_TIME
+      ndc_count=$((ndc_count + 1))
+    done
+  fi
+}
+
+PROCESS_START_WAIT_TIME=30
+#start test
+start_test()
+{
+  _SCENARIO=$1
+  export START_TEST_BY_DAEMON=1
+  count=0
+  wait_count=0
+  SUCCESS=0
+  MAX_TEST_CHECK_COUNT=$((TEST_START_COUNT * PROGRESS_SEC))
+  ((MAX_TEST_CHECK_COUNT /= PROCESS_START_WAIT_TIME))
+  
+  while true
+  do
+    if [ $count -eq $TEST_START_COUNT ];then
+      write_log_file 1 "Failed to start test as maximum retry count [$TEST_START_COUNT] reached, Need to start manually. Exiting.."
+      dump_cmd_logs
+      make_send_mail $CONTINUES_TEST_NUM "$_TR_PATH/mail_logs.$$" "Failed to start test, Need to start manually."
+      rm $MAIL_CMD_LOGS 2>/dev/null
+      exit 1
+    fi
+    check_ndc_and_restart
+    write_log_file 1 "Going to start test, retry count = $((count + 1))"
+    nsu_start_test -n $_SCENARIO -S gui -u $TEST_USER -r $ROLE
+    while true
+    do
+      sleep $PROCESS_START_WAIT_TIME
+      [ $wait_count -ge $MAX_TEST_CHECK_COUNT ] && break
+ 
+      #TESTRUN=`check_if_test_is_running_or_not`
+      check_if_test_is_running_or_not
+      if [[ "X$NETSTORM_PID" != "X0" ]] || [[ "X$NETSTORM_PID" != "X-1" ]]; then
+        #write_log_file 1 "$TESTRUN Test run started successfully in [$((wait_count + 1))] times"
+        write_log_file 1 "$CONTINUES_TEST_NUM Test run started successfully in [$((wait_count + 1))] times"
+        SUCCESS=1
+        break
+      else
+        write_log_file 1 "$CONTINUES_TEST_NUM Test starting failed [$((wait_count + 1))] times"
+      fi
+      ((wait_count++))
+    done
+    [ "XX$SUCCESS" = "XX1" ] && break
+    ((count++))
+  done
+  DIFF_RESET_FLAG=2
+  RTG_NOT_FOUND=0
+}
+
+#Function to make mail and send to FH with attachment
+make_send_mail()
+{
+  if [ "X$TO_LIST" = "XNA" ];then
+    return
+  fi
+  TEST_RUN=$1
+  RPT_FILE=`basename $2`
+  MSG="$3"
+  TEST_DURATION=`awk -F'|' '{print $(NF-1)}' $_TR_PATH/summary.top`
+  #calling send_mail utility
+  send_mail $TEST_RUN $TEST_DURATION 1 ${NS_WDIR} 5 $RPT_FILE 80 "$TO_LIST" "$CC_LIST" "$BCC_LIST" "$MSG"
+}
+
+#Check for core dump if core dump created then get the stack trace and mail to all FHs
+check_core_dump_and_send_mail()
+{
+  core_found_flag=0
+  write_log_file 1 "Going to check core dumps of last $MAX_TIME_MIN minutes"
+  CORE_FILE=$_TR_PATH/${CONTINUES_TEST_NUM}_corefile.txt
+  PARENT_PID=`awk -F' ' '/netstorm parent/{print $5}' $_TR_PATH/get_all_process_pid`
+  CHILD_PID=($(awk -F' ' '/child_pid/{print $3}' $_TR_PATH/get_all_process_pid))
+  CORES=($(find /home/cavisson/core_files/. -maxdepth 1 -mmin -$MAX_TIME_MIN -type f -name 'core.*' -exec ls -tr {} +))
+  for (( c=0; c<${#CORES[@]}; c++ ))
+  do
+    CORENAME=`basename ${CORES[$c]}`
+    COREPID=`echo "$CORENAME"|awk -F'.' '{print $NF}'`
+    [ -z $COREPID ] && continue
+    #who causes core
+    write_log_file 2 "Checking core dump, File = $CORENAME, Parent pid = $PARENT_PID"
+    if [ "X$PARENT_PID" = "X$COREPID" ];then
+      write_log_file 1 "Core dumped by Parent. File = $CORENAME"
+      core_found_flag=1
+    else
+      for (( i=0; i<${#CHILD_PID[@]}; i++ ))
+      do
+        if [ "X${CHILD_PID[$i]}" = "X$COREPID" ];then
+          write_log_file 1 "Core dumped by Child. File = $CORENAME"
+          core_found_flag=1
+        fi
+      done
+    fi
+    [ $core_found_flag -eq 1 ] && break
+  done
+    
+  if [ "X$core_found_flag" = "X0" ];then
+    write_log_file 1 "Test is stopped somehow, starting test again."
+    make_send_mail $CONTINUES_TEST_NUM $MAIL_CMD_LOGS "Starting test again, Test is stopped somehow check manually."
+  else
+    write_log_file 1 "Test core dump found, sending mail and starting test again."
+    gdb -q -n -ex bt -batch bin/netstorm "${CORES[$c]}" >$CORE_FILE 2>&1
+    make_send_mail $CONTINUES_TEST_NUM $CORE_FILE "Starting test again, Details of core dump below."
+  fi
+ 
+  dump_cmd_logs
+  rm $MAIL_CMD_LOGS 2>/dev/null
+  start_test $_SCENARIO
+}
+
+usage()
+{
+  echo "Mode           : Mode for enable/disable. It can be 0, 1 (default is enable). Enable only for Continuous Monitoring Test"
+  echo "Start test val : Start test val is count that indicate how many times tool will check test is started or not in the interval of 30 secs in case of failure to start test."
+  echo "Start ndc val  : Start ndc val is count that indicate how many times tool will try to restart the ndc in interval of 20 secs in case of failure to start ndc." 
+  echo "Rtg diff count : Maximum time to wait for Rtg update and it will be multiple of progress interval(for e.g Progress Interval * Rtg diff count )."
+  echo "Tracing level  : Level for logs. It can be 1 or 2 (1: Update on Error, 2: Update on progress Interval)"
+  echo "To list        : To send mail in to list. (Optional)"
+  echo "CC list        : To send mail in cc list. (Optional)"
+  echo "BCC list       : To send mail in bcc list. (Optional)"
+  exit 2
+}
+
+_TR_PATH=""
+_SCENARIO=""
+TEST_START_COUNT=""
+PROGRESS_SEC=300
+first_time=0
+CONTROLLER=`basename $NS_WDIR`
+ROLL_OVER_SIZE_OF_TRACE=10
+MAIL_CMD_LOGS=""
+TRACE_LOG_LEVEL=1
+TO_LIST=NA
+CC_LIST=NA
+BCC_LIST=NA
+TEST_USER=""
+ROLE=""
+
+while getopts t:s:I:p:c:n:T:C:B:D:d:l:u:r:S:? ch
+do
+  case $ch in
+  t) CONTINUES_TEST_NUM=$OPTARG;;
+  s) _SCENARIO=$OPTARG;;
+  I) NDC_IP=$OPTARG;;
+  p) NDC_PORT=$OPTARG;;
+  c) TEST_START_COUNT=$OPTARG;;
+  n) NDC_START_COUNT=$OPTARG;;
+  T) TO_LIST=$OPTARG;;
+  C) CC_LIST=$OPTARG;;
+  B) BCC_LIST=$OPTARG;;
+  D) PROGRESS_SEC=$OPTARG;;
+  d) RTG_DIFF_COUNT=$OPTARG;;
+  l) TRACE_LOG_LEVEL=$OPTARG;;
+  u) TEST_USER=$OPTARG;;
+  r) ROLE=$OPTARG;;
+  S) TSDB_MODE=$OPTARG;;
+  ?) usage ;;
+  esac
+done
+
+MAX_RTG_DIFF=$((PROGRESS_SEC * RTG_DIFF_COUNT))
+RTG_NOT_FOUND=0
+DIFF_RESET_FLAG=0
+RTG_EXTRA_DIFF=0
+NETSTORM_PID=0
+
+while true
+do
+  #Creating path and Pid file first time only
+  #TESTRUN=`check_if_test_is_running_or_not`
+  check_if_test_is_running_or_not
+  if [ "$first_time" == "0" ];then
+    _TR_PATH=$NS_WDIR/logs/TR$CONTINUES_TEST_NUM
+    DAEMON_PID_PATH=${_TR_PATH}/nsu_check_cont_test_pid
+    kill -9 `cat $DAEMON_PID_PATH 2>/dev/null` 2>/dev/null
+    echo $$ >$DAEMON_PID_PATH
+    MAIL_CMD_LOGS=$_TR_PATH/mail_logs.$$
+    TRACE_LOGS=$_TR_PATH/ns_logs/test_trace.log
+    echo "#DateTime|Build Version|Comments" >>$TRACE_LOGS
+    first_time=1
+  fi
+
+  #Test is not running. Send mail with core dump stack trace if core file there. and start test
+  if [[ "X$NETSTORM_PID" == "X0" ]] || [[ "X$NETSTORM_PID" == "X-1" ]]; then
+    write_log_file 1 "$NETSTORM_PID because of which test is stopped"
+    write_log_file 1 "$CONTINUES_TEST_NUM test has been stopped."
+    check_core_dump_and_send_mail
+  fi
+      
+  if [ $DIFF_RESET_FLAG -eq 1 ];then
+    sleep $((PROGRESS_SEC - RTG_EXTRA_DIFF))
+    DIFF_RESET_FLAG=0
+  else
+    sleep $PROGRESS_SEC
+  fi
+  if [ $TSDB_MODE -ne 2 ];then
+    check_if_rtg_is_updating_or_not $CONTINUES_TEST_NUM
+  fi
+done

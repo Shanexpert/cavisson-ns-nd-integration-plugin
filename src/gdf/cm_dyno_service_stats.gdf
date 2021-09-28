@@ -1,0 +1,8 @@
+#LAST_MAX_ASSIGNED_GRAPH_ID = 3
+#LAST_MODIFIED_DATE = 03/06/14 11:13:32
+#https://devcenter.heroku.com/articles/http-routing
+Info|3.1|1|-|-|-1|-1|-
+Group|Dyno Service Stats|10206|vector|3|0|Application Metrics|Tier>Server|Information related to response time, router queue time and response throughput of Dyno
+Graph|Router Queue time (ms)|1|scalar|times|-|-|0|A|-1|-1|NA|NA|Average time (ms) spent establishing a connection to the backend web process
+Graph|Response Time (ms)|2|scalar|times|-|-|0|A|-1|-1|NA|NA|Average service time (ms) of requests in seconds.
+Graph|Receive Throughput (Kbps)|3|scalar|rate|-|-|0|A|-1|-1|NA|NA|Receive Throughput in kilo bits/sec

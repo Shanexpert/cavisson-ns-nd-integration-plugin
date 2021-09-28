@@ -1,0 +1,5 @@
+# 1.0 - Initial version
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP Service Runtime Limit|11602|vector|1|0|GCP Metrics|ProjectID>Location>Service>LimitName>QuotaMetric|It provide metric related to quota limit.
+Graph|GCP Service Runtime Quota Limit|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Limit for the quota.

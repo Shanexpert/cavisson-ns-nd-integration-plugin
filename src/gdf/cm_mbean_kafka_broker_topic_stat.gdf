@@ -1,0 +1,20 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+#ObjectName :kafka.server:type=BrokerTopicMetrics
+info|3.1|1|-|-|-1|-1|-
+Group|Apache Kafka Broker Topic|11452|vector|5|0|Apache Kafka Metrics|Tier>Server>Instance>Name|BytesInPerSec = Aggregate incoming byte rate,BytesOutPerSec =Aggregate outgoing byte rate,BytesRejectedPerSec =Aggregate rejected byte rate for the topic,MessagesInPerSec =Aggregate incoming message rate for the topic,FailedFetchRequestsPerSec =fetch request rate for requests that failed,FailedProduceRequestsPerSec =Produce request rate for requests that failed,ReplicationBytesInPerSec =The rate at which data sent from other brokers is consumed by the follower broker,ReplicationBytesOutPerSec=The rate at which data is sent from the broker to other brokers.
+#G1
+Graph|Apache Kafka Broker Topic Count |1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of topic broker connection.
+#G2       
+Graph|Apache Kafka Broker Topic Mean Rate|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Mean rate of data send to broker topic.
+#G3
+Graph|Apache Kafka Broker Topic/One Minute|3|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Data is sent from the broker to topic  per minute.
+#G4      
+Graph|Apache Kafka Broker Topic/Five Minute|4|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Data is sent from the broker to  topic per five minute.
+#G5
+Graph|Apache Kafka Broker Topica/Fifteen Minute|5|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Data is sent from the broker to topic per fifteen minute.
+
+

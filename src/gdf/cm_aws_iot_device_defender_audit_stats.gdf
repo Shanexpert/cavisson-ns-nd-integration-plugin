@@ -1,0 +1,12 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS IoT Device Defender Audit Stats|14049|vector|2|0|AWS Metrics|AccountName>Region>CheckName>ScheduledAuditName|AWS IoT Device Defender is a fully managed service that helps us secure your fleet of IoT devices.
+
+Graph|AWS IoT Resources Evaluated|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of resources that were evaluated for compliance. The system reports the number of resources that were evaluated for each check of each audit performed
+
+Graph|AWS IoT Non Compliant Resources|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of resources that were found to be noncompliant with a check. The system reports the number of resources that were out of compliance for each check of each audit performed
+

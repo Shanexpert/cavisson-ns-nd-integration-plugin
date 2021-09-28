@@ -1,0 +1,16 @@
+# --- GDF Version History ---
+# -- 1.0 - Initial version --
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|DB2 Transaction Stats|10420|vector|9|0|DB2 Metrics|Tier>Server>Instance|DB2 Transaction Stats provides metrics related to transaction in the database.
+Graph|DB2 Transactions/Sec|1|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of transaction per second.
+Graph|DB2 Rollback Transactions/Sec|2|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of transactions roll backed per second.
+Graph|DB2 Dead Locks/Sec|3|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of deadlocks per second.
+Graph|DB2 Sort Time/Transaction (ms)|4|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average time spent in sort per transaction in milliseconds.
+Graph|DB2 Locks Held|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of locks currently held by all applications in the database.
+Graph|DB2 Locks Waiting|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current number of agents waiting on a lock.
+Graph|DB2 Locks Time-Outs/Sec|7|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of times that a request to lock an object timed out instead of being granted per second.
+Graph|DB2 Sorts/Sec|8|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of sorts that have been executed per second.
+Graph|DB2 Lock Wait Time (Pct)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of time spent waiting within the DB2 database server that was spent waiting on locks.
+

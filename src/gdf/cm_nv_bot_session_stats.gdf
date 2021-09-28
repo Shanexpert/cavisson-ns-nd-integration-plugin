@@ -1,0 +1,10 @@
+# --- GDF Version History ---
+# # 1.0 - Initial version
+#
+Info|3.1|1|-|-|-1|-1|-
+#
+Group|Bot session Stats|10718|vector|3|0|UX Metrics|Channel|Netvision Bot session stats
+#
+Graph|Total Bot session|1|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Number of bot sessions 
+Graph|Total Web crawler session|2|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Number of Web crawler session
+Graph|Total Bad bot session|3|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Number of Bad bot session

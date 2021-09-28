@@ -1,0 +1,29 @@
+# --- GDF Version History ---
+#  1.0 - Initial version
+# Command to get data for this gdf on windows server :
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# wmic path Win32_PerfFormattedData_MSSQLSTOREDB_MSSQLSTOREDBDatabases
+Info|3.1|1|-|-|-1|-1|-
+Group|MS SQL DB Stats|10296|vector|20|0|MSSQL Metrics|Tier>Server>Instance|MS SQL DB provides counters to monitor bulk copy operations, backup and restore throughput, and transaction log activities. Monitor transactions and the transaction log to determine how much user activity is occurring in the database and how full the transaction log is becoming.
+
+Graph|MS SQL DB Active Transactions|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of active update transactions for the database.
+Graph|MS SQL DB Log Expanded Count|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of times the transaction log for the database has been expanded.
+Graph|MS SQL DB Backup Per Restore Throughput/Sec|3|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Read/write throughput for backup and restore operations of a database per second.
+Graph|MS SQL DB Bulk Copy Rows/Sec|4|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of rows bulk copied per second.
+Graph|MS SQL DB Bulk Copy Throughput/Sec|5|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Amount of data bulk copied (in kilobytes) per second.
+Graph|MS SQL DB Data Files Size (KB)|6|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Cumulative size (in kilobytes) of all the data files in the database including any automatic growth.
+Graph|MS SQL DB DBCC Logical Scan Bytes/Sec|7|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of logical read scan bytes per second for database console commands (DBCC).
+Graph|MS SQL DB Log Cache Reads/Sec|8|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Reads performed per second through the log manager cache.
+Graph|MS SQL DB Log Files Size (KB)|9|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Cumulative size (in kilobytes) of all the transaction log files in the database.
+Graph|MS SQL DB Log Files Used Size (KB)|10|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|The cumulative used size of all the log files in the database.
+Graph|MS SQL DB Log Flushes/Sec|11|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of log flushes per second.
+Graph|MS SQL DB Log Flush Waits/Sec|12|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of commits per second waiting for the log flush.
+Graph|MS SQL DB Log Flush Wait Time (ms)|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total wait time (in milliseconds) to flush the log. On an AlwaysOn secondary database, this value indicates the wait time for log records to be hardened to disk.
+Graph|MS SQL DB Log Flush Write Time (ms)|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Time in milliseconds for performing writes of log flushes that were completed in the last second.
+Graph|MS SQL DB Log Pool Cache Misses/Sec|15|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of requests per second for which the log block was not available in the log pool. The log pool is an in-memory cache of the transaction log. This cache is used to optimize reading the log for recovery, transaction replication, rollback, and AlwaysOn Availability Groups.
+Graph|MS SQL DB Log Pool Disk Reads/Sec|16|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of disk reads second that the log pool issued to fetch log blocks.
+Graph|MS SQL DB Log Pool Requests/Sec|17|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The number of log-block requests per second processed by the log pool.
+Graph|MS SQL DB Transactions/Sec|18|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of transactions started for the database per second.
+Graph|MS SQL DB Tracked Transactions/Sec|19|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of committed transactions per second recorded in the commit table for the database.
+Graph|MS SQL DB Write Transactions/Sec|20|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of transactions per second that wrote to the database and committed, in the last second.
+

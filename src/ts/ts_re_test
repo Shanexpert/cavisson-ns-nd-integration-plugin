@@ -1,0 +1,170 @@
+#!/bin/sh
+#*****************************************************************
+# * Name    :    nsu_re_test 
+# * Author  :    Anuj Sharma
+# * Purpose :    Re Execute the Scenario Giving the Test Run Number as Argument
+# * Usage   :
+#              nsu_re_test -n <Test Run Number>
+# * Modification History:
+# *   7/7/09: Anuj Sharma - Initial Version
+#
+#*****************************************************************
+
+NS_TA_DIR=""
+SGRP_TEMP_FILE=/tmp/re_sgrp.$$
+SCENARIO_TEMP_FILE=/tmp/re_scenario.$$
+
+debug_log()
+{
+  #echo $*
+  echo > /dev/null
+}
+
+usage()
+{
+  echo "Usage: nsu_re_test <Options> <Arguments>"
+  echo "       -n  <TR_NUM> -w <WORKSPACE_NAME>"
+}
+
+while getopts n:w: opt
+do
+  case "$opt" in
+  n) TR_NUM=$OPTARG;;
+  w) WORKSPACE_PROFILE=$OPTARG;;
+  *) usage;;
+  ?) usage;;
+  esac
+done
+
+if [ $# -lt 1 ];then
+  usage
+fi
+
+#set absolute test assets path
+NS_TA_DIR=`nsi_get_work_space_path.sh $WORKSPACE_PROFILE`
+TR_NUM_PATH=$NS_WDIR/logs/TR$TR_NUM
+SCENARIO_FILE=$TR_NUM_PATH/scenario
+SCRIP_PATH=$TR_NUM_PATH/scripts
+RE_TEST_PROJ_SUB_PROJ=re_test/re_test
+NS_SCENARIO_DIR="$NS_TA_DIR/$RE_TEST_PROJ_SUB_PROJ/scenarios"
+NS_SCRIPT_DIR="$NS_TA_DIR/$RE_TEST_PROJ_SUB_PROJ/scripts"
+
+mkdir -p $NS_SCENARIO_DIR $NS_SCRIPT_DIR
+
+if [ ! -d "$TR_NUM_PATH" ];then
+  echo "The Test Run Number $TR_NUM Is Not Present"
+  exit -1
+fi
+
+if [ ! -f "$SCENARIO_FILE" ];then
+  echo "The Scenario File Is Not Present For Test Run $TR_NUM"
+  exit -1
+fi 
+
+if [ ! -d $SCRIP_PATH ];then
+  echo "The Script Is Not Present For Test Run $TR_NUM"
+  exit -1
+fi
+
+#This is to check if the script is present or not
+check_script_present()
+{
+  debug_log "check_script_present: Method Called"
+  if [ ! -d "$SCRIPT_WITH_PATH" ];then
+    echo "The Script Is Not Present For Test Run $TR_NUM"
+    exit -1
+  fi
+  debug_log "check_script_present: Method Ended"
+}
+
+if [ ! -d $NS_SCENARIO_DIR ];then
+  debug_log "Creating The Script And Scenarios Directory"
+  mkdir -p $NS_SCENARIO_DIR 
+  mkdir -p $NS_SCRIPT_DIR
+fi
+
+#This is to create the SGRP Keyword For the scenario to be re executed 
+create_sgrp_keyword()
+{ 
+  debug_log "create_sgrp_keyword: Method Called"
+  cat $SCENARIO_FILE|grep ^SG > $SGRP_TEMP_FILE
+  cat $SCENARIO_FILE|grep -v ^SG >$SCENARIO_TEMP_FILE
+  debug_log "create_sgrp_keyword: Creating Temp Files For Scenario $SGRP_TEMP_FILE And $SCENARIO_TEMP_FILE"
+  while read line
+  do
+    debug_log "create_sgrp_keyword: Parsing the SGRP Keyword From The $SGRP_TEMP_FILE File"
+    RE_GROUP_NAME=`echo $line|awk -F " " '{print $2}'`
+    RE_GENERATOR_NAME=`echo $line|awk -F " " '{print $3}'`
+    RE_SCENARIO_TYPE=`echo $line|awk -F " " '{print $4}'`
+    RE_GROUP_PROFILE=`echo $line|awk -F " " '{print $5}'`
+    RE_GROUP_TYPE=`echo $line|awk -F " " '{print $6}'`
+    RE_SCRIPT_OR_URL=`echo $line|awk -F " " '{print $7}'`
+    RE_NUM_USER=`echo $line|awk -F " " '{print $8}'`
+    debug_log "create_sgrp_keyword: RE_GROUP_NAME = $RE_GROUP_NAME,RE_GENERATOR_NAME=$RE_GENERATOR_NAME, RE_GROUP_PROFILE = $RE_GROUP_PROFILE" 
+    debug_log "RE_SCENARIO_TYPE= $RE_SCENARIO_TYPE, RE_GROUP_TYPE = $RE_GROUP_TYPE, RE_SCRIPT_OR_URL = $RE_SCRIPT_OR_URL, RE_NUM_USER = $RE_NUM_USER"
+    if [ "$RE_GROUP_TYPE" == "0" ];then
+      debug_log "create_sgrp_keyword: RE_GROUP_TYPE Value Is 0 Creating SGRP Keyword For Script"
+      #Bug-76203: if only script name is there, add default project and sub-project
+      NUM=`echo $RE_SCRIPT_OR_URL|awk -F "/" '{print NF}'`
+      if [ "X$NUM" == "X1" ];then
+        SCRIPT_PATH="default/default"
+        SCRIPT="$RE_SCRIPT_OR_URL"
+      else
+        SCRIPT_PATH=`dirname $RE_SCRIPT_OR_URL`
+        SCRIPT=`basename $RE_SCRIPT_OR_URL`
+      fi
+      if [ -d $TR_NUM_PATH/scripts/$SCRIPT_PATH/scripts/$SCRIPT ];then
+        SCRIPT_WITH_PATH=$TR_NUM_PATH/scripts/$SCRIPT_PATH/scripts/$SCRIPT
+      else
+        SCRIPT_WITH_PATH=$TR_NUM_PATH/scripts/$SCRIPT_PATH/$SCRIPT
+      fi
+      check_script_present
+      #echo "In the SG_TYPE 0"
+      echo "SGRP $RE_GROUP_NAME $RE_GENERATOR_NAME $RE_SCENARIO_TYPE $RE_GROUP_PROFILE $RE_GROUP_TYPE .$RE_TEST_SCRIPT_NAME $RE_NUM_USER" >>$SCENARIO_TEMP_FILE
+    else
+      debug_log "create_sgrp_keyword: RE_GROUP_TYPE Value Is 1 Creating SGRP Keyword For URL"
+      #echo "In the SG_TYPE 1"
+      echo "SGRP $RE_GROUP_NAME $RE_GENERATOR_NAME $RE_SCENARIO_TYPE $RE_GROUP_PROFILE $RE_GROUP_TYPE $RE_SCRIPT_OR_URL $RE_NUM_USER" >>$SCENARIO_TEMP_FILE
+    fi
+  done < $SGRP_TEMP_FILE
+  debug_log "create_sgrp_keyword: Method Ended"
+}
+
+#This is to copy the script and scenario in the re_test/re_test directory
+copy_test_data()
+{
+  debug_log "copy_test_data: Method Called"
+  RE_TEST_SCENARIO_NAME=scenario_$TR_NUM.conf
+  RE_TEST_SCRIPT_NAME=script_$TR_NUM
+  RE_TEST_SCENARIO_NAME_WITH_PATH=$NS_SCENARIO_DIR/.$RE_TEST_SCENARIO_NAME
+  RE_TEST_SCRIPT_NAME_WITH_PATH=$NS_SCRIPT_DIR/.$RE_TEST_SCRIPT_NAME
+  create_sgrp_keyword 
+  #echo "SCRIPT_WITH_PATH = $SCRIPT_WITH_PATH" 
+  cp $SCENARIO_TEMP_FILE $NS_SCENARIO_DIR/.$RE_TEST_SCENARIO_NAME
+
+  debug_log "copy_test_data: Scenario File Created is $RE_TEST_SCENARIO_NAME_WITH_PATH"
+  debug_log "copy_test_data: Script Created is $RE_TEST_SCRIPT_NAME_WITH_PATH"
+
+  if [ ! -d "$NS_SCRIPT_DIR/.$RE_TEST_SCRIPT_NAME" -a "$RE_GROUP_TYPE" == "0" ];then
+    debug_log "copy_test_data: If script Does Not Exist Then Copy"
+    cp -r $SCRIPT_WITH_PATH $NS_SCRIPT_DIR/.$RE_TEST_SCRIPT_NAME
+  fi
+  debug_log "copy_test_data: Method Ended"
+}
+
+#This is to start the scenario in background
+restart_test()
+{
+  debug_log "restart_test: Method Called"
+  nsu_start_test -n $RE_TEST_PROJ_SUB_PROJ/.$RE_TEST_SCENARIO_NAME -S gui
+  if [ "$?" -ne "0" ];then
+    exit -1
+  fi
+  debug_log "restart_test: Method Ended"
+}
+
+copy_test_data
+restart_test
+debug_log "Removing Temp Files"
+rm -rf $SCENARIO_TEMP_FILE $SGRP_TEMP_FILE
+exit 0

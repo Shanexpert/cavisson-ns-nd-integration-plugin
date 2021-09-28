@@ -1,0 +1,5 @@
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP Spanner Storage Utilization Stats|11512|vector|1|0|GCP Metrics|ProjectID>InstanceConfig>InstanceId>Location>StorageClass|Spanner storage utilization stats provided metrics related to spanner storage utilization.
+
+Graph|GCP Spanner Storage Utilization (Pct)|1|scalar|sample|-|-|0|D|-1|-1|NA|MUL(G1,100)|CPU Storage Utilization in percentage.

@@ -1,0 +1,19 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Azure firewall ManagerStats|14022|vector|6|0|Azure Metrics|AccountName>Region>ResourceGroup>AzureFirewall|Azure Firewall Manager is a security management service that provides central security policy and route management for cloud-based security perimeters.
+
+Graph|Azure Firewall ApplicationRuleHit|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Azure azureFirewalls Number of times Application rules were hit.
+
+Graph|Azure Firewall NetworkRuleHit|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Azure azureFirewalls Number of times Network rules were hit.
+
+Graph|Azure Firewall FirewallHealth(%)|3|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Azure azureFirewalls Indicates the overall health of this firewall.
+
+Graph|Azure Firewall DataProcessed(Bytes)|4|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Azure azureFirewalls Total amount of data processed by this firewall.
+
+Graph|Azure Firewall Throughput(Bits/Sec)|5|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Azure azureFirewalls Throughput processed by this firewall.
+
+Graph|Azure Firewall SNATPortUtilization(%)|6|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Azure azureFirewalls Percentage of outbound SNAT ports currently in use.

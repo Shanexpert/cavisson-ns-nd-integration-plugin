@@ -1,0 +1,95 @@
+#!/usr/bin/python
+######################################################################################################################
+#Name: nsu_remote_exec
+#Created by: Ankur
+#Date:1/8/2013
+#Modified: 12/30/2012
+#Description: This expect shell logs into a server and executes a command if sent with sudo we provide the login password as sudo password
+#Usage: nsu_remote_exec <hostname> <username> <password> <command>
+######################################################################################################################
+import pexpect
+import getpass
+import time
+import os
+import sys
+import commands
+import shutil
+import getopt
+
+prompt = '.*[#\$]'
+
+def usage():
+    print "Requires 4 arguments hostname username password action"
+    sys.exit(1)
+
+#This is a function to Login to the remote machine Using the pexpect
+def cli_login(user, host, password):
+    #print 'Login to the machine %s'% host 
+    ssh_newkey = 'Are you sure you want to continue connecting'
+    child = pexpect.spawn('ssh -l %s %s'%(user, host))
+    i = child.expect([pexpect.TIMEOUT, ssh_newkey, 'assword:', prompt, pexpect.EOF])
+    #print ('the value of I is %s'%(i))
+    if i == 0: # Timeout
+        print 'SSH could not login:'
+        print child.before, child.after
+        return None
+    if i == 1: # SSH public key prompt, just accept it
+        child.sendline ('yes')
+#       child.expect ('password: ')
+        i = child.expect([pexpect.TIMEOUT, 'assword:'])
+        if i == 0: # Timeout
+            print "SSH timeout"
+            #print child.before, child.after
+            return None
+    if i == 2:
+        child.sendline(password)
+    if i == 3:
+        return child 
+    i = child.expect(['What Work env, you want to work with\?', 'Please enter the controller name which you want to use', pexpect.TIMEOUT, prompt])    # Expect CLI prompt
+    #print ('the value of I is %s'%(i))
+    if i == 0 or i == 1:
+	child.sendline('1')
+	child.expect([pexpect.TIMEOUT, prompt, pexpect.EOF])
+    print child.before, child.after
+    return child
+
+def main ():
+    if len(sys.argv) != 5:
+        usage()
+    hostname = sys.argv[1]
+    username = sys.argv[2]
+    password = sys.argv[3]
+    action = sys.argv[4]
+    pass_str = ('password for %s:'%username)
+    child = cli_login(username, hostname, password)#Call for login to remote machin
+    if child == None:
+        print ('Error in accessing server %s'%(hostname))
+        sys.exit(1)
+    child.sendline('%s'%(action))
+    i = child.expect([pexpect.TIMEOUT, pass_str, 'Password:', '\?', prompt, pexpect.EOF])
+    if i == 0: # Timeout
+        print 'Timeout'
+        print child.before, child.after
+	sys.exit(1)
+        return None
+    if i == 1 or i == 2:
+        child.sendline (password)
+        i = child.expect([pexpect.TIMEOUT, '\?', prompt, pexpect.EOF])
+        if i == 0: # Timeout
+            print "Timeout"
+            print child.before, child.after
+	    sys.exit(1)
+            return None
+	if i == 1:
+	    child.sendline ('y')
+	    child.expect([pexpect.TIMEOUT, prompt, pexpect.EOF])
+    if i == 3:
+	child.sendline ('y')
+	child.expect([pexpect.TIMEOUT, prompt, pexpect.EOF])
+    print child.before, child.after
+    time.sleep(1)
+    sys.exit(0)
+    return 0
+
+if __name__ == '__main__':
+    main()

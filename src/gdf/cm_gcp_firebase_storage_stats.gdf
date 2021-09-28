@@ -1,0 +1,5 @@
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP Firebase Storage Stats|11505|vector|1|0|GCP Metrics|ProjectID>Location>TableName>RequestMethod>RuleSetLabel>Result|GCP Firebase storagestats provides metrics details related to storage security rules evaluation metrics.
+
+Graph|GCP Firebase Storage Rule evaluations/Sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The number of Cloud Storage for Firebase Security Rules evaluations performed in response to write or read requests per seconds.

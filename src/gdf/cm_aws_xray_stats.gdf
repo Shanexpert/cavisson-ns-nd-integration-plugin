@@ -1,0 +1,9 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS X-Ray Stats|14045|vector|1|0|AWS Metrics|AccountName>Region>GroupName|AWS X-Ray helps developers analyze and debug production, distributed applications
+
+Graph|AWS X-Ray Approximate Trace Count|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Retrieve service graphs and traces with the AWS X-Ray API.

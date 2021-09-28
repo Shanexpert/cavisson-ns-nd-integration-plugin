@@ -1,0 +1,83 @@
+#!/bin/sh
+# Name: ts_show_fail_cases
+# Purpose: To show failed test cases
+# Author: Arun Nishad
+# Date:04/16/08
+
+
+PRE_VIP=""
+NO_ARGS=$#
+TSRMin=""
+TSRMax=""
+TSR_DIR=$NS_WDIR/logs/tsr
+FAIL_CASES=/tmp/temp
+HEADER=" "
+if [ $NO_ARGS -lt 2 -o $NO_ARGS -gt 3 ];then
+  echo "Usage: ts_show_fail_cases -n < TSRNO | TSRMin TSRMax >"
+  exit 1
+fi
+
+if [ $NO_ARGS == 2 ];then
+  TSRMin=$2
+  TSRMax=$TSRMin 
+fi
+
+if [ $NO_ARGS == 3 ];then
+  TSRMin=$2
+  TSRMax=$3
+fi
+
+count=0
+for TSR_NUM in `seq $TSRMin $TSRMax`
+do
+  #Added by Anuj sharma
+  TCL_PATH=`find $TSR_DIR -maxdepth 2 -type d -name $TSR_NUM -exec dirname {} \;` #Get the testcycle for each tsr
+  if [ "XX$TCL_PATH" == "XX" ];then
+    echo "Error: There is no logs for tsr $TSR_NUM"
+    exit 1
+  fi
+
+  if [ "XX$TCL_PATH" != "XX" ];then
+    TCL_NUM=`basename $TCL_PATH`
+  fi
+
+  if [ ! -f $TSR_DIR/$TCL_NUM/$TSR_NUM/fail_cases ] ;then
+    echo -n "Error: $TSR_DIR/$TCL_NUM/$TSR_NUM/fail_cases not found." >>$FAIL_CASES
+    echo " ">>$FAIL_CASES
+    continue
+  fi
+  value_line=`cat $TSR_DIR/$TCL_NUM/$TSR_NUM/fail_cases | grep -v "TR#" | grep -v -c "VIP:" `
+  while read line
+  do
+    HEADER=`echo $line | grep ^"TR#"`
+    if [ $? == 0 ];then
+      if [ $count == 0 ];then
+        echo "$HEADER" >>$FAIL_CASES
+        ((count=count + 1)) 
+      fi 
+      continue
+    fi
+    if [ $value_line == 0 ];then
+     continue 2  # will continue with while loop
+    fi
+    VIP_LINE=`echo $line | grep "VIP" | awk -F':' '{ print $1 }'`
+    VIP_VAL=`echo $line | grep "VIP" | awk -F':' '{ print $2 }' | awk '{print $1}'`
+    if [ "X$VIP_LINE" == "XVIP" ];then
+      if [ "X$VIP_VAL" != "X$PRE_VIP" ];then
+        PRE_VIP=$VIP_VAL
+        echo "$line" >>$FAIL_CASES
+        continue
+      else
+        continue
+      fi
+    fi
+    TR_EX=`echo $line | cut -d " " -f1`
+    #echo -n `$NS_WDIR/bin/ts_show_logs -n $i | grep $TR_EX | awk '{print $2,$8}' ` >>$FAIL_CASES
+    LOG_VALUE=`$NS_WDIR/bin/ts_show_logs -c $TCL_NUM -n $TSR_NUM | grep $TR_EX`
+    echo -n `echo $LOG_VALUE | awk '{print $2}'` `echo -n $LOG_VALUE | awk '{for(i=8;i<=NF;i++) print $i}'`>>$FAIL_CASES
+    echo -n " " >> $FAIL_CASES
+    echo $line | cut -d' ' -f2- >>$FAIL_CASES
+  done < $TSR_DIR/$TCL_NUM/$TSR_NUM/fail_cases
+done
+cat $FAIL_CASES
+rm -f $FAIL_CASES

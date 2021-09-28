@@ -1,0 +1,5 @@
+#! /bin/sh
+
+psql test cavisson <<+
+SELECT count(*) AS SessionProfile_$1      FROM SessionProfile_$1;
++

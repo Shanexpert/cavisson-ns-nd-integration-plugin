@@ -1,0 +1,46 @@
+# General information line
+# Info|msgVersion|numGroups|startIndex|testRun|sizeOfMsgData|interval|testRunStartDate/Time
+#--- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name 
+#
+# Group information line
+# Group|groupName|rptGrpId|groupType|numGraphs|numVectors|future1|future2|Group_Description 
+#
+# Graph information line
+# Graph|graphName|rptId|graphType|dataType|graphDataIndex|formula|numVectors|future1|PDF_ID|Percentile_Data_Idx|future2|future3|GRAPH_DESCRIPTION
+#
+# Numeric data is filled as -1 in the infoline
+
+Info|3.1|3|-1|-|-1|-1|-
+
+Group|POP3 Network Throughput|16|scalar|8|0|Test Metrics|NA|POP3 Network & connections information.
+
+Graph|POP3 Send Throughput (Kbps)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|POP3 data send thoughput in kilo bits per second (kbps) in the sampling period.
+Graph|POP3 Total Send Bytes|2|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total number of POP3 bytes send since start of the test.
+Graph|POP3 Receive Throughput (Kbps)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|POP3 data received per second in kilo bits per second (kbps) in the sampling period.
+Graph|POP3 Total Receive Bytes|4|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total POP3 bytes received since start of the test.
+Graph|POP3 Connections Open/Sec|5|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of POP3  connections opened per second in the sampling period.
+Graph|POP3 Total Connections Open|6|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total number of open POP3 connections since start of the test.
+Graph|POP3 Connections Close/Sec|7|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of closed POP3 connections per second in the sampling period.
+Graph|POP3 Total Connections Close|8|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total number of closed POP3 connections since start of the test.
+
+
+Group|POP3 Hits|17|scalar|8|0|Test Metrics|NA|POP3 information.
+
+Graph|POP3 Request Sent/Sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of POP3 request sent (started) per seconds in the sampling period.
+Graph|POP3 Hits/Sec|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of POP3 request completed (response received from server or some error occurred) per seconds in the sampling period.
+Graph|Success POP3 Responses/Sec|3|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of successful POP3 responses per second in the sampling period.
+Graph|POP3 Response Time (ms)|4|scalar|times|-|-|0|-|7|-1|NA|NA|Average POP3 response time from the server in seconds in the sampling period.
+Graph|POP3 Successful Response Time (ms)|7|scalar|times|-|-|0|-|20|-1|NA|NA|Average response time taken by failure POP3 requests in seconds.
+Graph|POP3 Failure Response Time (ms)|8|scalar|times|-|-|0|-|20|-1|NA|NA|Average response time taken by failure POP3 requests in seconds.
+Graph|Total POP3 Hits|5|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total number of POP3 hits made on the web server by virtual users since start of the test.
+Graph|Total POP3 Success|6|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total number of success POP3 hits made on the web server by virtual users since start of the test.
+
+Group|POP3 Failures|18|vector|2|0|Test Metrics|Error|POP3 failure information
+
+Graph|POP3 Failures/Sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of failed POP3 responses for each and every individual error during each second of scenario run.
+Graph|POP3 Failures|2|scalar|sum|-|-|0|AS|-1|-1|NA|NA|Number of failed POP3 responses
+

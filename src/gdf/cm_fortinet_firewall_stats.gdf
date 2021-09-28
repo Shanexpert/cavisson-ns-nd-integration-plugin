@@ -1,0 +1,14 @@
+#
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Fortinet Firewall Stats|10609|vector|8|0|Domain Metrics|Tier>Server>restaurantid>device>|Fortinet Firewall Stats
+
+Graph|Up Time(sec)|1|scalar|sample|-|None|0|NA|-1|-1|NA|NA|.The 64bit time (in seconds) since the network management portion of the system was last re-initialized.
+Graph|Active Sessions Count|2|scalar|sample|-|None|0|NA|-1|-1|NA|NA|Number of active sessions on the device.
+Graph|CPU Usage (pct)|3|scalar|sample|-|None|0|NA|-1|-1|NA|NA|Current CPU usage (percentage).
+Graph|Memory Utilization (pct)|4|scalar|sample|-|None|0|NA|-1|-1|NA|NA|Current memory utilization (percentage).
+Graph|Total Hard Disk Capacity (MB)|5|scalar|sample|-|None|0|NA|-1|-1|NA|NA|Total hard disk capacity (MB), if disk is present.
+Graph|Current Hard Disk Usage (MB)|6|scalar|sample|-|None|0|NA|-1|-1|NA|NA|Current hard disk usage (MB), if disk is present.
+Graph|Hard Disk Usage (pct)|7|scalar|sample|-|None|0|NA|-1|-1|NA|NA|Hard Disk Usage Percentage.( Current Hard Disk Usage * 100 /Total Hard Disk Capacity).
+Graph|Network Bandwidth Usage (kbps)|8|scalar|sample|-|None|0|NA|-1|-1|NA|NA|Network bandwidth usage of specified cluster member (kbps).

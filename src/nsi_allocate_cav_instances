@@ -1,0 +1,81 @@
+#!/bin/bash
+
+#Taking input from c program
+TEST_RUN=$1
+LOC_NAME=$2
+export REGION=$3
+export GEN_REQ=$4
+
+GEN_DATA_FILE="$NS_WDIR/etc/.netcloud/generators.dat"
+GEN_DATA_FILE_BKP="$NS_WDIR/logs/TR$TEST_RUN/generators.dat"
+cp $GEN_DATA_FILE $GEN_DATA_FILE_BKP 
+DEBUG_LOG_FILE="$NS_WDIR/logs/TR$TEST_RUN/NetCloud/gen_inst.netstorm.log"
+GENERATOR_VALIDATION="$NS_WDIR/logs/TR$TEST_RUN/ready_reports/TestInitStatus/2_generatorValidation.log"
+CAV_GEN_USED_FILE="$NS_WDIR/logs/TR$TEST_RUN/NetCloud/cav_gen.used"
+GEN_DATA_TEMP_FILE="$NS_WDIR/etc/.netcloud/.generators.dat.temp"
+
+debug_log()
+{
+  echo "`date "+%D %H:%M:%S"`|[$REGION]$*" >> $DEBUG_LOG_FILE
+}
+
+gen_log()
+{
+  echo "`date "+%D %H:%M:%S"`|$*" >> $GENERATOR_VALIDATION
+}
+
+Lockfd=10
+ns_release_lock()
+{
+  #Release lock only if it is acquired earlier
+  flock -u $Lockfd
+  eval "exec $Lockfd<&-"
+}
+
+ns_get_lock()
+{
+  retry_count=12
+  ctrl_name=`basename $NS_WDIR`
+  mkdir -p $HOME_DIR/.tmp/
+  Lockfile=$HOME_DIR/.tmp/.nc_gen_lock_${ctrl_name}
+  eval "exec $Lockfd<$Lockfile"
+  if [ ! -e "$Lockfile" ] ; then
+      touch "$Lockfile"
+  fi
+  for((i=0;i<$retry_count;i++))
+  {
+    flock -eno $Lockfd || { debug_log "File '$Lockfile' is locked. Will try again after 5 second"; sleep 5;continue; }
+    return 0;
+  }
+  return 1;
+}
+
+ns_get_lock
+if [ $? -eq 0 ];then
+   #All required generators from generators.dat for given location will fetched if available
+   AVAILABLE=`awk -F"|" '/^[^#]/ { if ($4 == ENVIRON["REGION"] && ($13 == 1 || $13 == "NA"))print $1 }' $GEN_DATA_FILE |wc -l`
+   if [ $AVAILABLE -lt $GEN_REQ ];then
+     debug_log "Available generators [$AVAILABLE] are less than required generators [$GEN_REQ]"
+     gen_log "Failed to get $GEN_REQ instances of $REGION"
+     exit 0
+   fi
+
+   debug_log "INFO: Fetching the instance name and external ip of instances"
+   gen_log "Fetching the instances information [name,ip] of $REGION"
+   GEN_LIST=`awk -F"|" '/^[^#]/ { if ($4 == ENVIRON["REGION"] && $13 == 1 && count < ENVIRON["GEN_REQ"]) {count++ ;print $1"|"$2} }' $GEN_DATA_FILE`
+   for i in $GEN_LIST
+   do
+     IFS="|" read -a array <<< $i
+     export NAME="${array[0]}"
+     export IP="${array[1]}"
+     CTRL_NAME=`basename ${array[4]}`
+     awk 'BEGIN{FS=OFS="|"} $1==ENVIRON["NAME"]{$13=0} 1' $GEN_DATA_FILE > $GEN_DATA_TEMP_FILE
+     awk 'BEGIN{FS=OFS="|"} $1==ENVIRON["NAME"]{$13=0} NA' $GEN_DATA_TEMP_FILE > $GEN_DATA_FILE
+     echo $NAME >> $CAV_GEN_USED_FILE
+     echo "$NAME:$CTRL_NAME|$IP"
+   done
+else
+   debug_log "Failed to aquired lock"
+   gen_log "Failed to get $GEN_REQ instances of $REGION"
+fi
+ns_release_lock

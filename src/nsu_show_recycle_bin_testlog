@@ -1,0 +1,30 @@
+#TR#, Remove date, remove from, scenario name, TR start time, TR duration, TR owner.
+#!/bin/bash
+
+#check NS_WDIR is set or Not
+if [ "X$NS_WDIR" == "X" ];then
+    echo "NS_WDIR not set. Exiting"
+    exit 1
+fi
+
+if [ ! -d "$NS_WDIR/.recyclebin" ]; then
+     echo "Recycle Bin Directory does not exits "
+     exit 1
+fi
+
+
+cd $NS_WDIR/.recyclebin
+
+array=($(ls -d */))
+
+for i in ${array[@]}; do 
+
+	filename="$NS_WDIR/.recyclebin/$i/.remove_info"
+	tdata1=`cat $filename`
+
+	filename="$NS_WDIR/.recyclebin/$i/summary.top"
+        TR=`cut -d '|' -f 1 $filename` 
+	temp_data2=`cut -d '|' -f 2,3,15,6 $filename`
+
+	echo "$TR|$tdata1|$temp_data2"
+done

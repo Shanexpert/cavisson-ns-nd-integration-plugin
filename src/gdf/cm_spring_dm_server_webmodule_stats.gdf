@@ -1,0 +1,18 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Spring DM Server WebModule Stats|10058|vector|8|0|Application Metrics|Tier>Server>Instance|Information related to Spring DM Server WebModule Stats
+
+Graph|cacheTTL|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of cacheTTL
+Graph|startTime|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Start Time
+Graph|processingTime|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Processing Time
+Graph|unloadDelay|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Unload Delay
+Graph|tldScanTime|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Tld ScanTime
+Graph|state|6|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|state
+Graph|startupTime|7|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Startup Time
+Graph|cacheMaxSize|8|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Maximum Cache Size

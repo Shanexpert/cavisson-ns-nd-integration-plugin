@@ -1,0 +1,17 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Oracle AWR System Stats|10086|vector|8|0|Oracle Metrics|Tier>Server>Instance|Oracle Automatic Workload Repository System Statistics
+Graph|Total Table Fetches By Rowid|1|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|table fetch by rowid
+Graph|OS System Time Used (Pct)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|OS System time used
+Graph|Total Physical Writes|3|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|physical writes
+Graph|Total Table Scan Rows Gotten|4|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|table scan rows gotten
+Graph|Total Physical Reads|5|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|physical reads
+Graph|Total User Calls|6|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|user calls
+Graph|Logons Current|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|logons current
+Graph|OS User Time Used (Pct)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|OS User time used

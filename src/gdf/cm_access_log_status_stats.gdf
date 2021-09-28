@@ -1,0 +1,11 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-1|-|-1|-1|-
+
+Group|Access Log Status Code Stats|10590|vector|2|0|Application Metrics|Tier>Server>Instance>Page>Status|Stats of access log according to each HTTP status code
+Graph|AL Requests by Status Code|1|scalar|sum_4B|-|-|0|AS|-1|-1|NA|NA|Number of requests of particular HTTP status code
+Graph|AL Requests by Status Code (%)|2|scalar|sample_2B_100_count_4B|-|-|0|AS|-1|-1|NA|NA|Percentage of request of particular HTTP status code.

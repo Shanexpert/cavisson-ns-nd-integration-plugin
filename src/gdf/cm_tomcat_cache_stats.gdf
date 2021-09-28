@@ -1,0 +1,9 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Tomcat Cache Stats|10344|vector|3|0|Tomcat Metrics|Tier>Server>Instance>Cache|Tomcat Cache Stats monitors metrics related to cache used by applications running on the Apache Tomcat container.
+Graph|Tomcat Cache Hits/Sec|1|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of cache hits per second.
+Graph|Tomcat Cache Access/Sec|2|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of cache access per second.
+Graph|Tomcat Cache Size (MB)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Cache memory used by the application running in MegaBytes.

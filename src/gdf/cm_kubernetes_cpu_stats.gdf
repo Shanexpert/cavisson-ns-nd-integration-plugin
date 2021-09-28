@@ -1,0 +1,11 @@
+
+# --- GDF Version History ---
+#  1.0 - Initial version
+# GDF For Redis Rest Base Monitor
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Kubernetes Container CPU Stats|10877|vector|1|0|Kubernetes Metrics|Tier>Server>POD>Container|Kubernetes Container CPU stats.
+
+Graph|Kubernetes Container CPU Usage (Pct)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|CPU Usage of kubernetes Container in Percentage.
+

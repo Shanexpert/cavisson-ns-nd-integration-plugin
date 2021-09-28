@@ -1,0 +1,9 @@
+#Author : Dharmendra Singh
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Prometheus Kubernetes Namespace Summary Stats|10652|vector|3|0|Kubernetes Metrics|Tier>Server>PrometheusHost>Region>Zone>Namespace|Prometheus Kubernetes Container Namespace Summary stats.
+
+Graph|Prometheus Kubernetes Namespaces|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of Namespaces in Zone.
+Graph|Prometheus Kubernetes Pods|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of Pods in Namaspace.
+Graph|Prometheus Kubernetes Containers|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of Containers in Namespace.

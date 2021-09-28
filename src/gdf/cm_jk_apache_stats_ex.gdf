@@ -1,0 +1,29 @@
+# General information line
+# Info|msgVersion|numGroups|startIndex|testRun|sizeOfMsgData|interval|testRunStartDate/Time
+#
+# Group information line
+# Group|groupName|rptGrpId|groupType|numGraphs|numVectors
+#
+# Graph information line
+# Graph|graphName|rptId|graphType|dataType|graphDataIndex|formula|numVectors
+
+Info|2.0|1|-|-|-1|-1|-
+
+Group|JK Status Extended|10363|vector|17|0|NA|Tier>Server>Instance|JK Status Manager
+Graph|Worker distance|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Worker distance
+Graph|Load Balancer factor|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Load Balancer factor
+Graph|Load Balancer multiplicity|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Load Balancer multiplicity
+Graph|Load Balancer value|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Load Balancer value
+Graph|Number of requests|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of requests
+Graph|Number of requests/sec|6|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of requests per sec
+Graph|Number of failed requests|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of failed requests
+Graph|Number of client errors|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of client errors
+Graph|Number of reply timeouts (decayed)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of reply timeouts (decayed)
+Graph|Number of bytes transferred|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of bytes transferred (MB)
+Graph|Number of bytes transferred/sec|11|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of bytes transferred per sec (KB)
+Graph|Number of bytes read|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of bytes read (MB)
+Graph|Number of bytes read/sec|13|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of bytes read per sec (KB)
+Graph|Current number of busy connections|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current number of busy connections
+Graph|Maximum number of busy connections|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum number of busy connections
+Graph|Current number of backend connections|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current number of backend connections
+Graph|Seconds since last reset of statistics counters|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Seconds since last reset of statistics counters

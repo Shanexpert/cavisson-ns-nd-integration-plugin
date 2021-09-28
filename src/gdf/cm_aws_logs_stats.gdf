@@ -1,0 +1,11 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS Logs Stats|14061|vector|2|0|AWS Metrics|AccountName>Region|CloudWatch Logs enables you to centralize the logs from all of your systems, applications, and AWS services that you use, in a single, highly scalable service.
+
+Graph|AWS Logs Incoming Data (Bytes)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The volume of log events in uncompressed bytes uploaded to CloudWatch Logs.
+Graph|AWS Logs Incoming Log Events|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of log events uploaded to CloudWatch Logs.
+

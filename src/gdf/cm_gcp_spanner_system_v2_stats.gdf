@@ -1,0 +1,8 @@
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP Spanner System Stats V2|11311|vector|4|0|GCP Metrics|ProjectID>InstanceConfig>InstanceId>Location>DataBase|Spanner system stats provided metrics related to spanner system.
+
+Graph|GCP Spanner CPU Utilization (Pct)|1|scalar|sample|-|-|0|D|-1|-1|NA|MUL(G1,100)|CPU Utilization in percentage.
+Graph|GCP Spanner Session Count|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of sessions in use.
+Graph|GCP Spanner Used Size (MB)|3|scalar|sample|-|-|0|D|-1|-1|NA|DIV(G3,1048576)|Storage used in mega bytes.
+Graph|GCP Spanner Smoothed CPU utilization (Pct)|4|scalar|sample|-|-|0|D|-1|-1|NA|MUL(G4,100)|24-hour smoothed utilization of provisioned CPU in percentage.

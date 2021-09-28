@@ -1,0 +1,120 @@
+#!/bin/sh
+#----------------------------------------------------------------------
+# Name    :    nsu_gen_certificate
+# Author  :    Ankur Nath Mishra
+# Purpose :    This is a tool program to generate certificates
+#Modification History:
+#   07/29/09:  Ankur Nath Mishra - Initial Version
+#----------------------------------------------------------------------
+CUR_DIR=$NS_WDIR
+if [ "XX$CUR_DIR" == "XX" ];then
+  CUR_DIR="/home/cavisson/work"
+fi
+cd $CUR_DIR/cert
+mkdir -p $CUR_DIR/cert/newcerts
+if [ ! -f $CUR_DIR/cert/serial ];then
+  echo 10 > $CUR_DIR/cert/serial
+fi
+usage()
+{
+  echo "Error:"
+  echo "nsu_gen_cert -f <File name> -i <issuer type 1(CA)|0(Self)> -s <Subject Line in openssl x509 format>  -d <Number of days the certifacte will be valid for> [-p <passphrase for CA certificate>] -k <Key Size 1024|2048>"
+  exit -1
+}
+if [ $# == 0 ];then 
+  usage
+fi
+while getopts f:i:s:d:p:k: opt 
+do
+  case $opt in
+    f) OUT_FILE=$OPTARG
+       if [ "XX$OUT_FILE" == "XX" ];then
+         echo "Error: File name -f is mandatory field"
+         exit -1
+       fi
+       ;;
+    i) if [ "XX$OPTARG" == "XX" ];then
+         echo "Error: Issuer type '-i' is a mandatory field"
+         exit -1
+       else
+           case $OPTARG in
+             1) ISSUER="CA" ;;
+             0) ISSUER="Self" ;;
+             *) echo "Error: Wrong input for -i Issuer type, value can be 0 (Self) or 1 (CA)"
+                exit -1
+                ;;
+           esac
+       fi
+       ;; 
+    s) SUBJECT=$OPTARG
+       if [ "XX$SUBJECT" == "XX" ];then
+         echo "Subject field -s is a mandatory argument"
+         exit -1
+       fi
+       ;;
+    d) DAYS=$OPTARG
+       if [ "XX$DAYS" == "XX" ];then
+         echo "Days field -d is a mandatory argument"
+         exit -1
+       fi
+       ;;
+    p) PASS="$OPTARG" ;;
+    k) KEY="$OPTARG" 
+       if [ "XX$KEY" == "XX" ];then
+         echo "Error: Key size -k is a mandatory argument"
+         exit -1
+       else
+          if [ "XX$KEY" != "XX1024" -a "XX$KEY" != "XX2048" ];then
+            echo "Error: Key Size $KEY Not supported"
+            exit -1
+          fi
+       fi
+       ;;
+    *) usage ;;
+    ?) usage ;;
+  esac
+done
+
+#######This method is to create root.pem and root.p12
+Generate_rootCA()
+{
+  #Generate a Root CA private key--------------------->
+  #Create a self-signed certificate  
+  openssl req -x509 -nodes -subj "$SUBJECT" -extensions v3_ca -days $DAYS -newkey rsa:$KEY -keyout $1 -set_serial 01 -out $1 -passout pass:$PASS 
+  if [ $? != 0 ];then
+    echo "Error: Failed to Create Certificate"
+    exit -1
+  fi
+  echo "Self Signed Certificate Generated Sucessfully" 
+}
+
+#######This method is to create a client certificate
+Generate_client_cert()
+{
+  #Generate a certificate sign request
+  openssl req -new -subj "$SUBJECT" -nodes -keyout $1.key -out $1.csr.pem -config $CUR_DIR/cert/openssl.cnf -days $DAYS -passout pass:$PASS -batch -set_serial 02
+  if [ $? != 0 ];then
+    echo "Error: Failed to Create Certificate"
+    exit -1
+  fi
+  echo "Certificate Request Generated Sucessfully" 
+
+  #Sign the request with the Intermediate CA
+  openssl ca -out $1.cert -cert $1.root.pem -keyfile $1.root.pem -config $CUR_DIR/cert/openssl.cnf -days $DAYS -passin pass:$PASS -batch -infiles $1.csr.pem
+  if [ $? != 0 ];then
+    echo "Error: Failed to Create Certificate"
+    exit -1
+  fi
+  #Installing the Client Certificate
+  cat $1.key $1.cert > $1
+  echo "Certificate has been created"
+  rm -f $1.key $1.cert $1.csr.pem $1.root.pem
+}
+if [ "XX$ISSUER" == "XXSelf" ];then
+  Generate_rootCA $CUR_DIR/cert/$OUT_FILE
+else
+  Generate_rootCA $CUR_DIR/cert/$OUT_FILE.root.pem
+  Generate_client_cert $CUR_DIR/cert/$OUT_FILE
+fi
+
+exit 0

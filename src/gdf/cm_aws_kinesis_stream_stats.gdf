@@ -1,0 +1,21 @@
+# --- GDF Version History ---
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS Kinesis Stream Stats|11280|vector|14|0|AWS Metrics|AccountName>Region>StreamName|You can use Amazon Kinesis Data Streams to collect and process large streams of data records in real time.
+
+Graph|AWS Kinesis Bytes/GetRecordsOps|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average number of bytes per GetRecords operation.
+Graph|AWS Kinesis Get Records Iterator Age (ms)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The age of the last record in all GetRecords calls made against a shard, measured over the specified time period in milliseconds.
+Graph|AWS Kinesis Latency/GetRecordsOps|3|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average time taken per GetRecords operation in milliseconds.
+Graph|AWS Kinesis Records/GetRecordsOps|4|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average number of records per GetRecords operation.
+Graph|AWS Kinesis Successful GetRecordsOps/Stream|5|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Sum of successful GetRecords operations per stream.
+Graph|AWS Kinesis Incoming Bytes/Ops|6|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average number of bytes successfully put to the Amazon Kinesis stream per operation.
+Graph|AWS Kinesis Incoming Records|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of records sucessfully put to the Amazon Kinesis stream.
+Graph|AWS Kinesis Bytes/PutRecordOps|8|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The number of bytes put to the Kinesis stream using the PutRecord operation over the specified time period.
+Graph|AWS Kinesis Latency/PutRecordOps|9|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The time taken per PutRecord operation, measured over the specified time period in milliseconds.
+Graph|AWS Kinesis Successful PutRecordOps/Stream|10|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The number of successful PutRecord operations per Kinesis stream, measured over the specified time period.
+Graph|AWS Kinesis Records/PutRecordsOps|11|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average number of records per PutRecords operation.
+Graph|AWS Kinesis Successful PutRecordsOps/Stream|12|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Sum of successful PutRecords operations per Amazon Kinesis stream.
+Graph|AWS Kinesis Write Provisioned Throughput|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of records rejected due to throttling for the stream.
+Graph|AWS Kinesis Read Provisioned Throughput|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of GetRecords calls throttled for the stream.

@@ -1,0 +1,17 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+# ObjectName :org.apache.cassandra.db:type=Caches
+info|3.1|1|-|-|-1|-1|-
+Group|Apache Cassandra Database Cache|14120|vector|6|0|Apache Cassandra Metrics|Tier>Server>Instance|This stats gives information about database cache of apache cassandra.
+#Graphs
+Graph|Apache Cassandra Database Key Cache Save Period(sec)|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The amount of time the key cache is kept in memory.
+Graph|Apache Cassandra Database Key Cache Keys To Save|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of keys from the key cache to save to the saved caches directory.
+Graph|Apache Cassandra Database Row Cache Save Period(sec)|3|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The amount of time cache save period for rows.
+Graph|Apache Cassandra Database Row Cache Keys To Save|4|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of keys from the row cache to save to the saved caches directory.
+Graph|Apache Cassandra Database Counter Cache Save Period(sec)|5|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The amount of time after which Cassandra should save the counter cache (keys only).
+Graph|Apache Cassandra Database Counter Cache Keys To Save |6|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of keys from the counter cache to save to the saved caches directory.
+
+

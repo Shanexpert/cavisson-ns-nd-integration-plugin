@@ -1,0 +1,48 @@
+# --- GDF Version History ---
+#  1.0 - Initial version
+#  2.0 - Change done for match Long_data and Long_long_data to double
+#  3.0 - Changes done for Dynamic data in Execution GUI
+#  3.1 - Use future1 field of group line for Metric group name
+#
+#
+# Note: Please Use the Group Name and Graph Name having no special character like {%, !, ^, &, + } etc..
+
+# General information line
+# Info|msgVersion|numGroups|startIndex|testRun|sizeOfMsgData|interval|testRunStartDate/Time
+#
+# Group information line
+# Group|groupName|rptGrpId|groupType|numGraphs|numVectors
+#
+# Graph information line
+# Graph|graphName|rptId|graphType|dataType|graphDataIndex|formula|numVectors
+#
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Cache Stats|10152|vector|19|0|Application Metrics|Tier>Server>Instance>App|Virtual Memory Stat
+
+Graph|Local Entries|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|localEntries
+Graph|Weak Entries|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|weak Entries
+
+Graph|Local Cache Size|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|local cache size
+Graph|Used Ratio|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|used ratio 
+Graph|Total Hits|5|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|total hits
+Graph|Total Misses|6|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|total misses
+Graph|Ratio|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|ratio
+
+Graph|Local Hits|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|local hits
+Graph|Local Misses|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|local misses
+
+Graph|Weak Hits|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|weak hits
+Graph|Weak Misses|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|weak misses
+
+Graph|Cache Invalidations|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|cache invalidations
+Graph|Entry Invalidations|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|entry incalidations
+
+Graph|Local Culls|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|local culls
+Graph|Local Items Culled|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|local items culled
+Graph|Local Max Culled|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|local Max Culled
+Graph|Weak Culls|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|weak culls
+Graph|Weak Items Culled|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|weak items culled
+Graph|Weak Max Culled|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|weak max culled
+

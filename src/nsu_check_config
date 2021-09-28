@@ -1,0 +1,210 @@
+#!/bin/sh
+
+TEST=0
+
+#Set it is not set for main controller
+if [ "X$HPD_CMD" == "X" ]; then
+  HPD_CMD=hpd
+fi
+
+if [ "XX$NS_WDIR" == "XX" ];then
+	echo "NS_WDIR is not defined"
+	exit 3
+fi
+
+check_cavisson_autostart ()
+{
+    /sbin/chkconfig --list cavisson >/dev/null 2>&1
+    if [ $? -ne 0 ];then
+	echo "cavisson not configured for auto start on reboot"
+	TEST=1
+    fi
+}
+
+check_db()
+{
+    #Check if Postgres running, if not start it
+    pgrep postmaster >/dev/null 2>&1
+    if [ $? -ne 0 ];then
+	echo "Database not running"
+	TEST=1
+    fi
+    #configure for autostart
+    /sbin/chkconfig --list postgresql >/dev/null 2>&1
+    if [ $? -ne 0 ];then
+	echo "Database not configured for auto start on reboot"
+	TEST=1
+    fi
+}
+
+check_cmon()
+{
+    #Check if cmon running, if not start it
+    NUM=`ps -lef | grep java | grep -c CavMonAgent`
+    if [ $NUM == 0 ];then
+        echo "CavMonAgent is not running"
+        TEST=1
+    fi
+    #cinfigure for autostart
+    /sbin/chkconfig --list cmon >/dev/null 2>&1
+    if [ $? -ne 0 ];then
+        echo "CavMonAgent is not configured for auto start on reboot"
+        TEST=1
+    fi
+}
+
+check_tomcat()
+{
+    #Check if tomcat running, if not start it
+    NUM=`ps -lef | grep -w tomcat | grep -c "$NS_WDIR "`
+    if [ $NUM -eq 0 ];then
+	echo "Tomcat is not running"
+	TEST=1
+    fi
+    #configure for autostart
+    /sbin/chkconfig --list $TOMCAT_CMD >/dev/null 2>&1 
+    if [ $? -ne 0 ];then
+	echo "Tomcat is not configured for auto start on reboot" 
+	TEST=1 
+    fi
+}
+
+check_common_yes()
+{
+  check_cavisson_autostart
+  check_db
+  check_cmon
+  check_tomcat
+}
+
+#check con from ns to no
+check_ns_con ()
+{
+    ping -c 1 $SRAdminIP >/dev/null 2>&1
+    if [ $? -ne 0 ];then
+	echo "Unable to connect to Server Admnin IP $SRAdminIP"
+	TEST=1	
+    fi
+
+    ping -c 1 -I $NSAdminIP $SRAdminIP >/dev/null 2>&1
+    if [ $? -ne 0 ];then
+	echo "Unable to connect to Server Admnin IP $SRAdminIP from Source NetStorm Admin IP $NSAdminIP"
+	TEST=1	
+    fi
+}
+
+#check con from no to ns
+check_no_con ()
+{
+    ping -c 1 $NSAdminIP >/dev/null 2>&1
+    if [ $? -ne 0 ];then
+	echo "Unable to connect to NetStorm Admnin IP $NSAdminIP"
+	TEST=1	
+    fi
+
+    ping -c 1 -I $SRAdminIP $NSAdminIP >/dev/null 2>&1
+    if [ $? -ne 0 ];then
+	echo "Unable to connect to NetStorm Admnin IP $NSAdminIP from Source NetOcean Admin IP $SRAdminIP"
+	TEST=1	
+    fi
+}
+
+#Give error if not running
+check_netocean_yes ()
+{
+    #Check if hpd running, if not start it
+    ps -lef | grep -v grep | grep $HPD_ROOT/bin/nsu_hpd >/dev/null
+    if [ $? -ne 0 ];then
+	echo "hpd not running"
+	TEST=1
+    fi
+    #cinfigure for autostart
+    /sbin/chkconfig --list $HPD_CMD >/dev/null 2>&1
+    if [ $? -ne 0 ];then
+	echo "$HPD_CMD not configured for auto start on reboot"
+	TEST=1
+    fi
+
+}
+
+#Give error if running
+check_netocean_no ()
+{
+    #Check if hpd running, if not start it
+    ps -lef | grep -v grep | grep $HPD_ROOT/bin/nsu_hpd >/dev/null
+    if [ $? -eq 0 ];then
+	echo "hpd running while it should not"
+	TEST=1
+    fi
+    #cinfigure for autostart
+    /sbin/chkconfig --list $HPD_CMD >/dev/null 2>&1
+    if [ $? -eq 0 ];then
+	echo "$HPD_CMD should not be configured for auto start on reboot"
+	TEST=1
+    fi
+    
+}
+
+if [ ! -f  $HOME_DIR/etc/cav.conf ];then
+    echo "$HOME_DIR/etc/cav.conf is missing"
+    exit 1
+fi
+
+CONFIG=`$NS_WDIR/bin/nsi_show_config`
+
+NSAdminIF=`cat $HOME_DIR/etc/cav.conf | grep NSAdminIF | awk '{print $2}'`
+NSAdminIP=`cat $HOME_DIR/etc/cav.conf | grep NSAdminIP | awk '{print $2}' | awk -F / '{print $1}'`
+NSAdminGW=`cat $HOME_DIR/etc/cav.conf | grep NSAdminGW | awk '{print $2}'`
+NSLoadIF=`cat $HOME_DIR/etc/cav.conf | grep NSLoadIF | awk '{print $2}'`
+SRAdminIF=`cat $HOME_DIR/etc/cav.conf | grep SRAdminIF | awk '{print $2}'`
+SRAdminIP=`cat $HOME_DIR/etc/cav.conf | grep SRAdminIP | awk '{print $2}' | awk -F / '{print $1}'`
+SRAdminGW=`cat $HOME_DIR/etc/cav.conf | grep SRAdminGW | awk '{print $2}'`
+SRLoadIF=`cat $HOME_DIR/etc/cav.conf | grep SRLoadIF | awk '{print $2}'`
+
+if [ $CONFIG == 'NS>NO' ];then
+    echo "This is the NetStorm of NetStorm/NetOcean pair installation"
+    check_common_yes
+    check_ns_con
+    check_netocean_no
+elif [ $CONFIG == 'NS+NO' ];then
+    echo "This is the test NetStorm/NetOcean configuration"
+    check_ns_con
+    check_no_con
+    check_netocean_yes
+elif [ $CONFIG == 'NS' -o $CONFIG == 'ED'  -o $CONFIG == 'NDE' ];then
+    echo "This is the stand-alone NetStorm configuration"
+    check_ns_con
+    check_netocean_no
+elif [ $CONFIG == 'NCH' ];then
+    echo "This is the stand-alone NetChannel configuration"
+    check_common_yes
+    check_ns_con
+    check_netocean_no
+elif [ $CONFIG == 'NO' ];then
+    echo "This is the NetOcean of NetStorm/NetOcean pair installation"
+    check_no_con
+    check_netocean_yes
+elif [ $CONFIG == 'NV' ];then
+    echo "This is the test NetVision configuration"
+    check_common_yes
+    check_ns_con
+    check_no_con
+    check_netocean_yes
+elif [ $CONFIG == 'NC' ];then
+    echo "This is the test NetCloud configuration"
+    check_common_yes
+    check_ns_con
+    check_netocean_no
+else
+    echo "Invalid Cavisson Config: $CONFIG. Valid values are NS, NO, NV, NCH, NS+NO or NS>NO"
+    exit 2
+fi
+
+if [ $TEST -eq 1 ];then
+    echo "System is NOT working as per configuration"
+    echo "Use nsu_configure -n to set the system working as per configuration"
+    exit 1
+else
+    echo "System is working as per configuration"
+    exit 0
+fi

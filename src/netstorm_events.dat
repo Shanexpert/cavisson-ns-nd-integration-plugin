@@ -1,0 +1,167 @@
+#--------------------------------------------------------------------------------------------------------------
+# Name: netstorm_events.dat
+# Purpose:
+# This file contains list of Event ID, Event Name, Attribute Name List with Seperator (Not yet decided may be
+# ',' seperated), Future1, Future2, Future3, Future4 and Event description, all fields should be | separated.
+# 
+# Format:
+# Event ID|Event Name|Attribute Name List|Filtering Mode|Mode Based Param|Future1|Future2|future3|Future4|Event Description
+#
+# Where
+#   Event ID is the event number. This should be unique
+#   Event Name is the name of an event. Depends upon event id there should be some fixed event name.
+#   Attribute Name List contains atrribute of an event like Machine, Monitor, Process  
+#   Filtering Mode is used to specify which event filtering  apply to particular event id.
+#   	#define NS_EVENT_NO_FILTER     0
+#   	#define NS_EVENT_STATE_FILTER  1
+#   	#define NS_EVENT_COUNT_FILTER  2
+#   	#define NS_EVENT_TIME_FILTER   3
+#   	#define NS_EVENT_ALL_FILTER    9
+#
+#   Mode Based parameter shoub be count or time. Its based on Filtering Mode. If Filtering mode 0 and 1 then it
+#   should be NA. If Filtering mode 2 then its should be 'count' if Filtering mode 3 then it should be 'time'
+#   Future1 for future use
+#   Future2 for future use
+#   Future3 for future use
+#   Future4 for future use
+#   Event Description is the detail description of an event. Like "Sending message to server" 
+#
+# Example
+#   |For Standard Monitor 
+#       |Event Id : 1000-5000
+#   |For Custom Monitor ?? How to know which custom monitor?
+#       |Event Id : 5001-1000  
+#
+#--------------------------------------------------------------------------------------------------------------
+#Data Monitor Events
+1|Data Monitor Invalid Data|Server,Gdf,Vector|3|900000|NA|NA|NA|NA|General events of diffrent monitors
+2|Data Monitor Error events|Server,Gdf,Vector|3|300000|NA|NA|NA|NA|Error events of diffrent monitors
+3|Data Monitor API events|Server,Gdf,Vector|0|NA|NA|NA|NA|NA|Events from event API called from Monitors/LPS
+4|Data Monitor General events|Server,Gdf,Vector|0|NA|NA|NA|NA|NA|Error events of diffrent monitors
+
+11|Check Monitor Error events|Server,Type,Monitor Name|3|900000|NA|NA|NA|NA|General events of diffrent monitors
+12|Check Monitor Event Log events|Server,Type,Monitor Name|3|300000|NA|NA|NA|NA|Error events of diffrent monitors
+13|Check Monitor General events|Server,Type,Monitor Name|0|NA|NA|NA|NA|NA|Error events of diffrent monitors
+
+25|NetStorm Init events|File,Function|0|NA|NA|NA|NA|NA|NetStorm init events
+26|NetStorm Script API events|Script,Page|3|10000|NA|NA|NA|NA|Event API
+
+30|Connection Failure|Server,Client,Error|3|10000|NA|NA|NA|NA|Connection Failure
+31|Internet Simulation Kernel Call Failure|Operation|3|10000|NA|NA|NA|NA|Internet Simulation Failure
+
+50|NTLM Authorization Failure|File,Function|0|NA|NA|NA|NA|NA|NTLM Authorization Failure
+51|NTLM Error|File,Function|0|NA|NA|NA|NA|NA|NTLM Error
+
+70|Transaction errors|Script,Transaction|3|10000|NA|NA|NA|NA|Transaction errors
+71|Transaction errors|Script|3|10000|NA|NA|NA|NA|Transaction errors
+
+72|Http Cache|Url,Function Name|3|10000|NA|NA|NA|NA|Error in cache
+81|Runtime changes OK|Keyword,KeywordValue|0|NA|NA|NA|NA|NA|Run time changes in a test run
+82|Runtime changes Error|Keyword,KeywordValue|0|NA|NA|NA|NA|NA|Run time changes in a test run
+
+99|Filter Event|-|0|NA|NA|NA|NA|NA|Filter Event
+
+#JavaScript Events
+100|EID_JS_EVALUATE_SCRIPT|Script,Page,Function Name|3|10000|NA|NA|NA|NA|Java Script error in evaluating
+101|EID_JS_URL_NOT_IN_CACHE|Script,Page|3|10000|NA|NA|NA|NA|URL not found in cache
+102|EID_JS_DECOMPRESS|Script,Page|3|10000|NA|NA|NA|NA|Error in decompressing the URL contents.
+103|EID_JS_INVALID_URL|Script,Page,Embedded Url|3|10000|NA|NA|NA|NA|URL is not in good format
+104|EID_JS_XML_ERROR|Script,Page|3|10000|NA|NA|NA|NA|XML Error
+105|EID_JS_ERROR|Script,Page,Main Url,JS Id,JS Url|3|10000|NA|NA|NA|NA|Java script error
+106|EID_JS_DOM|Script,Page|3|10000|NA|NA|NA|NA|Error in DOM
+107|EID_JS_ENGINE|Script,Page|3|10000|NA|NA|NA|NA|Error in java script engine
+108|EID_JS_CALL_FUNCTION_FAILED|Script,Page,Function Name|3|10000|NA|NA|NA|NA|Error Setting up element in JS 
+109|EID_JS_NEW_STRING_COPY|Script,Page,Function Name|3|10000|NA|NA|NA|NA|Error in copy new string 
+
+251|EID_VUSER_CTX|UserId|3|10000|NA|NA|NA|NA|User Context Switch events.
+252|EID_VUSER_THREAD|File,Function|3|10000|NA|NA|NA|NA|User Thread Context events.
+
+#Host related events
+301|EID_DYNAMIC_HOST|Script,Page,Host|3|60000|NA|NA|NA|NA|Event log for dynamic host
+#
+#Logging data related events
+401|EID_LOGGING_BUFFER|File,Function|3|10000|NA|NA|NA|NA|Logging data events
+#
+#Logging NDCollector related events
+501|EID_NDCOLLECTOR|NDCollector|0|NA|NA|NA|NA|NA|This for NDCollector.
+#
+#Logging Connection Handling related events
+601|EID_CONN_HANDLING|File,Function|0|NA|NA|NA|NA|NA|Logging info events for connection handling
+#Misc Events
+# Event ID|Event Name|Attribute Name List|Filtering Mode|Mode Based Param|Future1|Future2|future3|Future4|Event Description
+701|EID_MISC|File,Function|0|NA|NA|NA|NA|NA|Logging events for Misc errors
+#
+#URL ERROR IDs Do 10 Seconds 
+1001|MiscErr|Script,Page,Server,Url|3|10000|NA|NA|NA|NA|MiscErr
+1002|1xx|Script,Page,Server,Url|3|10000|NA|NA|NA|NA|1xx
+1003|2xx|Script,Page,Server,Url|3|10000|NA|NA|NA|NA|2xx
+1004|3xx|Script,Page,Server,Url|3|10000|NA|NA|NA|NA|3xx
+1005|4xx|Script,Page,Server,Url|3|10000|NA|NA|NA|NA|4xx
+1006|5xx|Script,Page,Server,Url|3|10000|NA|NA|NA|NA|5xx
+1007|BadBytes|Script,Page,Server,Url|3|10000|NA|NA|NA|NA|BadBytes
+1008|T.O|Script,Page,Server,Url|3|10000|NA|NA|NA|NA|T.O
+1009|ConFail|Script,Page,Server,Url|3|10000|NA|NA|NA|NA|ConFail
+1010|ClickAway|Script,Page,Server,Url|3|10000|NA|NA|NA|NA|ClickAway
+1011|WriteFail|Script,Page,Server,Url|3|10000|NA|NA|NA|NA|WriteFail
+1012|SSLWriteFail|Script,Page,Server,Url|3|10000|NA|NA|NA|NA|SSLWriteFail
+1013|SSLHshakeFail|Script,Page,Server,Url|3|10000|NA|NA|NA|NA|SSLHshakeFail
+1014|IncompleteExact|Script,Page,Server,Url|3|10000|NA|NA|NA|NA|IncompleteExact
+1015|NoRead|Script,Page,Server,Url|3|10000|NA|NA|NA|NA|NoRead
+1016|BadHdr|Script,Page,Server,Url|3|10000|NA|NA|NA|NA|BadHdr
+1017|BadBodyNoSize|Script,Page,Server,Url|3|10000|NA|NA|NA|NA|BadBodyNoSize
+1018|BadBodyChunked|Script,Page,Server,Url|3|10000|NA|NA|NA|NA|BadBodyChunked
+1019|BadBodyConLen|Script,Page,Server,Url|3|10000|NA|NA|NA|NA|BadBodyConLen
+1020|Reload|Script,Page,Server,Url|3|10000|NA|NA|NA|NA|Reload
+1021|Stopped|Script,Page,Server,Url|3|10000|NA|NA|NA|NA|Stopped
+1022|BadResponse|Script,Page,Server,Url|3|10000|NA|NA|NA|NA|BadResponse
+1023|MailBoxErr|Script,Page,Server,Url|3|10000|NA|NA|NA|NA|MailBoxErr
+1024|MailBoxStorageErr|Script,Page,Server,Url|3|10000|NA|NA|NA|NA|MailBoxStorageErr
+1025|AuthFail|Script,Page,Server,Url|3|10000|NA|NA|NA|NA|AuthFail
+1026|UseOnceDataOver|Script,Page,Server,Url|3|10000|NA|NA|NA|NA|UseOnceDataIsOverErr
+1027|BindFail|Script,Page,Server,Url|3|10000|NA|NA|NA|NA|BindFail
+1028|DNSLookUpFail|Script,Page,Server,Url|3|10000|NA|NA|NA|NA|DNSLookUpFail
+1029|Undef29|Script,Page,Server,Url|3|10000|NA|NA|NA|NA|Undef29
+1030|Undef30|Script,Page,Server,Url|3|10000|NA|NA|NA|NA|Undef30
+1031|Undef31|Script,Page,Server,Url|3|10000|NA|NA|NA|NA|Undef31
+#PAGE ERROR IDS
+5032|UrlErr|Script,Page,Server|3|10000|NA|NA|NA|NA|UrlErr
+5033|CVFail|Script,Page,Server,CheckSpec|3|10000|NA|NA|NA|NA|CVFail
+5034|UnCompFail|Script,Page,Server|3|10000|NA|NA|NA|NA|UnCompFail
+5035|SizeTooSmall|Script,Page,Server|3|10000|NA|NA|NA|NA|SizeTooSmall
+5036|SizeTooBig|Script,Page,Server|3|10000|NA|NA|NA|NA|SizeTooBig
+5037|Undef37|Script,Page,Server|3|10000|NA|NA|NA|NA|Undef37
+5038|Undef38|Script,Page,Server|3|10000|NA|NA|NA|NA|Undef38
+5039|Undef39|Script,Page,Server|3|10000|NA|NA|NA|NA|Undef39
+5040|Undef40|Script,Page,Server|3|10000|NA|NA|NA|NA|Undef40
+5041|Undef41|Script,Page,Server|3|10000|NA|NA|NA|NA|Undef41
+5042|Undef42|Script,Page,Server|3|10000|NA|NA|NA|NA|Undef42
+5043|Undef43|Script,Page,Server|3|10000|NA|NA|NA|NA|Undef43
+5044|Undef44|Script,Page,Server|3|10000|NA|NA|NA|NA|Undef44
+5045|Undef45|Script,Page,Server|3|10000|NA|NA|NA|NA|Undef45
+5046|Undef46|Script,Page,Server|3|10000|NA|NA|NA|NA|Undef46
+5047|Undef47|Script,Page,Server|3|10000|NA|NA|NA|NA|Undef47
+5048|Undef48|Script,Page,Server|3|10000|NA|NA|NA|NA|Undef48
+5049|Undef49|Script,Page,Server|3|10000|NA|NA|NA|NA|Undef49
+5050|Undef50|Script,Page,Server|3|10000|NA|NA|NA|NA|Undef50
+5051|Undef51|Script,Page,Server|3|10000|NA|NA|NA|NA|Undef51
+5052|Undef52|Script,Page,Server|3|10000|NA|NA|NA|NA|Undef52
+5053|Undef53|Script,Page,Server|3|10000|NA|NA|NA|NA|Undef53
+5054|Undef54|Script,Page,Server|3|10000|NA|NA|NA|NA|Undef54
+5055|Undef55|Script,Page,Server|3|10000|NA|NA|NA|NA|Undef55
+5056|Undef56|Script,Page,Server|3|10000|NA|NA|NA|NA|Undef56
+5057|Undef57|Script,Page,Server|3|10000|NA|NA|NA|NA|Undef57
+5058|Undef58|Script,Page,Server|3|10000|NA|NA|NA|NA|Undef58
+5059|Undef59|Script,Page,Server|3|10000|NA|NA|NA|NA|Undef59
+5060|Undef60|Script,Page,Server|3|10000|NA|NA|NA|NA|Undef60
+5061|Undef61|Script,Page,Server|3|10000|NA|NA|NA|NA|Undef61
+5062|Undef62|Script,Page,Server|3|10000|NA|NA|NA|NA|Undef62
+5063|Undef63|Script,Page,Server|3|10000|NA|NA|NA|NA|Undef63
+#
+6001|DOS Attack|SourceIP,SourcePort,DestIP,DestPort|3|10000|NA|NA|NA|NA|DOS Attack event
+#
+#
+7001|EID_SP_RELEASE|GroupName,SyncPointType,SyncPointName,ReleaseCount|0|NA|NA|NA|NA|NA|EID_SP_RELEASE event
+7002|EID_SP_ADD_USER|GroupName,SyncPointType,SyncPointName,ReleaseCount|3|10000|NA|NA|NA|NA|EID_SP_ADD_USER event
+7003|EID_SP_RUNTIME_CHANGE|GroupName,SyncPointType,SyncPointName,ReleaseCount|3|10000|NA|NA|NA|NA|EID_SP_RUNTIME_CHANGE event
+7004|EID_SP_TIMEOUT|GroupName,SyncPointType,SyncPointName,ReleaseCount|3|10000|NA|NA|NA|NA|EID_SP_TIMEOUT event
+7005|EID_SP_ADD_FIRST_OR_LAST_USER|GroupName,SyncPointType,SyncPointName,ReleaseCount|0|NA|NA|NA|NA|NA|EID_SP_ADD_LAST_USER event

@@ -1,0 +1,17 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# General information line
+# Info|msgVersion|numGroups|startIndex|testRun|sizeOfMsgData|interval|testRunStartDate/Time
+#
+# Group information line
+# Group|groupName|rptGrpId|groupType|numGraphs|numVectors
+#
+# Graph information line
+# Graph|graphName|rptId|graphType|dataType|graphDataIndex|formula|numVectors
+#
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Cert Expiry Stats|10548|vector|1|0|Domain Metrics|Domain>Region|Certificate Expiry Left
+
+Graph|Cert Expiry Days Left|1|scalar|sample|-|None|0|NA|-1|-1|NA|NA|Certificate Expiry Left In Days.
+

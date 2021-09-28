@@ -1,0 +1,115 @@
+#!/bin/bash
+
+# Including nsi_db_utils
+. $NS_WDIR/bin/nsi_db_utils
+
+#Clean cache directory
+clean_cache_dir $1
+
+BASE_DIR=""
+CSV_ARRAY="NDAppLogs.csv  NDSQLRecord.csv  NDSQL.csv  NDBCIArg.csv  NDMetaData.csv  NDFlowPath.csv  NDTier.csv  NDAppServer.csv  NDAppInstance.csv NDFunctionalGroup.csv NDURLTable.csv NDURLRecord.csv"
+MISSING_FILE=""
+LC_FLAG=0
+
+#Checking Test number is valid or not
+if [ -d $PWD/TR$1 ]; then
+  BASE_DIR=$PWD
+elif [ -d $NS_WDIR/logs/TR$1 ]; then
+  BASE_DIR=$NS_WDIR/logs
+else
+  echo "Error: Test run number $1 is not a valid test run number"
+  exit -1
+fi
+
+
+#count the total lines in csv files
+echo
+INSTANCE_CSV_DIR=(`cd $BASE_DIR/TR$1; ls -Frt nd/csv | grep '/' | cut -d '/' -f 1 |  tr '\n' ' '`)
+NUM_INSTANCE_DIR=${#INSTANCE_CSV_DIR[@]}
+echo "TOTAL Number of Instances are : " $NUM_INSTANCE_DIR
+echo 
+echo 
+echo "ndu_import: Counting number of lines in individual csv files ..."
+echo "-------------------------------------------------------------------"
+printf "%30s  %13s\n" "csv file" "num of lines"
+echo "-------------------------------------------------------------------"
+
+
+for csv in $CSV_ARRAY
+do
+ FLG=0
+ T_LC=0
+ FILE_FOUND=0
+ for (( i = 0; i<$NUM_INSTANCE_DIR; i++ ))
+   do  
+   if [  -f $BASE_DIR/TR$1/nd/csv/${INSTANCE_CSV_DIR[$i]}/$csv  ]; then
+     LC=`wc -l $BASE_DIR/TR$1/nd/csv/${INSTANCE_CSV_DIR[$i]}/$csv|awk '{print $1}'`
+     FILE_FOUND=1
+     T_LC=`expr $T_LC + $LC`
+     LC=0
+     FLG=1
+   fi
+   done
+   if [ "$FLG" -eq 1 ]  
+     then
+       #echo "Total lines in file $csv = $T_LC."
+       printf "%30s  %10d\n" $csv $T_LC
+   
+   else
+
+     if [ $FILE_FOUND = 0 ]; then
+       if [ -f $BASE_DIR/TR$1/nd/csv/$csv  ]; then
+         LC=`wc -l $BASE_DIR/TR$1/nd/csv/$csv|awk '{print $1}'`
+         #echo "Total lines in file $csv = $LC."
+         printf "%30s  %10d\n" $csv $LC
+
+       else
+         MISSING_FILE=$csv
+         #echo "Error: $MISSING_FILE file not found in the test run directory."
+         printf "%30s  %25s\n" $csv "*** FILE NOT FOUND ***"
+
+       fi
+     fi
+   fi
+ done
+ echo "-------------------------------------------------------------------"
+ if [ "X$MISSING_FILE" != "X" ]; then
+   echo "ndu_import: Exiting because mandatory file $MISSING_FILE not present in the test run directory."
+   exit -1
+ fi
+ echo "ndu_import: ... Done counting number of lines in individual csv files ..."
+
+echo
+echo "ndu_import: Creating netdiagnostics tables ..."
+. ndu_create_table $1
+echo "ndu_import: ... Done creating netdiagnostics tables."
+
+#We pass -T 0 for AUTO mode
+#Here 2 is the mode for importing only ND data
+#Number of threads depend on number of CPU in system
+echo "nsi_import_db -t $1 -n 2 "
+nsi_import_db -t $1 -n 2 -T 0
+
+sleep 2
+
+
+
+echo
+
+echo
+echo "ndu_import: Checking number of records in all tables ..."
+psql test cavisson <<+
+    SELECT count(*) AS NDTier_$1                               FROM NDTier_$1;
+    SELECT count(*) AS NDAppServer_$1                          FROM NDAppServer_$1;
+    SELECT count(*) AS NDAppInstance_$1                        FROM NDAppInstance_$1;
+    SELECT count(*) AS NDFunctionalGroup_$1                    FROM NDFunctionalGroup_$1;
+    SELECT count(*) AS NDFlowPath_$1                           FROM FlowPath_$1;
+    SELECT count(*) AS NDMetaData_$1                           FROM MetaData_$1;
+    SELECT count(*) AS NDAppLogs_$1                            FROM NDAppLogs_$1;
+    SELECT count(*) AS NDSQL_$1                                FROM NDSQL_$1;
+    SELECT count(*) AS NDSQLRecord_$1                          FROM NDSQLRecord_$1;
+    SELECT count(*) AS NDBCIArg_$1                             FROM NDBCIArg_$1;
+    SELECT count(*) AS NDAutoSensorHotSpotThreads_$1           FROM NDAutoSensorHotSpotThreads_$1;
+    SELECT count(*) AS URLTable_$1                             FROM URLTable_$1;
+    SELECT count(*) AS URLRecord_$1                            FROM URLRecord_$1;
++

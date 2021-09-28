@@ -1,0 +1,1116 @@
+#!/bin/sh
+#
+# Name: ts_run 
+# Author: Achint
+# Purpose: To run testsuite
+#
+# Usage:  See Usage method below in the code
+#
+# Exit Values:
+#  0 - Sucessful
+#  1 - Usage Error and other errors
+# Modification History:
+#   08/30/07: Achint - Initial Version
+#   12/06/07:Megha: Add support for running in master mode  using -l option
+#   04/07/08:Arun : Add support for spec mode 2
+#   
+#Pending
+# - Allow only one TSR 
+# - Report Format (Later)
+# - Mail is going only on gmail domain
+
+#It will be set in site.env
+export TS_CONTROLLER_LIST=""
+# Including the ts_param_substitution
+. $NS_WDIR/bin/ts_vars_subs_lib
+if [ -f $NS_WDIR/sys/site.env ]; then . $NS_WDIR/sys/site.env ; fi
+
+. $NS_WDIR/bin/sendmail_utils
+#Atul: Resolve bug id 18047 -In test suit the below environment variable was not setting in case of chrome 40.hence added it here.
+export CHROME_DEVEL_SANDBOX=/usr/local/sbin/chrome-devel-sandbox
+
+
+#************************************************************************************************
+#default workspace
+DW="admin"
+#default profile
+DP="default"
+WORKSPACE=""
+PROFILE=""
+#WORK_PROFILE ==> WORKSPACE + PROFILE
+#WORK_PROFILE=$DW/$DP
+NS_TA_DIR=""
+NS_RTA_DIR="workspace"
+#************************************************************************************************
+
+trap 'on_stopping_forcefully; exit -1' 1 2 3 4 5 6 13 15
+
+TEST_SUITE_NAME_WITH_PATH=""
+TEST_START_CMD="nsu_start_test" 
+INVOKER=""
+GUI_USER=""
+ROLE=""
+IP_ADDR=`cat $HOME/etc/cav.conf | grep "^NSAdminIP" | cut -d" " -f2 | cut -d/ -f1`
+TOMCAT_FILE=`ps -ef | grep tomcat | grep -w $NS_WDIR  | awk -F 'Dcatalina.home=' '{print $2}' | cut -d ' ' -f 1`
+TOMCAT_PORT=`grep "Connector port=" $TOMCAT_FILE/conf/server.xml | grep -v "SSLEnabled=" | grep -v "AJP" | grep -v "\-\-" | cut -d '"' -f 2`
+IP_ADDR=`echo $IP_ADDR:$TOMCAT_PORT`
+#tx_am.conf file with its path in the test directory. Added by Anuj Sharma
+TX_AM_CONF_PATH=$TEST_DIR_PATH/$TX_AM_CONF
+check_status=0
+CTRLOPT="Any"
+CONTROLLER_CONFIG_FILE="$HOME/etc/cav_controller.conf"
+READ_PROFILE=1
+ADDITIONAL_KW="NA"
+
+check_controller_status()
+{
+  CTRL_STATUS="Available" 
+  ts_pid_file="/home/cavisson/$1/.tmp_ts/.ts_pid"
+  if [ -f $ts_pid_file ]; then
+    ts_pid=`cat $ts_pid_file`
+    if [ "X$ts_pid" != "X" ]; then
+      ts_status=`ps -p $ts_pid > /dev/null;echo $?`
+      if [ $ts_status == 0 ]; then
+        #Running
+        process_name=`ps -p $ts_pid | awk '{print $4}' | awk 'NR==2'`
+        if [ $process_name == "ts_run" ]; then
+          #testsuite is running
+          CTRL_STATUS="Unavailable"
+          return;
+        fi
+      fi
+    fi
+  fi
+}
+
+choose_controller()
+{
+  IFS=',' read -r -a ctrl_list <<< "$TS_CONTROLLER_LIST"
+  while [ 1 ]
+  do
+    for ctrl_name in "${ctrl_list[@]}"
+    do
+      ctrl_exist=`cat $CONTROLLER_CONFIG_FILE | awk -F '|' '{print $1}'|grep -wc $ctrl_name`
+      if [ $ctrl_exist == 1 ]; then
+        check_controller_status $ctrl_name
+        if [ $CTRL_STATUS == "Available" ]; then
+          export NS_WDIR="/home/cavisson/$ctrl_name"
+          return;
+        fi
+      fi	
+    done
+    sleep 60
+  done 
+}
+
+#reading the check_status_using_profile file
+read_check_status_using_profile()
+{
+  echo "read_check_status_function_called"
+  FILE_NAME="$NS_TA_DIR/$PROJECT_NAME/$SUB_PROJ_NAME/testcases/$TEST_CASE_NAME/check_status_using_profile"
+  check_status=0;
+
+  temp_run_post=`grep ^RUN_POST_SCRIPT_ON_FAILURE $FILE_NAME| awk '{print $2}'`
+  if [ $READ_PROFILE -eq 1 ];then
+    GUI_HTML_REPORT=`sh $NS_WDIR/bin/nsi_check_tr_using_profile --t $TEST_RUN_NUM --f $PROJECT_NAME/$SUB_PROJ_NAME/$TEST_CASE_NAME/check_status_using_profile --i $IP_ADDR --c $LOG_CYCLE_DIR_NAME --n $TESTCASE_IDX --s $TEST_SUITE_NAME --u $GUI_USER --d $wPARGS`
+  check_status=$?
+  
+    if [ -f $NS_WDIR/logs/TR${TEST_RUN_NUM}/TestSuiteStatus.data ];then
+      Status_Report=`cat $NS_WDIR/logs/TR${TEST_RUN_NUM}/TestSuiteStatus.data | cut -d ':' -f2`
+      echo "Overall_Report_Status = $Status_Report"
+    fi
+
+  fi  
+  
+  cp $NS_WDIR/webapps/netstorm/images/Fail.png $NS_WDIR/webapps/netstorm/images/logo.png $NS_WDIR/webapps/netstorm/images/Pass.png $NS_WDIR/webapps/netstorm/images/star-16.png $NS_WDIR/webapps/netstorm/images/star_off-16.png $NS_WDIR/webapps/netstorm/images/Graph-icon.png $NS_WDIR/logs/TR$TEST_RUN_NUM/ready_reports
+  echo "TestSuite Pdf Report Path: $NS_WDIR/logs/TR$TEST_RUN_NUM/ready_reports/testsuite_report_$TEST_RUN_NUM.pdf"
+  #echo $GUI_HTML_REPORT
+  #Bug 81985 :Send Report Via Mail
+  MAIL_CONF=${TEST_CASE_DIR}/mail_configuration
+  REPORT_FILE=$NS_WDIR/logs/TR${TEST_RUN_NUM}/ready_reports/TestSuiteReportNew.html
+  if [ -f $MAIL_CONF -a -f $REPORT_FILE ]; then
+    send_report_via_mail
+  fi
+  if [ $check_status != 0 ];then
+    if [ "XX$temp_run_post" == "XX0" ];then
+      return 1
+    elif [ "XX$temp_run_post" == "XX1" ];then
+      return 3
+    fi
+  else
+    return $check_status
+  fi
+}
+
+Usage()
+{
+  echo "Error: Invalid arguments"
+  echo "Usage: bin/ts_run [-l] -n <project>/<subproject/<testsuite name> -u <GUI user> -r <role> -w <workspace_name>/<profile_name> [-K <additinal keywords>]"
+  echo "  Where: -l is used to run scenario in master mode (controller mode)"
+  echo "         -D is used to run netstorm with debug log"
+  echo "         -n is used to specify test suite name (without .conf extension)"
+  echo "         -u is used to specify GUI user"
+  echo "         -r is used to specify user's role"
+  echo "         -C is used to read nsi_check_tr_using_profile" 
+  echo "         -t is used to run a particular testscase only" 
+  echo "         -w : To provide <workspace>/<profile>. Default values will be used in not provided"
+  echo "         -K : To provide additional keywords to be passed to nsu_start_test"
+  echo "  For example, "
+  echo "    bin/ts_run -n testsuites/sample1 -u cavisson -r admin -w anup/ns_dev_4.6"
+  exit 1
+}
+
+#************************************************************************************************
+#check for workspace/profile name and RetlativeTestAsset Dir
+check_and_set_workspace_profile()
+{
+  if [ "X${1}" == "X" ];then
+   WORKSPACE=$DW
+   PROFILE=$DP
+   WORK_PROFILE=${DW}/${DP}
+   return 1
+  fi
+  WORKSPACE=`echo $1 | egrep "/" | cut -d'/' -f1`
+  PROFILE=`echo $1 | egrep "/" | cut -d'/' -f2`
+
+  #<workspace> i.e. profile no given
+  #<workspace>/ i.e. profile no given
+  #/<profile> i.e. profile no given
+  if [ "X$WORKSPACE" == "X" ];then
+     #set default value
+     WORKSPACE=$DW
+ fi
+if [ "X$PROFILE" == "X" ];then
+     #set default value
+     PROFILE=$DP
+  fi
+  #if WORKSPACE is NOT default workspace
+  if [ \( $WORKSPACE != $DW \) -a \( ! -d ${NS_WDIR}/${NS_RTA_DIR}/$WORKSPACE \) ];then
+     #check if workspace exists
+      #set to default workspace
+      WORKSPACE=$DW 
+  fi
+  #check if profile exists
+  if [ ! -d ${NS_WDIR}/${NS_RTA_DIR}/$WORKSPACE/$PROFILE ];then
+      #set to default workspace
+     PROFILE=$DP
+  fi
+
+  #set workspace and profile path
+  WORKSPACE_PROFILE=${WORKSPACE}/${PROFILE}
+}
+#det relative test assets dir
+set_rta_dir()
+{
+  NS_RTA_DIR="workspace/$1/$2/cavisson"
+}
+#************************************************************************************************
+while getopts lDn:S:i:c:u:r:C:t:w:K: c
+do
+  case $c in
+    l) TEST_START_CMD="$TEST_START_CMD -l " ;;  
+    D) TEST_START_CMD="$TEST_START_CMD -D " ;;  
+    n) TEST_SUITE_NAME_WITH_PATH=$OPTARG ;;
+    S) INVOKER="-S "$OPTARG ;; 
+    c) CTRLOPT=$OPTARG ;;  #Bug-34392
+    i) IP_ADDR=$OPTARG ;;
+    u) GUI_USER=$OPTARG ;;
+    r) ROLE=$OPTARG ;;
+    C) READ_PROFILE=$OPTARG ;;
+    t) TESTCASE=$OPTARG ;;
+    w) WORK_PROFILE="$OPTARG";;
+    K) ADDITIONAL_KW="$OPTARG";;
+    ?) Usage ;;
+  esac
+done
+
+if [ "XX$GUI_USER" == "XX"  -a "XX$ROLE" == "XX" ];then
+  GUI_USER=`whoami`
+  ROLE="normal"
+elif [ "XX$GUI_USER" == "XX"  -o "XX$ROLE" == "XX" ];then
+  echo "Role(-r) should be provided with User(-u) option"
+  exit -1
+fi
+
+if [ "XX$ROLE" == "XXadmin" -o "XX$ROLE" == "XXnormal" ]; then
+  GUI_USER=$GUI_USER
+  ROLE="-r "$ROLE
+else
+  echo "user $GUI_USER with $ROLE role is not allowed to start testsuite"
+  exit -1
+fi
+
+#Bug 46828
+if [ "$INVOKER" == "-S gui" ]; then
+  echo "Not Allowed to run testsuite with -S gui option."
+  exit -1
+fi
+
+echo "IP_ADDR = $IP_ADDR"
+TEST_SUITE_RUN_ID_FILE="$HOME/etc/test_suite_run_id"
+TSR_NUM=""
+EMAIL_ADDRESS="NA"
+TSR_LOG_DIR=""
+ACTION_ON_FAIL=Continue
+SCENARIO=""
+#NetstormLogFile=/tmp/netstorm_output.$$
+TEMP_TEST_CASE=/tmp/test_case.$$
+
+
+#************************************************************************************************
+check_and_set_workspace_profile $WORK_PROFILE
+set_rta_dir $WORKSPACE $PROFILE
+#export NS_RTA_DIR to be used in subsitute_vars lib method
+export NS_RTA_DIR
+export WORK_PROFILE
+
+#set absolute test assets path
+NS_TA_DIR=$NS_WDIR/$NS_RTA_DIR
+WPARGS="-W ${WORKSPACE_PROFILE}"
+wPARGS="-w ${WORKSPACE_PROFILE}"
+#NS_TA_DIR=`nsi_get_work_space_path.sh $WORK_PROFILE`
+#WorkProfile Arguments i.e. <workspace>/<profile>
+#WPARGS="-W $WORK_PROFILE"
+#wPARGS="-w $WORK_PROFILE"
+#************************************************************************************************
+
+#If project/subproject is not provided we are making it point to default/default 
+#Project subproject have to be given in proper format. 
+#E.g 
+#   ts_run -n QAAutomation/ForwardRequest/suite1
+#   ts_run -n defaultSuite 
+#
+
+NUM=`echo $TEST_SUITE_NAME_WITH_PATH|awk -F "/" '{print NF}'`
+FCHAR=`echo $TEST_SUITE_NAME_WITH_PATH|cut -c1`
+
+if [ "X$FCHAR" != "X/" ]; then
+  if [ "X$NUM" == "X1" ];then
+    PROJECT_NAME="default"
+    SUB_PROJ_NAME="default"
+    TEST_SUITE_NAME=$TEST_SUITE_NAME_WITH_PATH
+    #echo  "$PROJECT_NAME $SUB_PROJ_NAME $TEST_SUITE_NAME"
+  elif [ "X$NUM" == "X3" ];then
+    PROJECT_NAME=`echo $TEST_SUITE_NAME_WITH_PATH|cut -d "/" -f1`
+    SUB_PROJ_NAME=`echo $TEST_SUITE_NAME_WITH_PATH|cut -d "/" -f2`
+    TEST_SUITE_NAME=`echo $TEST_SUITE_NAME_WITH_PATH|awk -F"/" '{print $3}'`
+    #echo  "$PROJECT_NAME $SUB_PROJ_NAME $TEST_SUITE_NAME"
+  else
+    echo "Project/Subproject/testsuite_name is not given in proper format"
+    exit -1
+  fi
+else
+ echo "Project/Subproject/testsuite_name is not given in proper format"
+ exit -1
+fi
+
+# This have suite name with suites dir
+# ex: testsuites/<testsuitename>.conf
+TEST_SUITE_NAME_CONF="$PROJECT_NAME/$SUB_PROJ_NAME/testsuites/${TEST_SUITE_NAME}.conf"
+#echo $TEST_SUITE_NAME_CONF
+
+if [ $CTRLOPT == "Any" -a "XX$TS_CONTROLLER_LIST" != "XX" ]; then
+  choose_controller
+elif [ $CTRLOPT != "Any" -a $CTRLOPT != "Self" ]; then
+  ctrl_exist=`cat $CONTROLLER_CONFIG_FILE | awk -F '|' '{print $1}'|grep -wc $CTRLOPT`
+  if [ $ctrl_exist == 1 ]; then
+    export NS_WDIR="/home/cavisson/$CTRLOPT"
+  else
+    echo "Invalid Argument passed with -c, $CTRLOPT is not valid controller."
+    exit 1
+  fi 
+fi
+
+echo "Controller = $NS_WDIR"
+
+USERID=`id -un`
+$NS_WDIR/bin/nsu_check_user $USERID ts_run
+if [ $? != 0 ];then
+  exit 1
+fi
+
+if [ "XX" = "XX$NS_WDIR" ]
+then
+  NS_WDIR=/home/cavisson/work
+fi
+
+#Check NS_WDIR set or not
+if [ ! -f $NS_TA_DIR/${TEST_SUITE_NAME_CONF} ];then
+  echo "There is no suite with name $NS_TA_DIR/$TEST_SUITE_NAME_CONF"
+  exit 1
+fi
+
+#This is dir where all test cases reside
+TEST_CASES_DIR=$NS_TA_DIR/$PROJECT_NAME/$SUB_PROJ_NAME/testcases
+
+get_cur_date_time()
+{
+  echo "`date '+%m/%d/%y %H:%M:%S'`"
+}
+
+# parse test suite configuration file
+parse_ts_file ()
+{
+  debug_log "Called parse_ts_file"
+  # get all test case into a temp file
+  cat "$NS_TA_DIR/$TEST_SUITE_NAME_CONF" | grep ^TEST_CASE_NAME >$TEMP_TEST_CASE
+  
+  # get email address
+  EMAIL_ADDRESS=`cat "$NS_TA_DIR/$TEST_SUITE_NAME_CONF" | grep ^EMAIL_ADDRESS`
+  
+  # get report format
+  REPORT_FORMAT=`cat "$NS_TA_DIR/$TEST_SUITE_NAME_CONF" | grep ^REPORT_FORMAT`
+
+  # get the delay between test of a testcase
+  if [ "XX$DELAY_BETWEEN_TEST_UNIT" == "XX" ];then  #Added By Anuj Sharma for delay between testcases
+    DELAY_BETWEEN_TESTSUITE_UNIT=`cat "$NS_TA_DIR/$TEST_SUITE_NAME_CONF" | grep -w ^DELAY_BETWEEN_TEST |cut -d " " -f2`
+    if [ "XX$DELAY_BETWEEN_TESTSUITE_UNIT" == "XX" ];then
+      export DELAY_BETWEEN_TESTSUITE_UNIT=0
+    else
+      export DELAY_BETWEEN_TESTSUITE_UNIT=$DELAY_BETWEEN_TESTSUITE_UNIT
+    fi
+  fi
+
+  # get the delay between different testcases
+  if [ "XX$DELAY_BETWEEN_TESTCASE_UNIT" == "XX" ];then  #Added By Anuj Sharma for delay between different testcases
+    DELAY_BETWEEN_TESTCASE_SUITE_UNIT=`cat "$NS_TA_DIR/$TEST_SUITE_NAME_CONF" | grep -w ^DELAY_BETWEEN_TEST_CASE |cut -d " " -f2`
+    if [ "XX$DELAY_BETWEEN_TESTCASE_SUITE_UNIT" == "XX" ];then
+      export DELAY_BETWEEN_TESTCASE_SUITE_UNIT=0
+    else
+      export DELAY_BETWEEN_TESTCASE_SUITE_UNIT=$DELAY_BETWEEN_TESTCASE_SUITE_UNIT
+    fi
+  fi
+ 
+  # export the testsuite debug log unit
+  export TEST_SUITE_LOG_UNIT=`cat "$NS_TA_DIR/$TEST_SUITE_NAME_CONF" | grep ^TEST_SUITE_DEBUG_LOG |awk -F ' ' '{print $2}'` 
+}
+
+# validate test cases. Given test cases exist or not
+validate_test_cases()
+{
+  debug_log "Called validate_test_cases"
+  # check number of lines in temp test case file
+  out=`cat $TEMP_TEST_CASE | wc -l`
+  if [ $out == 0 ];then
+    echo "At least one test case must be defined in test suite"
+    exit 1
+  fi
+ 
+  if [ "XX$TESTCASE" != "XX" ]; then
+    if [ ! -f $TEST_CASES_DIR/$TESTCASE/testcase.conf ]; then
+      echo "There is no test case with name $TESTCASE"
+      exit 1
+    fi
+  else
+    # check testcase exist or not
+    while read line
+    do
+      TEST_CASE_NAME=`echo $line | cut -d" " -f2`
+      if [ ! -f $TEST_CASES_DIR/$TEST_CASE_NAME/testcase.conf ];then
+        echo "There is no test case with name $TEST_CASE_NAME"
+        exit 1
+      fi
+    done < $TEMP_TEST_CASE
+  fi
+
+}
+
+# To create summary report
+create_summary_header ()
+{
+  debug_log "Called create_summary_header"
+  SUMMARY_REPORT=$TSR_LOG_DIR/summary.report >$SUMMARY_REPORT
+  echo "Test Suite Name: $TEST_SUITE_NAME" >>$SUMMARY_REPORT
+  echo "Test Suite Run Number: $TSR_NUM" >>$SUMMARY_REPORT
+  echo "Start Date/Time: `get_cur_date_time`" >>$SUMMARY_REPORT
+  echo "" >>$SUMMARY_REPORT
+  #Assume max test case name size is 32 chars
+  echo " TestCaseName<TIC-TID>    TR#  StartDate/Time EndDate/Time     Status       Description">>$SUMMARY_REPORT
+  echo " ---------------------    ---- -------------- -------------- -------------- -----------">>$SUMMARY_REPORT
+}
+
+# To create summary report
+create_cycle_summary_header ()
+{
+  debug_log "Called create_cycle_summary_header"
+  echo "Test Cycle Name: $LOG_CYCLE_DIR_NAME" >>$CYCLE_SUMMARY_REPORT
+  echo "Test Suite Name: $PROJECT_NAME/$SUB_PROJ_NAME/$TEST_SUITE_NAME" >>$CYCLE_SUMMARY_REPORT
+  echo "Start Date/Time: `get_cur_date_time`" >>$CYCLE_SUMMARY_REPORT
+  echo "" >>$CYCLE_SUMMARY_REPORT
+  #Assume max test case name size is 32 chars
+  echo " TestCaseName<TIC-TID>    TSR     TR#     StartDate/Time EndDate/Time     Status       Description">>$CYCLE_SUMMARY_REPORT
+  echo " ---------------------    ----    ----    -------------- -------------- -------------- -----------">>$CYCLE_SUMMARY_REPORT
+  #echo " TestCaseName<TIC-TID>    TSR#      TR#         Status       Description">>$CYCLE_SUMMARY_REPORT
+  #echo " ---------------------    -------   -------   -------------  -----------">>$CYCLE_SUMMARY_REPORT
+}
+
+append_to_progress_rpt ()
+{
+  PROGRESS_REPORT=$TSR_LOG_DIR/progress.report
+  echo $* >>$PROGRESS_REPORT
+}
+
+append_to_progress_rpt_console ()
+{
+  append_to_progress_rpt $*
+  echo $*
+}
+
+error_log ()
+{
+  append_to_progress_rpt $*
+  echo $*
+}
+
+get_test_cycle_format()
+{
+  echo "`date '+%y%m%d_%H%M%S'`"
+}
+
+# get suite id and create logs
+get_suite_id_and_create_logs ()
+{
+  if [ "XX$LOG_CYCLE_DIR_NAME" == "XX" ];then           #Added By Anuj Sharma
+    export LOG_CYCLE_DIR_NAME=`get_test_cycle_format`   #If LOG_CYCLE_DIR_NAME is not set in ts_run_ax
+    echo "Test Cycle Number = $LOG_CYCLE_DIR_NAME" 
+  fi
+  debug_log "Called get_suite_id_and_create_logs"
+  # get suite number and create the logs
+  TSR_NUM=`cat $TEST_SUITE_RUN_ID_FILE`
+  test_id=`expr $TSR_NUM + 1`
+  echo $test_id >$TEST_SUITE_RUN_ID_FILE
+
+  echo "Test Suite Run Number = $TSR_NUM" 
+  TSR_CYCLE_LOG_DIR=$NS_WDIR/logs/tsr/$LOG_CYCLE_DIR_NAME
+  mkdir -p $TSR_CYCLE_LOG_DIR/$TSR_NUM/testcases
+  mkdir -p $TSR_CYCLE_LOG_DIR/$TSR_NUM/logs
+
+  #Copyting tx_am.conf file from test dir to test_cycle directory
+  if [ "XX$TEST_DIR_PATH" != "XX" ];then
+    if [ ! -f $TSR_CYCLE_LOG_DIR/$TX_AM_CONF ];then #Added by Anuj Sharma
+      debug_log "Copying $TX_AM_CONF_PATH file to testcycle $TSR_CYCLE_LOG_DIR directory"
+      cp $TX_AM_CONF_PATH $TSR_CYCLE_LOG_DIR
+    fi
+  fi
+  
+  TSR_LOG_DIR=$NS_WDIR/logs/tsr/$LOG_CYCLE_DIR_NAME/$TSR_NUM
+  CYCLE_SUMMARY_REPORT=$TSR_CYCLE_LOG_DIR/cycle_summary.report
+
+  create_summary_header
+  if [ ! -f $CYCLE_SUMMARY_REPORT ];then 		#Added By Anuj Sharma
+    >$CYCLE_SUMMARY_REPORT
+    create_cycle_summary_header				#create cycle summary report if not created by ts_run_ax
+  else
+    continue
+  fi
+  append_to_progress_rpt "Starting test suite $TEST_SUITE_NAME, TSR Number = $TSR_NUM"
+  copy_files
+}
+
+save_pid_to_tsr_dir()
+{
+  # Save pid so that can be use in ts_stop.
+  PID=$$
+  echo $PID>$TSR_CYCLE_LOG_DIR/.ts_pid
+  echo $PID>$NS_WDIR/.tmp_ts/.ts_pid
+}
+# run shell commands 
+run_shell_command ()
+{ 
+  cmd=$*
+  debug_log "Called run_shell_command, command = $cmd"
+  #$cmd 1>>$PROGRESS_REPORT 2>&1
+  $cmd 1>>$LOG_DIR_NAME/$LOG_FILE_NAME 2>&1
+  #here we can't use tee because it will always return 0 (success of tee command)
+  #$cmd 2>&1 | tee -a $PROGRESS_REPORT
+  return $?
+}
+
+# parse test case file
+parse_test_case_file ()
+{
+  debug_log "Called parse_test_case_file for test case $1"
+  while read keyword value
+  do
+    if [ "XX$keyword" == "XX" -o "XX$value" == "XX" ];then
+      continue
+    fi
+    if [ "$keyword" == SCENARIO_NAME ];then
+      get_project_sub_project $value
+      #SCENARIO=$value
+    fi
+  done <$TEST_CASES_DIR/$1/testcase.conf
+}
+
+# Fill test case name, test run number, start end date/time and status
+add_test_case_in_summary_report ()
+{
+  TEST_CASE_END_DATE=`get_cur_date_time`
+  TEST_IDX_TMP=`expr $TEST_IDX + 1`
+  #Generate TestCase Name with ID
+  TEST_CASE_NAME_WITH_ID="$TEST_CASE_NAME<$COUNT-$TEST_IDX_TMP>"
+  #added for description,if spec mode is 0 then desc will be the testcase name else first value from var value line in iteration.spec (Because assumption is this that user will give the first value as desc) : arun
+  if [ $SPEC_MODE == 0 ];then
+    DESC=$TEST_CASE_NAME
+  else
+    DESC=${VAR_VALUE_ARR[0]}
+  fi
+  printf " %-24s %-4s %-14s %-14s %-14s %s\n" $TEST_CASE_NAME_WITH_ID $TEST_RUN_NUM "$TEST_CASE_START_DATE" "$TEST_CASE_END_DATE" $TEST_CASE_STATUS "$DESC">>$SUMMARY_REPORT
+  printf " %-24s %-7s %-7s %-14s %-14s %-14s %s\n" $TEST_CASE_NAME_WITH_ID $TSR_NUM $TEST_RUN_NUM "$TEST_CASE_START_DATE" "$TEST_CASE_END_DATE" $TEST_CASE_STATUS "$DESC">>$CYCLE_SUMMARY_REPORT
+
+
+
+  #Incrementing here because this function is calling on every failure and success
+  TEST_IDX=`expr $TEST_IDX + 1`
+  TOTAL_RUN=`expr $TOTAL_RUN + 1`
+  TEST_CASE_STATUS="Pass"
+}
+
+append_to_summary_report ()
+{
+  echo $* >>$SUMMARY_REPORT
+}
+
+#Added By Anuj Sharma
+delay_between_test_execution () 
+{
+ DELAY_TEST_TIME=$1
+ if [ "$DELAY_TEST_TIME" -gt "0" ];then
+   echo "Sleeping between TEST by the delay time $DELAY_TEST_TIME"
+   debug_log "Sleeping before execution of the next test by the time $DELAY_TEST_TIME"
+   sleep $DELAY_TEST_TIME
+ fi
+}
+
+delay_between_testcase_execution()
+{
+ DELAY_TESTCASE_TIME=$1
+ if [ "$DELAY_TESTCASE_TIME" -gt "0" ];then
+   echo "Sleeping between TESTCASE by the delay time $DELAY_TESTCASE_TIME"
+   debug_log "Sleeping before execution of the next testcase by the time $DELAY_TESTCASE_TIME"
+   sleep $DELAY_TESTCASE_TIME
+ fi
+}
+
+#Issues:
+# 1. Should we send netsorm output to TSR progress report or not?
+
+# To run the netstorm 
+run_netstorm ()
+{
+  WAIT_TIME=0 
+  debug_log "The run_netstorm() mthd has been called"
+  
+  #NetstormLogFile name format is :
+  #(TestCaseName)_(TOTAL_RUN)_(ITRCOUNT)_(TEST_ID) ( where TOTAL_RUN is total no. for which netstorm is running
+  NetstormLogFile=$LOG_DIR_NAME/test_run.report
+  debug_log "Called run_netstorm for test case $TEST_CASE_NAME"
+  append_to_progress_rpt_console "Netstorm is starting for Project: ${PROJECT}, Subproject: ${SUB_PROJECT}, Scenario is - ${SCENARIO_NAME}"
+  #Run from scenario dir if spec_mode is 0 else from /tmp dir Arun
+
+  debug_log "Starting test using $TEST_START_CMD"
+  if [ "$INVOKER" == "-S gui" ];then
+    # Adding wait time of 1 min for running test from gui. If one iteration is complete after that 2nd iteration will start.
+    WAIT_TIME=60
+  fi
+  if [ $SPEC_MODE == 0 ];then
+    $NS_WDIR/bin/$TEST_START_CMD -n ${PROJECT}/${SUB_PROJECT}/${SCENARIO_NAME}.conf -u $GUI_USER $ROLE $INVOKER -w $WAIT_TIME $WPARGS -C $ADDITIONAL_KW >$NetstormLogFile 2>&1
+  else
+    $NS_WDIR/bin/$TEST_START_CMD -n ${PROJECT}/${SUB_PROJECT}/.${SCENARIO_NAME}.conf -u $GUI_USER $ROLE $INVOKER -w $WAIT_TIME $WPARGS -C $ADDITIONAL_KW >$NetstormLogFile 2>&1
+  fi
+  
+  if [ $? != 0 ];then
+    #Change: Creating "Progress Report file" to "Starting Test run" as in case of failure we were not able to get TR 
+    #no - Bug# 6788
+    if [ "$INVOKER" == "-S gui" ];then
+      cat $NetstormLogFile | grep "TestRunNumber is"
+      if [ $? == 0 ];then
+        TEST_RUN_NUM=`cat $NetstormLogFile | tail -1`
+      fi
+    else
+      TEST_RUN_NUM=`grep -a "Starting Test run" $NetstormLogFile | cut -d ' ' -f 4`
+    fi
+      #TEST_RUN_NUM=`grep "Starting Test run" $NetstormLogFile | cut -d ' ' -f 4`
+    #export TEST_RUN_NUM
+    TEST_CASE_STATUS="NetstormFail"
+    #add_test_case_in_summary_report #Bug-88214
+    append_to_progress_rpt "Netstorm failed. Following is the output: "
+    debug_log "TEST_CASE_STATUS = $TEST_CASE_STATUS"
+    if [ $ACTION_ON_FAIL == Abort ];then
+      return 1
+    else
+      return 2
+    fi
+  fi
+  
+  # If test is running from GUI the in test_run.report file "Starting Test run" is not present
+  if [ "$INVOKER" == "-S gui" ];then
+    cat $NetstormLogFile | grep "TestRunNumber is"
+    if [ $? == 0 ];then
+      TEST_RUN_NUM=`cat $NetstormLogFile | tail -1`
+    fi
+  else
+    TEST_RUN_NUM=`grep -a "Starting Test run" $NetstormLogFile | cut -d ' ' -f 4`
+  fi
+  export TEST_RUN_NUM
+  if [ "XX$TEST_RUN_NUM" == "XX" ];then
+    TEST_RUN_NUM="NA"
+    TEST_CASE_STATUS="NetstormFail"
+    #add_test_case_in_summary_report #Bug-88214
+    if [ $ACTION_ON_FAIL == Abort ];then
+      return 1
+    else
+      return 2
+    fi
+  fi
+  #moved from run_test_suite
+  #Generate results file based on one sample (it uses gui.data)
+  get_all_summmary_data_value $TSR_NUM $TEST_CASE_NAME
+  if [ $? == 1 ];then
+    TEST_CASE_STATUS="NetstormFail"
+    #add_test_case_in_summary_report #Bug-88214
+    if [ $ACTION_ON_FAIL == Abort ];then
+      return 1
+    else
+      return 2
+    fi
+  fi
+
+  $NS_WDIR/bin/ts_get_results $TSR_NUM $TEST_RUN_NUM
+  export TEST_IDX=$TEST_IDX
+  export TEST_COUNT=$TEST_COUNT
+  export COUNT=$COUNT
+  export COUNT_NO=$COUNT_NO
+  #Generate results file based on summary data (it uses summary.dat)
+  $NS_WDIR/bin/ts_summary_results $TSR_NUM $TEST_RUN_NUM
+  debug_log "Test run number = $TEST_RUN_NUM"
+  debug_log ""
+  return 0
+}
+
+# Run set up files (Pre or post)
+run_set_up_script()
+{
+  CMD_NAME=$TEST_CASES_DIR/$TEST_CASE_NAME/$1
+  CMD_ARGS="$TSR_NUM $TEST_RUN_NUM $COUNT"
+  LOG_FILE_NAME=$3
+  if [ -f $CMD_NAME ];then
+    run_shell_command $CMD_NAME $CMD_ARGS $LOG_FILE_NAME
+    ret=$?
+    if [ $ret != 0 ];then
+      TEST_CASE_STATUS="Fail$2"
+      echo "$1 failed">>$LOG_DIR_NAME/$LOG_FILE_NAME
+      error_log "$CMD_NAME failed"
+      add_test_case_in_summary_report 
+      if [ $ACTION_ON_FAIL == Abort ];then
+        return 1
+      else
+	     if [ $ret == 3 -a $1 == "check_status" ];then
+		     return 3
+	     fi
+        return 2
+      fi
+      elif [ $ret -eq 0 ];then
+        echo "$1 passed">>$LOG_DIR_NAME/$LOG_FILE_NAME
+    fi
+  fi
+  return 0
+}
+
+# Copy files in TSR dir
+copy_files ()
+{
+  cp $NS_TA_DIR/$TEST_SUITE_NAME_CONF $TSR_LOG_DIR/testsuite.conf
+  while read line
+  do
+    TEST_CASE_NAME=`echo $line | cut -d" " -f2`
+    cp -r $TEST_CASES_DIR/$TEST_CASE_NAME $TSR_LOG_DIR/testcases/
+  done < $TEMP_TEST_CASE
+}
+
+#Send mail
+send_email()
+{
+  if [ "NA$EMAIL_ADDRESS" != "NA" ];then
+    cat $SUMMARY_REPORT | mail -s "Test Suite Run Report TSR - $TSR_NUM" $EMAIL_ADDRESS 
+  fi 
+}
+
+fill_tsr_inst_idx()
+{
+  
+  MAX_INSTANCE=4
+  USER=`id -u -n`
+  #If .tmp_ts dir not found then it will create it.
+  if [ ! -d $NS_WDIR/.tmp_ts ];then
+    mkdir -p $NS_WDIR/.tmp_ts
+  fi
+  #If .tmp/$user dir not found then it will create it.
+  INST_DIR=$NS_WDIR/.tmp_ts/$USER
+  if [ ! -d $INST_DIR ];then
+    mkdir -p $INST_DIR
+  fi
+  #All directory will we Saved in Array. 
+  instance_arr=(`ls $INST_DIR|sort`)
+    
+  arr_size=${#instance_arr[*]}
+  id=0
+  for instance_id in ${instance_arr[*]}
+  do
+    #If instance id is not dir then continue.
+    if [ ! -d $INST_DIR/$instance_id ];then
+      continue
+    fi
+    instance_dir="ts_inst$id"
+    if [ "X$instance_id" != "X$instance_dir" ];then
+      break
+    else
+      OLD_PID=`cat $INST_DIR/$instance_dir/ts.pid`
+      ps -p $OLD_PID >/dev/null
+      if [ $? -eq 0 ];then 
+        id=`expr $id + 1`
+        if [ $id -eq $MAX_INSTANCE ];then
+          end_date_header_to_cycle "(Failed)" 
+          append_to_progress_rpt_console "The Automation Is Stopped Forcefully. Exiting ......."
+          exit -1
+        else
+          continue
+        fi
+      else
+        break
+      fi
+    fi
+  done  
+  instance_dir="ts_inst$id"
+  mkdir -p $INST_DIR/$instance_dir
+  echo $$ >$INST_DIR/$instance_dir/ts.pid
+  echo "$LOG_CYCLE_DIR_NAME" >$INST_DIR/$instance_dir/ts.cid
+  #Changes for bug #38708
+  #Creating this file here because NS_WDIR has been set as the NS_WDIR of free controller, and ts_start_test read this file for reading 
+  # ts.pid and ts.cid file
+  OUT1=/tmp/ts_start_test.$$
+  ls -td $INST_DIR/$instance_dir >$OUT1 2>/dev/null #dont want to show anything on screen
+}
+
+#Bug 81985: Send report via mail
+send_report_via_mail()
+{
+  debug_log "Called send_report_via_mail "
+  ATTACH_TYPE=4 #Type - 1[pdf] 2[rtf] 3[index.html] 4[text] 5[Continuous Monitoring]
+  REPORT_SET_NAME=ready_reports/TestSuiteReportNew.html
+  ATTACH_MODE=2 #mode - 0[disable] 1[no attachment] 2[with attachment] 3[jenkins status]
+
+  REPORT_AS_ATTACHMENT=`grep ^REPORT_AS_ATTACHMENT $MAIL_CONF | awk -F' ' '{print $2}'`
+
+  if [ "X$REPORT_AS_ATTACHMENT" == "X1" ]; then
+    TEST_DURATION=`awk -F'|' '{print $15}' $NS_WDIR/logs/TR${TEST_RUN_NUM}/summary.top`
+
+    to_list=`grep ^MAIL_TO $MAIL_CONF | awk -F' ' '{print $2}'`
+    if [ "X$to_list" != "X" ];then
+      cc_list=`grep ^MAIL_CC $MAIL_CONF | awk -F' ' '{print $2}'`
+      bcc_list=`grep ^MAIL_BCC $MAIL_CONF | awk -F' ' '{print $2}'`
+
+      #Sending tomcat port
+      TOMCAT_PORT_FILE=$NS_WDIR/webapps/.tomcat/tomcat_port
+      if [ -f $TOMCAT_PORT_FILE ];then
+        FILL_TOMCAT_PORT=`awk '{print $1}' $TOMCAT_PORT_FILE`
+      else
+        FILL_TOMCAT_PORT=80
+      fi
+
+      debug_log "Sending Report to $to_list $cc_list $bcc_list"
+      send_mail $TEST_RUN_NUM $TEST_DURATION $ATTACH_MODE $NS_WDIR $ATTACH_TYPE $REPORT_SET_NAME $FILL_TOMCAT_PORT $to_list $cc_list $bcc_list
+    fi
+  fi
+}
+
+# run netstorm for given scenario
+run_test_suite ()
+{
+  debug_log "Called run_test_suites "
+  COUNT=1
+  TOTAL_RUN=1
+  #Added changes in below while loop as per Bug#12366
+  TEST_CASE_NO=1
+  TOTAL_TEST_CASES=`wc -l  < $TEMP_TEST_CASE`
+  while [ $TEST_CASE_NO  -le $TOTAL_TEST_CASES ]
+  do
+    line=`sed -n ''"$TEST_CASE_NO"'p' $TEMP_TEST_CASE`
+    #This is to add the delay between the execution of the testcases 
+    if [ $TOTAL_RUN -ne 1 ];then
+      if [ "XX$DELAY_BETWEEN_TESTCASE_UNIT" == "XX" ];then
+        delay_between_testcase_execution $DELAY_BETWEEN_TESTCASE_SUITE_UNIT
+      else
+        delay_between_testcase_execution $DELAY_BETWEEN_TESTCASE_UNIT
+      fi
+    fi
+
+    set $line
+    TOTAL_ARG=$#
+    shift 1
+    TEST_CASE_NAME=$1;shift 1
+    export TEST_CASE_NAME=$TEST_CASE_NAME
+    debug_log "Exporting the TEST_CASE_NAME = $TEST_CASE_NAME"
+    
+    ACTION_ON_FAIL=$1;shift 1
+  
+    # Added by Anuj
+    COUNT_NO=$1;shift 1
+
+    SPEC_MODE=$1
+
+    if [ "XX$TESTCASE" != "XX" ]; then
+      if [ $TEST_CASE_NAME == $TESTCASE ]; then
+        COUNT_NO=1
+      else
+        TEST_CASE_NO=`expr $TEST_CASE_NO + 1`
+        continue
+      fi
+    fi
+
+    #Added by Arun
+    if [ "X$SPEC_MODE" != "X" -a "$SPEC_MODE" != "0" -a "$SPEC_MODE" != "1" -a "$SPEC_MODE" != "2" ];then
+      echo "ERROR: Invalid Value : SPEC_MODE in $NS_TA_DIR/$TEST_SUITE_NAME_CONF for testcase $TEST_CASE_NAME" | tee -a $CYCLE_SUMMARY_REPORT 
+      exit 1
+    fi
+        
+    # Added by Anuj
+    if [ "XX$SPEC_MODE" == "XX" ];then
+      SPEC_MODE=0
+    fi
+
+    # COUNT_NO is the iteration count given with the TEST_CASE_NAME in testsuite.conf
+    if [ XX$COUNT_NO == XX ];then
+      COUNT_NO=1
+    fi
+    if [ "X$ACTION_ON_FAIL" != "X" -a "$ACTION_ON_FAIL" != "Continue" -a "$ACTION_ON_FAIL" != "Abort" ];then
+      echo "ERROR: Invalid Value : ACTION_ON_FAIL in $NS_TA_DIR/$TEST_SUITE_NAME_CONF for testcase $TEST_CASE_NAME" | tee -a $CYCLE_SUMMARY_REPORT
+      exit 1
+    fi
+    if [ XX$ACTION_ON_FAIL == XX ];then
+      ACTION_ON_FAIL=Continue
+    fi
+     
+     #This is exported so that pre/post/check script can use this
+     export TEST_CASE_DIR=$TEST_CASES_DIR/$TEST_CASE_NAME
+
+     #call from read_spec_file - set_test_count
+     read_spec_file 
+ 
+     #COUNT_NO is total iteration count
+     while [ $COUNT -le $COUNT_NO ]
+     do 
+     #  TEST_COUNT will be the total no of value lines present in the spec file
+     for (( TEST_IDX=0; $TEST_IDX < $TEST_COUNT;))
+     do 
+       TEST_CASE_STATUS="Pass"
+       TEST_RUN_NUM="NA"
+       #This is to add the delay between the execution of the test is a testcase
+       if [ $TEST_IDX -ne 0 ];then
+         if [ "XX$DELAY_BETWEEN_TEST_UNIT" == "XX" ];then
+           delay_between_test_execution $DELAY_BETWEEN_TESTSUITE_UNIT
+         else
+           delay_between_test_execution $DELAY_BETWEEN_TEST_UNIT 
+         fi
+       fi
+       TEST_CASE_START_DATE=`get_cur_date_time`
+       
+       append_to_progress_rpt_console "Starting execution of test case - $TEST_CASE_NAME"
+       append_to_progress_rpt_console "Starting pre_test_setup script"
+       
+       subsitute_vars $TEST_IDX
+
+       #Export value of all variables so that it can be used in pre/post/check scripts
+       # We are export both by name and by index. For example, if there are two variables $TName and %Port,
+       # with value Test and 7891, we will have following varibles exported
+       #       TName and VAR_NAME_ARR_1 with value "Test"
+       #       Port and VAR_NAME_ARR_2 with value "7891"
+       for i in ${!VAR_NAME_ARR[*]};do 
+         #Since variable name is starting with $ or %, we need to cut from 2nd character
+         VAR_NAME=`echo "${VAR_NAME_ARR[$i]}" | cut -c2-`
+         export $VAR_NAME="${VAR_VALUE_ARR[$i]}";
+         export VAR_NAME_ARR_$i="${VAR_VALUE_ARR[$i]}";
+       done
+
+       #export Testcase Id
+       export TESTCASE_IDX="${TEST_CASE_NAME}<${COUNT}-`expr $TEST_IDX + 1`>"
+
+       LOG_DIR_NAME=$NS_WDIR/logs/tsr/$LOG_CYCLE_DIR_NAME/$TSR_NUM/logs/${TEST_CASE_NAME}_${COUNT}_`expr $TEST_IDX + 1`
+       #This is a file created by user in check_status if required
+       export RUN_DATA_FILE=$LOG_DIR_NAME/run_data.report
+       mkdir -p $LOG_DIR_NAME 
+       # run pre_test_setup if given
+       run_set_up_script pre_test_setup PreTestSetup pre_test_setup.report 
+       ret=$?
+       if [ $ret == 1 ];then
+       # come out from both loops
+         break 2
+       elif [ $ret == 2 ];then
+         continue
+       fi
+       append_to_progress_rpt_console "Starting scenario"
+       #can we move following function to between read_spec_file && while, as it has only scenario name & supermost while loop reads it : arun 
+       parse_test_case_file $TEST_CASE_NAME
+       run_netstorm 
+       #return value of run_netstorm method must be save here earliar it was after the restore_org_files method and using that method return value 
+       #store return value of run_netstorm, so that after genearting HTML report action can be performed based on it.
+       #ret=$?
+       run_netstorm_ret=$?
+
+       # This will restore scenario and script files to original contents as these files
+       # are changed in subsitute_vars() based on spec mode
+       # ISsue - this shell exits before this step, then files may not be correct
+       restore_org_files
+    
+       #ret=$?
+
+       #Purpose of below code: Take decision based on return value of function run_netstorm (in case of failure).
+       #                       run_netstorm returns:
+       #                         0   - Success
+       #                         1/2 - Failure
+       #                           1 - Abort testcase execution
+       #                           2 - Continue testcase execution
+       #
+       #Till now, we were not generating HTML report if test stopped forcefully, 
+       #  loop(testcase execution) was breaked or continued from here itself, based on action on failure(Abort/Continue).
+       #
+       #Bug 68653 - HTML Report is not generating when we run test from TestSuite and stopped Forcefully.
+       #Issue:      Sometimes test is stopped forcefully by user, in that case HTML Report is not generated. We need to generate report anyhow.
+       #New Design: First generate HTML report then perform action(break/continue) based on action on failure(1/2).
+       #            Comment below code.
+       #            Execute this part of code once HTML Report is generated.
+
+       #if [ $ret == 1 ];then
+       #  break 2
+       #elif [ $ret == 2 ];then
+       #  append_to_progress_rpt_console "Starting post_test_setup script"
+       #  run_set_up_script post_test_setup PostTestSetup post_test_setup.report
+       #  continue;
+       #fi
+
+       # Check status
+       append_to_progress_rpt_console "Checking status"
+
+       if [ -f $NS_TA_DIR/$PROJECT_NAME/$SUB_PROJ_NAME/testcases/$TEST_CASE_NAME/check_status_using_profile ];then
+         read_check_status_using_profile
+         ret=$?
+	 if [ "XX$ret" == "XX0" ];then
+           echo "Overall_Test_Result = PASS for Test_Run = $TEST_RUN_NUM"
+	 else
+           echo "Overall_Test_Result = FAIL for Test_Run = $TEST_RUN_NUM"
+           TEST_CASE_STATUS=FAIL
+           add_test_case_in_summary_report
+	 fi
+	 echo "For details comparison check the HTML report Below"
+         echo $GUI_HTML_REPORT
+       else
+        run_set_up_script check_status CheckStatus check_status.report
+        ret=$?
+       fi
+      # ret=$?
+       if [ $ret == 1 ];then
+         break 2
+       elif [ $ret == 2 ];then
+         continue
+       elif [ $ret == 3 ];then
+         append_to_progress_rpt_console "Starting post_test_setup script"
+         run_set_up_script post_test_setup PostTestSetup post_test_setup.report
+         if [ $ret == 1 ];then
+	   break 2
+	 fi
+	   continue
+       fi
+
+       #check run_netstorm status
+       #Perform action based on return value of run_netstorm
+       #run_netstorm returns:
+       #  0   - Success
+       #  1/2 - Failure
+       #    1 - Abort testcase execution
+       #    2 - Continue testcase execution
+
+       if [ $run_netstorm_ret == 1 ];then
+         #Bug-88214
+         TEST_CASE_STATUS="NetstormFail"
+         add_test_case_in_summary_report
+         break 2
+       elif [ $run_netstorm_ret == 2 ];then
+         #Bug-88214
+         TEST_CASE_STATUS="NetstormFail"
+         add_test_case_in_summary_report
+         append_to_progress_rpt_console "Starting post_test_setup script"
+         run_set_up_script post_test_setup PostTestSetup post_test_setup.report
+         continue;
+       fi
+
+       #run post_test_setup if given
+       append_to_progress_rpt_console "Starting post_test_setup script"
+       run_set_up_script post_test_setup PostTestSetup post_test_setup.report
+       ret=$?
+       if [ $ret == 1 ];then
+         break 2
+       elif [ $ret == 2 ];then
+         continue
+       fi
+   
+       #Here it will be for Pass
+       add_test_case_in_summary_report
+     done
+   COUNT=`expr $COUNT + 1`
+   done
+   COUNT=1
+   ACTION_ON_FAIL=Continue
+   TEST_CASE_NO=`expr $TEST_CASE_NO + 1`
+  done
+}
+
+end_date_header_to_cycle()
+{
+ if [ "XX$END_DATE_HEADER" != "XX1" ];then
+   echo "" >>$CYCLE_SUMMARY_REPORT
+   echo "End Date/Time: `get_cur_date_time`$1">>$CYCLE_SUMMARY_REPORT
+   echo "TestCycleMode: W">>$CYCLE_SUMMARY_REPORT
+ fi
+}
+
+
+on_stopping_forcefully()
+{ 
+ end_date_header_to_cycle "(Stopped)" 
+ append_to_progress_rpt_console "The Automation Is Stopped Forcefully. Exiting ......."
+}
+
+
+parse_ts_file
+validate_test_cases
+get_suite_id_and_create_logs
+save_pid_to_tsr_dir
+fill_tsr_inst_idx
+run_test_suite
+end_date_header_to_cycle
+send_email
+
+rm -f $TEMP_TEST_CASE
+#rm -f $NetstormLogFile
+
+
+echo "Test Suite execution is completed!!!"
+
+
+#calling shell for RBU report generation
+rbuReportGenerate  $LOG_CYCLE_DIR_NAME
+
+#echo "Summary Report is"
+#cat $SUMMARY_REPORT
+#echo "------------------"
+
+#echo "Progress Report is"
+#cat $PROGRESS_REPORT
+#echo "------------------"
+
+#exit 0
+if [ "XX$check_status" == "XX0" ];then
+  exit 0
+else
+  exit 1
+fi

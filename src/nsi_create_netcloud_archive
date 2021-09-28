@@ -1,0 +1,99 @@
+#!/bin/sh
+###########################################################################################
+# Name    : nsi_create_netcloud_archive
+# Author  : Achint Agarwal
+# Purpose : This is a shell which is used to decide whether netcloud data tar will be created on controller machine.
+# Usage   : nsi_create_netcloud_archive -s </Project/Subproject/scenario name> -x maketar 
+#
+# Here,-s : s option specifies the path of scenario.
+#      -o : 1) if "maketar" is given in this option then only tar files for scenario, scripts, and default keywords will be created
+###########################################################################################
+
+usage()
+{
+  echo "ERROR: In correct usage"
+  echo "Usage:"
+  echo "nsi_create_netcloud_archive "
+  echo "  -s </Project/Subproject/Scenario Name> "
+  echo "  -x used to make the tar file"
+  exit -1
+}
+
+#defaults
+
+TEST_NAME="NA"
+make_tar="maketar"
+NETSTORM_BIN="bin/netstorm"
+PRE_TEST_CHECK_RETRY_COUNT=0
+
+chk_args_of_option()
+{
+  if [ "X$2" == "X" ];then
+    echo "Option $1 required a value."
+    usage
+    exit -1
+  fi
+}
+
+while [ "$1" != "" ];do
+  case $1 in
+    "-s")
+        shift
+      chk_args_of_option "-s" "$1"
+        ARGUMENT=$1;;
+    "-x")
+        shift
+      chk_args_of_option "-x" "$1"
+        make_tar=$1;;
+    -*) usage "Invalid option $1";;
+    *) usage;;
+  esac
+  shift
+done
+
+ProjectName=`echo "$ARGUMENT" | awk -F'/' '{print $1}'`
+SubprojectName=`echo "$ARGUMENT" | awk -F'/' '{print $2}'`
+ScenarioName=`echo "$ARGUMENT" | awk -F'/' '{print $3}'`
+
+if [ "XX$ProjectName" == "XX" -a "XX$SubprojectName" == "XX" -a "XX$ScenarioName" == "XX" ];then
+  usage
+fi
+
+
+if [ "XX$make_tar" == "XX" ];then
+  usage
+fi
+
+#Check and get login user name
+USER_NAME=`whoami 2>/dev/null`
+if [ $? != 0 ];then
+  echo "Error: Unable to get the real user name"
+  exit 1
+fi
+
+if [ "XX$NS_WDIR" == "XX" ];then
+   NS_WDIR="/home/cavisson/work"
+fi
+
+cd $NS_WDIR
+ScenFileName="scenarios/$ProjectName/$SubprojectName/$ScenarioName"
+
+if [ $PRE_TEST_CHECK_RETRY_COUNT == 0 ]; then
+  if [ "$TEST_NAME" == "NA" ]; then
+    echo "Starting netstorm using - nohup $NETSTORM_BIN -c $ScenFileName -x $make_tar -l" >/dev/null
+    $NETSTORM_BIN  -c $ScenFileName -x $make_tar -l
+  else
+    echo "Starting netstorm using - nohup $NETSTORM_BIN -c $ScenFileName -x $make_tar -l " >/dev/null
+    $NETSTORM_BIN  -c $ScenFileName -x $make_tar -l
+  fi
+else
+  if [ "$TEST_NAME" == "NA" ]; then
+    echo "Starting netstorm using - nohup $NETSTORM_BIN -c $ScenFileName -x $make_tar -l " >/dev/null
+    $NETSTORM_BIN -c $ScenFileName -x $make_tar -l
+  else
+    echo "Starting netstorm using - nohup $NETSTORM_BIN -c $ScenFileName -x $make_tar -l" >/dev/null
+    $NETSTORM_BIN -c $ScenFileName -x $make_tar -l
+  fi
+fi
+
+exit $?

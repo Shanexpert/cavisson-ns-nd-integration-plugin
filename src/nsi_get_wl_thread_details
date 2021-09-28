@@ -1,0 +1,128 @@
+########################################################################################################################
+# Name      :    nsi_get_wl_thread_details
+# Purpose   :    
+# Usage     :    nsi_get_wl_thread_details --instance <instance name> --debug_level <0/1/2>
+#Initial Version : Tuesday Nov 12, 2013
+#Modification :  
+#Author     :    Krishna
+##########################################################################################################################
+
+
+#This function reads the input from weblogic.conf file.
+#
+get_values()
+{
+  #Ignoring Multiple spaces before the Keyword in the file. Tabs will not be ignored.
+  cav_mon_home=`grep "^ *CAV_MON_HOME" $FILE_PATH | cut -d "=" -f2`
+  wl_admin_server=`grep "^ *WL_ADMIN_SERVER" $FILE_PATH | cut -d "=" -f2`
+  wl_java_home=`grep "^ *WL_JAVA_HOME" $FILE_PATH | cut -d "=" -f2`
+  wl_classpath=`grep "^ *WL_CLASSPATH" $FILE_PATH | cut -d "=" -f2`
+  wl_admin_host=`grep "^ *WL_ADMIN_HOST" $FILE_PATH | cut -d "=" -f2`
+  wl_admin_port=`grep "^ *WL_ADMIN_PORT" $FILE_PATH | cut -d "=" -f2`
+  wl_username=`grep "^ *WL_USERNAME" $FILE_PATH | cut -d "=" -f2`
+  wl_password=`grep "^ *WL_PASSWORD" $FILE_PATH | cut -d "=" -f2`
+  
+}
+
+#This functions checks if any of variable is empty. If true then prints the error message and exits.
+#
+check_values()
+{
+  if [ -z "$cav_mon_home" -o -z "$wl_admin_server" -o -z "$wl_java_home" -o -z "$wl_classpath" -o -z "$wl_admin_host" -o -z "$wl_admin_port" -o -z "$wl_username" -o -z "$wl_password" ]; then
+    display_error_and_exit "One or more values are missing from $FILE_PATH."
+  fi
+}
+
+#This function stores the command to be executed on nsu_server_admin in variable cmd_name
+#
+set_cmd_name()
+{
+  cmd_name="$wl_java_home/bin/java -DCAV_MON_HOME=$cav_mon_home -classpath $wl_classpath cm_weblogic_monitor -hostname $wl_admin_host -port $wl_admin_port -username $wl_username -password $wl_password -type ThreadPoolRuntime -server $instance_name -generateReport true"
+}
+
+display_error_and_exit()
+{
+  echo "$*"
+  exit -1
+}
+
+Usage()
+{
+  echo "$*"
+  echo "Usage: nsi_get_wl_thread_details --instance <instance name> --debug_level <0/1/2>" 
+  exit -1
+}
+
+set_debug_log_file()
+{
+if [ "XX$CAV_MON_HOME" != "XX" ];then
+  DEBUG_LOG_FILE="$CAV_MON_HOME/logs/nsi_get_wl_thread_details_"$MON_TEST_RUN"_"$VECTOR_NAME"_debug.log"
+else
+  DEBUG_LOG_FILE="/tmp/nsi_get_wl_thread_details_"$MON_TEST_RUN"_"$VECTOR_NAME"_debug.log"
+  debug 1 "CAV_MON_HOME is not exported, putting logs to /tmp/."
+fi
+}
+
+debug()
+{
+   DL=$1
+   MSG=$2
+
+   if [ $DEBUG_LEVEL -eq 0 ];then
+     return
+   fi
+
+   if [ $DL -le $DEBUG_LEVEL ];then
+     echo "`date +"%F %X"`|$MSG" >> $DEBUG_LOG_FILE
+   fi
+}
+
+###################################################################################################################################
+#
+#
+
+#Initializing Variables
+#
+FILE_PATH="$NS_WDIR/sys/weblogic.conf"
+DEBUG_LEVEL=0
+iflag=0
+
+set_debug_log_file
+
+#Validating Arguments
+#
+if [ $# -eq 0 ];then
+  Usage "Error: Invaid Arguments"
+fi
+
+while [ "X$1" != "X" ]; do
+  case $1 in
+    -i | --instance)
+        shift
+        instance_name=$1
+        iflag=1;;
+
+    -d | --debug_level)
+        shift
+        DEBUG_LEVEL=$1;;
+  esac
+
+  shift
+done
+
+#Checking if 'instance' has been provided"
+if [ $iflag -eq 0 ]; then
+  Usage "Error: Must provide instance_name"
+fi
+
+#Checking if file exists
+if [ ! -f "$FILE_PATH" ]; then
+  display_error_and_exit "Error: File $FILE_PATH doesn't exist."
+fi
+
+get_values
+check_values
+set_cmd_name
+
+nsu_server_admin -g -s $wl_admin_server -c "$cmd_name"   
+exit $?

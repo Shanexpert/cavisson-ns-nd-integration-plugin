@@ -1,0 +1,43 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS DocDB DBClusterIdentifier Stats|11362|vector|18|0|AWS Metrics|AccountName>Region>DBClusterIdentifier|Amazon DocumentDB (with MongoDB compatibility) is a fast, scalable, highly available, and fully managed document database service that supports MongoDB workloads
+
+Graph|AWS DocDB Engine Uptime (Sec)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The amount of time, in seconds, that the instance has been running.
+
+Graph|AWS DocDB Database Connections|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of connections to an instance.
+
+Graph|AWS DocDB Change Stream Log Size (MB)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The amount of storage used by your cluster to store the change stream log in megabytes.
+
+Graph|AWS DocDB Free Local Storage|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|This metric reports the amount of storage available to each instance for temporary tables and logs.
+
+Graph|AWS DocDB Network Throughput (Bytes/Sec)|5|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The amount of network throughput, in bytes per second, both received from and transmitted to clients by each instance in the Amazon DocDB cluster.
+
+Graph|AWS DocDB Network Transmitted Throughput (Bytes/Sec)|6|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The amount of network throughput, in bytes per second, sent to clients by each instance in the cluster.
+
+Graph|AWS DocDB Network Received Throughput (Bytes/Sec)|7|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The amount of network throughput, in bytes per second, received from clients by each instance in the cluster.
+
+Graph|AWS DocDB Freeable Memory (Bytes)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The amount of available random access memory, in bytes.
+
+Graph|AWS DocDB Swap Usage|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The amount of swap space used on the instance.
+
+Graph|AWS DocDB CPU Utilization (%)|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of CPU used by an instance.
+
+Graph|AWS DocDB Buffer Cache Hit Ratio (%)|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of requests that are served by the buffer cache.
+
+Graph|AWS DocDB Write IO/Sec|12|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The average number of disk write I,O operations per second.
+
+Graph|AWS DocDB Read IO/Sec|13|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The average number of disk read I,O operations per second. Amazon DocDB reports read and write IOPS separately, and on one-minute intervals.
+
+Graph|AWS DocDB Write Latency (ms)|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average amount of time, in milliseconds, taken per disk I,O operation.
+
+Graph|AWS DocDB Read Latency|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average amount of time taken per disk I,O operation.
+
+Graph|AWS DocDB Disk Queue Depth|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of outstanding read,write requests waiting to access the disk.
+
+Graph|AWS DocDB Write Throughput (Bytes/Sec)|17|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The average number of bytes written to disk per second.
+
+Graph|AWS DocDB Read Throughput (Bytes/Sec)|18|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The average number of bytes read from disk per second.

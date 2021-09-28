@@ -1,0 +1,26 @@
+# --- GDF Version History ---
+# # 1.0 - Initial version
+# # 2.0 - Change done for match Long_data and Long_long_data to double
+# # 3.0 - Changes done for Dynamic data in Execution GUI
+# # 3.1 - Use future1 field of group line for Metric group name
+#
+# Command to get data for this gdf on windows server :
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# wmic path Win32_PerfFormattedData_Counters_HTTPServiceUrlGroups.Name='_Global_' get AllRequests, BytesReceivedRate, BytesSentRate, BytesTransferredRate, ConnectionAttempts, CurrentConnections, GetRequests, HeadRequests, MaxConnections /every:10
+#
+# Entry in mprof to get data :
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# CUSTOM_MONITOR <server ip> cm_win_HTTP_Service_URl.gdf <HTTPServiceURLGroup> 2 wmic path Win32_PerfFormattedData_Counters_HTTPServiceUrlGroups.Name='_Global_' get AllRequests, BytesReceivedRate, BytesSentRate, BytesTransferredRate, ConnectionAttempts, CurrentConnections, GetRequests, HeadRequests, MaxConnections /every:10
+#
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Windows HTTP Service URL Group Stats|10096|vector|9|0|Application Metrics|Tier>Server>Instance|Windows HTTP Service URL Group Stats monitor metrics related to URL Groups.
+Graph|HTTP Requests/Sec|1|scalar|rate|-|CumToPS|0|NA|-1|-1|H|NA|HTTP requests per second.
+Graph|Average Bytes Received|2|scalar|sample|-|-|0|NA|-1|-1|L|NA|Average data received by HTTP service.
+Graph|Average Bytes Sent|3|scalar|sample|-|-|0|NA|-1|-1|L|NA|Average data sent by HTTP service.
+Graph|Average Bytes Transferred|4|scalar|sample|-|-|0|NA|-1|-1|L|NA|Average bytes transferred (sent and received) by HTTP service.
+Graph|Average Connection Attempts|5|scalar|sample|-|-|0|NA|-1|-1|L|NA|Average connection attempts made .
+Graph|Current Connections|6|scalar|sample|-|-|0|NA|-1|-1|H|NA|Number of current established connections.
+Graph|GET Requests/Sec|7|scalar|rate|-|-|0|NA|-1|-1|L|NA|Rate of GET method requests made.
+Graph|HEAD Requests/Sec|8|scalar|rate|-|-|0|NA|-1|-1|L|NA|Rate of HEAD method requests made.
+Graph|Max Connections|9|scalar|sample|-|-|0|NA|-1|-1|H|NA|Maximum number of concurrent connections established.

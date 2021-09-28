@@ -1,0 +1,12 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Netty Access Log Stats|10319|vector|3|0|Application Metrics|Tier>Server>Instance|Request stats using netty access log.
+
+Graph|Average Service time (ms)|1|scalar|times|-|None|0|NA|-1|-1|NA|NA|Average Service time of requests.
+Graph|Number of requests/Sec|2|scalar|rate|-|None|0|NA|-1|-1|NA|NA|Number of requests in a seconds.
+Graph|Total Number of requests|3|scalar|cumulative|-|None|0|NA|-1|-1|NA|NA|Total number of requests.

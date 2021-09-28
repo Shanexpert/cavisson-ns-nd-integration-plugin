@@ -1,0 +1,78 @@
+#!/bin/bash
+
+################################################################################################
+# Name  : nii_untar_req_rep
+# Purpose: This shell is used to untar req_rep.tar.gz at controller 
+# Output :        
+# Author Name     : Krishna Tayal 
+################################################################################################
+
+. $CAV_MON_HOME/bin/ns_check_monitor_func.sh
+
+MY_PID=$$
+
+LOG_FILE=/tmp/nii_untar_req_rep.log.$MY_PID
+
+echo "Starting nii_untar_req_rep tool..." >> $LOG_FILE
+
+chmod 666 $LOG_FILE
+add_pid_in_excp_list $MY_PID
+
+Usage()
+{
+  echo "Usage: $0 -f <req rep tar name> -d <req rep path> -u <user name and group name>"
+  remove_pid_from_excp_list $MY_PID
+  exit 1
+}
+
+extract_req_rep_files()
+{
+  cd $REQ_REP_PATH;
+  USR_NAME=`echo $USER_GRP_NAME|cut -d':' -f1`
+  GEN_FILE_NAME=`echo $REQ_REP_TAR |cut -d. -f1`
+  CMON_USR_ID=`id -u`
+  echo "username = $USR_NAME" >> $LOG_FILE
+  #Decompress the tar.gz file
+  echo "Untaring $REQ_REP_TAR" >> $LOG_FILE
+  if [ $CMON_USR_ID -eq 0 ];then
+    su $USR_NAME -c "gzip -d $REQ_REP_TAR 1>>$LOG_FILE 2>&1"
+  else
+    gzip -d $REQ_REP_TAR 1>>$LOG_FILE 2>&1
+  fi
+  #Extract tar file
+  echo "Untaring ${GEN_FILE_NAME}.tar" >> $LOG_FILE
+  #Fix bug#18900 where uploader break the link which created by NS
+  #like: ns_logs -> /tmp/r3/TR12340/20160830151129/ns_logs
+  #Here, we have add option '-k' in tar command, which means don't replace existing files when extracting
+  #But this option may be slow. so need to revisit again.
+  if [ $CMON_USR_ID -eq 0 ];then
+    su $USR_NAME -c "tar -xkf ${GEN_FILE_NAME}.tar 1>>$LOG_FILE 2>&1"
+  else
+    tar -xkf ${GEN_FILE_NAME}.tar 1>>$LOG_FILE 2>&1
+  fi
+  #Remove .tar file
+  rm -f ${GEN_FILE_NAME}.tar
+}
+
+while getopts f:d:u:? args  2>/dev/null
+do
+  case $args in
+    f) REQ_REP_TAR=$OPTARG;;
+    d) REQ_REP_PATH=$OPTARG;;
+    u) USER_GRP_NAME=$OPTARG;;
+    ?) Usage "Invalid arguments";;
+    *) Usage "Invalid arguments";;
+  esac
+done
+
+if [ "X$USER_GRP_NAME" == "X" ]; then
+  exit 0
+fi
+
+if [ "X$REQ_REP_TAR" != "X" -a "X$REQ_REP_PATH" != "X" ]; then
+  extract_req_rep_files
+fi
+
+rm -f $LOG_FILE
+remove_pid_from_excp_list $MY_PID
+exit 0

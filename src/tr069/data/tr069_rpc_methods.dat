@@ -1,0 +1,10 @@
+GetRPCMethods
+SetParameterValues
+GetParameterValues
+GetParameterNames
+SetParameterAttributes
+GetParameterAttributes
+AddObject
+DeleteObject
+Reboot
+Download

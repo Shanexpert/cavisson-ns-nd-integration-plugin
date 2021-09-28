@@ -1,0 +1,554 @@
+#!/bin/bash
+
+#######################################################################################################
+# Name   : nsi_db_get_pg_comp_data
+# Example:
+# Initial version : --
+#   Author: --
+#   Date: --
+# Modified version:
+#   Author: Nikita Pandey
+#   Date: 21/April/2012
+#   Modification Details:
+#     (1) Change input style.
+#           Synatx Before change input style--
+#             nsi_get_3x <TR-NUM> <select-fields> <obj-type> <group-by> <[limit]> <[offset]>
+#          Synatx After change input style--
+#          nsi_db_get_pg_comp_data --testrun <value> --field <value> --object <value> --group <value> [--runphase <value>]
+#                        [--script <value>] [--starttime <value>] [--endtime <value>]
+#                         [--responsetime <value>] [--resptimeqmode <value>] 
+#           Note: here bracket [] show agrument is optional, and bracket <> show argument value
+#     (2) Example 
+#      nsi_db_get_pg_comp_data --testrun 21060 --object 2 --status -2 --resptimeqmode 2 --responsetime 0 --pageidx 12 
+#                                  --trans FN04_Select100ItemsPP
+
+
+#SELECT
+#  Count (*) AS "Count",
+#  inq."Component",
+#  round(avg(inq.CumulativeTime)) AS "Average Download Time"
+#FROM
+#  (
+#  SELECT
+#    UrlRecord_88019.ChildIndex,
+#    UrlRecord_88019.SessionInstance,
+#    UrlRecord_88019.PageInstance,
+#    UrlType AS "Component",
+#    (MAX(UrlRecord_88019.EndTime) - MIN(UrlRecord_88019.StartTime)) AS CumulativeTime
+#  FROM
+#    UrlRecord_88019 ,
+#    PageRecord_88019
+#  WHERE
+#    UrlRecord_88019.PageIndex = 1
+#    AND URLRecord_88019.SessionInstance = PageRecord_88019.SessionInstance
+#    AND UrlRecord_88019.PageInstance = PageRecord_88019.PageInstance
+#    AND URLRecord_88019.ChildIndex = PageRecord_88019.ChildIndex
+#  GROUP BY
+#    UrlType,
+#    UrlRecord_88019.ChildIndex,
+#    UrlRecord_88019.SessionInstance,
+#    UrlRecord_88019.PageInstance
+#  ) inq
+#GROUP BY  inq."Component"
+#ORDER BY inq."Component"
+
+#Count|Component|Average Download Time
+#1|1|20
+         
+
+
+########################################################################################################
+
+
+######################################################################
+#                     Variables and init settings
+#####################################################################
+
+# Including nsi_db_utils
+. $NS_WDIR/bin/nsi_db_utils
+
+LOCATION="All"
+ACCESS="All"
+BROWSER="All"
+OBJTBL=""
+# Set default values of variables
+DEBUG=0 # 0 --> off
+        # 1 --> on
+#RPO=0
+
+########################################################################
+#                       Functions's Definitions
+#######################################################################
+
+debug_logs()
+{
+  if [ "X$DEBUG" != "X0" ];then
+    echo "$*"
+  fi
+}
+
+
+#
+usage()
+{
+  echo "$*"
+  echo "$0 --testrun <value> --object <value> --pageidx <value> --location <value> --access <value> --script <value>
+        --starttime <value> --endtime <value> --resptimeqmode<value> --responsetime<value> --status<value> --page <value> --trans <value> --url<value> --browser <value>"
+  echo ""
+  echo "WHERE"
+  echo "  --testrun is test run number, which is mandatory argument."
+  echo "  --object is the type where the search began 0=Url,1=Page,2=Transaction,3=Session, which is mandatory args."
+  echo "  --pageidx is the pageindex, which is mendatory argument."
+  echo "  --location is the location-slectection: All for all otherwise location name,which is optional argument"
+  echo "  --access is the access-slectection: All for all otherwise access name, which is optional argument"
+  echo "  --browser is the browser-slectection: All for all otherwise access name, which is optional argument"
+  echo "  --script is for selecting particular script result, which is optional argument"
+  echo "  --page is for selecting particular page result, which is optional argument"
+  echo "  --trans is for selecting particular transaction result, which is optional argument"
+  echo "  --url is for selecting particular url result, which is optional argument"
+  echo "  --status is for selecting particular status, which is optional argument"
+  echo "  --starttime and --endtime is for selecting result that comes under the given range, which is optional argument."
+  echo "  --resptimeqmode is the selection of responsetime(0-lessthen, 1-greaterthen, 2-equal), which is optional argument."
+  exit 1
+}
+
+chk_args()
+{
+  if [ "X$TRNUM" == "X" ]; then
+    usage "Test run argument is missing"
+  fi
+  if [ "X$PAGEIDX" == "X" ]; then
+    usage "page index is missing"
+  fi
+ if [ "X$OBJECT" == "X" ]; then
+    usage "onject is missing"
+  fi
+
+
+
+}
+
+########################################################################
+#                            calling functions
+########################################################################
+
+
+
+chk_args_of_option()
+{
+  if [ "X$2" == "X" ];then
+    echo "Option $1 required a value."
+    usage
+    exit -1
+  fi
+}
+#args: TR-NUM Parent-tx pgidx loc-selection acc-selection runpahase
+if [ "X$1" == "X" ];then
+  usage
+fi
+
+while [ "$1" != "" ];do
+  debug_logs "ARGS=$1"
+  case $1 in
+    "--testrun")
+        shift
+        chk_args_of_option "--testrun" "$1"
+        TRNUM=$1;;
+    "--pageidx")
+        shift
+        chk_args_of_option "--pageidx" "$1"
+        PAGEIDX=$1;;
+    "--location")
+        shift
+        chk_args_of_option "--location" "$1"
+        LOCATION=$1;;
+    "--access")
+        shift
+        chk_args_of_option "--access" "$1"
+        ACCESS=$1;;
+    "--browser")
+        shift
+        chk_args_of_option "--browser" "$1"
+        BROWSER=$1;;
+    "--script")
+        shift
+        chk_args_of_option "--script" "$1"
+        SCRIPT=$1;;
+    "--page")
+        shift
+        chk_args_of_option "--page" "$1"
+        PAGE=$1;;
+    "--trans")
+        shift
+        chk_args_of_option "--trans" "$1"
+        TRANS=$1;;
+    "--url")
+        shift
+        chk_args_of_option "--url" "$1"
+        URL=$1;;
+    "--starttime")
+        shift
+        chk_args_of_option "--starttime" "$1"
+        STARTTIME=$1;;
+    "--endtime")
+        shift
+        chk_args_of_option "--endtime" "$1"
+        ENDTIME=$1;;
+    "--abs_starttime")
+        shift
+        chk_args_of_option "--abs_starttime" "$1"
+        ABS_STARTTIME=$1;;
+    "--abs_endtime")
+        shift
+        chk_args_of_option "--abs_endtime" "$1"
+        ABS_ENDTIME=$1;;
+    "--responsetime")
+        shift
+        chk_args_of_option "--responsetime" "$1"
+        RESPONSETIME=$1;;
+    "--resptimeqmode")
+        shift
+        chk_args_of_option "--resptimeqmode" "$1"
+        RESPTIMEQMODE=$1;;
+    "--responsetime2")
+        shift
+        chk_args_of_option "--responsetime2" "$1"
+        RESPONSETIME2=$1;;
+    "--status")
+        shift
+        chk_args_of_option "--status" "$1"
+        STATUS=$1;;
+    "--object")
+        shift
+        chk_args_of_option "--object" "$1"
+        OBJECT=$1;;
+    "--phaseidx")
+        shift
+        chk_args_of_option "--phaseidx" "$1"
+        PHASEIDX=$1;;
+    "--generatorid")
+        shift
+        chk_args_of_option "--generator" "$1"
+        GENERATORID=$1;;
+
+    --*) usage "Invalid options";;
+    *) usage ;;
+  esac
+  shift
+done
+
+if [ "X$STATUS" = "X-2" ];then
+  STATUS=""
+fi
+
+
+debug_logs "TRNUM = $TRNUM, PAGEIDX = $PAGEIDX, RUNPHASE=$RUNPHASE, ACCESS = $ACCESS, LOCATION = $LOCATION OBJECT = $OBJECT"
+
+#checking the version and build for setting timestamp in MS
+set_testrun_version_and_build $TRNUM
+if [ \( $VERSION -lt 414 \) -o \( $VERSION -eq 414 -a $BUILD -le 20 \) ]; then
+  $0_old_tr $ALL_ARG
+  exit 0
+fi
+
+set_query_files $TRNUM
+
+
+handle_time_filters_in_ms $TRNUM
+
+
+SELECT="SELECT $NEWLINE  Count (*) AS \"Count\""
+SELECT="$SELECT, $NEWLINE  inq.\"Component\""
+
+if [ "X$TR_NEW" == "X1" ]; then
+  SELECT="$SELECT, $NEWLINE  round(avg(inq.CumulativeTime / inq.count)) AS \"Average Download Time\""
+else
+  SELECT="$SELECT, $NEWLINE  round(avg(inq.CumulativeTime)) AS \"Average Download Time\""
+fi
+
+FROM="FROM $NEWLINE  ("
+
+INNER_QUERY="  SELECT $NEWLINE    UrlRecord_$TRNUM.ChildIndex"
+INNER_QUERY="$INNER_QUERY, $NEWLINE    UrlRecord_$TRNUM.SessionInstance"
+INNER_QUERY="$INNER_QUERY, $NEWLINE    UrlRecord_$TRNUM.PageInstance"
+INNER_QUERY="$INNER_QUERY, $NEWLINE    UrlType AS \"Component\""
+
+if [ "X$TR_NEW" == "X1" ]; then
+  INNER_QUERY="$INNER_QUERY, $NEWLINE    SUM(UrlRecord_$TRNUM.RespTime) AS CumulativeTime"
+  INNER_QUERY="$INNER_QUERY, $NEWLINE    count(*)"
+else
+  INNER_QUERY="$INNER_QUERY, $NEWLINE    (MAX(UrlRecord_$TRNUM.EndTime) - MIN(UrlRecord_$TRNUM.StartTime)) AS CumulativeTime"
+fi
+
+INQ_FROM="  FROM $NEWLINE    UrlRecord_$TRNUM "
+
+INQ_WHERE="  WHERE $NEWLINE    UrlRecord_$TRNUM.PageIndex = $PAGEIDX"
+ 
+INQ_GROUPBY="  GROUP BY $NEWLINE    UrlType"
+INQ_GROUPBY="$INQ_GROUPBY, $NEWLINE    UrlRecord_$TRNUM.ChildIndex"
+INQ_GROUPBY="$INQ_GROUPBY, $NEWLINE    UrlRecord_$TRNUM.SessionInstance"
+INQ_GROUPBY="$INQ_GROUPBY, $NEWLINE    UrlRecord_$TRNUM.PageInstance"
+
+
+
+if [ "X$OBJECT" != "X" ];then
+
+ if [ $OBJECT -eq 0 ];then
+   OBJTBL="URLRecord_$TRNUM"
+
+ elif [ $OBJECT -eq 1 ];then
+   OBJTBL="PageRecord_$TRNUM"
+
+#setting tables in case object = 2 or 3 for Response time and status object since PageRecord and Urlrecord will be present
+#forever
+
+ elif [ $OBJECT -eq 2 ];then
+   if [ -s $NS_WDIR/logs/TR$TRNUM/reports/csv/tprc.csv ];then
+     OBJTBL="TransPageRecord_$TRNUM"
+     TRANSPAGERECORD_TABLE_FLAG=1
+   else
+     OBJTBL="TransactionRecord_$TRNUM"
+     TRANSACTIONRECORD_TABLE_FLAG=1
+   fi
+    INQ_FROM="$INQ_FROM, $NEWLINE    $OBJTBL "
+
+
+  elif [ $OBJECT -eq 3 ];then
+    OBJTBL="SessionRecord_$TRNUM"
+    SESSIONRECORD_TABLE_FLAG=1
+    INQ_FROM="$INQ_FROM, $NEWLINE   $OBJTBL "
+  fi
+fi
+
+
+
+#Joining with Session Record Table
+if [ "$LOCATION" != "All" -o  "$ACCESS" != "All" -o "$BROWSER" != "All" -o "X$SCRIPT" != "X" -o "$OBJECT" -eq 3 ];then
+ if [ "$OBJTBL" != "SessionRecord_$TRNUM" ];then  
+  INQ_FROM="$INQ_FROM, $NEWLINE    SessionRecord_$TRNUM"
+  SESSIONRECORD_TABLE_FLAG=1
+ fi
+  
+  
+  INQ_WHERE="$INQ_WHERE $NEWLINE    AND URLRecord_$TRNUM.SessionInstance = SessionRecord_$TRNUM.SessionInstance"
+  INQ_WHERE="$INQ_WHERE $NEWLINE    AND URLRecord_$TRNUM.ChildIndex = SessionRecord_$TRNUM.ChildIndex"
+
+ if [ "X$SCRIPT" != "X" ];then
+  INQ_FROM="$INQ_FROM, $NEWLINE    SessionTable_$TRNUM"
+  INQ_WHERE="$INQ_WHERE $NEWLINE    AND SessionTable_$TRNUM.SessionName = ""'"$SCRIPT"'"
+  INQ_WHERE="$INQ_WHERE $NEWLINE    AND SessionRecord_$TRNUM.SessionIndex = SessionTable_$TRNUM.SessionIndex"
+ fi
+
+ if [ $LOCATION != "All" ];then
+   INQ_WHERE="$INQ_WHERE $NEWLINE    AND SessionRecord_$TRNUM.Location = ""'"$LOCATION"'"
+ fi
+  
+ if [ $ACCESS != "All" ];then
+   INQ_WHERE="$INQ_WHERE $NEWLINE    AND SessionRecord_$TRNUM.Access = ""'"$ACCESS"'"
+ fi
+  
+ if [ $BROWSER != "All" ];then
+   INQ_WHERE="$INQ_WHERE $NEWLINE    AND SessionRecord_$TRNUM.Browser = ""'"$BROWSER"'"
+ fi
+
+fi
+
+#In case of phase, starttime, endtime and resptime based filters, no extra join is needed
+if [ "X$PHASEIDX" != "X" ];then
+  INQ_WHERE="$INQ_WHERE $NEWLINE    AND URLRecord_$TRNUM.PhaseIndex = $PHASEIDX"
+fi
+
+
+#In case of TRANS, need to join with TransactionTable and TransactionRecord (or TransPageRecord depending on tprc.csv)
+if [ "X$TRANS" != "X" -o   "$OBJECT" -eq 2 ];then
+  INQ_FROM="$INQ_FROM, $NEWLINE    TransactionTable_$TRNUM"
+
+
+  # In case tprc is present the joining is done with TransPageRecord table 
+  # where session instance, pageinstance and childindex are matching.
+  # If tprc is not there then joined with url and only transaction index is matched with url record.
+  if [ -s $NS_WDIR/logs/TR$TRNUM/reports/csv/tprc.csv ];then
+ 
+    if [ $OBJECT -ne 2 ];then
+       INQ_FROM="$INQ_FROM, $NEWLINE     TransPageRecord_$TRNUM"
+       TRANSPAGERECORD_TABLE_FLAG=1
+    fi
+    INQ_WHERE="$INQ_WHERE $NEWLINE    AND URLRecord_$TRNUM.SessionInstance = TransPageRecord_$TRNUM.SessionInstance"
+    INQ_WHERE="$INQ_WHERE $NEWLINE    AND UrlRecord_$TRNUM.PageInstance = TransPageRecord_$TRNUM.PageInstance"
+    INQ_WHERE="$INQ_WHERE $NEWLINE    AND URLRecord_$TRNUM.ChildIndex = TransPageRecord_$TRNUM.ChildIndex"
+    INQ_WHERE="$INQ_WHERE $NEWLINE    AND TransactionTable_$TRNUM.TransactionIndex = TransPageRecord_$TRNUM.TransactionIndex"
+  else
+    if [ $OBJECT -ne 2 ];then
+     INQ_FROM="$INQ_FROM, $NEWLINE     TransactionRecord_$TRNUM"
+     TRANSACTIONRECORD_TABLE_FLAG=1
+    fi
+    INQ_WHERE="$INQ_WHERE $NEWLINE    AND URLRecord_$TRNUM.SessionInstance = TransactionRecord_$TRNUM.SessionInstance"
+    INQ_WHERE="$INQ_WHERE $NEWLINE    AND URLRecord_$TRNUM.ChildIndex = TransactionRecord_$TRNUM.ChildIndex"
+    INQ_WHERE="$INQ_WHERE $NEWLINE    AND TransactionTable_$TRNUM.TransactionIndex = TransactionRecord_$TRNUM.TransactionIndex"
+  fi
+
+if [ "X$TRANS" != "X"  ];then
+  INQ_WHERE="$INQ_WHERE $NEWLINE    AND TransactionTable_$TRNUM.TransactionName = ""'"$TRANS"'"
+fi
+
+fi
+
+
+#Response time filter
+if [ "X$RESPTIMEQMODE" != "X" ];then
+  if [ $RESPTIMEQMODE -eq 1 ];then
+    INQ_WHERE="$INQ_WHERE $NEWLINE    AND  $OBJTBL.RespTime <= $RESPONSETIME"
+  elif [ $RESPTIMEQMODE -eq 2 ];then
+    INQ_WHERE="$INQ_WHERE $NEWLINE    AND  $OBJTBL.RespTime >= $RESPONSETIME"
+  elif [ $RESPTIMEQMODE -eq 3 ];then
+    INQ_WHERE="$INQ_WHERE $NEWLINE    AND  $OBJTBL.RespTime >= $RESPONSETIME"
+    INQ_WHERE="$INQ_WHERE $NEWLINE    AND  $OBJTBL.RespTime <= $RESPONSETIME2"
+  fi
+fi
+
+if [ "X$STATUS" != "X" ];then
+
+  NOF=`echo $STATUS |awk -F ',' '{print NF}'`
+  if [ $NOF -gt 1 ];then
+    INQ_WHERE="$INQ_WHERE $NEWLINE    AND $OBJTBL.Status in ($STATUS)"
+  else
+    if [ "X$STATUS" = "X-1" ];then
+      INQ_WHERE="$INQ_WHERE $NEWLINE    AND $OBJTBL.Status > 0"
+    elif [ "X$STATUS" != "X-2" ];then
+      INQ_WHERE="$INQ_WHERE $NEWLINE    AND $OBJTBL.Status = $STATUS"
+    fi
+  fi
+fi
+
+
+
+#In case of PAGE, need to join with PageTable and PageRecord
+if [ "X$PAGE" != "X" -o "$OBJECT" -eq 1 ];then
+
+
+    INQ_FROM="$INQ_FROM, $NEWLINE    PageRecord_$TRNUM"
+    PAGERECORD_TABLE_FLAG=1
+    INQ_WHERE="$INQ_WHERE $NEWLINE    AND URLRecord_$TRNUM.SessionInstance = PageRecord_$TRNUM.SessionInstance"
+    INQ_WHERE="$INQ_WHERE $NEWLINE    AND UrlRecord_$TRNUM.PageInstance = PageRecord_$TRNUM.PageInstance"
+    INQ_WHERE="$INQ_WHERE $NEWLINE    AND URLRecord_$TRNUM.ChildIndex = PageRecord_$TRNUM.ChildIndex"
+
+  if [ "X$PAGE" != "X" ];then 
+     INQ_FROM="$INQ_FROM, $NEWLINE    PageTable_$TRNUM"
+    INQ_WHERE="$INQ_WHERE $NEWLINE    AND PageRecord_$TRNUM.PageIndex = PageTable_$TRNUM.PageIndex"
+    INQ_WHERE="$INQ_WHERE $NEWLINE    AND PageTable_$TRNUM.PageName = ""'"$PAGE"'"
+ fi
+fi
+
+#Add Url selection
+if [ "X$URL" != "X" ];then
+  INQ_FROM="$INQ_FROM, $NEWLINE    URLTable_$TRNUM"
+  INQ_WHERE="$INQ_WHERE $NEWLINE    AND URLRecord_$TRNUM.URLIndex = URLTable_$TRNUM.URLIndex"
+  INQ_WHERE="$INQ_WHERE $NEWLINE    AND URLTable_$TRNUM.URLName = ""'"$URL"'"
+fi
+
+
+# when --generatorid is given as filter to the query
+if [ "X$GENERATORID" != "X" ]; then
+  INQ_FROM="$INQ_FROM, $NEWLINE    GeneratorTable_$TRNUM"
+  INQ_WHERE="$INQ_WHERE $NEWLINE    AND $OBJTBL.GeneratorId = GeneratorTable_$TRNUM.GeneratorId"
+  INQ_WHERE="$INQ_WHERE $NEWLINE    AND GeneratorTable_$TRNUM.GeneratorId = $GENERATORID"
+fi
+
+if [ "X$STARTTIME" != "X" ];then
+  INQ_WHERE="$INQ_WHERE $NEWLINE    AND URLRecord_$TRNUM.EndTime >= $STARTTIME"
+
+  if [ "X$SESSIONRECORD_TABLE_FLAG" == "X1" ]; then
+    INQ_WHERE="$INQ_WHERE $NEWLINE    AND SessionRecord_$TRNUM.EndTime >= $STARTTIME"
+  fi
+
+  if [ "X$TRANSPAGERECORD_TABLE_FLAG" == "X1" ]; then
+    INQ_WHERE="$INQ_WHERE $NEWLINE    AND TransPageRecord_$TRNUM.EndTime >= $STARTTIME"
+  fi
+
+  if [ "X$TRANSACTIONRECORD_TABLE_FLAG" == "X1" ]; then
+    INQ_WHERE="$INQ_WHERE $NEWLINE    AND TransactionRecord_$TRNUM.EndTime >= $STARTTIME"
+  fi
+
+  if [ "X$PAGERECORD_TABLE_FLAG" == "X1" ]; then
+    INQ_WHERE="$INQ_WHERE $NEWLINE    AND PageRecord_$TRNUM.EndTime >= $STARTTIME"
+  fi
+
+fi
+
+if [ "X$ENDTIME" != "X" ];then
+  INQ_WHERE="$INQ_WHERE $NEWLINE    AND URLRecord_$TRNUM.EndTime <= $ENDTIME"
+
+  if [ "X$SESSIONRECORD_TABLE_FLAG" == "X1" ]; then
+    INQ_WHERE="$INQ_WHERE $NEWLINE    AND SessionRecord_$TRNUM.EndTime <= $ENDTIME"
+  fi
+
+  if [ "X$TRANSPAGERECORD_TABLE_FLAG" == "X1" ]; then
+    INQ_WHERE="$INQ_WHERE $NEWLINE    AND TransPageRecord_$TRNUM.EndTime <= $ENDTIME"
+  fi
+
+  if [ "X$TRANSACTIONRECORD_TABLE_FLAG" == "X1" ]; then
+    INQ_WHERE="$INQ_WHERE $NEWLINE    AND TransactionRecord_$TRNUM.EndTime <= $ENDTIME"
+  fi
+
+  if [ "X$PAGERECORD_TABLE_FLAG" == "X1" ]; then
+    INQ_WHERE="$INQ_WHERE $NEWLINE    AND PageRecord_$TRNUM.EndTime <= $ENDTIME"
+  fi
+
+fi
+
+if [ "X$ABS_STARTTIME" != "X" ];then
+  INQ_WHERE="$INQ_WHERE $NEWLINE    AND URLRecord_$TRNUM.EndTime >= $ABS_STARTTIME"
+
+  if [ "X$SESSIONRECORD_TABLE_FLAG" == "X1" ]; then
+    INQ_WHERE="$INQ_WHERE $NEWLINE    AND SessionRecord_$TRNUM.EndTime >= $ABS_STARTTIME"
+  fi
+
+  if [ "X$TRANSPAGERECORD_TABLE_FLAG" == "X1" ]; then
+    INQ_WHERE="$INQ_WHERE $NEWLINE    AND TransPageRecord_$TRNUM.EndTime >= $ABS_STARTTIME"
+  fi
+
+  if [ "X$TRANSACTIONRECORD_TABLE_FLAG" == "X1" ]; then
+    INQ_WHERE="$INQ_WHERE $NEWLINE    AND TransactionRecord_$TRNUM.EndTime >= $ABS_STARTTIME"
+  fi
+
+  if [ "X$PAGERECORD_TABLE_FLAG" == "X1" ]; then
+    INQ_WHERE="$INQ_WHERE $NEWLINE    AND PageRecord_$TRNUM.EndTime >= $ABS_STARTTIME"
+  fi
+
+fi
+
+if [ "X$ABS_ENDTIME" != "X" ];then
+  INQ_WHERE="$INQ_WHERE $NEWLINE    AND URLRecord_$TRNUM.EndTime <= $ABS_ENDTIME"
+
+  if [ "X$SESSIONRECORD_TABLE_FLAG" == "X1" ]; then
+    INQ_WHERE="$INQ_WHERE $NEWLINE    AND SessionRecord_$TRNUM.EndTime <= $ABS_ENDTIME"
+  fi
+
+  if [ "X$TRANSPAGERECORD_TABLE_FLAG" == "X1" ]; then
+    INQ_WHERE="$INQ_WHERE $NEWLINE    AND TransPageRecord_$TRNUM.EndTime <= $ABS_ENDTIME"
+  fi
+
+  if [ "X$TRANSACTIONRECORD_TABLE_FLAG" == "X1" ]; then
+    INQ_WHERE="$INQ_WHERE $NEWLINE    AND TransactionRecord_$TRNUM.EndTime <= $ABS_ENDTIME"
+  fi
+
+  if [ "X$PAGERECORD_TABLE_FLAG" == "X1" ]; then
+    INQ_WHERE="$INQ_WHERE $NEWLINE    AND PageRecord_$TRNUM.EndTime <= $ABS_ENDTIME"
+  fi
+
+fi
+
+
+INQ_ORDERBY="  ) inq"
+GROUP="GROUP BY  inq.\"Component\" "
+ORDER="ORDER BY inq.\"Component\" "
+
+chk_args
+
+set_query_files $TRNUM
+
+ns_run_query
+
+show_query_result
+
+exit 0

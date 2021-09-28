@@ -1,0 +1,10 @@
+# --- GDF Version History ---
+#  1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Redis DB Stats V1|10840|vector|4|0|Redis Metrics|Tier>Server>Instance>DB Name|Redis server DB stats provides metrics related to total keys,keyspace pending expirations,average time to live and db size.
+
+Graph|Redis Keys Spaces|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of key in database.
+Graph|Redis Key Pending Expiration|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of key expiration events.
+Graph|Redis Average Time To Live Keys (Sec)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average time in seconds to life of keys with an expiration set.
+Graph|Redis Database Size|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of keys in the currently-selected database.

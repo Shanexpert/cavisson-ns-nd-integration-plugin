@@ -1,0 +1,17 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|JBoss Cache stats|10201|vector|7|0|Application Metrics|Tier>Server>Instance>Cache|JBoss Cache stats
+
+Graph|Access Count|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Access Count
+Graph|Cache Max Size (KB)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Cache Max Size in KB
+Graph|Cache Size (KB)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Cache size in KB
+Graph|Desired Entry Access Ratio|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Desired Entry Access Ratio
+Graph|Hit Count|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of hits
+Graph|Max Allocation Iterations|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum allocation iterations
+Graph|Spare NotFound Entries|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Spare NotFound Entries

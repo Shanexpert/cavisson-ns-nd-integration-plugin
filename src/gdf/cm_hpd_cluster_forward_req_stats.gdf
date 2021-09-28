@@ -1,0 +1,15 @@
+# --- GDF Version History ---
+# # 1.0 - Initial version
+#
+Info|3.1|1|-|-|-1|-1|-
+#
+Group|HPD Slave Forward Request Stats|10429|vector|6|0|Application Metrics|Tier>Server>Instance>Cluster|slave monitor
+#
+Graph|Forward Request/Min|1|scalar|rate|-|CumToPM|0|A|-1|-1|NA|NA|no of request forward per minute
+Graph|Successful Forward/Min|2|scalar|rate|-|CumToPM|0|A|-1|-1|NA|NA|no of successfull forward request per minute
+Graph|Failed Forward/Min|3|scalar|rate|-|CumToPM|0|A|-1|-1|NA|NA|no of failed forward request per minute
+Graph|ConFail Forward/Min|4|scalar|rate|-|CumToPM|0|A|-1|-1|NA|NA|no of ConnFail forward request per minute
+Graph|T.O. Forward/Min|5|scalar|rate|-|CumToPM|0|A|-1|-1|NA|NA|no of timeout forward request per minute
+Graph|Forward resonse time|6|scalar|times|-|-|0|A|-1|-1|NA|NA|response time of forward request
+#
+

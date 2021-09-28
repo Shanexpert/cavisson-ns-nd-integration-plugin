@@ -1,0 +1,26 @@
+#!/bin/sh
+# Name    : nsi_get_ip_properties
+# Author  : Achint
+# usage   :
+#           nsi_get_ip_properties keyword
+# Purpose : This script will use in to get the value of specified keyword. If the script does not find the keyword supplied by user in ip properties file the script will show the error and exit otherwise script will show the value of the given keyword.
+# Modification History:
+#   07/29/06  Initial version
+
+if [ $# -ne 1 ];then
+  echo "Usage: nsi_get_ip_properties keyword"
+  exit 1
+fi
+
+IP_PROPERTIES=$NS_WDIR/sys/ip_properties
+keyword=$1
+
+temp=`grep $keyword $IP_PROPERTIES`
+if [ $? != 0 ];then
+  echo "Specified keyword $keyword is not in the ip properties file."
+  exit 1
+fi
+
+keyword=`echo $temp | cut -d" " -f2`
+echo $keyword
+exit 0

@@ -1,0 +1,28 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Oracle Current Blocks Served Stats|10192|vector|18|0|Oracle Metrics|Tier>Server>Instance|Oracle DataBase Current Blocks Served Stats
+
+Graph|Number of Pins|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of Pins.
+Graph|Pins less than 1 ms (Pct)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Pins less than 1 ms (Pct)
+Graph|Pins less than 10 ms (Pct)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Pins less than 10 ms (Pct)
+Graph|Pins less than 100 ms (Pct)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Pins less than 100 ms (Pct)
+Graph|Pins less than 1 second (Pct)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Pins less than 1 second (Pct)
+Graph|Pins less than 10 second (Pct)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Pins less than 10 second (Pct)
+Graph|Number of Flushes|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of Flushes
+Graph|Flushes less than 1 ms (Pct)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Flushes less than 1 ms (Pct)
+Graph|Flushes less than 10 ms (Pct)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Flushes less than 10 ms (Pct)
+Graph|Flushes less than 100 ms (Pct)|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Flushes less than 10 ms (Pct)
+Graph|Flushes less than 1 second (Pct)|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Flushes less than 1 second (Pct)
+Graph|Flushes less than 10 second (Pct)|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Flushes less than 10 second (Pct)
+Graph|Number of Writes|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of Writes
+Graph|Writes less than 1 ms (Pct)|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Writes less than 1 ms (Pct)
+Graph|Writes less than 10 ms (Pct)|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Writes less than 10 ms (Pct)
+Graph|Writes less than 100 ms (Pct)|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Writes less than 100 ms (Pct)
+Graph|Writes less than 1 second (Pct)|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Writes less than 1 second (Pct)
+Graph|Writes less than 10 second (Pct)|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Writes less than 10 second (Pct)

@@ -1,0 +1,15 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Hadoop Resource Manager Stats|10259|vector|5|0|Application Metrics|Tier>Server>Instance|Hadoop Resource Manager stats
+Graph|Active Node Manager(s)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of active node manager in cluster.
+Graph|Decommision Node Manager(s) |2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of node manager in the cluster withdraw from service .
+Graph|Lost Node Manager(s)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of node manager lost in the cluster.
+Graph|Rebooted Node Manager(s)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of node manager rebooted in the cluster.
+Graph|Unhealthy Node Manager(s)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of unhealthy node manager in the cluster.
+
+
+
+

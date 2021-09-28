@@ -1,0 +1,16 @@
+#!/bin/sh
+display_help_and_exit() 
+{
+  echo "Usage:"
+  echo "sampleTest -p <yamlFilePath> -u <userName>"
+  exit 1
+}
+
+#usage
+SCRIPT_DIR=$NS_WDIR/
+
+if [ $? != 0 ]; then
+    display_help_and_exit
+fi
+
+java -Djava.awt.headless=true -cp :$NS_WDIR/webapps/netstorm/lib/netstorm_bean.jar:$NS_WDIR/webapps/netstorm/lib/runlogic.jar:/home/cavisson/monitors/lib/java-getopt-1.0.9.jar:$NS_WDIR/webapps/netstorm/lib/swingx-all-1.6.4.jar:$NS_WDIR/webapps/netstorm/lib/scriptconverter.jar:$NS_WDIR/webapps/netstorm/lib/amf.jar:$NS_WDIR/webapps/netstorm/lib/commonClient.jar:$NS_WDIR/webapps/netstorm/lib/ns_object_utility.jar:$NS_WDIR/thirdparty/gui_signed_jars/yamlbeans-1.0.jar:$NS_WDIR/webapps/netstorm/lib/commons-io-2.2.jar:$NS_WDIR/thirdparty/gui_signed_jars/log4j-core-2.12.1.jar:$NS_WDIR/thirdparty/gui_signed_jars/log4j-api-2.12.1.jar:$NS_WDIR/thirdparty/gui_signed_jars/disruptor-3.4.2.jar:$NS_WDIR/thirdparty/gui_signed_jars/json_simple-1.1.jar -DNS_WDIR=$NS_WDIR -Dlog4j2.configurationFile=$NS_WDIR/webapps/.tomcat/log4j2/log4j2.xml com.cavisson.yamlToNS.YamlParser $*

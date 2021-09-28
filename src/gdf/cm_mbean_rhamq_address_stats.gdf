@@ -1,0 +1,29 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|RHAMQ Address Stats|11038|vector|7|0|ActiveMQ Metrics|Tier>Server>Instance>Monitor>Vector>Broker>Address|ActiveMQ Address stats. This information is taken from JMX Mbean.
+
+#G1
+Graph|NumberOfPages|1|scalar|sample|-|NONE|0|AS|-1|-1|NA|NA|Number of pages used by this address.
+
+#G2
+Graph|NumberOfMessages|2|scalar|sample|-|NONE|0|AS|-1|-1|NA|NA|The sum of messages on queue(s), including messages in delivery.
+
+#G3
+Graph|MessageCount|3|scalar|sample|-|NONE|0|AS|-1|-1|NA|NA|Number of messages currently in all queues bound to this address (includes scheduled, paged, and in-delivery messages).
+
+#G4
+Graph|AddressSize|4|scalar|sample|-|NONE|0|AS|-1|-1|NA|NA|The number of estimated bytes being used by the queue(s), used to control paging and blocking.
+
+#G5
+Graph|NumberOfBytesPerPage|5|scalar|sample|-|NONE|0|AS|-1|-1|NA|NA|Number of bytes used by each page for this address.
+
+#G6
+Graph|RoutedMessageCount|6|scalar|sample|-|NONE|0|AS|-1|-1|NA|NA|Number of messages routed to one or more bindings.
+
+#G7
+Graph|UnRoutedMessageCount|7|scalar|sample|-|NONE|0|AS|-1|-1|NA|NA|Number of messages not routed to any bindings.

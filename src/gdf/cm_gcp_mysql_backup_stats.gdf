@@ -1,0 +1,11 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP Cloud SQL Backup Stats|10745|vector|4|0|GCP Metrics|Tier>Server>ProjectID>Instance|GCP cloud SQL backup stats provide metrics related to backup status and backup size.
+Graph|Full Backup Status|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Backup status (status = 1, backup service is active and status = 0, indicate is inactive).
+Graph|Incremental Backup Status|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Backup status (status = 1, backup service is active and status = 0, indicate is inactive).
+Graph|Full Backup Size (MB)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total amount of space used in Megabytes for full backup. 
+Graph|Incremental Backup Size (MB)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total amount of space used in Megabytes for Incremental backup.
+

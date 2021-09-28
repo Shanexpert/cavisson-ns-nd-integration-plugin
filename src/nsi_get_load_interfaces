@@ -1,0 +1,25 @@
+#!/bin/sh
+# Name  : nsi_get_load_interfaces
+
+# Author: Achint
+# usage :
+#         nsi_get_load_interfaces [-s]
+# This script show the Interfaces of the system. If -s option is given then it will show the Interfaces of NetOcean otherwise it will show the interfaces of NetStorm. It takes the values from the $HOME_DIR/etc/cav.conf file
+
+# Modification History:
+#   07/24/06  Initial version
+
+ETH=NSLoadIF
+if [ $1XX != XX ];then
+  if [ $1 == '-s' ];then
+    ETH=SRLoadIF
+  fi
+fi
+
+INTERFACE=`cat $HOME_DIR/etc/cav.conf | grep $ETH | cut -d' ' -f2`
+echo $INTERFACE
+exit 0
+
+
+
+

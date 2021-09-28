@@ -1,0 +1,6 @@
+Info|3.1|1|-|-|-1|-1|-
+Group|Windows CRM Router Service|14274|vector|4|0|CRM Metrics|Tier>Server|Windows CRM Router Service Stats.
+Graph|AppFabric Request Timeout|1|scalar|sample|-|-|0|NA|-1|-1|H|NA|Number of time-outs seen making requests to Windows Azure.
+Graph|Router Request Faulted|2|scalar|sample|-|-|0|NA|-1|-1|H|NA|Number of requests made on the faulted channel to the router.
+Graph|Router Request Received (Throughput)|3|scalar|sample|-|-|0|NA|-1|-1|H|NA|Number of requests received by the router.
+Graph|Router Request Timeout|4|scalar|sample|-|-|0|NA|-1|-1|H|NA|Number of time-outs seen making requests to the router.

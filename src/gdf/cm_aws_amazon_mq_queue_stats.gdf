@@ -1,0 +1,17 @@
+# --- GDF Version History ---
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS AmazonMQ Queue Stats|11252|vector|10|0|AWS Metrics|AccountName>Region>Broker>Queue|Amazon MQ is a managed message broker service for Apache ActiveMQ that makes it easy to migrate to a message broker in the cloud
+
+Graph|AWS AmazonMQ Consumer|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of consumers subscribed to the destination
+Graph|AWS AmazonMQ Dequeue|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of messages acknowledged by consumers.
+Graph|AWS AmazonMQ Dispatch|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of messages sent to consumers.
+Graph|AWS AmazonMQ Enqueue|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of messages sent to the destination
+Graph|AWS AmazonMQ Enqueue Time (ms)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The end-to-end latency from when a message arrives at a broker until it is delivered to a consumer.
+Graph|AWS AmazonMQ Expired|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of messages that couldn't be delivered because they expired.
+Graph|AWS AmazonMQ Inflight|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of messages sent to consumers that the consumers still have to acknowledge.
+Graph|AWS AmazonMQ Memory Usage (%)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of memory limit that the destination currently uses.
+Graph|AWS AmazonMQ Producer|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of producers for the destination.
+Graph|AWS AmazonMQ Queue Size|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of messages in the queue.

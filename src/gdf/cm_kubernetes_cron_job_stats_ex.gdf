@@ -1,0 +1,5 @@
+Info|3.1|1|-|-|-1|-1|-
+Group|Kubernetes Cron Job Stats|11008|vector|3|0|Kubernetes Metrics|Cluster>Namespace>Job|Kubernetes cron job monitors metrices regarding cron job registry services which provide information related to job success, fail and last execution status.
+Graph|Kubernetes Cron Job Success Count|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Success count for kubernetes cron job.
+Graph|Kubernetes Cron Job Failed Count|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Failed count for kubernetes cron job.
+Graph|Kubernetes Cron Job Execution Status|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Last execution status of kubernetes cron job (1-Complete, 0-Failed).

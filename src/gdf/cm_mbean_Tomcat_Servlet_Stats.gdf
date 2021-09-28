@@ -1,0 +1,45 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Tomcat Servlet Stats|14138|vector|12|0|Application Metrics|Tier>Server>Instance>name|This stats provide information about each servlet loaded on the Apache Tomcat container and also monitors the Apache Tomcat web servlet.
+
+#G1
+Graph|Tomcat Max Time|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Maximum processing time of a request.
+
+#G2
+Graph|Tomcat Request Count|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of requests processed by this wrapper.
+
+#G3
+Graph|Tomcat Count Allocated|3|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The count of allocations that are currently active (even if they  are for the same instance, as will be true on a non-STM servlet).
+
+#G4
+Graph|Tomcat Available(ms)|4|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The date and time at which this servlet will become available (in milliseconds since the epoch), or zero if the servlet is available. If this value equals Long.MAX_VALUE, the unavailability of this servlet is considered permanent.
+
+#G5
+Graph|Tomcat Background Processor Delay|5|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The processor delay for this component.
+
+#G6
+Graph|Tomcat Processing Time|6|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Total execution time of the servlet's service method.
+
+#G7
+Graph|Tomcat Load On Startup|7|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The load-on-startup order value (negative value means load on first call) for this servlet.
+
+#G8
+Graph|Tomcat Load Time|8|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Time taken to load and initialise the Servlet.
+
+#G9
+Graph|Tomcat Min Time|9|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Minimum processing time of a request.
+
+#G10
+Graph|Tomcat Class Load Time|10|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Time taken to load the Servlet class.
+
+#G11
+Graph|Tomcat Max Instances|11|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Maximum number of STM instances..
+
+#G12
+Graph|Tomcat Error Count|12|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The Number of Error Counts.
+

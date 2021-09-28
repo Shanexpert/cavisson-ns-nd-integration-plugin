@@ -1,0 +1,106 @@
+#!/bin/sh
+
+ALL_TCL=''
+TSR_DIR=$NS_WDIR/logs/tsr
+TEMP_TCL_NUM=/tmp/tcl_num.$$
+
+display_help_and_exit()
+{
+  echo "ERROR: Incorrect usage"
+  echo "Usage:"
+  echo "ts_show_logs -n <TSR Number> -c <Test Cycle Number> -a <No Argument>" 
+  echo "Where:"
+  echo "  -n <TSR Number> to get the summary of a particular testsuite number" 
+  echo "  -c <Test Cycle Number> to get the summary of a particular test cycle number" 
+  echo "  -a <No Argument> to get the summary of all the test cycles"
+  exit 1  
+}
+
+while getopts n:c:a? OPT
+do
+    case $OPT in
+        n) TSR_NUM="$OPTARG" ;;
+        c) TCL_NUM="$OPTARG";;
+        a) ALL_TCL="ALL";;
+        ?) display_help_and_exit ;;
+    esac
+done
+
+if [ $# == 0 ];then
+  display_help_and_exit
+fi
+
+get_all_test_cycle_number()
+{
+  tsi_show_tsr -a|awk -F '|' {'print $1'}|sort -u > $TEMP_TCL_NUM
+}
+
+get_summary_of_all_cycles()
+{
+  while read line 
+  do
+    TCL_SUMMARY_FILE=$TSR_DIR/$line/cycle_summary.report
+    if [ -f $TCL_SUMMARY_FILE ];then
+      cat $TCL_SUMMARY_FILE 
+      echo "" 
+    fi
+  done < $TEMP_TCL_NUM
+}
+
+get_summary_of_test_cycle()
+{
+  TCL_SUM_FILE=$TSR_DIR/$TCL_NUM/cycle_summary.report
+  if [ -f $TCL_SUM_FILE ];then
+    cat $TCL_SUM_FILE
+  else
+    echo "There is no logs for TEST CYCLE $TCL_NUM"
+  fi 
+}
+
+get_summary_of_tsr_number()
+{
+  TEST_CYCLE_PATH=`find $TSR_DIR -name $TSR_NUM -exec dirname {} \;`
+  if [ ! -f $TEST_CYCLE_PATH/$TSR_NUM/summary.report ];then
+    echo "There is no logs for TSR $TSR_NUM"
+    exit 1
+  else 
+    cat $TEST_CYCLE_PATH/$TSR_NUM/summary.report
+  fi
+}
+
+get_summary_for_cycle_and_tsr()
+{
+  TSR_DIR_PATH=$TSR_DIR/$TCL_NUM/$TSR_NUM
+  if [ ! -d $TSR_DIR_PATH ];then
+    echo "The directory $TSR_DIR/$TCL_NUM/$TSR_NUM is not present"
+    exit 1
+  else
+    TSR_SUMMARY_PATH=$TSR_DIR/$TCL_NUM/$TSR_NUM/summary.report
+    if [ -f $TSR_SUMMARY_PATH ];then
+      cat $TSR_SUMMARY_PATH
+    else
+      echo "There is no logs for TSR $TSR_NUM"
+      exit 1
+    fi
+  fi  
+}
+
+if [ "XX$ALL_TCL" != "XX" ];then 
+  get_all_test_cycle_number
+  get_summary_of_all_cycles
+  rm -rf $TEMP_TCL_NUM
+fi
+
+if [ "XX$TCL_NUM" != "XX" -a "XX$TSR_NUM" == "XX" ];then
+  get_summary_of_test_cycle
+fi
+
+if [ "XX$TSR_NUM" != "XX" -a "XX$TCL_NUM" == "XX" ];then
+  get_summary_of_tsr_number
+fi
+
+if [ "XX$TSR_NUM" != "XX" -a "XX$TCL_NUM" != "XX" ];then
+  get_summary_for_cycle_and_tsr 
+fi
+
+exit 0

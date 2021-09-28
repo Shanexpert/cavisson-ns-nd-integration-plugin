@@ -1,0 +1,4 @@
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Kubernetes Service Status|10567|vector|1|0|Kubernetes Metrics|Tier>Server>NameSpace>Service|Kubernetes Service Status monitor service health.
+Graph|Services Status|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Service status (status = 1, depict that service is active and status=0, indicate is inactive).

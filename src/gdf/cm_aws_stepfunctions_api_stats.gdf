@@ -1,0 +1,15 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS StepsFunctions API Stats|11476|vector|4|0|AWS Metrics|AccountName>Region>API|AWS Step Functions is a web service that enables you to coordinate the components of distributed applications and microservices using visual workflows.
+
+Graph|AWS StepsFunctions Requests/Sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The count of requests per second.
+
+Graph|AWS StepsFunctions Throttled Events|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The count of requests that have been throttled.
+
+Graph|AWS StepsFunctions Available Requests/Sec|3|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The count of available requests per second.
+
+Graph|AWS StepsFunctions Allowed Requests/Sec|4|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The count of requests per second that are allowed into the bucket.

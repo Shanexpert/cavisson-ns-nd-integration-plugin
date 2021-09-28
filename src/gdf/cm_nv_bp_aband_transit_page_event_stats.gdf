@@ -1,0 +1,8 @@
+# --- GDF Version History ---
+# # 1.0 - Initial version
+#
+Info|3.1|1|-|-|-1|-1|-
+#
+Group|BP Abandonments by Transit Page Events|10235|vector|1|0|UX Metrics|ChannelName>BusinessProcess>SegmentName>BPExitPage>SessionExitPage>Event|Business Process abandonments due to different events on the transit pages
+#
+Graph|BP Abandonments/Minute|1|scalar|rate|-|CumToPM|0|NA|-1|-1|NA|NA|Number of Business Process Abandonments per minute

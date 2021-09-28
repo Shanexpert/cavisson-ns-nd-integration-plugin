@@ -1,0 +1,8 @@
+#---------GDFVersionHistory---------
+#1.0-Initial Version
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Network Delay Ex|10601|vector|3|0|Network Metrics|Tier>Server>Destination|Network Delay
+Graph|Network Delay (ms)|1|scalar|times|-|-|0|NA|-1|-1|NA|NA|Network delay in milliseconds.
+Graph|Network Packet Loss (pct)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percentage of loss of packets while travelling from one node to another across the network.
+Graph|Network Delay Max Min Ratio|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The Ratio of the max and min round trip time.

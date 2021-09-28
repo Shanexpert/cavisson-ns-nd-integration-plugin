@@ -1,0 +1,17 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Kubernetes Container CPU Stats Ex|14220|vector|8|0|Kubernetes Metrics|Cluster>Region>Zone>Node>Pod>Container|Kubernetes Container CPU stats provide metrics related to cpu utilization.
+Graph|CPU Usage Time/Sec|1|scalar|rate|-|CumToPS|0|D|-1|-1|NA|DIV(G1,1000000000)|CPU usage time per second. 
+Graph|Kernel Mode CPU Usage Time/Sec|2|scalar|rate|-|CumToPS|0|D|-1|-1|NA|DIV(G2,1000000000)|Kernel mode CPU usage time per second. 
+Graph|User Mode CPU Usage Time/Sec|3|scalar|rate|-|CumToPS|0|D|-1|-1|NA|DIV(G3,1000000000)|User mode CPU usage time per second.
+Graph|System CPU Usage Time/Sec|4|scalar|rate|-|CumToPS|0|D|-1|-1|NA|DIV(G4,1000000000)|System CPU usage time per second.
+Graph|Online CPUs|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Online cpus.
+Graph|Throttle Periods|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Throttle periods.
+Graph|Throttled Periods|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Throttled periods.
+Graph|Throttled Time|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Throttled time.
+
+
+ 

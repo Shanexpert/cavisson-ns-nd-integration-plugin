@@ -1,0 +1,124 @@
+#! /bin/sh
+
+#Here we are creating indexes for tables
+#Index will enhance database performance (indexes can be used to obtain fast access)
+
+if [ -d $PWD/TR$1 ]; then
+  BASE_DIR=$PWD
+elif [ -d $NS_WDIR/logs/TR$1 ]; then
+  BASE_DIR=$NS_WDIR/logs
+else
+  echo "Error: Test run number $1 is not a valid test run number"
+  exit -1
+fi
+
+echo "nsu_create_index: Please wait indexes will be created ..."
+START=`date +%s`
+
+psql test cavisson <<+
+create index urc_start_time_$1 ON URLRecord_$1 (StartTime);
+create index urc_end_time_$1 ON URLRecord_$1 (EndTime);
+create index urc_urlidx_start_time_$1 ON URLRecord_$1 (URLIndex, StartTime);
+create index urc_urlidx_end_time_$1 ON URLRecord_$1 (URLIndex, EndTime);
+create index urc_url_index_$1  ON URLRecord_$1 (UrlIndex);
+create index urc_page_index_$1 ON URLRecord_$1 (PageIndex);
+create index urc_session_index_$1 ON URLRecord_$1 (SessionIndex);
+create index urc_tx_index_$1 ON URLRecord_$1 (TransactionIndex);
+create index urc_fpi_$1 ON URLRecord_$1 (FlowPathInstance);
+create index urc_status_$1 ON URLRecord_$1 (Status);
+create index urc_all_index_$1 ON URLRecord_$1 (UrlIndex, ChildIndex, SessionInstance, PageInstance);
+create index urc_response_time_$1 ON URLRecord_$1 (RespTime);
+create index urc_generator_id_$1 ON URLRecord_$1 (GeneratorID);
+create index urc_phase_index_$1 ON URLRecord_$1 (PhaseIndex);
+
+create index prc_start_time_$1 ON PageRecord_$1 (StartTime);
+create index prc_end_time_$1 ON PageRecord_$1 (EndTime);
+create index prc_pageidx_start_time_$1 ON PageRecord_$1 (PageIndex, StartTime);
+create index prc_pageidx_end_time_$1 ON PageRecord_$1 (PageIndex, EndTime);
+create index prc_all_index_$1 ON PageRecord_$1 (Status, SessionIndex, PageIndex, SessionInstance, PageInstance);
+create index prc_all_trans_index_$1 ON PageRecord_$1 (TransactionIndex, ChildIndex, PageInstance,SessionInstance);
+create index prc_response_time_$1 ON PageRecord_$1 (RespTime);
+create index prc_generator_id_$1 ON PageRecord_$1 (GeneratorID);
+create index prc_phase_index_$1 ON PageRecord_$1 (PhaseIndex);
+
+create index trc_start_time_$1 ON TransactionRecord_$1 (StartTime);
+create index trc_end_time_$1 ON TransactionRecord_$1 (EndTime);
+create index trc_transidx_start_time_$1 ON TransactionRecord_$1 (TransactionIndex, StartTime);
+create index trc_transidx_end_time_$1 ON TransactionRecord_$1 (TransactionIndex, EndTime);
+create index trc_session_index_$1 ON TransactionRecord_$1 (SessionIndex);
+create index trc_transaction_index_$1 ON TransactionRecord_$1 (TransactionIndex);
+create index trc_status_$1 ON TransactionRecord_$1 (Status);
+create index trc_all_index_$1 ON TransactionRecord_$1 (TransactionIndex, SessionIndex);
+create index trc_response_time_$1 ON TransactionRecord_$1 (RespTime);
+create index trc_generator_id_$1 ON TransactionRecord_$1 (GeneratorID);
+create index trc_phase_index_$1 ON TransactionRecord_$1 (PhaseIndex);
+
+create index src_start_time_$1 ON SessionRecord_$1 (StartTime);
+create index src_end_time_$1 ON SessionRecord_$1 (EndTime);
+create index src_sessionidx_start_time_$1 ON SessionRecord_$1 (SessionIndex, StartTime);
+create index src_sessionidx_end_time_$1 ON SessionRecord_$1 (SessionIndex, EndTime);
+create index src_session_index_$1 ON SessionRecord_$1 (SessionIndex);
+create index src_status_$1 ON SessionRecord_$1 (Status);
+create index src_response_time_$1 ON SessionRecord_$1 (RespTime);
+create index src_generator_id_$1 ON SessionRecord_$1 (GeneratorID);
+create index src_phase_index_$1 ON SessionRecord_$1 (PhaseIndex);
+
+create index tprc_start_time_$1 ON TransPageRecord_$1 (StartTime);
+create index tprc_end_time_$1 ON TransPageRecord_$1 (EndTime);
+create index tprc_transidx_start_time_$1 ON TransPageRecord_$1 (TransactionIndex, StartTime);
+create index tprc_transidx_end_time_$1 ON TransPageRecord_$1 (TransactionIndex, EndTime);
+create index tprc_status_$1 ON TransPageRecord_$1 (Status);
+create index tprc_all_index_$1 ON TransPageRecord_$1 (TransactionIndex, ChildIndex, PageInstance,SessionInstance);
+create index tprc_response_time_$1 ON TransPageRecord_$1 (RespTime);
+create index tprc_generator_id_$1 ON TransPageRecord_$1 (GeneratorID);
+create index tprc_phase_index_$1 ON TransPageRecord_$1 (PhaseIndex);
+
+
+create index urt_url_idx_$1 ON URLTable_$1 (UrlIndex);
+create index pgt_page_idx_$1 ON PageTable_$1 (PageIndex);
+create index trt_trans_idx_$1 ON TransactionTable_$1 (TransactionIndex);
+create index sst_session_idx_$1 ON SessionTable_$1 (SessionIndex);
+
+create index log_phase_table_phase_index_$1 ON LogPhaseTable_$1 (PhaseIndex);
+
+
+create index page_dump_starttime_idx_$1 ON PageDumpRecord_$1 (StartTime);
+create index page_dump_endtime_idx_$1 ON PageDumpRecord_$1 (EndTime);
+create index page_dump_generatorid_idx_$1 ON PageDumpRecord_$1 (GeneratorId);
+create index page_dump_pageindex_idx_$1 ON PageDumpRecord_$1 (PageIndex);
+create index page_dump_sessionindex_idx_$1 ON PageDumpRecord_$1 (SessionIndex);
+create index page_dump_pagestatus_idx_$1 ON PageDumpRecord_$1 (PageStatus);
+create index page_dump_groupnum_idx_$1 ON PageDumpRecord_$1 (GroupNum);
+
+create index error_codes_objecttype_idx_$1 ON ErrorCodes_$1 (ObjectType);
+create index error_codes_errorcode_idx_$1 ON ErrorCodes_$1 (ErrorCode);
+create index error_codes_errorname_idx_$1 ON ErrorCodes_$1 (ErrorName);
+
+create index alert_history_key_idx_$1 ON AlertHistory_$1 (Key);
+create index alert_history_timestamp_idx_$1 ON AlertHistory_$1 (Timestamp);
+create index alert_history_type_idx_$1 ON AlertHistory_$1 (Type);
+create index alert_history_status_idx_$1 ON AlertHistory_$1 (Status);
+create index alert_history_state_idx_$1 ON AlertHistory_$1 (State);
+create index alert_history_severity_idx_$1 ON AlertHistory_$1 (Severity);
+create index alert_history_prev_severity_idx_$1 ON AlertHistory_$1 (PrevSeverity);
+create index alert_history_rulename_idx_$1 ON AlertHistory_$1 (RuleName);
+create index alert_history_baseline_idx_$1 ON AlertHistory_$1 (Baseline);
+
++
+
+TR_DIR_PATH=$NS_WDIR/logs/TR$1
+#READER_RUN_MODE=`grep "READER_RUN_MODE" $TR_DIR_PATH/sorted_scenario.conf | cut -d' ' -f2`
+#if [ $READER_RUN_MODE -eq 0 ];then
+if [ -f $TR_DIR_PATH/.oracle_sql_report ];then
+  nsu_orl_create_index $1 
+elif [ -f $TR_DIR_PATH/common_files/.oracle_sql_report ];then
+  nsu_orl_create_index $1
+fi
+#fi
+
+END=`date +%s`
+#echo $END
+#echo $START
+DIFF=`expr $END - $START`
+#echo $DIFF
+echo "nsu_create_index: Creating indexes took $DIFF seconds"

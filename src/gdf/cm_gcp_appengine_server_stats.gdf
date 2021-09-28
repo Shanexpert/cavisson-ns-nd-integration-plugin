@@ -1,0 +1,9 @@
+# 1.0 - Initial version
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP App Engine Server|11593|vector|5|0|GCP Metrics|ProjectID>Zone>ResponseCode>RequestLoading|Server Stats provide metrics related to server response.
+Graph|GCP App Engine Server Response/Sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|HTTP response count per seconds.
+Graph|GCP App Engine 5th Percentile Server Response Latency (ms)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|5th Percentile HTTP response latency in milliseconds.
+Graph|GCP App Engine 50th Percentile Server Response Latency (ms)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|50th Percentile HTTP response latency in milliseconds.
+Graph|GCP App Engine 95th Percentile Server Response Latency (ms)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|95th Percentile HTTP response latency in milliseconds. 
+Graph|GCP App Engine 99th Percentile Server Response Latency (ms)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|99th Percentile HTTP response latency in milliseconds.

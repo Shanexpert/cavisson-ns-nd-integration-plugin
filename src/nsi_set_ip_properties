@@ -1,0 +1,35 @@
+#!/bin/sh
+# Name    : nsi_set_ip_properties
+# Author  : Achint
+# usage   :
+#           nsi_set_ip_properties keyword new-value
+# Purpose : This script is used in to change the value in ip properties file.It will take 2 inputs first is keyword and second one is value of keyword. If the specified keyword does not fined in ip properties file then scipt will show error message and exit otherwise script will change the value of keyword with new value suplied by user.
+# Modification History:
+#   07/29/06  Initial version
+
+#Check number of inputs
+if [ $# -ne 2 ];then
+  echo "Usage: nsi_set_ip_properties keyword new-value"
+  exit 1
+fi
+IP_PROPERTIES=$NS_WDIR/sys/ip_properties
+TEMP=/tmp/temp.$$
+KEYWORD=$1
+VALUE=$2
+
+#Check Specified keyword is in ip properties file or not.
+grep $KEYWORD $IP_PROPERTIES >>/dev/null
+if [ $? != 0 ];then
+  echo "Specified  keyword is not in the ip properties file."
+  exit 1
+fi
+
+#Change the value of keyword.
+grep -v $KEYWORD $IP_PROPERTIES >>$TEMP
+echo $KEYWORD $VALUE >$IP_PROPERTIES
+cat $TEMP >>$IP_PROPERTIES
+rm -f $TEMP
+SR_ADDRESS=`cat $HOME_DIR/etc/cav.conf | grep "SRAdminIP" | cut -d" " -f2 | cut -d/ -f1`
+scp /home/cavisson/work/sys/ip_properties $SR_ADDRESS:/home/cavisson/work/sys/ > /dev/null
+exit 0
+

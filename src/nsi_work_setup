@@ -1,0 +1,90 @@
+#
+# Name: nsi_work_setup
+# Author: Neeraj Jain
+# Purpsose: To setup files for the work directory
+#
+# Usage:  nsi_work_setup <work2 or work3>
+#   e.g.  nsi_work_setup work2
+#
+# Exit Values: 
+#  0 - Start Sucessful
+#  -1 - Usage Error
+# Modification History:
+#   03/01/05: Neeraj - Initial Version
+#   02/08/06: Neeraj - Removed config.init from server and change of work as work path is not used in ini file.
+#
+#           Ports
+#Dir   Tomcat Tomcat 		Path 			Tomcat Start Script
+#work	80 8009 8005	/apps/jakarta-tomcat-5.5.4	/etc/init.d/tomcat
+#work2	8000 8002 8003	/apps2/jakarta-tomcat-5.5.4	/etc/init.d/tomcat2
+#work3	8001 8004 8006	/apps3/jakarta-tomcat-5.5.4	/etc/init.d/tomcat3
+#           Ports
+#Dir	Applet	NS 	GUI Server Start Script
+#work	7001	7000	/etc/init.d/nsServer
+#work2	7002	7202	/etc/init.d/nsServer3
+#work3	7003	7203	/etc/init.d/nsServer3
+#
+# tomcat server.xml should have correct app path
+#
+#if [ $# != 1 ]
+#then
+#  echo "ERROR: In correct usage"
+#  echo "Usage:"
+#  echo "nsi_work_setup <work dir>"
+#  echo "    e.g.  nsi_work_setup work2"
+#  exit -1
+#fi
+
+if [ "XX$NS_WDIR" = "XX" ];then
+  echo "ERROR: env NS_WDIR must be defined"
+  exit -1
+fi
+
+WD=`pwd`
+
+#if [ $WD != "$NS_WDIR/webapps" ];then
+#  echo "This cmd must be run from $NS_WDIR/webapps"
+#  exit -1
+#fi
+
+WorkDir=`basename $NS_WDIR`
+
+OrigNSPort=7000
+OrigAppletPort=7001
+
+if [ $WorkDir == "work2" ]
+then
+  NSPort=7202
+  AppletPort=7002
+elif [ $WorkDir == "work3" ]
+then
+  NSPort=7203
+  AppletPort=7003
+else
+  exit 0
+fi
+
+#NS_WDIR=/home/cavisson/$1
+
+echo "NS_WDIR is $NS_WDIR"
+
+GUIConfFile="$NS_WDIR/webapps/netstorm/config/config.ini" 
+
+for file in $GUIConfFile
+do
+  sed s/$OrigNSPort/$NSPort/ $file | sed s/$OrigAppletPort/$AppletPort/ > /tmp/nsi_work_setup.tmp
+  cp /tmp/nsi_work_setup.tmp $file
+
+#First replace work[0-9] to work and then to correct work
+# sed s/work[0-9]/work/g $file | sed s/'netstorm\/'work/'netstorm\/'$WorkDir/g > /tmp/nsi_work_setup.tmp
+#  cp /tmp/nsi_work_setup.tmp $file
+
+#enable debug
+#  sed s/off/on/ $file > /tmp/nsi_work_setup.tmp
+#  cp /tmp/nsi_work_setup.tmp $file
+done
+
+rm -f /tmp/nsi_work_setup.tmp
+
+exit 0
+

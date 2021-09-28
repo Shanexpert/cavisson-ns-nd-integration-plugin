@@ -1,0 +1,4 @@
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Vault Seal Stats|10891|vector|1|0|Vault Seal Status Metrics|Tier>Server>Instance|Vault Seal Stats.
+Graph|Vault Sealed Status|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Vault Sealed Status(true-1, false-0).

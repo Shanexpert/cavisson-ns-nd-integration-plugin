@@ -1,0 +1,23 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+#
+# Command to get data for this gdf on windows server : 
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# wmic path Win32_PerfFormattedData_Tcpip_TCPv4 get ConnectionFailures, ConnectionsActive, ConnectionsEstablished, ConnectionsPassive, ConnectionsReset, SegmentsPersec, SegmentsReceivedPersec, SegmentsRetransmittedPersec, SegmentsSentPersec /every:10
+#
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Windows TCP Stats|10053|vector|9|0|Network Metrics|Tier>Server|TCP Stats monitor metrics related to rates at which TCP Segments are sent and received by using the TCP protocol and TCP connections states.
+
+Graph|TCP Connection Failures|1|scalar|sample|-|-|0|NA|-1|-1|H|NA|Number of TCP connections have made a direct transition to the CLOSED state from the SYN-SENT state or the SYN-RCVD state, plus the number of times TCP connections have made a direct transition to the LISTEN state from the SYN-RCVD state.
+Graph|TCP Active Connections|2|scalar|cumulative|-|-|0|NA|-1|-1|H|NA|Number of TCP connections have made a direct transition to the SYN-SENT state from the CLOSED state.
+Graph|TCP Connections Established|3|scalar|sample|-|-|0|NA|-1|-1|L|NA|Number of TCP connections for which the current state is either ESTABLISHED or CLOSE-WAIT.
+Graph|TCP Passive Connections|4|scalar|cumulative|-|-|0|NA|-1|-1|L|NA|Number of TCP connections have made a direct transition to the SYN-RCVD state from the LISTEN state.
+Graph|TCP Connections Reset|5|scalar|sample|-|-|0|NA|-1|-1|H|NA|Number of TCP connections have made a direct transition to the CLOSED state from either the ESTABLISHED state or the CLOSE-WAIT state.
+Graph|TCP Segments/Sec|6|scalar|rate|-|-|0|NA|-1|-1|L|NA|Number of TCP segments are sent or received per second using the TCP protocol.
+Graph|TCP Segments Received/Sec|7|scalar|rate|-|-|0|NA|-1|-1|L|NA|Number of segments are received per second, including those received in error. This count includes segments received on currently established connections.
+Graph|TCP Segments Retransmitted/Sec|8|scalar|rate|-|-|0|NA|-1|-1|L|NA|Number of segments are retransmitted per second, that is, segments transmitted containing one or more previously transmitted bytes.
+Graph|TCP Segments Sent/Sec|9|scalar|rate|-|-|0|NA|-1|-1|L|NA|Number of segments are sent per second, including those on current connections, but excluding those containing only retransmitted bytes.

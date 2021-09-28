@@ -1,0 +1,65 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+Info|3.1|1|-|-|-1|-1|-
+Group|Vault Internal Stats|10691|vector|29|0|Vault Metrics|Tier>Server>VaultServer|Show metrics related to operational aspects of the running Vault instance.
+
+Graph|Vault Audit Log Request Time(ms)|1|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by audit log requests across all audit log devices
+
+Graph|Vault Audit Log Response(ms)|2|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by audit log responses across all audit log devices
+
+Graph|Vault Audit Log Request Failures|3|scalar|times|-|None|0|NA|-1|-1|NA|NA|Number of audit log request failures
+
+Graph|Vault Audit Log Response Failure|4|scalar|times|-|None|0|NA|-1|-1|NA|NA|Number of audit log response failures
+
+Graph|Vault Barrier Delete (ms)|5|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by DELETE operations at the barrier
+
+Graph|Vault Barrier Get (ms)|6|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by GET operations at the barrier
+
+Graph|Vault Barrier Input (ms)|7|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by PUT operations at the barrier
+
+Graph|Vault Barrier List (ms)|8|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by LIST operations at the barrier
+
+Graph|Vault Core Check Token (ms)|9|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by token checks handled by Vault core
+
+Graph|Vault Core Fetch ACL And Token (ms)|10|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by ACL and corresponding token entry fetches handled by Vault core
+
+Graph|Vault Core Handle Request (ms)|11|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by requests handled by Vault core
+
+Graph|Vault Core Handle Login Request (ms)|12|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by login requests handled by Vault core
+
+Graph|Vault Core Leadership Setup Failed (ms)|13|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by cluster leadership setup failures which have occurred in a highly available Vault cluster
+
+Graph|Vault Core Leadership Lost (ms)|14|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by cluster leadership losses which have occurred in a highly available Vault cluster
+
+Graph|Vault Core Post Unseal (ms) |15|scalar|sample|-|None|0|NA|-1|-1|NA|NA|Time taken by post-unseal operations handled by Vault core
+
+Graph|Vault Core Pre Seal (ms) |16|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by pre-seal operations
+
+Graph|Vault Core Seal With Request (ms) |17|scalar|sample|-|None|0|NA|-1|-1|NA|NA|Time taken by requested seal operations
+
+Graph|Vault Core Seal (ms) |18|scalar|sample|-|None|0|NA|-1|-1|NA|NA|Time taken by seal operations
+
+Graph|Vault Core Seal Internal (ms)|19|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by internal seal operations
+
+Graph|Vault Core Step Down (ms)|20|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by cluster leadership step downs
+
+Graph|Vault Core Unseal (ms)|21|scalar|times|-|None|0|NA|-1|-1|NA|NA|Time taken by unseal operations
+
+Graph|Vault Runtime Alloc Bytes/Sec|22|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of bytes allocated by the Vault process.
+
+Graph|Vault Runtime Free Count/Sec|23|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of freed objects.
+
+Graph|Vault Runtime Heap Objects/Sec|24|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of objects on heap.
+
+Graph|Vault Runtime Malloc Count/Sec|25|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Cumulative count of allocated heap objects.
+
+Graph|Vault Runtime Num Goroutines/Sec|26|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of goroutines.
+
+Graph|Vault Runtime Sys Bytes/Sec|27|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of bytes allocated to Vault.
+
+Graph|Vault Runtime Total Garbage Collector Pause Time|28|scalar|times|-|None|0|NA|-1|-1|NA|NA|The total garbage collector pause time since Vault was last started.
+
+Graph|Vault Runtime Total Garbage Collections Runs/Sec|29|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Total number of garbage collection runs since Vault was last started.

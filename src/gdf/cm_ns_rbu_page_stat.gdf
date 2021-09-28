@@ -1,0 +1,60 @@
+# General information line
+# Info|msgVersion|numGroups|startIndex|testRun|sizeOfMsgData|interval|testRunStartDate/Time
+# --- GDF Version History ---
+#1.0 - Initial version
+#2.0 - Change done for match Long_data and Long_long_data to double
+#3.0 - Changes done for Dynamic data in Execution GUI
+#3.1 - Use future1 field of group line for Metric group name
+#
+# Group information line
+# Group|groupName|rptGrpId|groupType|numGraphs|numVectors|future1|future2|Group_Description
+#
+# Graph information line
+# Graph|graphName|rptId|graphType|dataType|graphDataIndex|formula|numVectors|future1|PDF_ID|Percentile_Data_Idx|future2|future3|GRAPH_DESCRIPTION
+
+# Numeric data is filled as -1 in the infoline
+
+#Info|3.1|1|-1|-|-1|-1|-
+# From NS 4.1.10B#7, RBU Page Stats is converted to Page Stats.
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Page Stats|107|vector|38|9|RBU Metrics|Group>Page|Page timing, request, size, Page status and Resource Timing stats.
+
+Graph|DOM Load Time (Sec)|1|scalar|timesStd|-|-|0|AS|-1|-1|NA|NA|Average DOM Content Load time in Seconds, where DOM Content is considered loaded when the engine has completed parsing of the main document and the DOMContentLoaded event is fire.
+Graph|OnLoad Time (Sec)|2|scalar|timesStd|-|-|0|AS|-1|-1|NA|NA|Average OnLoad time in Seconds where OnLoad time is the time until, the all resources referenced by the page up until onload has loaded (images, scripts, CSS, etc.), is thrown and finished executing 
+Graph|Overall Time (Sec)|3|scalar|timesStd|-|-|0|AS|-1|-1|NA|NA|Average Page Load time in Seconds where Page Load time is the time the webpage actually took to load all the resources of the page 
+Graph|Time To Interact (Sec)|4|scalar|timesStd|-|-|0|AS|-1|-1|NA|NA|Average Time taken by a webpage to get interactive in Seconds, Time to interact is define as the point at which a page  displays its primary interactive content
+Graph|Start Render Time (Sec)|5|scalar|timesStd|-|-|0|AS|-1|-1|NA|NA|Average Start Render time in Second where start render in time when something first displays on the user's screen
+Graph|Visually Complete Time (Sec)|6|scalar|timesStd|-|-|0|AS|-1|-1|NA|NA|Average Visually Complete time in Seconds where Visually Complete time is where user's screen is fully loaded
+Graph|HTTP Requests (Excluding Browser Cache)|7|scalar|timesStd|-|-|0|AS|-1|-1|NA|NA|Average number of HTTP Requests Excluding Browser Cache per page.
+Graph|HTTP Requests Served From Browser Cache|8|scalar|timesStd|-|-|0|AS|-1|-1|NA|NA|Average number of resource served by Browser Cache per page.
+Graph|Byte Received (KB)|9|scalar|timesStd|-|-|0|AS|-1|-1|NA|NA|Average total number of bytes recieved for a page.
+Graph|Byte Sent (KB)|10|scalar|timesStd|-|-|0|AS|-1|-1|NA|NA|Average total number of bytes send for a page.
+Graph|Page Weight (KB)|11|scalar|timesStd|-|-|0|AS|-1|-1|NA|NA|Average Page Weight (Pege Weight - Sum of JavaScript size, CSS size and Image weight).
+Graph|JavaScript Size (KB)|12|scalar|timesStd|-|-|0|AS|-1|-1|NA|NA|Average JavaScript size.
+Graph|CSS Size (KB)|13|scalar|timesStd|-|-|0|AS|-1|-1|NA|NA|Average CSS size.
+Graph|Image Weight (KB)|14|scalar|timesStd|-|-|0|AS|-1|-1|NA|NA|Average Image weight.
+Graph|DOM Elements|15|scalar|timesStd|-|-|0|AS|-1|-1|NA|NA|Average Total number of DOM elements in page.
+Graph|Pagespeed Metrics|16|scalar|timesStd|-|-|0|AS|-1|-1|NA|NA|Google Ranking.
+Graph|CDN offload (%)|17|scalar|timesStd|-|-|0|AS|-1|-1|NA|NA|Average percentage of requests served by Content Delivery Network (CDN) such as Akamai, CloudFront, Strangeloop and Instart.
+Graph|Back-end Response (Sec)|18|scalar|timesStd|-|-|0|AS|-1|-1|NA|NA|Average Page Load time in Seconds where Page Load time is the time the webpage actually took to load all the resources of the page .
+Graph|Page Availability|19|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Average Page Availability  
+Graph|Session Completed|20|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Total Session completed 
+Graph|Session Success/Failure|21|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Total Session success  
+Graph|Page Status 1xx|22|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Status of Main Url of a Page is in range 100, Informational response
+Graph|Page Status 2xx|23|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Status of Main Url of a Page is in range 200, Success case
+Graph|Page Status 3xx|24|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Status of Main Url of a Page is in range 300, any type of redirection in network
+Graph|Page Status 4xx|25|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Status of Main Url of a Page is in range 400, any client error
+Graph|Page Status 5xx|26|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Status of Main Url of a Page is in range 500, any server error
+Graph|Page Status Other|27|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Some error occured to the page, hence status is set to Other
+Graph|Domain Lookup Time (Sec)|28|scalar|times|-|-|0|A|-1|-1|NA|NA|Time taken by main URL to resolve a host name, in Seconds.
+Graph|TCP Time (Sec)|29|scalar|times|-|-|0|A|-1|-1|NA|NA|Time taken by Main URL for making connection without including SSL Handshake time, in Seconds.
+Graph|SSL HandShake Time (Sec)|30|scalar|times|-|-|0|A|-1|-1|NA|NA|Time taken by Main URL for SSL/TLS negotiation, this time also includes connect time, in Seconds.
+Graph|Connect Time (Sec)|31|scalar|times|-|-|0|A|-1|-1|NA|NA|Time taken by Main URL to connect including SSL handshake time, in Seconds.
+Graph|Wait Time (Sec)|32|scalar|times|-|-|0|A|-1|-1|NA|NA|Time taken by Main URL while waiting for response from server, in Seconds.
+Graph|Download Time (Sec)|33|scalar|times|-|-|0|A|-1|-1|NA|NA|Time taken by Main URL to read entire response from the server, in Seconds.
+Graph|Block Time (Sec)|34|scalar|times|-|-|0|A|-1|-1|NA|NA|Time spent by Main URL in a queue waiting for a network connection, in Seconds.
+Graph|Response Time (Sec)|35|scalar|times|-|-|0|A|-1|-1|NA|NA|Total Time taken by Main URL for completion, in Seconds.
+Graph|Total Blocking Time(Sec)|36|scalar|timesStd|-|-|0|AS|-1|-1|NA|NA|The Total Blocking Time (TBT) metric measures the total amount of time between First Contentful Paint (FCP) and Time to Interactive (TTI) where the main thread was blocked for long enough to prevent input responsiveness.
+Graph|Largest Contentful Paint (Sec)|37|scalar|timesStd|-|-|0|AS|-1|-1|NA|NA|The Largest Contentful Paint (LCP) metric reports the render time of the largest image or text block visible within the viewport, relative to when the page first started loading
+Graph|Cumulative Layout Shift|38|scalar|timesStd|-|-|0|AS|-1|-1|NA|NA|CLS is a measure of the largest burst of layout shift scores for every unexpected layout shift that occurs during the entire lifespan of a page

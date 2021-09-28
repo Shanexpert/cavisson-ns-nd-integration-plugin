@@ -1,0 +1,11 @@
+# General information line
+# Info|pctMsgVersion|numPDF|sizeOfPctMsgData|Mode|Interval
+# 
+# PDF information line
+# PDF|PDF_Id|Min_Granule|Max_Granule|numSlabs|Unit|PDF_Description
+#
+# Slab information line
+# Slab|Slab_Name|Slab_Id|Min_Value|Max_Value|Color
+#
+# Numeric data is filled as -1 in the infoline
+

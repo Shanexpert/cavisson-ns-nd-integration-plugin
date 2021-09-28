@@ -1,0 +1,188 @@
+#!/bin/sh
+
+#----------------------------------------------------------------------
+# Name    :    nsu_show_user
+# Author  :    Archana
+# Purpose :    This command only can run by root/admin user only.
+#              This file is to show existing users details.
+# Usage   :    nsu_show_user [-a | -A | -u <User Name>]
+# where 
+#  -a : Only active users (defaults)
+#  -A : All users (active or inactive) (This option will use by User Admin GUI )
+#  -u : User Name (to show status of specified user)
+# Format of Output:
+#  User Name|Status|Email Address|Creation Date|Last Modification Date|Total Test Execution time|Number of Test Executions|Last Test Execution Time
+# Modification History:
+#   01/27/09:  Archana - Initial Version
+#----------------------------------------------------------------------
+
+. $NS_WDIR/bin/ns_user_admin_lib
+
+get_user_test_time_detail()
+{
+  USER_NAME=$1 
+  egrep -w ^$USER_NAME $USER_TEST_TIMES 1>/dev/null 2>/dev/null
+  RETURN_VALUE=$?
+  if [ $RETURN_VALUE == 0 ]; then
+    RESULT=`egrep -w ^$USER_NAME $USER_TEST_TIMES |cut -d"|"  -f2-`
+    echo "|$RESULT"
+  else
+    if [ ! -f $USER_TEST_TIMES ];then
+      echo "|0|0|NA"
+    else
+      echo "|0|0|NA"
+    fi
+  fi
+}
+
+show_user_prof()
+{
+line="$*"
+
+  Role=`echo "$line" | cut -f7 -d'|'`
+
+  if [ "X$Role" == "X" ]; then
+    if [ "$USER_NAME" == "admin" ]; then
+      echo -n "$line|Admin"
+    else
+      echo -n "$line|Standard"
+    fi
+  else
+    echo -n "$line"
+  fi
+} 
+
+#This method to show for all users details (Active/ Inactive)
+show_all_users()
+{
+  TMP_USER_PROFILE=/tmp/user_profile.$$
+  sed -e '/User Name/d' $USER_PROFILE > $TMP_USER_PROFILE
+  while read line
+  do
+    echo $line | grep "^#" >/dev/null
+    if [ $? -eq 0 ]; then
+      continue
+    elif [ "XX$line" == "XX"  ];then
+      continue
+    else
+      USER_NAME=`echo "$line" | cut -d"|"  -f1`
+      show_user_prof $line
+      get_user_test_time_detail $USER_NAME
+    fi
+  done < $TMP_USER_PROFILE
+  rm -f $TMP_USER_PROFILE 
+}
+
+#This method to show only for active users details
+show_active_user_detail()
+{
+  TMP_USER_PROFILE=/tmp/user_profile.$$
+  TMP_ACTIVE_PROFILE=/tmp/active_profile.$$
+  sed -e '/User Name/d' $USER_PROFILE > $TMP_USER_PROFILE
+  grep "|Active|" $TMP_USER_PROFILE > $TMP_ACTIVE_PROFILE 
+  #return=$?
+  rm -f $TMP_USER_PROFILE
+  while read line
+  do
+    echo $line | grep "^#" >/dev/null
+    if [ $? -eq 0 ]; then
+      continue
+    elif [ "XX$line" == "XX"  ];then
+      continue
+    else
+      USER_NAME=`echo "$line" | cut -d"|"  -f1`
+      show_user_prof $line
+      get_user_test_time_detail $USER_NAME
+    fi
+  done < $TMP_ACTIVE_PROFILE
+  rm -f $TMP_ACTIVE_PROFILE 
+}
+
+#This method to show specified user details
+show_user_detail()
+{
+  TMP_USER_PROFILE=/tmp/user_profile.$$
+  sed -e '/User Name/d' $USER_PROFILE >$TMP_USER_PROFILE
+  USER_DETAIL=`egrep -w ^$USER_NAME $TMP_USER_PROFILE`
+  return=$?
+  while read line
+  do
+    echo $line | grep "^#" >/dev/null
+    if [ $? -eq 0 ]; then
+      continue
+    elif [ "XX$line" == "XX"  ];then
+      continue
+    else
+      if [ $return == 0 ];then
+        show_user_prof "$USER_DETAIL" 
+        get_user_test_time_detail $USER_NAME
+        exit
+      fi
+    fi
+  done < $TMP_USER_PROFILE
+  rm -f $TMP_USER_PROFILE
+}
+
+#This method to give error Usage message and exit
+display_help_and_exit()
+{
+  err_msgout "$1"
+  err_msgout "Usage: nsu_show_user [-a | -A | -u <User Name>]"
+  err_msgout "Where:"
+  err_msgout "  -a is used to show only active users (defaults)"
+  err_msgout "  -A is used to All users - Active or Inactive"
+  err_msgout "  -u is used to show specify User Name"
+  exit -1
+}
+
+aFLAG=0
+AFLAG=0
+UFLAG=0
+check_option()
+{
+  OPTION_FLAG=$1
+  if [ $OPTION_FLAG -gt 0 ] ;then
+    display_help_and_exit "nsu_show_user: $2 option cannot be specified more than once."
+  fi
+}
+
+#This method to check options if used more 
+check_if_more_option()
+{
+  if [ $aFLAG -eq 1 -o $AFLAG -eq 1 -o $UFLAG -eq 1 ];then
+    display_help_and_exit "nsu_show_user: Only one option can specify at a time."
+  fi
+}
+
+ONLY_ACTIVE=1
+ALL_USERS=1
+while getopts aAu:? c
+do
+  case $c in
+    a) check_option $aFLAG "-a"; check_if_more_option;
+       aFLAG=`expr $aFLAG + 1` ; 
+       ONLY_ACTIVE=1 ;;
+    A) check_option $AFLAG "-A"; check_if_more_option;
+       AFLAG=`expr $AFLAG + 1` ; 
+       ONLY_ACTIVE=0;;
+    u) check_option $UFLAG "-u"; check_if_more_option;
+       UFLAG=`expr $UFLAG + 1` ;
+       ALL_USERS=0
+       USER_NAME="$OPTARG" 
+       check_user_is_cavisson_user $USER_NAME ;;
+    ?) display_help_and_exit ;;
+    *) display_help_and_exit ;;
+  esac
+done
+
+echo "User Name|Group Name|Status|Email Address|Creation Date|Last Modification Date|Role|Total Test Execution time|Number of Test Executions|Last Test Execution Time"
+if [ $ONLY_ACTIVE == 0 ];then
+  show_all_users
+elif [ $ALL_USERS == 0 ];then
+  show_user_detail
+else 
+  show_active_user_detail
+fi
+
+#err_msgout "----------------------------------------------------------------------"
+exit 0

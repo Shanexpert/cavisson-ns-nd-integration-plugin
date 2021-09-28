@@ -1,0 +1,375 @@
+#!/bin/bash
+#
+# Name : nsu_wp_mgr
+# Author: Anup Singh
+
+# Purpsose: To create or delete new/existing Work Profile for ACL user.
+#
+# nsu_wp_mgr  [-o  create] [-p <profile_name>] [-u <acl_user_name>] [-D <0/1>] [-d <test_assets_dest>]
+#
+# Mandatory I/P arguments are:
+#				1: -o (operation to perform)  [create, delete, update, list]
+#				2: -p (profile name) 
+#				3: -u (ACL user name) 
+#				4: -D (for making profile to default) 
+#				5: -l (make_link)
+#
+# Optional I/P argument	     :  1: -d (destination path where to checkout test assets)
+# 1. Create a worok profile "developer" for ACL user "anup"
+# nsu_wp_mgr -o create -u anup  -p developer -d "."
+#
+# 2. Create a worok profile "QA" for ACL user "anup" and make it  default directory 
+# nsu_wp_mgr -o create -u anup  -p QA -d "." -D 1
+#
+# 3. List out total profiles for a particular user
+# nsu_wp_mgr -o list -u anup  
+#
+# 4. Delete an existing  worok profile "POC" for ACL user "anup"
+# nsu_wp_mgr -o delete -u anup  -p POC
+# NOTE: Here user means  means ACL user
+#################################################################################################################################
+DEBUG=1
+ERROR="ERROR!!! "
+# exsiting default ACL Users(cavisson, guest, nsrepo.cavisson, admin@cavisson.com and guest@cavisson.com)
+USER_ARR=("guest" "nsrepo.cavisson" "admin@cavisson.com"  "guest@cavisson.com" "cavisson" "admin")
+PERMISSION=(0 0 1 0 1 1)
+OP_ARR=("create" "delete" "update" "list")
+TA_ARR=("scenarios" "scripts" "testcases" "testsuites"  "checkprofile" "scenario_profiles" "replay_profiles" "ReplayAccessLogs" "services")
+
+TA_DIR="cavisson"
+DEFAULT_TA_DIR="default"
+DATA_DIR="data"
+NS_WP_DIR=""
+debug_log() 
+{
+   if [ "${DEBUG}" == 1 ];then
+      echo $*
+   fi
+}
+
+_exit()
+{
+  #enable debug log
+  DEBUG=1
+  debug_log $*
+  exit -1
+} 
+
+usage()
+{
+  echo "Usage:"
+  echo "nsu_wp_mgr  -o <operation> -u <user_name> -p <profile_name> -d <dest_path> -D <0/1> [-a]"
+  echo  "where :"
+  echo  "  -o : Operation, can be create, delete update and list"
+  echo  "  -u : ACL user name i.e workspace name. The workspace name is 'admin' for profile type NO, irrespective of i/p provided "
+  echo  "  -p : Profile Name"
+  echo  "  -D : Make profile as default profile "
+  echo  "  -l : make link"
+  echo  "  -d : Destination path, optional field [path outside the profile, where user wants to clone Git repo]"
+  echo  "  -a : delete all profiles"
+  exit -1
+}
+
+
+set_default_profile()
+{
+  if [ ! -d  $NS_WS_DIR ];then
+     _exit "$ERROR workspace $user_name doesn't exists" 
+  fi
+
+  #Default Profile
+  if [ $mark_default -eq 1 ];then
+    cd $NS_WS_DIR; ln -nsf $profile_name default
+    if [ "X$user_name" == "Xcavisson" ]; then
+      cd $NS_WS_DIR; ln -nsf ../workspace/admin/$profile_name/cavisson $HPD_ROOT/correlation
+      touch $HPD_ROOT/correlation/correlation.conf
+      if [ ! -d $HPD_ROOT/correlation/.system ];then
+        cp -rf $NS_WDIR/workspace/admin/system/cavisson/.system $HPD_ROOT/correlation/ >/dev/null 2>&1
+      fi
+    fi
+  fi
+} 
+
+#create a work profile
+create_work_profile()
+{
+  #Return Error < $profile_name already exists at $NS_WDIR/workspace/$user_name/$profile_name>
+  #Stop further processing
+  if [ "X$NS_WP_DIR" != "X" ]; then
+    if [ -d ${NS_WP_DIR} ];then
+      _exit "${ERROR} profile ${profile_name} already exists."
+    fi
+  fi
+
+  if [ "X$dest" == "X" ];then
+     _exit "${ERROR} Test Assets path ${dest} can not be empty"   
+  fi 
+
+  if [ "X$make_link" == "X1" ];then
+     if [ ! -d ${dest} ];then
+      _exit "${ERROR} ${dest} does not exist"
+     fi
+     base=`basename ${dest}`
+     if [ "X$base" != "X$TA_DIR" ];then
+       if [ ! -d ${dest}/cavisson ];then
+         mkdir -p ${dest}/cavisson
+         debug_log "cavisson directory created successfully" >/dev/null 2>&1
+         #_exit "${ERROR} test assets path doesn't contain $TA_DIR directory"   
+       fi
+      dest=$dest/cavisson
+     fi
+  fi 
+
+  if [ ! -d $NS_WS_DIR ];then
+    mkdir -p $NS_WS_DIR 
+    debug_log "Workspace name ${user_name} created successfully" >/dev/null 2>&1
+  fi
+  #link with system profile
+  
+  if [ ! -d ${NS_SP_DIR} ];then
+    cd ${NS_WS_DIR};ln -nsf $NS_AP_DIR system 
+    ln -nsf $NS_AP_DIR default
+  fi
+
+  if [ "X$NS_WP_DIR" == "X" ]; then
+    return
+  fi
+  if [ "X$make_link" == "X0" ];then
+    #set Default Test Assets Directory
+    if [ "X${dest}" == "X." -o "X${dest}" == "X${NS_WP_DIR}/$TA_DIR" -o "X${dest}" == "X${NS_WP_DIR}/$TA_DIR/" ];then
+       NS_TA_DIR=${NS_WP_DIR}/$TA_DIR
+       mkdir -p $NS_TA_DIR
+    else
+       NS_TA_DIR=${dest}/$profile_name/$TA_DIR
+       mkdir -p $NS_TA_DIR
+       ln -sf $dest/$profile_name $NS_WP_DIR
+    fi
+    #creating data dir.
+    DATA_DIR_PATH="${NS_TA_DIR}/${DATA_DIR}"
+    mkdir -p  "${DATA_DIR_PATH}/shared"
+    mkdir -p  "${DATA_DIR_PATH}/tmp"
+  else
+    mkdir -p $NS_WP_DIR
+    ln -sf $dest $NS_WP_DIR/$TA_DIR
+    NS_TA_DIR=${dest}
+  fi
+  debug_log "creating profile $profile_name for workspace name $user_name"
+  #creating a Work Profile with .logs dir.
+  mkdir -p  ${NS_WP_DIR}/.logs
+  touch ${NS_WP_DIR}/.workprofile.conf
+  #chmod 755 ${NS_WP_DIR}/.workprofile.conf
+ 
+
+  set_default_profile
+  
+  debug_log "Test Assets Dir= ${NS_TA_DIR}" 
+  
+  #create default test assets directory
+  #mkdir -p  ${NS_TA_DIR}/default/default/scenarios 
+  for i in "${TA_ARR[@]}"
+   do
+        debug_log "creating Test Asset $i"
+        mkdir -p  ${NS_TA_DIR}/default/default/$i
+   done
+  debug_log "Profile ${profile_name} created successfully" 
+}
+
+get_default_profile()
+{
+  default_ns_profile=`readlink $NS_WS_DIR/default`
+  if [ "X$default_ns_profile" != "X" ];then
+    default_ns_profile=`basename $default_ns_profile`
+  fi
+}
+
+#delete a work profile
+delete_work_profile()
+{
+  if [ ! -d  $NS_WS_DIR ];then
+     _exit "$ERROR workspace $user_name doesn't exists" 
+  fi
+
+  #Delete all profiles 
+  if [ $delete_all -eq 1 ];then
+   #check for reserved users
+   for i in "${USER_ARR[@]}"
+      do
+        if [ "X$user_name" ==  "X$i" ];then
+          _exit "${ERROR} Delete operation NOT allowed on user $user_name"
+        fi
+      done
+     rm -fr $NS_WS_DIR
+     debug_log "Workspace ${user_name} deleted successfully"
+     return
+  fi
+
+  #check if profile exists
+  if [ ! -d ${NS_WP_DIR} ];then
+     _exit "${ERROR} profile $ ${NS_WP_DIR} doesn't exists" 
+  fi
+
+  #system profile can not be deleted
+  if [ "X${profile_name}" ==  "Xsystem" ];then
+     _exit "${ERROR} Delete operation NOT allowed on profile $profile_name" 
+  fi
+ 
+  #default profile can not be deleted
+  if [ "X${profile_name}" ==  "Xdefault" ];then
+     _exit "${ERROR} Delete operation NOT allowed on profile $profile_name" 
+  fi
+
+  get_default_profile
+ 
+  #active default profile can not be deleted 
+  if [ "X${profile_name}" == "X$default_ns_profile" ];then
+    _exit "${ERROR} Delete operation NOT allowed on default profile $profile_name" 
+  fi
+
+  debug_log "Deleting profile ${NS_WP_DIR}"
+  #delete a profile
+  rm -fr ${NS_WP_DIR} 
+  debug_log "profile  ${profile_name} deleted successfully"
+}
+
+validate_and_set_vars()
+{
+  #check for NS_WDIR
+  if [ "X$NS_WDIR" == "X" ];then
+    _exit "${ERROR} NS_WDIR is not set"
+  fi
+  HPD_ROOT="$NS_WDIR/hpd"
+
+  if [ "X$operation" == "X" ];then
+     debug_log "${ERROR} Please provide any of the below operations, as per the usage"
+     usage
+  elif [ "X$user_name" == "X" ];then
+     debug_log "${ERROR} Please provide username."
+     usage
+  fi 
+ 
+  valid_op=0
+  #check for valid operation
+  for i in "${OP_ARR[@]}"
+  do
+    if [ "X$operation" == "X$i" ];then
+      valid_op=1 
+      break
+    fi
+  done
+  if [ $valid_op -eq 0 ];then
+     _exit "${ERROR}  invalid operation "$operation"" 
+  fi
+
+  if [ \( "X$operation" == "create" -o "X$operation" == "Xupdate" \) -a "XX$profile_name" == "XX"  ];then
+    _exit  "${ERROR} The profile name [${profile_name}] can not be empty"
+  fi
+
+  if [ "X$operation" == "delete" -a $delete_all -eq 0 -a "XX$profile_name" == "XX"  ];then
+    _exit  "${ERROR} The profile name [${profile_name}] can not be empty"
+  fi
+
+  #workspace dir
+  user_perm=1
+  for ((k = 0; k < ${#USER_ARR[@]}; k++))
+  do
+    if [ "X$user_name" == "X${USER_ARR[$k]}" ];then
+      user_name="cavisson"
+      user_perm=${PERMISSION[$k]}
+      break
+    fi
+  done
+
+  if [ $user_perm -eq 0 -a "X$operation" != "Xlist" ];then
+    _exit  "${ERROR} $operation not permitted"
+  fi
+  if [ "X$user_name" == "Xcavisson" ];then
+    NS_WS_DIR=$NS_WDIR/workspace/admin
+  else
+    NS_WS_DIR=$NS_WDIR/workspace/$user_name
+    #Only cavisson user can modify NO default profile
+    if [ $mark_default -gt 1 ]; then
+      mark_default=1
+    fi
+  fi
+
+  #work profile dir
+  if [ "X$profile_name" != "X" ]; then
+    NS_WP_DIR=$NS_WS_DIR/$profile_name
+  fi
+ 
+  NS_SP_DIR=$NS_WS_DIR/system
+  NS_AP_DIR=$NS_WDIR/workspace/admin/system
+}
+
+list_profiles()
+{
+
+  if [ ! -d  $NS_WS_DIR ];then
+     dest="."
+     create_work_profile
+  fi
+  cd $NS_WS_DIR
+ 
+  export default_ns_profile
+
+  get_default_profile
+  profile_list=`ls -1 */.workprofile.conf | awk -F '/' '$1 != "default" {if($1 == ENVIRON["default_ns_profile"] ) {print $1 "|1";} else {print $1 "|0";};}'`
+
+  echo "$profile_list"
+}
+
+#=====================================================================================================================
+operation=
+user_name=
+profile_name=
+dest=
+make_link=0
+mark_default=0
+delete_all=0
+while getopts o:u:p:d:l:D:t:a? c
+do
+  case $c in
+    o)operation=$OPTARG
+      ;;
+    u)user_name=$OPTARG
+      ;;
+    p)profile_name=$OPTARG
+      ;;
+    d)dest=$OPTARG
+      ;;
+    l)make_link=$OPTARG;; #0 or 1
+    D)mark_default=$OPTARG;; #0-None,1-Make Default for both in case of admin workspace
+    a)delete_all=1;;
+    ?)usage;;
+    *)usage;;
+  esac
+done
+
+validate_and_set_vars
+#check for the operation
+case $operation in
+
+     create)
+	   create_work_profile
+	   ;;
+     delete)
+	   delete_work_profile
+	   ;;
+     update)
+           #set profile_name to default 
+           #check for $mark_default
+           set_default_profile 
+	   ;;
+     list)
+           #list all profiles
+           list_profiles 
+	   ;;
+
+          *)
+	   debug_log "$ERROR Invalid operation $opertion"
+           usage
+           ;;
+esac
+
+#################################################################################################################################
+

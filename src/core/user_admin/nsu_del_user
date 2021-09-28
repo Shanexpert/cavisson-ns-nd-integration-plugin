@@ -1,0 +1,107 @@
+#!/bin/sh
+
+#----------------------------------------------------------------------
+# Name    :    nsu_del_user
+# Author  :    Archana
+# Purpose :   This command only can run by root/admin user only.
+#             This file is to delete user account. And make 'Inactive' status ??? 
+#             Currently delete user account and not store them information
+# Usage   :    nsu_del_user -u <user name>
+# Where   :
+#  -u <user name>: User Name 
+# Modification History:
+#   01/27/09:  Archana - Initial Version
+#----------------------------------------------------------------------
+
+. $NS_WDIR/bin/ns_user_admin_lib
+
+#To check uid call check_root_uid
+check_root_uid "nsu_del_user"
+
+display_help_and_exit()
+{
+  err_msgout "$1"
+  err_msgout "Usage: nsu_del_user -u <User Name>" 
+  err_msgout "Where:"
+  err_msgout "  -u is used to specify User Name"
+  exit 1
+}
+
+UFLAG=0
+check_mandatory_options()
+{
+   if [ $UFLAG -eq 0 ];then
+     err_msgout "nsu_del_user: -u option is mandatory"
+     display_help_and_exit
+   fi
+}
+
+check_option()
+{
+  OPTION_FLAG=$1
+  if [ $OPTION_FLAG -gt 0 ] ;then
+    err_msgout "nsu_del_user: $2 option cannot be specified more than once."
+    display_help_and_exit
+  fi
+}
+
+# Need to check admin/netstorm user, since 'admin'/'netstorm' user can not be delete.
+# These are reserved internal user. It should always in user profiles.
+check_admin_user()
+{
+  if [ "XX$USER_NAME" == "XXadmin" -o "XX$USER_NAME" == "XXcavisson" ];then
+    err_msgout "Error: '$USER_NAME' user cannot be deleted"
+    exit -1
+  fi
+}
+
+#This will delete user account from Linux system using userdel Linux command
+delete_cavisson_user()
+{
+  CMD_OUT_FILE=/tmp/cmd.out.$$
+  CMD_ERR_FILE=/tmp/cmd.err.$$
+
+  userdel -r $USER_NAME 1>$CMD_OUT_FILE 2>$CMD_ERR_FILE
+  cmd_ret_value=$?
+  if [ $cmd_ret_value == 0 ]; then
+    rm -f $CMD_OUT_FILE $CMD_ERR_FILE
+    return 0
+  fi
+
+  #Handle errors
+  if [ $cmd_ret_value == 6 ]; then
+    err_msgout "Error: User '$USER_NAME' does not exist"
+  else
+    err_msgout "Error in deleting user '$USER_NAME'."
+    cat $CMD_OUT_FILE $CMD_ERR_FILE
+  fi
+  rm -f $CMD_OUT_FILE $CMD_ERR_FILE
+  exit -1
+}
+
+while getopts u:? c
+do
+  case $c in
+    u) check_option $UFLAG "-u"
+       UFLAG=`expr $UFLAG + 1`
+       USER_NAME="$OPTARG" ;;
+    ?) display_help_and_exit ;;
+    *) display_help_and_exit ;;
+  esac
+done
+check_mandatory_options
+
+check_user_is_cavisson_user $USER_NAME
+check_admin_user
+
+delete_cavisson_user
+
+#To delete defaults project, user details from user profile and test run time details when user has deleted
+delete_user_from_profile $USER_NAME
+
+#Delete $NS_WDIR/.tmp directory because when delete user and create same name user then .tmp directory should delete all information of deleted user.
+rm -rf $NS_WDIR/.tmp/$USER_NAME
+
+echo "User '$USER_NAME' has been successfully deleted from cavisson user."
+#msgout "----------------------------------------------------------------------"
+exit 0

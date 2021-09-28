@@ -1,0 +1,11 @@
+
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+
+Info|3.1|1|-|-|-1|-1|-
+Group|SAP HANA Disk Usage|10828|vector|3|0|SAP Metrics|Tier>Server>DataType|It provides the Disk Usage metrics related to database based on queries.
+
+Graph|HANA Used Disk(MB)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Display the Used Disk(MB)  stats of database.
+Graph|HANA Used Disk(pct)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Display the Used Disk(pct) stats of database.
+Graph|HANA Total Disk(MB)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Display the Total Disk(MB) stats of database.

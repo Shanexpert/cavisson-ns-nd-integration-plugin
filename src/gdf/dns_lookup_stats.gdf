@@ -1,0 +1,28 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+#
+# General information line
+# Info|msgVersion|numGroups|startIndex|testRun|sizeOfMsgData|interval|testRunStartDate/Time
+# 
+# Group information line
+# Group|groupName|rptGrpId|groupType|numGraphs|numVectors|future1|future2|Group_Description 
+#
+# Graph information line
+# Graph|graphName|rptId|graphType|dataType|graphDataIndex|formula|numVectors|graphState|PDF_ID|Percentile_Data_Idx|future2|future3|GRAPH_DESCRIPTION
+# graphState --> (AS for active system, A for active, I for inactive, NA & - is also treated as active)
+# Numeric data is filled as -1 in the infoline
+#
+Info|3.1|1|-1|-|-1|-1|-
+#
+Group|DNS Lookup Stats|31|scalar|5|0|Test Metrics|NA|DNS Lookup Stats information of the hosts.
+#
+Graph|DNS Lookup/Sec|1|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of Hosts for which the DNS Lookup happens.
+Graph|DNS Lookup Failure/Sec|2|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of failed DNS Lookups.
+Graph|DNS Lookup From Cache/Sec|5|scalar|rate|-|-|0|AS|-1|-1|NA|NA|Number of DNS Lookups from cache.
+Graph|Total DNS Lookup|3|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Total number of DNS Lookup requests.
+#
+Graph|Avg DNS Lookup Time (ms)|4|scalar|times|-|-|0|AS|-1|-1|NA|NA|Average time in mili-seconds taken by DNS to resolve a host.
+# End

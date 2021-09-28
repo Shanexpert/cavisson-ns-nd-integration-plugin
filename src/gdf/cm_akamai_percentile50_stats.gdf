@@ -1,0 +1,28 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Akamai Percentile 50 Stats|10984|vector|15|0|Akamai Metrics|Tier>Server>Pagegroup|Akamai percentile 50 stats.
+Graph|Akamai Client Round Trip Time(ms)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The 50th percentile of the round-trip time between the browser and the Akamai edge server (nearest to the end user) in millisecond.
+Graph|Akamai TCP (ms)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The 50th percentile of TCP connect time in millisecond.
+Graph|Akamai DNS (ms)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The 50th percentile of DNS resolution time in millisecond.
+Graph|Akamai SSL (ms)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The 50th percentile of SSL handshake time in millisecond.
+Graph|Akamai First Byte (ms)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The 50th percentile of the time from navigation start to first byte in millisecond.
+Graph|Akamai First Last Byte (ms)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The 50th percentile of the time from first byte to onload (or whenever the page is considered ready) in millisecond.
+Graph|Akamai First Interaction Time (ms)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The 50th percentile of the time when the user first tries to interact with the page in millisecond.
+Graph|Akamai First Input Delay (ms)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The 50th percentile of how quickly the page was able to respond to the user’s first interaction in millisecond.
+Graph|Akamai First Paint (ms)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The 50th percentile of the time when the browser first rendered after navigation in millisecond.
+Graph|Akamai First Contentful Paint (ms)|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The 50th percentile of the time when the browser displays content for the first time in millisecond.
+Graph|Akamai Interactive Time (ms)|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The 50th percentile of the time the user interacts with the page in millisecond.
+Graph|Akamai Visually Ready Time (ms)|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The 50th percentile of the time when the page view is ready to use in millisecond.
+Graph|Akamai Long Task Time (ms)|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The 50th percentile of the sum of the amount of time of LongTasks, which are browser tasks that take over 50 ms in millisecond.
+Graph|Akamai Dom Ready (ms)|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The 50th percentile of domComplete navigationStart in millisecond.
+Graph|Akamai Dom Load (ms)|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The 50th percentile of domLoading navigationStart in millisecond.
+
+
+
+
+

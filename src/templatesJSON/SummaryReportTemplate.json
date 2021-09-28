@@ -1,0 +1,850 @@
+{
+  "templateName": "SummaryReportTemplate",
+  "description": "This Template is used for generating summary report",
+  "creationDate": "12/29/16 15:45:20",
+  "modifiedDate": "09/29/20 19:01:06",
+  "owner": "arvind",
+  "testRun": "1216",
+  "isConverted": false,
+  "reportSetArray": [
+    {
+      "reportSetName": "URL",
+      "dataType": 0,
+      "chartType": 0,
+      "formulaType": "0",
+      "legendEnable": false,
+      "totalBuckets": "10",
+      "scaling": 0,
+      "isRptSetPerSumm": false,
+      "isChartPerIndices": false,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 3,
+          "graphName": "HTTP Response Time (Secs)",
+          "graphId": 3,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 3,
+          "graphName": "HTTP Requests Completed",
+          "graphId": 4,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 3,
+          "graphName": "HTTP Requests Successful",
+          "graphId": 5,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 3,
+          "graphName": "HTTP Request Completed/Sec",
+          "graphId": 1,
+          "vecName": "Overall"
+        }
+      ]
+    },
+    {
+      "reportSetName": "URL(percentile)",
+      "dataType": 1,
+      "chartType": 0,
+      "formulaType": "0",
+      "percentileSelected": "50, 90, 95, 97, 98, 99",
+      "legendEnable": false,
+      "scaling": 0,
+      "isRptSetPerSumm": false,
+      "isChartPerIndices": false,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 3,
+          "graphName": "HTTP Response Time (Secs)",
+          "graphId": 3,
+          "vecName": "Overall"
+        }
+      ]
+    },
+    {
+      "reportSetName": "Page",
+      "dataType": 0,
+      "chartType": 0,
+      "formulaType": "0",
+      "legendEnable": false,
+      "totalBuckets": "10",
+      "scaling": 0,
+      "isRptSetPerSumm": false,
+      "isChartPerIndices": false,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 4,
+          "graphName": "Page Response Time (Secs)",
+          "graphId": 3,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 4,
+          "graphName": "Pages Success",
+          "graphId": 6,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 4,
+          "graphName": "Page Download Completed/Second",
+          "graphId": 10,
+          "vecName": "Overall"
+        }
+      ]
+    },
+    {
+      "reportSetName": "Page(percentile)",
+      "dataType": 1,
+      "chartType": 0,
+      "formulaType": "0",
+      "percentileSelected": "50, 90, 95, 97, 98, 99",
+      "legendEnable": false,
+      "scaling": 0,
+      "isRptSetPerSumm": false,
+      "isChartPerIndices": false,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 4,
+          "graphName": "Page Response Time (Secs)",
+          "graphId": 3,
+          "vecName": "Overall"
+        }
+      ]
+    },
+    {
+      "reportSetName": "Transactions",
+      "dataType": 0,
+      "chartType": 0,
+      "formulaType": "0",
+      "legendEnable": false,
+      "scaling": 0,
+      "isRptSetPerSumm": false,
+      "isChartPerIndices": false,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 6,
+          "graphName": "Transaction Response Time (Secs)",
+          "graphId": 3,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 6,
+          "graphName": "Transactions Success",
+          "graphId": 6,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 6,
+          "graphName": "Transactions Completed/Second",
+          "graphId": 8,
+          "vecName": "Overall"
+        }
+      ]
+    },
+    {
+      "reportSetName": "Transaction(percentile)",
+      "dataType": 1,
+      "chartType": 0,
+      "formulaType": "0",
+      "percentileSelected": "50, 90, 95, 97, 98, 99",
+      "legendEnable": false,
+      "scaling": 0,
+      "isRptSetPerSumm": false,
+      "isChartPerIndices": false,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 6,
+          "graphName": "Transaction Response Time (Secs)",
+          "graphId": 3,
+          "vecName": "Overall"
+        }
+      ]
+    },
+    {
+      "reportSetName": "Session",
+      "dataType": 0,
+      "chartType": 0,
+      "formulaType": "0",
+      "legendEnable": false,
+      "scaling": 0,
+      "isRptSetPerSumm": false,
+      "isChartPerIndices": false,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 5,
+          "graphName": "Session Response Time (Secs)",
+          "graphId": 3,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 5,
+          "graphName": "Session Success",
+          "graphId": 6,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 5,
+          "graphName": "Sessions Completed/Minute",
+          "graphId": 8,
+          "vecName": "Overall"
+        }
+      ]
+    },
+    {
+      "reportSetName": "Session(percentile)",
+      "dataType": 1,
+      "chartType": 0,
+      "formulaType": "0",
+      "percentileSelected": "50, 90, 95, 97, 98, 99",
+      "legendEnable": false,
+      "scaling": 0,
+      "isRptSetPerSumm": false,
+      "isChartPerIndices": false,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 5,
+          "graphName": "Session Response Time (Secs)",
+          "graphId": 3,
+          "vecName": "Overall"
+        }
+      ]
+    },
+    {
+      "reportSetName": "TCP Connections",
+      "dataType": 0,
+      "chartType": 0,
+      "formulaType": "0",
+      "legendEnable": false,
+      "scaling": 0,
+      "isRptSetPerSumm": false,
+      "isChartPerIndices": false,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 1,
+          "graphName": "Number Of Connections",
+          "graphId": 6,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 1,
+          "graphName": "TCP Connections Open/Sec",
+          "graphId": 8,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 1,
+          "graphName": "TCP Connections Close/Sec",
+          "graphId": 9,
+          "vecName": "Overall"
+        }
+      ]
+    },
+    {
+      "reportSetName": "SSL Sessions",
+      "dataType": 0,
+      "chartType": 0,
+      "formulaType": "0",
+      "legendEnable": false,
+      "scaling": 0,
+      "isRptSetPerSumm": false,
+      "isChartPerIndices": false,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 2,
+          "graphName": "SSL Reuse attempted/Sec",
+          "graphId": 5,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 2,
+          "graphName": "SSL New Sessions/Sec",
+          "graphId": 1,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 2,
+          "graphName": "SSL Reused Sessions/Sec",
+          "graphId": 3,
+          "vecName": "Overall"
+        }
+      ]
+    },
+    {
+      "reportSetName": "HTTP hit rate (per sec)",
+      "dataType": 0,
+      "chartType": 0,
+      "formulaType": "0",
+      "legendEnable": false,
+      "scaling": 0,
+      "isRptSetPerSumm": false,
+      "isChartPerIndices": false,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 3,
+          "graphName": "HTTP Request Started/Sec",
+          "graphId": 6,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 3,
+          "graphName": "HTTP Request Successful/Sec",
+          "graphId": 2,
+          "vecName": "Overall"
+        }
+      ]
+    },
+    {
+      "reportSetName": "Throughput (Kbits/sec)",
+      "dataType": 0,
+      "chartType": 0,
+      "formulaType": "0",
+      "legendEnable": false,
+      "scaling": 0,
+      "isRptSetPerSumm": false,
+      "isChartPerIndices": false,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 1,
+          "graphName": "TCP Send Throughput (Kbps)",
+          "graphId": 10,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 1,
+          "graphName": "TCP Receive Throughput (Kbps)",
+          "graphId": 11,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 3,
+          "graphName": "HTTP Body receive throughput (Kbps)",
+          "graphId": 7,
+          "vecName": "Overall"
+        }
+      ]
+    },
+    {
+      "reportSetName": "Detail Transaction Report(All time in seconds)",
+      "dataType": 0,
+      "chartType": 0,
+      "formulaType": "0",
+      "legendEnable": false,
+      "scaling": 0,
+      "isRptSetPerSumm": false,
+      "isChartPerIndices": false,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 102,
+          "graphName": "Transaction Time (Sec)",
+          "graphId": 1,
+          "vecName": "All"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 102,
+          "graphName": "Transaction Completed/Sec",
+          "graphId": 2,
+          "vecName": "All"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 102,
+          "graphId": 3,
+          "vecName": "All"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 102,
+          "graphId": 4,
+          "vecName": "All"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 102,
+          "graphName": "Transaction NetCache Hits (Pct)",
+          "graphId": 5,
+          "vecName": "All"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 102,
+          "graphName": "Transaction Successful Time (Sec)",
+          "graphId": 7,
+          "vecName": "All"
+        }
+      ]
+    },
+    {
+      "reportSetName": "Detail Transaction Report(percentile)",
+      "dataType": 1,
+      "chartType": 0,
+      "formulaType": "0",
+      "percentileSelected": "50,90,95,97,98,99",
+      "legendEnable": false,
+      "totalBuckets": "10",
+      "scaling": 0,
+      "isRptSetPerSumm": false,
+      "isChartPerIndices": false,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 102,
+          "graphName": "Transaction Time (Sec)",
+          "graphId": 1,
+          "vecName": "All"
+        }
+      ]
+    },
+    {
+      "reportSetName": "HTTP Status codes",
+      "dataType": 0,
+      "chartType": 0,
+      "formulaType": "0",
+      "legendEnable": false,
+      "scaling": 0,
+      "isRptSetPerSumm": false,
+      "isChartPerIndices": false,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 25,
+          "graphId": 1,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 25,
+          "graphId": 2,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 25,
+          "graphId": 3,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 25,
+          "graphId": 4,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 25,
+          "graphId": 5,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 25,
+          "graphId": 6,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 25,
+          "graphId": 7,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 25,
+          "graphId": 8,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 25,
+          "graphId": 9,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 25,
+          "graphId": 10,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 25,
+          "graphId": 11,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 25,
+          "graphId": 12,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 25,
+          "graphId": 13,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 25,
+          "graphId": 14,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 25,
+          "graphId": 15,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 25,
+          "graphId": 16,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 25,
+          "graphId": 17,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 25,
+          "graphId": 18,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 25,
+          "graphId": 19,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 25,
+          "graphId": 20,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 25,
+          "graphId": 21,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 25,
+          "graphId": 22,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 25,
+          "graphId": 23,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 25,
+          "graphId": 24,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 25,
+          "graphId": 25,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 25,
+          "graphId": 26,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 25,
+          "graphId": 27,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 25,
+          "graphId": 28,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 25,
+          "graphId": 29,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 25,
+          "graphId": 30,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 25,
+          "graphId": 31,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 25,
+          "graphId": 32,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 25,
+          "graphId": 33,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 25,
+          "graphId": 34,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 25,
+          "graphId": 35,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 25,
+          "graphId": 36,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 25,
+          "graphId": 37,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 25,
+          "graphId": 38,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 25,
+          "graphId": 39,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 25,
+          "graphId": 40,
+          "vecName": "Overall"
+        },
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 25,
+          "graphId": 41,
+          "vecName": "Overall"
+        }
+      ]
+    },
+    {
+      "reportSetName": "TotalVuser",
+      "dataType": 0,
+      "chartType": 0,
+      "formulaType": "0",
+      "legendEnable": false,
+      "totalBuckets": "10",
+      "scaling": 0,
+      "isRptSetPerSumm": false,
+      "isChartPerIndices": false,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 1,
+          "graphName": "Total Vusers",
+          "graphId": 1,
+          "vecName": "NA"
+        }
+      ]
+    },
+    {
+      "reportSetName": "TotalVuser(percentile)",
+      "dataType": 1,
+      "chartType": 0,
+      "formulaType": "0",
+      "percentileSelected": "50,80,90,95,99",
+      "legendEnable": false,
+      "totalBuckets": "10",
+      "scaling": 0,
+      "isRptSetPerSumm": false,
+      "isChartPerIndices": false,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 1,
+          "graphName": "Total Vusers",
+          "graphId": 1,
+          "vecName": "NA"
+        }
+      ]
+    },
+    {
+      "reportSetName": "PageDownloadComplete",
+      "dataType": 0,
+      "chartType": 0,
+      "formulaType": "0",
+      "legendEnable": false,
+      "totalBuckets": "10",
+      "scaling": 0,
+      "isRptSetPerSumm": false,
+      "isChartPerIndices": false,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 4,
+          "graphName": "Page Download Completed/Second",
+          "graphId": 10,
+          "vecName": "NA"
+        }
+      ]
+    },
+    {
+      "reportSetName": "PageDownloadComplete(percentile)",
+      "dataType": 1,
+      "chartType": 0,
+      "formulaType": "0",
+      "percentileSelected": "50,80,90,95,99",
+      "legendEnable": false,
+      "totalBuckets": "10",
+      "scaling": 0,
+      "isRptSetPerSumm": false,
+      "isChartPerIndices": false,
+      "reportSetGraphInfo": [
+        {
+          "derived": false,
+          "isGraphTypeVector": false,
+          "groupId": 4,
+          "graphName": "Page Download Completed/Second",
+          "graphId": 10,
+          "vecName": "NA"
+        }
+      ]
+    }
+  ]
+}

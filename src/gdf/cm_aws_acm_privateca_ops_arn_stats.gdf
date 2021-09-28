@@ -1,0 +1,9 @@
+info|3.1|1|-|-|-1|-1|-
+
+Group|AWS ACM PrivateCA ARN Stats|11348|vector|5|0|AWS Metrics|AccountName>Region>Operation>PrivateCAArn|ACM Private CA enables creation of private certificate authority (CA) hierarchies, including root and subordinate CAs, without the investment and maintenance costs of operating an on-premises CA.
+
+Graph|AWS ACM CRLGenerated|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|A certificate revocation list (CRL) was generated.
+Graph|AWS ACM Misconfigured CRLBucket|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The S3 bucket specified for the CRL is not correctly configured.
+Graph|AWS ACM Time|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|This metric specifies the time at which the certificate was issued.
+Graph|AWS ACM Success|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|A certificate was successfully issued.
+Graph|AWS ACM Failure|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|An operation failed.

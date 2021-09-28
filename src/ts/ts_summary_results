@@ -1,0 +1,132 @@
+#!/bin/bash
+#************************************************************************
+# Name    :    ts_summary_results
+# Author  :    Anuj Sharma
+# Purpose :    Create script to generate the summary report for A10
+# Usage   :
+#              ts_summary_result <TSR_NUM> <TEST_RUN_NUM>
+#
+# Modification History:
+# 01/14/08 : Anuj Sharma - Initial Version
+# 01/22/08 : Anuj Dhiman - Final Version
+#*************************************************************************
+
+. $NS_WDIR/bin/ts_ip_lib
+
+sum_debug_log ()
+{
+  #echo "$*"
+  echo >/dev/null
+}
+
+TSR_NUM=$1
+TEST_RUN_NUM=$2
+RESULT_FILE=$NS_WDIR/logs/tsr/$LOG_CYCLE_DIR_NAME/$TSR_NUM/${TEST_CASE_NAME}_results.csv
+sum_debug_log "ts_summary_result: The TSR_NUM= $TSR_NUM, TEST_RUN_NUM= $TEST_RUN_NUM"
+
+sum_debug_log "The values of variables for the ts_summary_result are MODE=$MODE, PLATFORM=$PLATFORM, VIP_LAST_OCTET=$VIP_LAST_OCTET, TX_AM_CONF_WITHOUT_EXT=$TX_AM_CONF_WITHOUT_EXT, TEST_CASE_NAME=$TEST_CASE_NAME"
+
+if [ "XX$NS_WDIR" == "XX" ];then
+  NS_WDIR=/home/cavisson/work
+fi
+
+usage()
+{
+  echo $1
+  echo "Usage: "
+  echo "  ts_summary_results <TSR_NUM> <TEST_RUN_NUM>"
+  exit 1
+}
+
+if [ "XX$1" == "XX" ];then
+  usage "Invalid arguments"
+fi
+
+if [ "XX$2" == "XX" ];then
+  usage "Invalid arguments"
+fi
+
+#test-id is the name/number given to a particular test
+#@@test_id=      This need to be implemented later - Anuj
+
+# This mthd will create the result dir and the *.rslt file 
+make_result_dir()
+{
+  sum_debug_log "make_result_dir() - Method starts"
+  CUR_DATE=`date +%m%d%y`
+  RESULT_DIR="$NS_WDIR/$CUR_DATE/$PLATFORM/$MODE/$TX_AM_CONF_WITHOUT_EXT/$VIP_LAST_OCTET"
+  VIP_RESULT_FILE=$RESULT_DIR/$TEST_CASE_NAME.rslt
+  if [ ! -d $RESULT_DIR ];then
+    mkdir -p $RESULT_DIR
+    if [ $? != 0 ];then
+      echo "The result directory $RESULT_DIR can not be created"
+      exit -1
+    fi
+  fi
+  sum_debug_log "make_result_dir() - Method ends"
+}
+
+    #Note :get_summmary_data_value() & get_all_summmary_data_value() is moved to ts_vars_subs_lib:arun 
+
+#This is the path of the directory where the test results are saved
+#/home/cavisson/work/date/platform/mode/conf-file-name/vip<VIP_LAST_OCTET>/test<test-id>.rslt 
+#010808/ax2000/Transparent/tm_ax/vip100/test1.rslt), test2.rslt etc
+
+#This mthd is used to append the header lines in RESULT_FILE file
+write_header_lines()
+{
+  sum_debug_log "write_header_lines() - Method starts"
+  echo -e "TestCaseName,TestRun,Duration$VAR_NAME_SUM_RESULT,Pass%,SD_TotalConn,SD_TotalSuccConn,SD_TotalURLHits,SD_TotalSuccURL,Open/Sec,URLHits/Sec,URLFailures,SD_AvgURLTime,SD_MaxURLTime,SD_MinURLTime,SD_TotalTrasHits,SD_TotalSuccTras,SD_TrasHits/Sec,SD_TrasFailures,SD_AvgTrasTime,SD_MaxTrasTime,SD_MinTrasTime,SD_TcpTx,SD_TcpRx,SD_EthTx,SD_EthRx,Close/Sec,SD_CPUBusyNS,SD_CPUBusyNO"  >> $RESULT_FILE
+}
+
+# This mthd will chech the result which is finally appended to the RESULT_FILE
+result_criteria()
+{
+  sum_debug_log "result_criteria() - Method called"
+  sum_debug_log "The arguments for the result_criteria  will be URL_FAILURE=$URL_FAILURE"
+  if [ $URL_FAILURE > 0 ];then
+    RESULT="Fail"
+  else
+    RESULT="Pass"
+  fi
+  sum_debug_log "result_criteria() - Method ends"
+}
+
+# This mthd will append the final values to the RESULT_FILE.
+write_test_results()
+{
+  sum_debug_log "write_test_results() - Method starts"
+  sum_debug_log "The arguments for the write_test_results  will be DURATION=$SD_DURATION, TCP_CONN_OPEN_PER_SEC=$TCP_CONN_OPEN_PER_SEC, NUM_TRANS=$NUM_TRANS, TCP_CONN_OPEN_PER_SEC=$TCP_CONN_OPEN_PER_SEC, URL_SUCCESS=$URL_SUCCESS"
+
+  #get_all_summmary_data_value (called from ts_run and all data elements are exported) 
+
+  #result_criteria - Not needed here. User need to put it in check_status
+
+  RESULT_LINE=`echo -e "$TEST_CASE_NAME,$TEST_RUN_NUM,$SD_DURATION$VAR_VALUE_SUM_RESULT,$SD_TotalPassPct,$SD_TotalConn,$SD_TotalSuccConn,$SD_TotalURLHits,$SD_TotalSuccURL,$SD_TotalConnOpenSec,$SD_URLHitsPerSec,$SD_URLFailures,$SD_AvgURLTime,$SD_MaxURLTime,$SD_MinURLTime,$SD_TotalTrasHits,$SD_TotalSuccTras,$SD_TrasHitsPerSec,$SD_TrasFailures,$SD_AvgTrasTime,$SD_MaxTrasTime,$SD_MinTrasTime,$SD_TcpTx,$SD_TcpRx,$SD_EthTx,$SD_EthRx,$SD_TotalConnCloseSec,$SD_CPUBusyNS,$SD_CPUBusyNO"`
+  echo $RESULT_LINE >> $RESULT_FILE
+  sum_debug_log "write_test_results() - Method ends"
+}
+
+#################################################################################################
+
+sum_debug_log "The VIP = $VIP_LAST_OCTET"
+if [ $COUNT == 1 -a $TEST_IDX == 0  ];then
+  write_header_lines
+fi
+
+write_test_results
+if [ "XX$VIP_LAST_OCTET" != "XX" ];then
+  make_result_dir
+  if [ ! -f $VIP_RESULT_FILE ];then
+     echo -e "$CUR_DATE/$PLATFORM/$MODE/$TX_AM_CONF_WITHOUT_EXT/$VIP_LAST_OCTET/$TEST_CASE_NAME" > $VIP_RESULT_FILE
+  fi
+  if [ $COUNT == $COUNT_NO -a `expr $TEST_COUNT - 1` == $TEST_IDX ];then
+    cat $RESULT_FILE >> $VIP_RESULT_FILE
+    echo "" >> $VIP_RESULT_FILE
+  fi
+fi
+
+
+sum_debug_log "ts_summary_results - ends"
+exit 0
+ 

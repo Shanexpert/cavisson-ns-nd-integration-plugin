@@ -1,0 +1,370 @@
+#!/bin/bash
+
+#######################################################################################################
+# Name   : nsi_db_get_think_time_data
+# Example:
+# Initial version : --
+#   Author: --
+#   Date: --
+# Modified version:
+#   Author: Nikita Pandey
+#   Date: 15/04/2012
+#   Modification Details:
+#     (1) Change input style.
+#           Synatx Before change input style--
+#             nsi_get_5a1 <TR-NUM> <select-fields> <obj-type> <group-by> <[limit]> <[offset]>
+#           Synatx After change input style--
+#           nsi_db_get_think_time_data -testrun <value> -field <value> -object <value> -group <value> [-runphase <value>]
+#                                     [--script <value>] [--starttime <value>] [--endtime <value>]
+#                                     [--responsetime <value>] [--resptimeqmode <value>]
+#           Note: here bracket [] show agrument is optional, and bracket <> show argument value
+#     (2) Example
+#         nsi_db_get_think_time_data --testrun 3776 --object 2 --object_name static1K_page1_trans1 --location All --access All --runphase 0 --script 0 --starttime 1000 --endtime 2000
+#########################################################################################################
+
+
+######################################################################
+#                     Variables and init settings
+#####################################################################
+
+# Including nsi_db_utils
+. $NS_WDIR/bin/nsi_db_utils
+
+# Set default values of variables
+TRNUM=""
+OBJECT=""
+OBJECT_NAME=""
+LOCATION="All"
+ACCESS="All"
+BROWSER="All"
+#RUNPHASE=-255
+SCRIPT=""
+PAGE=""
+URL=""
+TRANS=""
+STATUS=0
+DEBUG=0 # 0 --> off
+        # 1 --> on
+SELECT="select"
+
+########################################################################
+#                       Functions's Definitions
+#######################################################################
+debug_logs()
+{
+  if [ "X$DEBUG" != "X0" ];then
+    echo "$*"
+  fi
+}
+
+usage()
+{
+  echo "$*"
+  echo "$0 --testrun <value> --object <value> --location <value> --access <value> --browser <value> --phaseidx <value> --trans <value> --script <value> --page <value> --url <value> --stutas <value> --starttime <value> --endtime <value> --resptimeqmode<value>"
+  echo ""
+  echo "Where"
+  show_test_run_usage
+  show_object_run_usage
+  show_location_run_usage
+  show_access_run_usage
+  show_browser_run_usage
+  show_phaseidx_run_usage
+  show_trans_run_usage
+  show_script_run_usage 
+  show_page_run_usage
+  show_url_run_usage
+  show_status_run_usage
+  show_starttime_run_usage
+  show_resptimeqmode_run_usage
+  exit 1
+}
+
+chk_args()
+{
+  if [ "X$TRNUM" == "X" ]; then
+    usage "Test run argument is missing"
+  fi
+  if [ "X$OBJECT" == "X" ]; then
+    usage " object type is missing"
+  fi
+  if [ $OBJECT -eq 2 -a "X$TRANS" == "X" ]; then
+    usage "trans argument is missing"
+  fi
+  if [ $OBJECT -eq 3 -a "X$SCRIPT" == "X" ]; then
+    usage "script argument is missing"
+  fi
+}
+
+########################################################################
+#                            calling functions
+########################################################################
+
+
+chk_args_of_option()
+{
+  if [ "X$2" == "X" ];then
+    echo "Option $1 required a value."
+    usage
+    exit -1
+  fi
+}
+#args: TR-NUM Parent-obj-type obj-name loc-selection acc-selection run-time-flag
+if [ "X$1" == "X" ];then
+  usage
+fi
+
+while [ "$1" != "" ];do
+  debug_logs "ARGS=$1"
+  case $1 in
+    "--testrun")
+        shift
+        chk_args_of_option "--testrun" "$1"
+        TRNUM=$1;;
+    "--object")
+        shift
+        chk_args_of_option "--object" "$1"
+        OBJECT=$1;;
+    "--location")
+        shift
+        chk_args_of_option "--location" "$1"
+        LOCATION=$1;;
+    "--access")
+        shift
+        chk_args_of_option "--access" "$1"
+        ACCESS=$1;;
+    "--browser")
+        shift
+        chk_args_of_option "--browser" "$1"
+        BROWSER=$1;;
+    "--script")
+        shift
+        chk_args_of_option "--script" "$1"
+        SCRIPT=$1;;
+    "--page")
+        shift
+        chk_args_of_option "--page" "$1"
+        PAGE=$1;;
+    "--trans")
+        shift
+        chk_args_of_option "--trans" "$1"
+        TRANS=$1;;
+    "--url")
+        shift
+        chk_args_of_option "--url" "$1"
+        URL=$1;;
+    "--starttime")
+        shift
+        chk_args_of_option "--starttime" "$1"
+        STARTTIME=$1;;
+    "--endtime")
+        shift
+        chk_args_of_option "--endtime" "$1"
+        ENDTIME=$1;;
+    "--abs_starttime")
+        shift
+        chk_args_of_option "--abs_starttime" "$1"
+        ABS_STARTTIME=$1;;
+    "--abs_endtime")
+        shift
+        chk_args_of_option "--abs_endtime" "$1"
+        ABS_ENDTIME=$1;;
+    "--responsetime")
+        shift
+        chk_args_of_option "--responsetime" "$1"
+        RESPONSETIME=$1;;
+    "--resptimeqmode")
+        shift
+        chk_args_of_option "--resptimeqmode" "$1"
+        RESPTIMEQMODE=$1;;
+    "--responsetime2")
+        shift
+        chk_args_of_option "--responsetime2" "$1"
+        RESPONSETIME2=$1;;
+    "--status")
+        shift
+        chk_args_of_option "--status" "$1"
+        STATUS=$1;;
+    "--phaseidx")
+        shift
+        chk_args_of_option "--phaseidx" "$1"
+        PHASEIDX=$1;;
+    "--generatorid")
+        shift
+        chk_args_of_option "--generatorid" "$1"
+        GENERATORID=$1;;
+
+    --*) usage "Invalid options";;
+    *) usage ;;
+  esac
+  shift
+done
+
+debug_logs "TRNUM = $TRNUM, OBJECT = $OBJECT, PAGEIDX = $PAGEIDX, RUNPHASE=$RUNPHASE, ACCESS = $ACCESS, LOCATION = $LOCATION"
+
+#Cheking mantatory arguments
+#chk_args
+
+set_query_files $TRNUM
+
+handle_time_filters $TRNUM
+
+# Argument for this function
+#TransactionRecord
+#SessionRecord
+#$1
+set_from_and_where_for_filters()
+{
+  #Add Location/Access/Browser
+  if [ $LOCATION != "All" -o  $ACCESS != "All" -o $BROWSER != "All" ];then
+    if [ $OBJECT -eq 2 ];then
+      WHERE="$WHERE $NEWLINE  AND TransactionRecord_$TRNUM.SessionInstance = SessionRecord_$TRNUM.SessionInstance"
+      WHERE="$WHERE $NEWLINE  AND TransactionRecord_$TRNUM.ChildIndex = SessionRecord_$TRNUM.ChildIndex" 
+      FROM="$FROM,  SessionRecord_$TRNUM"
+      SESSIONRECORD_TABLE_FLAG=1
+    fi
+  fi
+
+  if [ $LOCATION != "All"  ];then
+    WHERE="$WHERE $NEWLINE  AND SessionRecord_$TRNUM.Location = ""'"$LOCATION"'"
+  fi
+  
+  if [ $ACCESS != "All"  ];then
+    WHERE="$WHERE $NEWLINE  AND SessionRecord_$TRNUM.Access = ""'"$ACCESS"'"
+  fi
+  
+  if [ $BROWSER != "All"  ];then
+    WHERE="$WHERE $NEWLINE  AND SessionRecord_$TRNUM.Browser = ""'"$BROWSER"'"
+  fi
+  
+  
+  #Add phase index selection
+  if [ "X$PHASEIDX" != "X" ];then
+    WHERE="$WHERE $NEWLINE  AND $1_$TRNUM.PhaseIndex = $PHASEIDX"
+  fi
+  
+  #Add status selection
+  NOF=`echo $STATUS |awk -F ',' '{print NF}'`
+  if [ $NOF -gt 1 ];then
+    WHERE="$WHERE $NEWLINE  AND $1_$TRNUM.Status in ($STATUS)"
+  else
+    if [ $STATUS -eq -1 ];then
+    WHERE="$WHERE $NEWLINE  AND $1_$TRNUM.Status > 0"
+  elif [ $STATUS -ne -2 ];then
+    WHERE="$WHERE $NEWLINE  AND $1_$TRNUM.Status = $STATUS"
+    fi
+  fi
+  
+  
+  #Add Script selection
+  if [ $OBJECT -eq 2 -a "X$SCRIPT" != "X" ];then
+    FROM="$FROM, SessionTable_$TRNUM"
+    if [ "X$LOCATION" == "XAll" -a "X$ACCESS" == "XAll" -a "X$BROWSER" == "XAll" ];then
+     FROM="$FROM, SessionRecord_$TRNUM"
+     SESSIONRECORD_TABLE_FLAG=1
+    fi
+    WHERE="$WHERE $NEWLINE  AND SessionTable_$TRNUM.SessionName = ""'"$SCRIPT"'"
+    WHERE="$WHERE $NEWLINE  AND SessionRecord_$TRNUM.ChildIndex = TransactionRecord_$TRNUM.ChildIndex"
+    WHERE="$WHERE $NEWLINE  AND SessionRecord_$TRNUM.sessioninstance = TransactionRecord_$TRNUM.sessioninstance"
+  fi
+
+
+  #Add Transaction selection
+  if [ $OBJECT -eq 3 -a "X$TRANS" != "X" ];then
+    FROM="$FROM, TransactionTable_$TRNUM"
+    WHERE="$WHERE $NEWLINE  AND TransactionTable_$TRNUM.TransactionName = ""'"$TRANS"'"
+  fi
+
+  
+  #Add page selection
+  if [ "X$PAGE" != "X" ];then
+    WHERE="$WHERE $NEWLINE  AND PageTable_$TRNUM.PageName = ""'"$PAGE"'"
+    FROM="$FROM, PageTable_$TRNUM"
+  fi
+
+  
+  #Add Url selection
+  if [ "X$URL" != "X" ];then
+    FROM="$FROM,URLTable_$TRNUM"
+    WHERE="$WHERE $NEWLINE  AND URLTable_$TRNUM.URLName = ""'"$URL"'"
+  fi
+  
+  #Add Start time and End time selection
+  if [ "X$STARTTIME" != "X" -a "X$ENDTIME" != "X" ];then
+    WHERE="$WHERE $NEWLINE  AND $1_$TRNUM.EndTime >= $STARTTIME"
+    WHERE="$WHERE $NEWLINE  AND $1_$TRNUM.StartTime <= $ENDTIME"
+  elif [ "X$STARTTIME" != "X" ];then
+    WHERE="$WHERE $NEWLINE  AND $1_$TRNUM.EndTime >= $STARTTIME"
+  elif [ "X$ENDTIME" != "X" ];then
+    WHERE="$WHERE $NEWLINE  AND $1_$TRNUM.StartTime <= $ENDTIME"
+  fi
+  
+  #Add Absolute Start time and Absolute End time selection
+  if [ "X$ABS_STARTTIME" != "X" -a "X$ABS_ENDTIME" != "X" ];then
+    WHERE="$WHERE $NEWLINE  AND $1_$TRNUM.EndTime >= $ABS_STARTTIME"
+    WHERE="$WHERE $NEWLINE  AND $1_$TRNUM.StartTime <= $ABS_ENDTIME"
+  elif [ "X$ABS_STARTTIME" != "X" ];then
+    WHERE="$WHERE $NEWLINE  AND $1_$TRNUM.EndTime >= $ABS_STARTTIME"
+  elif [ "X$ABS_ENDTIME" != "X" ];then
+    WHERE="$WHERE $NEWLINE  AND $1_$TRNUM.StartTime <= $ABS_ENDTIME"
+  fi
+
+  # matching with other tables present
+  if [ "X$STARTTIME" != "X" -o "X$ENDTIME" != "X" -o "X$ABS_STARTTIME" != "X" -o "X$ABS_ENDTIME" != "X" ]; then
+    timestamp_filter_match
+  fi
+
+  #Add response time selection
+  if [ "X$RESPTIMEQMODE" != "X" -a "X$RESPONSETIME" != "X" ];then
+    if [ $RESPTIMEQMODE -eq 1 ];then
+      WHERE="$WHERE $NEWLINE  AND $1_$TRNUM.RespTime <= $RESPONSETIME"
+    elif [ $RESPTIMEQMODE -eq 2 ];then
+      WHERE="$WHERE $NEWLINE  AND $1_$TRNUM.RespTime >= $RESPONSETIME"
+    elif [ $RESPTIMEQMODE -eq 3 ];then
+      WHERE="$WHERE $NEWLINE  AND $1_$TRNUM.RespTime >= $RESPONSETIME"
+      WHERE="$WHERE $NEWLINE  AND $1_$TRNUM.RespTime <= $RESPONSETIME2"
+    fi
+  fi
+}
+
+
+#Add obj name
+if [ $OBJECT -eq 2 ];then
+  SELECT="SELECT round(avg(TransactionRecord_$TRNUM.ThinkDuration)) AS \"Avg Think Time\", count(*) AS Total"
+  WHERE="WHERE TransactionTable_$TRNUM.TransactionName = ""'"$TRANS"'"
+  WHERE="$WHERE $NEWLINE  AND TransactionRecord_$TRNUM.TransactionIndex = TransactionTable_$TRNUM.TransactionIndex"
+  FROM="FROM TransactionTable_$TRNUM, TransactionRecord_$TRNUM"
+  set_from_and_where_for_filters TransactionRecord
+
+elif [ $OBJECT -eq 3 ];then
+  SELECT="SELECT round(avg(SessionRecord_$TRNUM.ThinkDuration)) AS \"Avg Think Time\", count(*) AS Total"
+  WHERE="WHERE SessionTable_$TRNUM.SessionName = ""'"$SCRIPT"'"
+  WHERE="$WHERE $NEWLINE  AND SessionRecord_$TRNUM.SessionIndex = SessionTable_$TRNUM.SessionIndex"
+  FROM="FROM SessionTable_$TRNUM, SessionRecord_$TRNUM"
+  set_from_and_where_for_filters SessionRecord
+
+else
+  echo "Invalid object-type (valid values 2 or 3)"
+  exit 1
+fi
+
+# when --generatorid filter is given to the query 
+if [ "X$GENERATORID" != "X" ]; then
+  FROM="$FROM, $NEWLINE  GeneratorTable_$TRNUM"
+  if [ "$OBJECT" -eq 0 ];then
+    WHERE="$WHERE $NEWLINE  AND URLRecord_$TRNUM.GeneratorId = GeneratorTable_$TRNUM.GeneratorId"
+
+  elif [ "$OBJECT" -eq 1 ];then
+    WHERE="$WHERE $NEWLINE  AND PageRecord_$TRNUM.GeneratorId = GeneratorTable_$TRNUM.GeneratorId"
+
+  elif [ "$OBJECT" -eq 2 ];then
+    WHERE="$WHERE $NEWLINE  AND TransactionRecord_$TRNUM.GeneratorId = GeneratorTable_$TRNUM.GeneratorId"
+
+  elif [ "$OBJECT" -eq 3 ];then
+    WHERE="$WHERE $NEWLINE  AND SessionRecord_$TRNUM.GeneratorId = GeneratorTable_$TRNUM.GeneratorId"
+  fi
+  WHERE="$WHERE $NEWLINE  AND GeneratorTable_$TRNUM.GeneratorId = $GENERATORID"
+fi
+ 
+ns_run_query
+show_query_result
+exit 0

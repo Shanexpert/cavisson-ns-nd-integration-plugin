@@ -1,0 +1,17 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP Datastore Stats|10695|vector|10|0|GCP Metrics|Tier>Server>ProjectID|GCP datastore stats provided metrics related to client requests on datastore.
+Graph|Datastore API Request/sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of API calls per second.
+Graph|Datastore Index Writes/sec|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of index writes per second.
+Graph|Datastore 5th Percentile Read Size Entities (Bytes)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|5th percentile read size entities in bytes.
+Graph|Datastore 50th Percentile Read Size Entities (Bytes)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|50th percentile read size entities in bytes.
+Graph|Datastore 95th Percentile Read Size Entities (Bytes)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|95th percentile read size entities in bytes.
+Graph|Datastore 99th Percentile Read Size Entities (Bytes)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|99th percentile read size entities in bytes.
+Graph|Datastore 5th Percentile  Written Size Entities (Bytes)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|5th percentile write size entities in bytes.
+Graph|Datastore 50th Percentile Written Size Entities (Bytes)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|50th percentile write size entities in bytes.
+Graph|Datastore 95th Percentile Written Size Entities (Bytes)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|95th percentile write size entities in bytes.
+Graph|Datastore 99th Percentile Written Size Entities (Bytes)|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|99th percentile write size entities in bytes.
+

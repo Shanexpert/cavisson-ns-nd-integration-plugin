@@ -1,0 +1,279 @@
+#LAST_MAX_ASSIGNED_GRAPH_ID = 2
+#LAST_MODIFIED_DATE = 11/17/14 13:39:24
+
+#
+Info|3.1|1|112|99999|1120|120000|11/13/14  14:36:18
+
+# Notes:
+# When adding/deleting graph, do following:
+#  1. Make sure graph id and graph data index in the Graph Line are correct. Also type (sample, rate...) is correct
+#  2. Number of graphs in Group line is changed
+#  3. pkt size in Info line is changed
+#
+Group|Key Performance Indicators|10227|scalar|126|0|KPI|Tier|Key Performance Indicators such as response time, orders, revenue, PVS, CPU and Memory usage
+
+# ------------------------------------------------------------------------
+# Tier Based Metrics
+# Tier            PVS  RepsoneTime CPUUtil(%) Avail Memory (MB)
+# WebStore         Y          Y         Y      Y
+#  (Normal and Burst)
+# OpenAPIREST      Y          Y         Y      Y
+#  (Normal and Burst)
+# OpenAPISAL       Y          Y         Y      Y
+#  (Normal and Burst)
+# OfferGrid        Y          Y         Y      Y
+# Endeca           Y          Y         Y      Y
+# BCC              Y          Y         Y      Y
+# CSC              Y          Y         Y      Y
+# BOT              Y          Y         Y      Y
+
+# InventoryGrid    N          N         Y      Y
+# OrderGrid        N          N         Y      Y
+#-------------------------------------------------------------------------
+
+#
+# Today Orders - WebStore	Mobile	Tablet	Kiosk	CSC
+#
+Graph|Orders Today - WebStore|1|scalar|cumulative|112|-|0|NA|-1|-1|NA|NA|Total orders since midnight for WebStore channel
+Graph|Orders Today - Mobile|2|scalar|cumulative|120|-|0|NA|-1|-1|NA|NA|Total orders since midnight for Mobile channel
+Graph|Orders Today - Tablet|3|scalar|cumulative|128|-|0|NA|-1|-1|NA|NA|Total orders since midnight for Tablet channel
+Graph|Orders Today - Kiosk|4|scalar|cumulative|136|-|0|NA|-1|-1|NA|NA|Total orders since midnight for Kiosk channel
+Graph|Orders Today - CSC|5|scalar|cumulative|144|-|0|NA|-1|-1|NA|NA|Total orders since midnight for CSC channel
+#
+# Order per minutes
+#
+Graph|Orders Per Minute - WebStore|6|scalar|rate|152|-|0|NA|-1|-1|NA|NA|Orders per minute for WebStore channel
+Graph|Orders Per Minute - Mobile|7|scalar|rate|160|-|0|NA|-1|-1|NA|NA|Orders per minute for Mobile channel
+Graph|Orders Per Minute - Tablet|8|scalar|rate|168|-|0|NA|-1|-1|NA|NA|Orders per minute for Tablet channel
+Graph|Orders Per Minute - Kiosk|9|scalar|rate|176|-|0|NA|-1|-1|NA|NA|Orders per minute for Kiosk channel
+Graph|Orders Per Minute - CSC|10|scalar|rate|184|-|0|NA|-1|-1|NA|NA|Orders per minute for CSC channel
+
+#
+# Today Revenue - WebStore	Mobile	Tablet	Kiosk	CSC
+#
+Graph|Revenue Today - WebStore|11|scalar|cumulative|192|-|0|NA|-1|-1|NA|NA|Total revenue since midnight for WebStore channel
+Graph|Revenue Today - Mobile|12|scalar|cumulative|200|-|0|NA|-1|-1|NA|NA|Total revenue since midnight for Mobile channel
+Graph|Revenue Today - Tablet|13|scalar|cumulative|208|-|0|NA|-1|-1|NA|NA|Total revenue since midnight for Tablet channel
+Graph|Revenue Today - Kiosk|14|scalar|cumulative|216|-|0|NA|-1|-1|NA|NA|Total revenue since midnight for Kiosk channel
+Graph|Revenue Today - CSC|15|scalar|cumulative|224|-|0|NA|-1|-1|NA|NA|Total revenue since midnight for CSC channel
+#
+# Revenue per minutes
+#
+Graph|Revenue Per Minute - WebStore|16|scalar|rate|232|-|0|NA|-1|-1|NA|NA|Revenue per minute for WebStore channel
+Graph|Revenue Per Minute - Mobile|17|scalar|rate|240|-|0|NA|-1|-1|NA|NA|Revenue per minute for Mobile channel
+Graph|Revenue Per Minute - Tablet|18|scalar|rate|248|-|0|NA|-1|-1|NA|NA|Revenue per minute for Tablet channel
+Graph|Revenue Per Minute - Kiosk|19|scalar|rate|256|-|0|NA|-1|-1|NA|NA|Revenue per minute for Kiosk channel
+Graph|Revenue Per Minute - CSC|20|scalar|rate|264|-|0|NA|-1|-1|NA|NA|Revenue per minute for CSC channel
+
+# WebStore Metrics
+#
+Graph|PVS Last 2 Minutes - WebStore|21|scalar|rate|272|-|0|NA|-1|-1|NA|NA|Page views per second in last 2 minutes for WebStore requests
+Graph|Response Time Last 2 Minutes (Sec) - WebStore|22|scalar|sample|280|-|0|NA|-1|-1|NA|NA|Average response time (seconds) in last 2 minutes for WebStore requests
+Graph|CPU Utilization Last 2 Minutes (Pct) - WebStore|23|scalar|sample|288|-|0|NA|-1|-1|NA|NA|CPU utilization percentage in last 2 minutes for WebStore Servers
+Graph|Available Memory Last 2 Minutes (MB) - WebStore|24|scalar|sample|296|-|0|NA|-1|-1|NA|NA|Available memory in MB in last 2 minutes for WebStore Servers
+#
+# OpenAPIREST Metrics
+#
+Graph|PVS Last 2 Minutes - OpenAPIREST|25|scalar|rate|304|-|0|NA|-1|-1|NA|NA|Page views per second in last 2 minutes for OpenAPIREST requests
+Graph|Response Time Last 2 Minutes (Sec) - OpenAPIREST|26|scalar|sample|312|-|0|NA|-1|-1|NA|NA|Average response time (seconds) in last 2 minutes for OpenAPIREST requests
+Graph|CPU Utilization Last 2 Minutes (Pct) - OpenAPIREST|27|scalar|sample|320|-|0|NA|-1|-1|NA|NA|CPU utilization percentage in last 2 minutes for OpenAPIREST Servers
+Graph|Available Memory Last 2 Minutes (MB) - OpenAPIREST|28|scalar|sample|328|-|0|NA|-1|-1|NA|NA|Available memory in MB in last 2 minutes for OpenAPIREST Servers
+#
+# OpenAPISAL Metrics
+#
+Graph|PVS Last 2 Minutes - OpenAPISAL|29|scalar|rate|336|-|0|NA|-1|-1|NA|NA|Page views per second in last 2 minutes for OpenAPISAL requests
+Graph|Response Time Last 2 Minutes (Sec) - OpenAPISAL|30|scalar|sample|344|-|0|NA|-1|-1|NA|NA|Average response time (seconds) in last 2 minutes for OpenAPISAL requests
+Graph|CPU Utilization Last 2 Minutes (Pct) - OpenAPISAL|31|scalar|sample|352|-|0|NA|-1|-1|NA|NA|CPU utilization percentage in last 2 minutes for OpenAPISAL Servers
+Graph|Available Memory Last 2 Minutes (MB) - OpenAPISAL|32|scalar|sample|360|-|0|NA|-1|-1|NA|NA|Available memory in MB in last 2 minutes for OpenAPISAL Servers
+#
+# OfferGrid Metrics
+#
+Graph|PVS Last 2 Minutes - OfferGrid|33|scalar|rate|368|-|0|NA|-1|-1|NA|NA|Page views per second in last 2 minutes for OfferGrid requests
+Graph|Response Time Last 2 Minutes (Sec) - OfferGrid|34|scalar|sample|376|-|0|NA|-1|-1|NA|NA|Average response time (seconds) in last 2 minutes for OfferGrid requests
+Graph|CPU Utilization Last 2 Minutes (Pct) - OfferGrid|35|scalar|sample|384|-|0|NA|-1|-1|NA|NA|CPU utilization percentage in last 2 minutes for OfferGrid Servers
+Graph|Available Memory Last 2 Minutes (MB) - OfferGrid|36|scalar|sample|392|-|0|NA|-1|-1|NA|NA|Available memory in MB in last 2 minutes for OfferGrid Servers
+#
+# Endeca Metrics
+#
+Graph|PVS Last 2 Minutes - Endeca|37|scalar|rate|400|-|0|NA|-1|-1|NA|NA|Page views per second in last 2 minutes for Endeca requests
+Graph|Response Time Last 2 Minutes (Sec) - Endeca|38|scalar|sample|408|-|0|NA|-1|-1|NA|NA|Average response time (seconds) in last 2 minutes for Endeca requests
+Graph|CPU Utilization Last 2 Minutes (Pct) - Endeca|39|scalar|sample|416|-|0|NA|-1|-1|NA|NA|CPU utilization percentage in last 2 minutes for Endeca Servers
+Graph|Available Memory Last 2 Minutes (MB) - Endeca|40|scalar|sample|424|-|0|NA|-1|-1|NA|NA|Available memory in MB in last 2 minutes for Endeca Servers
+#
+# BCC Metrics
+#
+Graph|PVS Last 2 Minutes - BCC|41|scalar|rate|432|-|0|NA|-1|-1|NA|NA|Page views per second in last 2 minutes for BCC requests
+Graph|Response Time Last 2 Minutes (Sec) - BCC|42|scalar|sample|440|-|0|NA|-1|-1|NA|NA|Average response time (seconds) in last 2 minutes for BCC requests
+Graph|CPU Utilization Last 2 Minutes (Pct) - BCC|43|scalar|sample|448|-|0|NA|-1|-1|NA|NA|CPU utilization percentage in last 2 minutes for BCC Servers
+Graph|Available Memory Last 2 Minutes (MB) - BCC|44|scalar|sample|456|-|0|NA|-1|-1|NA|NA|Available memory in MB in last 2 minutes for BCC Servers
+#
+# CSC Metrics
+#
+Graph|PVS Last 2 Minutes - CSC|45|scalar|rate|464|-|0|NA|-1|-1|NA|NA|Page views per second in last 2 minutes for CSC requests
+Graph|Response Time Last 2 Minutes (Sec) - CSC|46|scalar|sample|472|-|0|NA|-1|-1|NA|NA|Average response time (seconds) in last 2 minutes for CSC requests
+Graph|CPU Utilization Last 2 Minutes (Pct) - CSC|47|scalar|sample|480|-|0|NA|-1|-1|NA|NA|CPU utilization percentage in last 2 minutes for CSC Servers
+Graph|Available Memory Last 2 Minutes (MB) - CSC|48|scalar|sample|488|-|0|NA|-1|-1|NA|NA|Available memory in MB in last 2 minutes for CSC Servers
+#
+# BOT Metrics
+#
+Graph|PVS Last 2 Minutes - BOT|49|scalar|rate|496|-|0|NA|-1|-1|NA|NA|Page views per second in last 2 minutes for BOT requests
+Graph|Response Time Last 2 Minutes (Sec) - BOT|50|scalar|sample|504|-|0|NA|-1|-1|NA|NA|Average response time (seconds) in last 2 minutes for BOT requests
+Graph|CPU Utilization Last 2 Minutes (Pct) - BOT|51|scalar|sample|512|-|0|NA|-1|-1|NA|NA|CPU utilization percentage in last 2 minutes for BOT Servers
+Graph|Available Memory Last 2 Minutes (MB) - BOT|52|scalar|sample|520|-|0|NA|-1|-1|NA|NA|Available memory in MB in last 2 minutes for BOT Servers
+#
+# InventoryGrid Metrics
+#
+Graph|PVS Last 2 Minutes - InventoryGrid|53|scalar|rate|528|-|0|NA|-1|-1|NA|NA|Page views per second in last 2 minutes for InventoryGrid requests
+Graph|Response Time Last 2 Minutes (Sec) - InventoryGrid|54|scalar|sample|536|-|0|NA|-1|-1|NA|NA|Average response time (seconds) in last 2 minutes for InventoryGrid requests
+Graph|CPU Utilization Last 2 Minutes (Pct) - InventoryGrid|55|scalar|sample|544|-|0|NA|-1|-1|NA|NA|CPU utilization percentage in last 2 minutes for InventoryGrid Servers
+Graph|Available Memory Last 2 Minutes (MB) - InventoryGrid|56|scalar|sample|552|-|0|NA|-1|-1|NA|NA|Available memory in MB in last 2 minutes for InventoryGrid Servers
+#
+# OrderGrid Metrics
+#
+Graph|PVS Last 2 Minutes - OrderGrid|57|scalar|rate|560|-|0|NA|-1|-1|NA|NA|Page views per second in last 2 minutes for OrderGrid requests
+Graph|Response Time Last 2 Minutes (Sec) - OrderGrid|58|scalar|sample|568|-|0|NA|-1|-1|NA|NA|Average response time (seconds) in last 2 minutes for OrderGrid requests
+Graph|CPU Utilization Last 2 Minutes (Pct) - OrderGrid|59|scalar|sample|576|-|0|NA|-1|-1|NA|NA|CPU utilization percentage in last 2 minutes for OrderGrid Servers
+Graph|Available Memory Last 2 Minutes (MB) - OrderGrid|60|scalar|sample|584|-|0|NA|-1|-1|NA|NA|Available memory in MB in last 2 minutes for OrderGrid Servers
+#
+# DB Tier Metrics
+#
+Graph|PVS Last 2 Minutes - DB Tier|61|scalar|rate|592|-|0|NA|-1|-1|NA|NA|Page views per second in last 2 minutes for DB Tier requests
+Graph|Response Time Last 2 Minutes (ms) - DB Tier|62|scalar|sample|600|-|0|NA|-1|-1|NA|NA|Average response time (ms) in last 2 minutes for DB Tier requests
+Graph|CPU Utilization Last 2 Minutes (Pct) - DB Tier|63|scalar|sample|608|-|0|NA|-1|-1|NA|NA|CPU utilization percentage in last 2 minutes for DB Tier Servers
+Graph|Available Memory Last 2 Minutes (MB) - DB Tier|64|scalar|sample|616|-|0|NA|-1|-1|NA|NA|Available memory in MB in last 2 minutes for DB Tier Servers
+#
+# WCS Delivery Metrics
+#
+Graph|PVS Last 2 Minutes - WCS Delivery|65|scalar|rate|624|-|0|NA|-1|-1|NA|NA|Page views per second in last 2 minutes for WCS Delivery requests
+Graph|Response Time Last 2 Minutes (Sec) - WCS Delivery|66|scalar|sample|632|-|0|NA|-1|-1|NA|NA|Average response time (seconds) in last 2 minutes for WCS Delivery requests
+Graph|CPU Utilization Last 2 Minutes (Pct) - WCS Delivery|67|scalar|sample|640|-|0|NA|-1|-1|NA|NA|CPU utilization percentage in last 2 minutes for WCS Delivery Servers
+Graph|Available Memory Last 2 Minutes (MB) - WCS Delivery|68|scalar|sample|648|-|0|NA|-1|-1|NA|NA|Available memory in MB in last 2 minutes for WCS Delivery Servers
+
+# Total Orders/Revenue 
+#
+Graph|Submitted Orders/Min|69|scalar|rate|656|-|0|NA|-1|-1|NA|NA|Number of orders submitted per minute.
+Graph|Total Submitted Orders|70|scalar|cumulative|664|-|0|NA|-1|-1|NA|NA|Total number of orders submitted today.
+Graph|Order Revenue($)/Min|71|scalar|rate|672|-|0|NA|-1|-1|NA|NA|Revenue generated per minute($).
+Graph|Total Revenue($)|72|scalar|cumulative|680|-|0|NA|-1|-1|NA|NA|Total Revenue generated for the day($).
+
+#
+## Loyalty Tier Metrics ###
+#
+Graph|PVS Last 2 Minutes - Loyalty|73|scalar|rate|688|-|0|NA|-1|-1|NA|NA|Page views per second in last 2 minutes for Loyalty requests
+Graph|Response Time Last 2 Minutes (Sec) - Loyalty|74|scalar|sample|696|-|0|NA|-1|-1|NA|NA|Average response time (seconds) in last 2 minutes for Loyalty requests
+Graph|CPU Utilization Last 2 Minutes (Pct) - Loyalty|75|scalar|sample|704|-|0|NA|-1|-1|NA|NA|CPU utilization percentage in last 2 minutes for Loyalty Servers
+Graph|Available Memory Last 2 Minutes (MB) - Loyalty|76|scalar|sample|712|-|0|NA|-1|-1|NA|NA|Available memory in MB in last 2 minutes for Loyalty Servers
+
+# ================WebStore Tier to Other Tiers Metrics ================================
+#WebStore to WCS Delivery
+Graph|Request/Sec Last 2 Minutes- WebStore to WCS Delivery|77|scalar|rate|720|PS|0|NA|-1|-1|NA|NA|Method Invocation/Sec by WebStore to WCS Delivery
+Graph|Average Time Last 2 Minutes (ms) - WebStore to WCS Delivery|78|scalar|sample|728|-|0|NA|-1|-1|NA|NA|Average time (ms) in last 2 minutes by WebStore to WCS Delivery
+
+#WebStore to OfferGrid
+Graph|Request/Sec Last 2 Minutes- WebStore to OfferGrid|79|scalar|rate|736|PS|0|NA|-1|-1|NA|NA|Method Invocation/Sec by WebStore to OfferGrid
+Graph|Average Time Last 2 Minutes (ms) - WebStore to OfferGrid|80|scalar|sample|744|-|0|NA|-1|-1|NA|NA|Average time (ms) in last 2 minutes by WebStore to OfferGrid
+
+#WebStore to Endeca
+Graph|Request/Sec Last 2 Minutes-WebStore to Endeca|81|scalar|rate|752|PS|0|NA|-1|-1|NA|NA|Method Invocation/Sec by WebStore to Endeca
+Graph|Average Time Last 2 Minutes (ms) -WebStore to Endeca|82|scalar|sample|760|-|0|NA|-1|-1|NA|NA|Average time (ms) in last 2 minutes by WebStore to Endeca
+
+#WebStore to DB Tier
+Graph|Request/Sec Last 2 Minutes- WebStore to DB Tier|83|scalar|rate|768|PS|0|NA|-1|-1|NA|NA|Method Invocation/Sec by WebStore to DB Tier
+Graph|Average Time Last 2 Minutes (Sec) -WebStore to DB Tier|84|scalar|sample|776|-|0|NA|-1|-1|NA|NA|Average time (seconds) in last 2 minutes by WebStore to DB Tier
+
+#WebStore to Inventory Grid
+Graph|Request/Sec Last 2 Minutes- WebStore to Inventory Grid|85|scalar|rate|784|PS|0|NA|-1|-1|NA|NA|Method Invocation/Sec by WebStore to Inventory Grid
+Graph|Average Time Last 2 Minutes (ms) - WebStore to Inventory Grid|86|scalar|sample|792|-|0|NA|-1|-1|NA|NA|Average time (ms) in last 2 minutes by WebStore to Inventory Grid
+
+#WebStore to Order Grid
+Graph|Request/Sec Last 2 Minutes-WebStore to Order Grid|87|scalar|rate|800|PS|0|NA|-1|-1|NA|NA|Method Invocation/Sec by WebStore to Order Grid
+Graph|Average Time Last 2 Minutes (ms) -WebStore to Order Grid|88|scalar|sample|808|-|0|NA|-1|-1|NA|NA|Average time (ms) in last 2 minutes by WebStore to Order Grid
+
+#WebStore to Loyalty Tier
+Graph|Request/Sec Last 2 Minutes - WebStore to Loyalty Tier|89|scalar|rate|816|PS|0|NA|-1|-1|NA|NA|Method Invocation/Sec by WebStore to Loyalty Tier
+Graph|Average Time Last 2 Minutes (ms) - WebStore to Loyalty Tier|90|scalar|sample|824|-|0|NA|-1|-1|NA|NA|Average time (ms) in last 2 minutes by WebStore to Loyalty Tier
+
+# ================CSC Tier to Other Tiers Metrics ================================
+#CSC to Offer Grid Server
+Graph|Request/Sec Last 2 Minutes-CSC to Offer Grid|91|scalar|rate|832|PS|0|NA|-1|-1|NA|NA|Method Invocation/Sec by CSC to Offer Grid
+Graph|Average Time Last 2 Minutes (ms) -CSC to Offer Grid|92|scalar|sample|840|-|0|NA|-1|-1|NA|NA|Average time (ms) in last 2 minutes by CSC to Offer Grid
+
+#CSC to Inventory Grid
+Graph|Request/Sec Last 2 Minutes-CSC to Inventory Grid|93|scalar|rate|848|PS|0|NA|-1|-1|NA|NA|Method Invocation/Sec by CSC to Inventory Grid
+Graph|Average Time Last 2 Minutes (ms) - CSC to Inventory Grid|94|scalar|sample|856|-|0|NA|-1|-1|NA|NA|Average time (ms) in last 2 minutes by CSC to Inventory Grid
+
+#CSC to Order Grid
+Graph|Request/Sec Last 2 Minutes- CSC to Order Grid|95|scalar|rate|864|PS|0|NA|-1|-1|NA|NA|Method Invocation/Sec by CSC to Order Grid
+Graph|Average Time Last 2 Minutes (ms) -CSC to Order Grid|96|scalar|sample|872|-|0|NA|-1|-1|NA|NA|Average time (ms) in last 2 minutes by CSC to Order Grid
+
+#CSC to DB Tier
+Graph|Request/Sec Last 2 Minutes-CSC to DB Tier|97|scalar|rate|880|PS|0|NA|-1|-1|NA|NA|Method Invocation/Sec by CSC to DB Tier
+Graph|Average Time Last 2 Minutes (ms) - CSC to DB Tier|98|scalar|sample|888|-|0|NA|-1|-1|NA|NA|Average time (ms) in last 2 minutes by CSC to DB Tier
+
+
+# ================OPENAPI REST Tier to Other Tiers Metrics ================================
+#Open API Rest to WCS Delivery
+Graph|Request/Sec Last 2 Minutes- Open API Rest to WCS Delivery|99|scalar|rate|896|PS|0|NA|-1|-1|NA|NA|Method Invocation/Sec by Open API Rest to WCS
+Graph|Average Time Last 2 Minutes (ms) - Open API Rest to WCS|100|scalar|sample|904|-|0|NA|-1|-1|NA|NA|Average time (ms) in last 2 minutes by Open API Rest to WCS
+
+#Open API Rest to Offer Grid
+Graph|Request/Sec Last 2 Minutes- Open API Rest to Offer Grid|101|scalar|rate|912|PS|0|NA|-1|-1|NA|NA|Method Invocation/Sec by Open API Rest to Offer Grid
+Graph|Average Time Last 2 Minutes (ms) - Open API Rest to Offer Grid|102|scalar|sample|920|-|0|NA|-1|-1|NA|NA|Average time (ms) in last 2 minutes by Open API Rest to Offer Grid
+
+#Open API Rest to Endeca
+Graph|Request/Sec Last 2 Minutes-Open API Rest to Endeca|103|scalar|rate|928|PS|0|NA|-1|-1|NA|NA|Method Invocation/Sec by Open API Rest to Endeca
+Graph|Average Time Last 2 Minutes (ms) -Open API Rest to Endeca|104|scalar|sample|936|-|0|NA|-1|-1|NA|NA|Average time (ms) in last 2 minutes by Open API Rest to Endeca
+
+#Open API Rest to DB Tier
+Graph|Request/Sec Last 2 Minutes- Open API Rest to DB Tier|105|scalar|rate|944|PS|0|NA|-1|-1|NA|NA|Method Invocation/Sec by Open API Rest to DB Tier
+Graph|Average Time Last 2 Minutes (ms) - Open API Rest to DB Tier|106|scalar|sample|952|-|0|NA|-1|-1|NA|NA|Average time (ms) in last 2 minutes by Open API Rest to DB Tier
+
+#Open API Rest to Inventory
+Graph|Request/Sec Last 2 Minutes- Open API Rest to Inventory|107|scalar|rate|960|PS|0|NA|-1|-1|NA|NA|Method Invocation/Sec by Open API Rest to Inventory
+Graph|Average Time Last 2 Minutes (ms) -Open API Rest to Inventory|108|scalar|sample|968|-|0|NA|-1|-1|NA|NA|Average time (ms) in last 2 minutes by Open API Rest to Inventory
+
+#Open API Rest to Open API SAL
+Graph|Request/Sec Last 2 Minutes- Open API Rest to Open API SAL|109|scalar|rate|976|PS|0|NA|-1|-1|NA|NA|Method Invocation/Sec by Open API Rest to Open API SAL
+Graph|Average Time Last 2 Minutes (ms) - Open API Rest to Open API SAL|110|scalar|sample|984|-|0|NA|-1|-1|NA|NA|Average time (ms) in last 2 minutes by Open API Rest to OpenAPI SAL
+
+#OPENAPIREST to Loyalty Tier
+Graph|Request/Sec Last 2 Minutes - OPENAPIREST to Loyalty Tier|111|scalar|rate|992|PS|0|NA|-1|-1|NA|NA|Method Invocation/Sec by OPENAPIREST to Loyalty Tier
+Graph|Average Time Last 2 Minutes (ms) - OPENAPIREST to Loyalty Tier|112|scalar|sample|1000|-|0|NA|-1|-1|NA|NA|Average time (ms) in last 2 minutes by OPENAPIREST to Loyalty Tier
+
+# ================OPEN API SAL to Other Tiers Tier Metrics ================================
+#Open API SAL to Offer Grid
+Graph|Request/Sec Last 2 Minutes- Open API SAL to Offer Grid|113|scalar|rate|1008|PS|0|NA|-1|-1|NA|NA|Method Invocation/Sec by Open API SAL to Offer Grid
+Graph|Average Time Last 2 Minutes (ms) - Open API SAL to Offer Grid|114|scalar|sample|1016|-|0|NA|-1|-1|NA|NA|Average time (ms) in last 2 minutes by Open API SAL to Offer Grid
+
+#Open API SAL to DB Tier
+Graph|Request/Sec Last 2 Minutes- Open API SAL to DB Tier|115|scalar|rate|1024|PS|0|NA|-1|-1|NA|NA|Method Invocation/Sec by Open API SAL to DB Tier
+Graph|Average Time Last 2 Minutes (ms) - Open API SAL to DB Tier|116|scalar|sample|1032|-|0|NA|-1|-1|NA|NA|Average time (ms) in last 2 minutes by Open API SAL to DB Tier
+
+#Open API SAL to Inventory Grid
+Graph|Request/Sec Last 2 Minutes-Open API SAL to Inventory Grid|117|scalar|rate|1040|PS|0|NA|-1|-1|NA|NA|Method Invocation/Sec by Open API SAL to Inventory Grid
+Graph|Average Time Last 2 Minutes (ms) - Open API SAL to Inventory Grid|118|scalar|sample|1048|-|0|NA|-1|-1|NA|NA|Average time (ms) in last 2 minutes by OpenAPISAL to Inventory Grid
+
+#Open API SAL to Order Grid
+Graph|Request/Sec Last 2 Minutes- Open API SAL to Order Grid|119|scalar|rate|1056|PS|0|NA|-1|-1|NA|NA|Method Invocation/Sec by Open API SAL to Order Grid
+Graph|Average Time Last 2 Minutes (ms) -Open API SAL to Order Grid|120|scalar|sample|1064|-|0|NA|-1|-1|NA|NA|Average time (ms) in last 2 minutes by Open API SAL to Order Grid
+
+#==================================WCS Delivery to Other Tiers Metrics========================================================
+#WCS Delivery to DB Tier
+Graph|Request/Sec Last 2 Minutes- WCS Delivery to DB Tier|121|scalar|rate|1072|PS|0|NA|-1|-1|NA|NA|Method Invocation/Sec by WCS Delivery to DB Tier
+Graph|Average Time Last 2 Minutes (ms) - WCS Delivery to DB Tier|122|scalar|sample|1080|-|0|NA|-1|-1|NA|NA|Average time (ms) in last 2 minutes by WCS Delivery to DB Tier
+
+#WCS Delivery to Loyalty Tier
+Graph|Request/Sec Last 2 Minutes- WCS Delivery to Loyalty Tier|123|scalar|rate|1088|PS|0|NA|-1|-1|NA|NA|Method Invocation/Sec by WCS Delivery to Loyalty Tier
+Graph|Average Time Last 2 Minutes (ms) - WCS Delivery to Loyalty Tier|124|scalar|sample|1096|-|0|NA|-1|-1|NA|NA|Average time (ms) in last 2 minutes by WCS Delivery to Loyalty Tier
+
+#==================================InventoryGrid To DB Tier Metrics========================================================
+#Inventory Grid to DB Tier
+Graph|Request/Sec Last 2 Minutes- InventoryGrid to DB Tier|125|scalar|rate|1104|PS|0|NA|-1|-1|NA|NA|Method Invocation/Sec by InventoryGrid to DB Tier
+Graph|Average Time Last 2 Minutes (ms) - InventoryGrid to DB Tier|126|scalar|sample|1112|-|0|NA|-1|-1|NA|NA|Average time (ms) in last 2 minutes by InventoryGrid to DB Tier
+
+# End of GDF
+
+
+
+
+

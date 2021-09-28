@@ -1,0 +1,14 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Azure DNSZones Stats|14013|vector|3|0|AWS Metrics|AccountName>Region>ResourceGroup>DNSZones|Azure DNS is a hosting service for DNS domains. It provides name resolution by using Microsoft Azure infrastructure. By hosting our domains in Azure, we can manage our DNS records by using the same credentials, APIs, tools, and billing as other Azure services
+
+Graph|AZURE DNSZones QueryVolume|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of queries served for a DNS zone.
+
+Graph|AZURE DNSZones RecordSetCount|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of Record Sets in a DNS zone.
+
+Graph|AZURE DNSZones RecordSetCapacityUtilization(%)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percent of Record Set capacity utilized by a DNS zone.
+

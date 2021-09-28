@@ -1,0 +1,6 @@
+# 1.0 - Initial version
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP ML Prediction|11608|vector|2|0|GCP Metrics|ProjectID>Region>ModelID>VersionID>PredictionType|It provides metrics related to prediction count and error count.
+Graph|GCP ML Prediction Count/Sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Count of predictions per seconds.
+Graph|GCP ML Prediction Error Count/Sec|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Count of prediction errors per seconds.

@@ -1,0 +1,14 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|1.0|1|-|-|-1|-1|
+
+Group|Kubernetes Replica Set|14098|vector|7|0|Kubernetes Metrics|Cluster>NameSpace>ReplicaSets|Provides metrics related to kubernetes replicaset stats.
+
+Graph|Kubernetes Replicas|1|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|The number of replicas per ReplicaSet.
+Graph|Kubernetes Fully Labeled Replicas|2|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|The number of fully labeled replicas per ReplicaSet.
+Graph|Kubernetes Ready Replicas|3|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|The number of ready replicas per ReplicaSet.
+Graph|Kubernetes Available Replicas|4|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|The number of available replicas per ReplicaSet.
+Graph|Kubernetes Observed Generation|5|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|The generation sequence number after replication.
+Graph|Kubernetes Desired Replicas|6|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|The number of desired replicas.
+Graph|Kubernetes Maximum Replicas|7|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|The number of maximum replicas.

@@ -1,0 +1,272 @@
+#!/bin/bash
+
+##############################################################################################
+# Name    : nsi_db_svc_get_comp_timing_details
+#
+# Author  :  Manmeet
+#
+# Purpose : This shell script is for getting the service component timing details,
+#           This is called by DDR GUI for information needed to be diaplyed in Gantt Chart
+#
+#           Currently it displays the dummy data
+##############################################################################################
+
+# Including nsi_db_utils
+. $NS_WDIR/bin/nsi_db_utils
+. $NS_WDIR/bin/nsi_db_svc_utils
+
+
+# Intializing default variables
+STATUS=""	
+STARTTIME=""
+ENDTIME=""
+LIMIT=""
+OFFSET=""
+GET_COUNT=0
+
+usage()
+{
+  echo "$*"
+  echo "USAGE:"
+  echo "====="
+  echo
+  echo "$0 --testrun <value> --svcindex <value> --status <value> --starttime <value> --endtime <value> --resptime <value> ----resptimeqmode <mode> --responsetime <time in ms> --responsetime2 <time in ms>"
+  echo
+  echo "Where"
+  echo "  --testrun is test run number, which is mandatory argument."
+  echo "  --svcinstance is transaction component instance. For getting timing details data for a particular service instance, this argument is mandatory."
+  echo "  --svcindex is transaction component index. For getting aggregated timing details data for a particular service over the test run (filters applicable), this is mandatory argument. Also if supplied, the signature index must also be supplied using --svcsignatureid."
+  echo "  --svcsignatureid is the signature index of the component service transactions. For getting aggregated timing details data for a particular service over the test run (filters applicable), this is mandatory argument. Also if supplied, the service index must also be supplied using --svcindex."
+  echo "  --svcsignatureid is transaction component index, which is optional argument."
+  echo "  --status is selecting particular staus (status is 0 for Success only, 1 the Failure code, -1 for all"
+  echo "  --starttime and -endtime is for selecting result that comes under the given range, optional"
+  echo "  --resptimeqmode is the selection of responsetime(1-lessthen, 2-greaterthen, 3-equal), which is mandatory argument."
+  echo "  --responsetime is for giving particular responsetime for different response time mode, which is optional argument."
+  echo "  --responsetime2 is required in case --resptimeqmode 3. In this case the range is between --responsetime and --responsetime2."
+  echo "  --get_count returns the number of rows of the query if it were called without this argumnent."  
+  echo "  --limit for selecting fix number of result optional"
+  echo "  --offset to set offset in case of limit optional"
+
+  exit 1
+}
+
+chk_args()
+{
+  if [ "X$TRNUM" == "X" ]; then
+    echo "Missing mandatory option --testrun."
+    usage
+  fi
+
+  if [ "X$SVCINDEX" == "X" -a  "X$SVCINSTANCE" == "X" ]; then
+    echo "Missing mandatory option: either --svcindex or --svcinstance must be supplied."
+    usage
+  fi
+
+  if [ "X$SVCINDEX" != "X" -a  "X$SVCSIGNATUREID" == "X" ]; then
+    if [ "X$SVCINSTANCE" == "X" ]; then
+      echo "Since --svcindex is supplied, --svcsignatureid is mandatory."
+      usage
+    fi
+  fi
+
+  if [ "X$SVCINDEX" == "X" -a  "X$SVCSIGNATUREID" != "X" ]; then
+    if [ "X$SVCINSTANCE" == "X" ]; then
+      echo "Since --svcsignatureid is supplied, --svcindex is mandatory."
+      usage
+    fi
+  fi
+}
+
+ARGS=$*
+if [ "X$1" == "X" ];then
+  echo "No arguments provided, please provide mandatory arguments"
+  usage 
+fi
+
+chk_args_of_option()
+{
+  if [ "X$2" == "X" ];then
+   echo "Option $1 requires a value."
+   usage 
+  fi
+}
+
+while [ "$1" != "" ];do
+  case $1 in
+    "--testrun")
+        shift
+        chk_args_of_option "--testrun" "$1"
+        TRNUM=$1;;
+    "--svcindex")
+        shift
+        chk_args_of_option "--svcindex" "$1"
+        SVCINDEX=$1;;
+    "--svcinstance")
+        shift
+        chk_args_of_option "--svcinstance" "$1"
+        SVCINSTANCE=$1;;
+    "--svcsignatureid")
+        shift
+        chk_args_of_option "--svcsignatureid" "$1"
+        SVCSIGNATUREID=$1;;
+    "--status")
+        shift
+        chk_args_of_option "--status" "$1"
+        STATUS=$1;;
+    "--starttime")
+        shift
+        chk_args_of_option "--starttime" "$1"
+        STARTTIME=$1;;
+    "--endtime")
+        shift
+        chk_args_of_option "--endtime" "$1"
+        ENDTIME=$1;;
+    "--responsetime")
+        shift
+        chk_args_of_option "--responsetime" "$1"
+        RESPONSETIME=$1;;
+    "--resptimeqmode")
+        shift
+        chk_args_of_option "--resptimeqmode" "$1"
+        RESPTIMEQMODE=$1;;
+    "--responsetime2")
+        shift
+        chk_args_of_option "--responsetime2" "$1"
+        RESPONSETIME2=$1;;
+    "--get_count")
+        shift
+        chk_args_of_option "--get_count" "$1"
+        GET_COUNT=$1;;
+    "--instancename")
+        shift
+        chk_args_of_option "--instancename" "$1"
+        INSTANCENAME=$1;;
+    "--instanceid")
+        shift
+        chk_args_of_option "--instanceid" "$1"
+        INSTANCEID=$1;;
+    "--limit")
+        shift
+        chk_args_of_option "--limit" "$1"
+        LIMIT=$1;;
+    "--offset")
+        shift
+        chk_args_of_option "--offset" "$1"
+        OFFSET=$1;;
+    "--only_query")
+        shift
+        chk_args_of_option "--only_query" "$1"
+        ONLY_QUERY=$1;;
+    --*) usage "Invalid option $1";;
+    *) usage ;;
+  esac
+  shift
+done
+
+#if [ "$GET_COUNT" == "1" ];then
+#  echo "Rows"
+#  echo "6"
+#else
+#  echo "SvcCompName|StartTime|RespTime|Status|CPFlag"
+#  echo "sp_get_cust_cuac_info_2011_09|45256|120|0|0"
+#  echo "sp_get_ola_services|45384|128|0|1"
+#  echo "sp_a_cust_wlth_segmnt_2011_03|45294|38|0"
+#  echo "getCustEmail_2012_06|45316|59|0"
+#  echo "getWSignOnAccountDetails_201109|45766|110|1"
+#  echo "XAMGCST4_GetCustomer|46112|80|1"
+#fi
+
+if [ "X$STATUS" = "X-2" ];then
+  STATUS=""
+fi
+
+SELECT="SELECT $NEWLINE  svctable_$TRNUM.svcname as \"SvcCompName\""
+
+if [ "X$SVCINSTANCE" = "X" ];then
+  SELECT="$SELECT, $NEWLINE  ROUND(AVG(svccomprecord_$TRNUM.svcstarttime - svccomprecord_$TRNUM.svcparentstarttime)) as \"StartTime\""
+  SELECT="$SELECT, $NEWLINE  ROUND(AVG(svccomprecord_$TRNUM.svcqueuewaittime),3) as \"QueueWaitTime\""
+  SELECT="$SELECT, $NEWLINE  ROUND(AVG(svccomprecord_$TRNUM.svcsorresptime),3) as \"SORRespTime\""
+else
+  SELECT="$SELECT, $NEWLINE  svccomprecord_$TRNUM.svcstarttime as \"StartTime\""
+  SELECT="$SELECT, $NEWLINE  svccomprecord_$TRNUM.svcqueuewaittime as \"QueueWaitTime\""
+  SELECT="$SELECT, $NEWLINE  svccomprecord_$TRNUM.svcsorresptime as \"SORRespTime\""
+fi
+
+SELECT="$SELECT, $NEWLINE  svccomprecord_$TRNUM.svcstatusindex as \"StatusIndex\""
+SELECT="$SELECT, $NEWLINE  svcerrorcode_$TRNUM.svcstatus as \"Status\""
+
+if [ "X$SVCINSTANCE" != "X" ];then
+  SELECT="$SELECT, $NEWLINE  svccomprecord_$TRNUM.svccritpathflag as \"CPFlag\""
+else
+  SELECT="$SELECT, $NEWLINE  0 as \"CPFlag\""
+fi
+  
+FROM="FROM $NEWLINE  svccomprecord_$TRNUM"
+FROM="$FROM, $NEWLINE  svctable_$TRNUM"
+FROM="$FROM, $NEWLINE  svcerrorcode_$TRNUM"
+
+if [ "X$SVCINSTANCE" = "X" ];then
+  WHERE="WHERE $NEWLINE  svccomprecord_$TRNUM.svcparentindex = $SVCINDEX"
+  WHERE="$WHERE $NEWLINE  AND svccomprecord_$TRNUM.svcsignatureindex = $SVCSIGNATUREID"
+else
+  WHERE="WHERE $NEWLINE  svccomprecord_$TRNUM.svcparentinstance = $SVCINSTANCE"
+fi
+
+#WHERE="$WHERE $NEWLINE  AND svccomprecord_$TRNUM.svctype = 1"
+WHERE="$WHERE $NEWLINE  AND svctable_$TRNUM.svcindex = svccomprecord_$TRNUM.svcindex"
+WHERE="$WHERE $NEWLINE  AND svccomprecord_$TRNUM.svcstatusindex = svcerrorcode_$TRNUM.svcstatusindex"
+
+if [ "X$RESPONSETIME" != "X" ];then
+  FROM="$FROM, $NEWLINE  svcrecord_$TRNUM"
+  WHERE="$WHERE $NEWLINE  AND svccomprecord_$TRNUM.svcparentinstance = svcrecord_$TRNUM.svcinstance"
+fi
+
+if [ "X$SVCINSTANCE" = "X" ];then
+  GROUP="GROUP BY $NEWLINE  \"Status\""
+  GROUP="$GROUP, $NEWLINE  \"SvcCompName\""
+  GROUP="$GROUP, $NEWLINE  \"CPFlag\""
+  GROUP="$GROUP, $NEWLINE  \"StatusIndex\""
+fi
+
+ORDER="ORDER BY \"StartTime\""
+
+OBJ_RECORD_TABLE=svccomprecord_$TRNUM
+apply_filters
+
+if [ "X$LIMIT" != "X" ];then
+  LIMIT="LIMIT $LIMIT"
+fi
+
+if [ "X$OFFSET" != "X" ];then
+  OFFSET="OFFSET $OFFSET"
+fi
+
+
+chk_args
+set_query_files $TRNUM
+
+if [ "X$ONLY_QUERY" = "X1" ];then
+ ns_query_debug_logs "START"
+ ns_log_run_query
+ echo $SELECT $FROM $INNER_QUERY $INQ_FROM $INQ_WHERE $INQ_GROUPBY $INQ_ORDERBY $WHERE $GROUP $ORDER $LIMIT $OFFSET
+ ns_query_debug_logs "END_ONLY_QUERY"
+ remove_files
+ exit 0
+fi
+
+if [ $GET_COUNT -eq 0 ];then
+  ns_run_query
+else
+  FROM="FROM $NEWLINE  ($NEWLINE  $SELECT $NEWLINE$FROM $NEWLINE$WHERE $NEWLINE$GROUP $NEWLINE  ) As \"Total\" "
+  SELECT="SELECT $NEWLINE  Count(*) As \"Rows\" "
+  WHERE=""
+  GROUP=""
+  ORDER=""
+  ns_run_query
+fi
+
+show_query_result
+
+
+exit 0
+

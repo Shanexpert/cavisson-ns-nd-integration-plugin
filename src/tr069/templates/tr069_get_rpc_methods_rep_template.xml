@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:soap-enc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:cwmp="urn:dslforum-org:cwmp-1-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Header>
+    <cwmp:ID soap:mustUnderstand="1" xsi:type="xsd:string">{TR069ACSReqIDSP}</cwmp:ID>
+  </soap:Header>
+  <soap:Body soap:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+    <cwmp:GetRPCMethodsResponse>
+      <MethodList soap-enc:arrayType="xsd:string[{TR069NumRPCMethodsDP}]">
+        {TR069GetRPCMethodsResponseDP}
+      </MethodList>
+    </cwmp:GetRPCMethodsResponse>
+  </soap:Body>
+</soap:Envelope>

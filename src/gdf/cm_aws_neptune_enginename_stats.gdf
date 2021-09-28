@@ -1,0 +1,88 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS Neptune DatabaseEngine Stats|11383|vector|40|0|AWS Metrics|AccountName>Region>DatabaseEngine|Amazon Neptune is a fast, reliable, fully managed graph database service that makes it easy to build and run applications that work with highly connected datasets
+
+Graph|AWS Neptune CPU Credit Balance|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The Number of CPU Credit Balance
+
+Graph|AWS Neptune CPU Credit Usage|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The Number of CPU Credit Usage
+
+Graph|AWS Neptune CPU Surplus Credits Charged|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The Number of CPU Surplus Credits Charged
+
+Graph|AWS Neptune CPU Surplus Credit Balance|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The Number of CPU Surplus Credit Balance
+
+Graph|AWS Neptune Volume Bytes Used|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The amount of storage used by your Neptune DB instance in bytes.
+
+Graph|AWS Neptune Volume Read IOPS|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of billed read I,O operations from a cluster volume reported at 5-minute intervals.
+
+Graph|AWS Neptune Volume Write IOPS|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average number of write disk I,O operations to the cluster volume reported at 5-minute intervals.
+
+Graph|AWS Neptune Gremlin Web Socket Open Connections|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of potential WebSocket connections currently open.
+
+Graph|AWS Neptune Gremlin Requests|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of requests to Gremlin engine.
+
+Graph|AWS Neptune Gremlin Errors|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of errors in Gremlin traversals.
+
+Graph|AWS Neptune Main Request Queue Pending Requests|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of requests waiting in the input queue pending execution. Neptune starts throttling requests when they exceed the maximum queue capacity.
+
+Graph|AWS Neptune Status Errors|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of errors from the status endpoint.
+
+Graph|AWS Neptune Loader Requests|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of Loader Requests.
+
+Graph|AWS Neptune Loader Errors|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of errors from Loader requests.
+
+Graph|AWS Neptune Sparql Requests|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of requests to the SPARQL engine.
+
+Graph|AWS Neptune Status Requests|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of requests to the status endpoint.
+
+Graph|AWS Neptune Sparql Errors|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of errors in the SPARQL queries.
+
+Graph|AWS Neptune Volume Bytes Left Total|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of Volume Bytes Left Total
+
+Graph|AWS Neptune Engine Uptime/Sec|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The amount of time that the instance has been running in seconds.
+
+Graph|AWS Neptune Sparql Requests/Sec|20|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of requests to the SPARQL engine per second.
+
+Graph|AWS Neptune Loader Requests/Sec|21|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of Loader Requests per second
+
+Graph|AWS Neptune Num Tx Opened/Sec|22|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of transactions opened on the server per second.
+
+Graph|AWS Neptune Num Tx Committed|23|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of transactions successfully committed per second.
+
+Graph|AWS Neptune Num Tx Rolled Back|24|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of transactions per second rolled back on the server because of errors.
+
+Graph|AWS Neptune Total Client Errors/Sec|25|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number per second of requests that errored out because of client-side issues.
+
+Graph|AWS Neptune Total Requests/Sec|26|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of requests per second to the server from all sources.
+
+Graph|AWS Neptune Total Server Errors/Sec|27|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number per second of requests that errored out on the server because of internal failures.
+
+Graph|AWS Neptune Gremlin Requests/Sec|28|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of requests to Gremlin engine per second.
+
+Graph|AWS Netune Gremlin Web Socket Client Errors/Sec|29|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of WebSocket client errors on the Gremlin endpoint per second.
+
+Graph|AWS Neptune Gremlin Web Socket Success/Sec|30|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of successful WebSocket connections to the Gremlin endpoint per second.
+
+Graph|AWS Neptune Gremlin Web Socket Server Errors/Sec|31|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of WebSocket server errors on the Gremlin endpoint per second.
+
+Graph|AWS Neptune Cpu Utilization(%)|32|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of CPU utilization.
+
+Graph|AWS Neptune Netowrk Transmit Throughput(Bytes/Sec)|33|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The outgoing (Transmit) network traffic on the DB instance including both customer database traffic and Neptune traffic used for monitoring and replication in bytes,second.
+
+Graph|AWS Neptune Network Receieve Throughput(Bytes/Sec)|34|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The incoming (Receive) network traffic on the DB instance including both customer database traffic and Neptune traffic used for monitoring and replication in bytes,second.
+
+Graph|AWS Neptune Network Throughput(Bytes/Sec)|35|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The amount of network throughput both received from and transmitted to clients by each instance in the Neptune DB cluster in bytes per second.
+
+Graph|AWS Neptune Backup Retention Period Storage Used(Bytes)|36|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total amount of backup storage, in bytes, used to support from the Neptune DB cluster's backup retention window. Included in the total reported by the TotalBackupStorageBilled metric.
+
+Graph|AWS Neptune Total Backup Storage Billed(Bytes)|37|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total amount of backup storage for which you are billed for a given Neptune DB cluster, in bytes. Includes the backup storage measured by the BackupRetentionPeriodStorageUsed and SnapshotStorageUsed metrics.
+
+Graph|AWS Neptune Snapshot Storage Used(Bytes)|38|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total amount of backup storage consumed by all snapshots for a Neptune DB cluster outside its backup retention window, in bytes. Included in the total reported by the TotalBackupStorageBilled metric.
+
+Graph|AWS Neptune Free Local Storage(Bytes)|39|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The amount of storage available for temporary tables and logs in bytes
+
+Graph|AWS Neptune Freeable Memory(Bytes)|40|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The amount of available random access memory in bytes
+

@@ -1,0 +1,18 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+#ObjectName : org.apache.cassandra.metrics:type=ReadRepair,name=Attempted,org.apache.cassandra.metrics:type=ReadRepair,name=ReconcileRead,org.apache.cassandra.metrics:type=ReadRepair,name=RepairedAsync,org.apache.cassandra.metrics:type=ReadRepair,name=RepairedBackground, org.apache.cassandra.metrics:type=ReadRepair,name=RepairedBlocking,org.apache.cassandra.metrics:type=ReadRepair,name=SpeculatedRead,org.apache.cassandra.metrics:type=ReadRepair,name=SpeculatedWrite
+info|3.1|1|-|-|-1|-1|-
+Group|Apache Cassandra Read Repair Stats|14112|vector|5|0|Apache Cassandra Metrics|Tier>Server>Instance>name|This stats gives information about read repairs will only kick off if the data is inconsistent on the read which shouldn't be that common.
+#G1
+Graph|Apache Cassandra Read Repair Count|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of read repairs data.
+#G2
+Graph|Apache Cassandra Read Repair Mean Rate|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Mean rate of read repairs data.
+Graph|Apache Cassandra Read Repair/One Minute|3|scalar|sample|-|None|0|AS|-1|-1|NA|NA|One minute read repairs data rate.
+#G4
+Graph|Apache Cassandra Read Repair/Five Minute|4|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Five minutes read repairs data rate.
+#G5
+Graph|Apache Cassandra Read Repair/Fifteen Minute|5|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Fifteen minutes read repairs data rate.
+

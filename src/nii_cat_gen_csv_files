@@ -1,0 +1,50 @@
+#! /bin/bash
+####################################################
+#  File: nc_cat_gen_csv_files
+#
+#  Author: Manmeet
+#
+#  Date: 16 Sept 2013
+#
+#  Synopsis: 
+#      This command is used for Netcloud testrun.
+#
+#      This command is used to concatenate the contents of
+#      the following csv files from Generator TR directories to 
+#      Controller TR directory
+#          prc.csv 
+#          trc.csv 
+#          tprc.csv 
+#          src.csv 
+#
+#  Usage: nc_cat_gen_csv_files <controller_trnum>
+#  
+####################################################
+
+if [ ! -f $NS_WDIR/logs/TR$1/NetCloud/NetCloud.data ]; then
+  echo ERROR: File not found $NS_WDIR/logs/TR$1/NetCloud/NetCloud.data
+  exit 1
+fi
+
+NC_DATA_FILE=$NS_WDIR/logs/TR$1/NetCloud/NetCloud.data
+CSV_PATH=reports/csv
+ARR_GEN_TRNUM=(`grep  ^NETCLOUD_GENERATOR_TRUN $NC_DATA_FILE | cut -d "|" -f1  |cut -d ' ' -f2`)
+ARR_GEN_NAME=(`grep  ^NETCLOUD_GENERATOR_TRUN $NC_DATA_FILE | cut -d "|" -f2  |cut -d ' ' -f2`)
+
+> $NS_WDIR/logs/TR$1/$CSV_PATH/prc.csv
+> $NS_WDIR/logs/TR$1/$CSV_PATH/trc.csv
+> $NS_WDIR/logs/TR$1/$CSV_PATH/tprc.csv
+> $NS_WDIR/logs/TR$1/$CSV_PATH/src.csv
+#Added page_dump.csv 
+> $NS_WDIR/logs/TR$1/$CSV_PATH/page_dump.csv
+
+for ((i = 0; i < ${#ARR_GEN_TRNUM[@]}; i++))
+do
+  cat $NS_WDIR/logs/TR$1/NetCloud/${ARR_GEN_NAME[$i]}/TR${ARR_GEN_TRNUM[$i]}/$CSV_PATH/prc.csv >> $NS_WDIR/logs/TR$1/$CSV_PATH/prc.csv
+  cat $NS_WDIR/logs/TR$1/NetCloud/${ARR_GEN_NAME[$i]}/TR${ARR_GEN_TRNUM[$i]}/$CSV_PATH/trc.csv >> $NS_WDIR/logs/TR$1/$CSV_PATH/trc.csv
+  cat $NS_WDIR/logs/TR$1/NetCloud/${ARR_GEN_NAME[$i]}/TR${ARR_GEN_TRNUM[$i]}/$CSV_PATH/tprc.csv >> $NS_WDIR/logs/TR$1/$CSV_PATH/tprc.csv
+  cat $NS_WDIR/logs/TR$1/NetCloud/${ARR_GEN_NAME[$i]}/TR${ARR_GEN_TRNUM[$i]}/$CSV_PATH/src.csv >> $NS_WDIR/logs/TR$1/$CSV_PATH/src.csv
+  cat $NS_WDIR/logs/TR$1/NetCloud/${ARR_GEN_NAME[$i]}/TR${ARR_GEN_TRNUM[$i]}/$CSV_PATH/page_dump.csv >> $NS_WDIR/logs/TR$1/$CSV_PATH/page_dump.csv
+done
+
+

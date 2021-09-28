@@ -1,0 +1,21 @@
+#LAST_MAX_ASSIGNED_GRAPH_ID = 22
+#LAST_MODIFIED_DATE = 09/01/16 01:56:09
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+ 
+Info|3.1|1|-|-|-1|-1|-
+Group|RabbitMQ Queue Stats|10373|vector|11|0|Application Metrics|Tier>Sever>Host>Queue|RabbitMQ Queue Stats monitors metrics related to messages in the queue and consumers of the queue.
+Graph|RabbitMQ Consumers|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of consumers of a queue.
+Graph|RabbitMQ Messages Available|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of messages available in queue.
+Graph|RabbitMQ Pending Acknowledgments|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of messages pending for acknowledgment in queue.
+Graph|RabbitMQ Messages Got/Sec|4|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of messages get per second in queue.
+Graph|RabbitMQ Messages Got No-Ack/Sec|5|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of messages get without acknowledgment per second in queue.
+Graph|RabbitMQ Messages Published/Sec|6|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of messages published per second in queue.
+Graph|RabbitMQ Messages Acknowledged/Sec|7|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of messages acknowledged per second in queue.
+Graph|RabbitMQ Messages Delivered/Sec|8|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of messages delivered per second in queue.
+Graph|RabbitMQ Messages Delivered No-Ack/Sec|9|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of message delivered per second without acknowledgment in queue.
+Graph|RabbitMQ Messages Total Delivered/Sec|10|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Total Delivered messages per second in queue.
+Graph|RabbitMQ Redelivered/Sec|11|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of messages redelivered per second in queue.

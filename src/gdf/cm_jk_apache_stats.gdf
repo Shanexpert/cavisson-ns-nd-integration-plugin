@@ -1,0 +1,39 @@
+# --- GDF Version History ---
+# # 1.0 - Initial version
+# # 2.0 - Change done for match Long_data and Long_long_data to double
+# # 3.0 - Changes done for Dynamic data in Execution GUI
+# # 3.1 - Use future1 field of group line for Metric group name
+#
+# General information line
+# Info|msgVersion|numGroups|startIndex|testRun|sizeOfMsgData|interval|testRunStartDate/Time
+#
+# Group information line
+# Group|groupName|rptGrpId|groupType|numGraphs|numVectors
+#
+# Graph information line
+# Graph|graphName|rptId|graphType|dataType|graphDataIndex|formula|numVectors
+
+Info|3.1|1|-|-|-1|-1|-
+
+
+
+Group|JK Status|10133|vector|19|0|Application Metrics|Tier>Server>Instance|JK Status Manager
+Graph|Worker distance|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Worker distance
+Graph|Load Balancer factor|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Load Balancer factor
+Graph|Load Balancer multiplicity|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Load Balancer multiplicity
+Graph|Load Balancer value|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Load Balancer value
+Graph|Number of requests|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of requests
+Graph|Number of requests/sec|6|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of requests per sec
+Graph|Number of sessions created|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of sessions created
+Graph|Number of sessions created/sec|8|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of sessions created
+Graph|Number of failed requests|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of failed requests
+Graph|Number of client errors|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of client errors
+Graph|Number of reply timeouts (decayed)|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of reply timeouts (decayed)
+Graph|Number of bytes transferred|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of bytes transferred
+Graph|Number of bytes transferred/sec|13|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of bytes transferred per sec
+Graph|Number of bytes read|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of bytes read
+Graph|Number of bytes read/sec|15|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of bytes read per sec
+Graph|Current number of busy connections|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current number of busy connections
+Graph|Maximum number of busy connections|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum number of busy connections
+Graph|Current number of backend connections|18|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Current number of backend connections
+Graph|Seconds since last reset of statistics counters|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Seconds since last reset of statistics counters

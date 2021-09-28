@@ -1,0 +1,24 @@
+Info|3.1|1|-|-|-1|-1|-
+Group|Apache Active MQ Broker Destination Stats|10631|vector|21|0|Application Metrics|Tier>Server>Instance>Broker>Destination>DestinationName|Apache Active MQ Broker Destination Stats provides information about the destination (either topic or queue).
+
+Graph|Active MQ Queue Size|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of messages in the destination that are waiting to be consumed, potentially dispatched but unacknowledged.
+Graph|Active MQ Enqueue/Sec|2|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of messages that have been sent to the destination per second.
+Graph|Active MQ Dequeue/Sec|3|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of messages that have been acknowledged from the destination per second.
+Graph|Active MQ Consumers|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of consumers subscribed to the destination.
+Graph|Active MQ Producers|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of producers connected to the destination.
+Graph|Active MQ Forward messages|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of messages that have been forwarded (to a networked broker) from the destination.
+Graph|Active MQ Average Message Size (KB)|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average Message Size on destination in Kilobytes.
+Graph|Active MQ Max Message Size (KB)|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum Message Size on destination in Kilobytes.
+Graph|Active MQ Min Message Size (KB)|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Minimum Message Size on destination in Kilobytes.
+Graph|Active MQ Blocked/Sec|10|scalar|rate|-|cumToPS|0|NA|-1|-1|NA|NA|Number of messages blocked per second for flow control.
+Graph|Active MQ Expired/Sec|11|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|The number of messages that have expired in the destination per second.
+Graph|Active MQ Dispatched/Sec|12|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|The number of messages that have been delivered to consumers per second, but not necessarily acknowledged by the consumer.
+Graph|Active MQ InFlight Messages|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of dispatched to but not acknowledged by the consumers.
+Graph|Active MQ Average Enqueue Time (ms)|14|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average amount of time (in milliseconds), that messages sat in the destination before being consumed.
+Graph|Active MQ Max Enqueue Time (ms)|15|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The longest amount of time (in milliseconds), that a message sat in the destination before being consumed.
+Graph|Active MQ Min Enqueue Time (ms)|16|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The shortest amount of time (in milliseconds), that a message sat in the destination before being consumed.
+Graph|Active MQ Average Blocked Time (ms)|17|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average amount of time (in milliseconds), that a message is blocked for flow control. 
+Graph|Active MQ Total Blocked Time (Sec)|18|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total amount of time (in seconds), that a message is blocked for flow control.
+Graph|Active MQ Memory Usage Portion|19|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Specifies the portion of the broker's memory limit used by the destination.
+Graph|Active MQ Memory Limit (MB)|20|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The memory(in megabytes) used for holding undelivered messages before paging to temporary storage.
+Graph|Active MQ Memory Usage (PCT)|21|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of the memory used.

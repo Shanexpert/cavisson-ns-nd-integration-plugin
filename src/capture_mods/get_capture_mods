@@ -1,0 +1,14 @@
+#!/bin/sh
+
+cp docshell/base/nsDocShell.cpp mods
+cp netwerk/protocol/http/src/nsHttpChannel.cpp mods
+cp netwerk/protocol/http/src/nsHttpChannel.h mods
+cp netwerk/protocol/http/src/nsHttpTransaction.cpp mods
+cp netwerk/protocol/http/src/nsHttpTransaction.h mods
+cp embedding/browser/gtk/tests/TestGtkEmbed.cpp mods
+cp netwerk/protocol/http/src/nsHttpRequestHead.cpp mods
+cp netwerk/protocol/http/src/nsHttpRequestHead.h mods
+cp netwerk/protocol/http/src/nsHttpHeaderArray.cpp mods
+cp netwerk/protocol/http/src/nsHttpHeaderArray.h mods
+cp profile/src/nsProfileAccess.cpp mods
+cp capture_urls.c  mods

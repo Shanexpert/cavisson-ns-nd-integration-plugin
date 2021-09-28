@@ -1,0 +1,18 @@
+# ---------GDF Version History---------
+#  1.0  -Initial Version, release:4.1.10 B?
+
+Info|3.1|1|-|-|-1|-1|-
+Group|JCache Stats|10653|vector|11|0|Application Metrics|Tier>Server>Instance|Provides EhCache jcache statitics.
+Graph|Average Put Time (ms)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average time in milliseconds to perform put operations.
+Graph|Average Get Time (ms)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average time in milliseconds to perform get operations.
+Graph|Average Remove Time (ms)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average time in milliseconds to perform remove operations.
+Graph|Cache Puts|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of put operations.
+Graph|Cache Gets|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of get operations.
+Graph|Cache Hits|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of successful get operations.
+Graph|Cache Misses|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of unsuccessful get operations.
+Graph|Cache Hit Percentage|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percentage of cache requests that return an entry.
+Graph|Cache Miss Percentage|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percentage of cache requests that do not return an entry.
+Graph|Cache Removals|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of remove operations.
+Graph|Cache Evictions|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of evictions from the cache.
+
+

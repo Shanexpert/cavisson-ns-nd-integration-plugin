@@ -1,0 +1,227 @@
+#!/bin/sh
+
+##
+# Script is used for runtime updation
+#
+# Does the following in order:
+# o     Sort the runtime_changes.conf to new sorted_runtime_changes.conf
+# o     Signals netstorm with USR2
+# o     Waits 5 secs for netstorm to write the status onto runtime_changes.log file
+# o     Display Status and exit with appropriate exit status. (on Error exit with -1, Zero otherwise)
+#
+RUNTIME_CHANGES="runtime_changes.conf"
+SORTED_RUNTIME_CHANGES="sorted_runtime_changes.conf"
+RUNTIME_CHANGES_ALL_LOG="runtime_changes/runtime_changes_all.log"
+RUNTIME_CHANGES_LOG="runtime_changes/runtime_changes.log"
+
+print_only_log_file=0
+
+debug_log()
+{
+  print_msg=$1
+  print_flag=$2
+  if [ "X$print_flag" = "X0" ];then
+    echo "`date +'%m/%d/%y %H:%M:%S'` $print_msg" >>$LOG_FILE
+  else
+    echo $print_msg
+    echo "`date +'%m/%d/%y %H:%M:%S'` $print_msg" >>$LOG_FILE
+  fi
+}
+
+if [ "XX" = "XX$NS_WDIR" ];then
+  echo "ERROR: NS_WDIR env must be defined"
+  exit -1
+fi
+
+function usage()
+{
+  echo "Error: Incorrect usage"
+  echo "Usage: nsi_runtime_update test-run-number or -n test-run-number"
+  exit -1
+}
+
+if [ $# -eq 1 ];then
+  TRNUM=$1
+elif [ $# -eq 2 ];then
+  if [ $1 = "-n" ];then
+    TRNUM=$2
+  else
+   usage 
+  fi
+else
+  usage 
+fi
+
+#this method is appending runtime_changes.log to runtime_changes_all.log and then removing runtime_changes.log file
+
+show_and_append_all_log()
+{
+  cat $NS_WDIR/logs/TR$TRNUM/$RUNTIME_CHANGES_LOG
+
+  # Add date/time when changes are done
+  echo "Runtime changes done at `date`" >>$NS_WDIR/logs/TR$TRNUM/$RUNTIME_CHANGES_ALL_LOG
+  # Append current log to all log file
+  cat $NS_WDIR/logs/TR$TRNUM/$RUNTIME_CHANGES_LOG >>$NS_WDIR/logs/TR$TRNUM/$RUNTIME_CHANGES_ALL_LOG
+  debug_log "runtime_changes.log file output : `cat $NS_WDIR/logs/TR$TRNUM/$RUNTIME_CHANGES_LOG`" $print_only_log_file
+  debug_log "runtime_changes_all.log file output: `cat $NS_WDIR/logs/TR$TRNUM/$RUNTIME_CHANGES_ALL_LOG`" $print_only_log_file
+  chown $TEST_RUN_OWNER $NS_WDIR/logs/TR$TRNUM/$RUNTIME_CHANGES_ALL_LOG
+  tail -1 $NS_WDIR/logs/TR$TRNUM/$RUNTIME_CHANGES_LOG | grep "Successful" >/dev/null 2>&1
+  if [ $? -ne 0 ]; then
+    exit -1 # Failed
+  else
+    debug_log "---------------------------runtime changes end-------------------------" $print_only_log_file
+    #exit 0
+  fi
+
+  #echo "============================================================================"
+
+  rm -f $NS_WDIR/logs/TR$TRNUM/$RUNTIME_CHANGES_LOG
+}
+
+check_if_test_running()
+{
+  OUT=/tmp/nsi_runtime_update.$$
+  #Here while listing instance files we are using -t option which help in sorting by modification time
+  #and current test comes first.
+  ls -td $NS_WDIR/.tmp/ns_inst* 1>$OUT 2>/dev/null
+  if [ $? -ne 0 ];then
+    echo "Runtime changes cannot be applied as test run '$TRNUM' is not running."
+    exit -1
+  fi
+
+  for inst in `cat $OUT`
+  do
+    #echo $inst
+    #Bug#4614, While getting tid and pid from directory ns_inst, one of the possibility is not finding
+    #netstorm.pid and netstorm.tid files then we will simply continue without throwing any error
+    #ACT=`cat $inst/netstorm.tid 2>/dev/null`
+    ACT=`sed -n '1p' $inst/keys 2>/dev/null`
+    if [ $? -ne 0 ];then
+    #  echo "Runtime changes cannot be applied as test run '$TRNUM' is not running. netstorm.tid file is not present"
+    #  rm $OUT
+    #  exit -1
+      continue
+    fi
+
+    #PID=`cat $inst/netstorm.pid 2>/dev/null`
+    #PID=`echo $inst|awk -F'_' '{print $NF}' 2>/dev/null`
+    PID=${inst##*_}
+    if [ $? -ne 0 ];then
+    #  echo "Runtime changes cannot be applied as test run '$TRNUM' is not running."
+    #  rm $OUT
+    #  exit -1
+      continue
+    fi
+
+    if [ $ACT -eq $TRNUM ];then
+      #Check if netstorm is running
+      #Since different user can run test; for that kill -0 giving error, so using ps -p
+      #kill -0 $PID >/dev/null 2>&1
+      ps -p $PID >/dev/null 2>&1
+      if [ $? -ne 0 ];then
+        echo "Runtime changes cannot be applied as test run '$TRNUM' is not running." 
+        rm $OUT
+        exit -1
+      fi
+      return
+    fi
+  done
+
+  # Not found
+  echo "Runtime changes cannot be applied as test run '$TRNUM' is not running"
+  exit -1
+}
+
+check_owner()
+{
+  CMD_OWNER=`whoami`
+  TEST_RUN_OWNER=`ps -p $PID -o user=`
+  debug_log "owner name to run the test: $TEST_RUN_OWNER" $print_only_log_file
+  #Since different user can run test; for that kill -0 giving error, so using ps -p
+  #kill -0 $PID >/dev/null 2>&1
+  if [ $CMD_OWNER == "root" -o $CMD_OWNER == $TEST_RUN_OWNER ];then 
+    return
+  fi
+
+  debug_log "Runtime changes cannot be applied for test run '$TRNUM' as you are not owner of the test. Owner is $TEST_RUN_OWNER"
+  exit -1
+}
+
+make_sorted_file()
+{
+  if [ ! -f $NS_WDIR/logs/TR$TRNUM/runtime_changes/$RUNTIME_CHANGES ]; then
+    debug_log "Runtime changes cannot be applied for test run '$TRNUM' as runtime change configuration file is not present. Filename is $NS_WDIR/logs/TR$TRNUM/runtime_changes/$RUNTIME_CHANGES"
+    exit -1
+  fi
+  debug_log "make_sorted_file() calling start.." $print_only_log_file 
+  # Sort
+  $NS_WDIR/bin/nsi_merge_sort_scen 1 $NS_WDIR/logs/TR$TRNUM/runtime_changes/$RUNTIME_CHANGES $NS_WDIR/logs/TR$TRNUM/runtime_changes/$SORTED_RUNTIME_CHANGES 1>$NS_WDIR/logs/TR$TRNUM/$RUNTIME_CHANGES_LOG  2>&1
+   ret=$?
+   chown $TEST_RUN_OWNER $NS_WDIR/logs/TR$TRNUM/$RUNTIME_CHANGES_LOG
+
+  if [ $ret != "0" ];then
+    debug_log "Runtime changes cannot be applied for test run '$TRNUM' as runtime change configuration file is not valid"
+    debug_log "Runtime change configuration file contents are:"
+    cat $NS_WDIR/logs/TR$TRNUM/runtime_changes/$RUNTIME_CHANGES
+    show_and_append_all_log                 
+    exit 1
+  fi
+  debug_log "make_sorted_file() exit.." $print_only_log_file
+}
+
+apply_runtime_changes()
+{
+
+  #echo "Signalling netstorm pid $PID for runtime update..."
+  kill -USR2 $PID
+  if [ $? -ne 0 ];then
+    debug_log "Runtime changes cannot be applied for test run '$TRNUM'. Error in sending SIGUSR2 signal to netstorm parent process with pid '$PID' (Instance is $inst)"
+    rm $OUT
+    exit -1
+  fi
+
+  rm $OUT
+  
+  debug_log "Waiting for netstorm to update runtime settings with pid = $PID" $print_only_log_file 
+  # Check status
+  #echo "Waiting for netstorm to update runtime settings."
+  #it will check for runtime_changes.conf file to find out runtime changes are done by parent  in a loop
+  #every one second .It will allow for 60 tries and then give error
+  retryCount=1
+  while [ $retryCount -le 60 ]
+  do
+    if [ -f $NS_WDIR/logs/TR$TRNUM/runtime_changes/$RUNTIME_CHANGES ]; then
+     # echo "Sleeping for retry count $retryCount"
+      sleep 1
+      if [ $retryCount -gt 60 ]; then
+        debug_log "Runtime changes cannot be applied for test run '$TRNUM' as netstorm could not finish applying changes in 60 seconds"
+        exit -1
+      fi
+    fi
+    retryCount=`expr $retryCount + 1`
+  done
+  
+  if [ ! -f $NS_WDIR/logs/TR$TRNUM/$RUNTIME_CHANGES_LOG ]; then
+    debug_log "Runtime changes cannot be applied for test run '$TRNUM' as netstorm did not create runtime changes log file"
+    exit -1
+  fi
+
+  #creating runtime_changes_all.log file and removing runtime_changes.log file
+  show_and_append_all_log                 
+}
+
+check_if_test_running
+
+LOG_FILE=$NS_WDIR/logs/TR$TRNUM/runtime_changes/nsi_runtime_update.log
+touch $LOG_FILE 1>/dev/null 2>&1
+chmod 666 $LOG_FILE 1>/dev/null 2>&1
+debug_log "Runtime changes started" $print_only_log_file
+debug_log "netstorm tid: $ACT" $print_only_log_file
+debug_log "netstorm pid: $PID" $print_only_log_file
+debug_log "Output file: $OUT" $print_only_log_file
+
+check_owner
+make_sorted_file
+apply_runtime_changes
+
+exit 0

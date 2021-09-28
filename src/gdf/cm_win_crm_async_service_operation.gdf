@@ -1,0 +1,3 @@
+Info|3.1|1|-|-|-1|-1|-
+Group|Windows CRM Async Service Operation|14265|vector|1|0|CRM Metrics|Tier>Server>Instance|Windows CRM Asynchronous Service Stats for each operation.
+Graph|Operations failed|1|scalar|sample|-|-|0|NA|-1|-1|H|NA|Total number of asynchronous operations that failed for all organizations in the deployment.

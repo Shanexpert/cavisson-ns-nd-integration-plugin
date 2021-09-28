@@ -1,0 +1,14 @@
+# --- GDF Version History ---
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS Lex BotAliasChannel Source Stats|11256|vector|7|0|AWS Metrics|AccountName>Region>BotAlias>BotChannelName>BotName>Source|Amazon Lex is an AWS service for building conversational interfaces for applications using voice and text
+
+Graph|AWS Lex Channel Auth Error|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of authentication errors returned by the messaging channel in the specified time period. An authentication error indicates that the secret token provided during channel creation is invalid or has expired.
+Graph|AWS Lex Channel Configuration Error|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of configuration errors in the specified period. A configuration error indicates that one or more configuration entries for the channel are invalid.
+Graph|AWS Lex Channel Throttled Event|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of times that messages that were sent by the messaging channel were throttled by Amazon Lex in the specified period.
+Graph|AWS Lex Channel Outbound Throttled Event|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of times that outbound events from Amazon Lex to the messaging channel were throttled in the specified time period.
+Graph|AWS Lex Channel Request|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of requests made on a channel in the specified time period.
+Graph|AWS Lex Response Card Error|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of times that Amazon Lex could not post response cards in the specified period.
+Graph|AWS Lex Channel System Error|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of internal errors that occurred in Amazon Lex for a channel in the specified period.

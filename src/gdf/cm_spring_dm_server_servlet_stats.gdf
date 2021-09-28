@@ -1,0 +1,17 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Spring DM Server Servlet Data|10057|vector|7|0|Application Metrics|Tier>Server>Instance>ServletName|Information related to Spring DM Server Servlet
+
+Graph|minTime|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Minimum Time
+Graph|processingTime|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Processing Time
+Graph|maxTime|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum Time
+Graph|errorCount|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Error Count
+Graph|loadTime|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Load Time
+Graph|classLoadTime|6|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Class Load Time
+Graph|requestCount|7|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Request Time

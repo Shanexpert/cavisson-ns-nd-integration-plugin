@@ -1,0 +1,107 @@
+#!/bin/sh
+script_libs=""
+error=""
+flow_files=""
+#***************************************************************************
+NS_TA_DIR=""
+NS_RTA_DIR="workspace"
+#***************************************************************************
+
+function convert_file()
+{
+  filename=$1
+  sed -i '/^\s*\/\//! s/MULTIPART_BODY_BEGIN,.*BODY_END/""/g' $filename
+  sed -i '/^\s*\/\//! s/BODY_BEGIN,.*BODY_END/""/g' $filename
+  sed -i '/BODY_BEGIN,/,/BODY_END/{//!s/^/\/\//}' $filename
+  sed -i '/"[ \t]*BODY[ \t]*=/{//s/^/\/\//}' $filename
+  sed -i '/^\s*\/\//! s/MULTIPART_BODY_BEGIN.*/"",/g' $filename
+  sed -i '/^\s*\/\//! s/BODY_BEGIN.*/"",/g' $filename
+  sed -i '/^\s*\/\//! s/^.*BODY_END/\t""/g' $filename
+
+}
+
+if [ $1 -le 0 ];then
+  err_path=$NS_WDIR/webapps/netstorm/temp/script_tmp_files
+  err_file=$NS_WDIR/webapps/netstorm/temp/script_validation.log
+  out_filename=$NS_WDIR/webapps/netstorm/temp/.nsu_script_tool.out
+else
+  err_path=$NS_WDIR/logs/TR$1/script_tmp_files
+  err_file=$NS_WDIR/logs/TR$1/ns_logs/script_validation.log
+  out_filename=$NS_WDIR/logs/TR$1/ns_logs/.nsu_script_tool.out
+fi
+>$out_filename
+
+#***************************************************************************
+NS_TA_DIR=$NS_WDIR/$NS_RTA_DIR/$5/$6/cavisson
+#***************************************************************************
+
+runlogic_list=""
+if [ $# -eq 7 ];then
+ runlogic_list="-r $7"
+fi
+
+if [ "X$2" == "X1" ]; then #For C Files
+  nsu_script_tool -o UsedFlowList -s $3 -w $5/$6 $runlogic_list> $out_filename 2>&1
+else
+  nsu_script_tool -o AllFlowList -s $3 -w $5/$6 $runlogic_list> $out_filename 2>&1
+fi
+
+if [ ! -s $out_filename ]; then
+  echo "Used flow list in script '$NS_TA_DIR/$3' not found." >> $err_file
+  exit 0
+else
+  echo "$(tail -n +2 $out_filename)" > $out_filename
+  if [ ! -s $out_filename ]; then
+    echo "Used flow list in script '$NS_TA_DIR/$3' not found." >> $err_file
+    exit 0
+  fi
+fi
+error_flag=0;
+mkdir -p $err_path
+cd $err_path
+while read line; do    
+  if [ "X$2" == "X1" ]; then
+    flow_files+="$line.c "
+    filename=$NS_TA_DIR/$3/$line.c
+    if [ ! -f $filename ];then
+      echo "Used flow file '$filename' not found." >> $err_file
+      exit 0
+    fi
+    match=`grep -c "BODY" $filename`
+    if [ $match -gt 0 ];then 
+      cp $filename .
+      #TODO  Convert all BODY Content in C Syntax 
+      convert_file $line.c
+    else
+      ln -s $filename .
+    fi
+#  else
+#    flow_files+="$line.java "
+#    cp $NS_WDIR/$3/$line.java . 
+    #TODO  Convert all BODY Content in Java Syntax 
+#    convert_file $line.java
+  fi  
+done < $out_filename
+
+if [ "X$4" != "X" ]; then
+ script_libs="-I$4"
+fi
+if [ "X$2" == "X1" ]; then 
+  #Validation for C Files: -w 'is use for ignoring warning msg and' -S 'Stop after the stage of compilation proper; do not assemble'. And here,  we are ignoring some error msg that come due to script parsing that is not come due to users mistake.
+  
+  error_msg=`gcc -w -S $flow_files $script_libs -I$NS_WDIR/include -I$NS_TA_DIR/$3 -I/home/cavisson/thirdparty/include 2>&1|grep -v "error: too many arguments to function"|grep -v "error: expected expression before *.).* token"| grep -v "expected expression before *.\[.* token"| grep -v "error: expected *.).* before string constant" | grep -v "error: *.attributes.* undeclared"| grep -w "error:"`
+  
+  if [ "X$error_msg" != "X" ]; then
+    echo "Script Compilation Error (Script = `basename $3`)" >> $err_file
+    echo "$error_msg" >> $err_file
+    error_flag=1
+  fi
+  cd - >/dev/null 2>&1
+fi
+
+rm -rf $err_path $out_filename 2>/dev/null
+if [ "X$error_flag" == "X1" ]; then
+  exit 1
+fi
+
+exit 0

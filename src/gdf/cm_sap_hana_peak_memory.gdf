@@ -1,0 +1,9 @@
+
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+
+Info|3.1|1|-|-|-1|-1|-
+Group|SAP HANA Peak Memory|10817|vector|1|0|SAP Metrics|Tier>Server|It provides the Peak Memory metrics related to database based on queries.
+
+Graph|HANA Peak Memory (MB)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Display the Peak Memory in MB of database.

@@ -1,0 +1,13 @@
+Info|3.1|1|-|-|-1|-1|-
+Group|Airflow Stats|10866|vector|10|0|Airflow Metrics|Tier>Server>AirflowServer>Instance|Stats of Airflow Process
+
+Graph|Airflow Task Instance Success|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Overall task instances successes in airflow device
+Graph|Airflow Task Instance Failure|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Overall task instances failures in airflow device
+Graph|Airflow DAG Import Errors|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|DAG import errors in airflow device
+Graph|Airflow DAG Bag Size|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|DAG bag size in airflow device
+Graph|Airflow Collect DAGs (Sec)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Seconds taken to scan and import DAGs in airflow device
+Graph|Airflow Scheduler Heartbeat|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Airflow scheduler heartbeat
+Graph|Airflow Executor Open Slots|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of of open slots on executor.
+Graph|Airflow Executor Queued Tasks|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of queued tasks on executor.
+Graph|Airflow Executor Running Tasks|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of running tasks on executor.
+Graph|Airflow Zombies Killed|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Zombie tasks killed by scheduler.

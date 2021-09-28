@@ -1,0 +1,5 @@
+# 1.0 - Initial version
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP Compute Engine Allocated Ports|11581|vector|1|0|GCP Metrics|ProjectID>Zone>InstanceId>NatGatewayName|Allocated Ports provide metrics related to comput engine allocated ports to vm.
+Graph|GCP Compute Engine Allocated Ports|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of ports allocated to a VM by the NAT gateway.

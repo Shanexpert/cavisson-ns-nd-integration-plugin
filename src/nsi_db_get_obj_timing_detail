@@ -1,0 +1,387 @@
+#!/bin/bash
+
+#######################################################################################################
+# Name   : nsi_db_get_obj_timing_detail 
+# Example:
+# Modified version:
+#   Author: Nikita Pandey, Neeraj Jain
+#   Date: 17/08/2012
+#   Modification Details:
+#
+#
+# Query for Transaction
+# SELECT URLRecord_3908.PageInstance, PageTable_3908.PageName, URLTable_3908.UrlName, URLRecord_3908.StartTime,
+#   ConnectStartTime, ConnectDoneTime, SSLHandshakeDone, WriteCompleTime, FirstByteRcdTime, RequestCompletedTime, ErrorName, HttpResponseCode, AppBytesRcd, ConReused, HttsReqReused, ConnectionNumber, FlowPathInstance
+# FROM URLRecord_3908, PageTable_3908, URLTable_3908, ErrorCodes_3908, TransactionRecord_3908, TransPageRecord_3908
+# WHERE URLRecord_3908.ChildIndex = 5
+#   AND URLRecord_3908.SessionInstance = 1144
+#   AND URLRecord_3908.URLIndex = URLTable_3908.URLIndex
+#   AND UrlRecord_3908.pageindex = PageTable_3908.pageindex
+#   AND TransactionRecord_3908.ChildIndex = UrlRecord_3908.ChildIndex
+#   AND TransactionRecord_3908.SessionInstance = UrlRecord_3908.SessionInstance
+#   AND TransactionRecord_3908.TxInstance = 1
+#   AND TransPageRecord_3908.TransactionIndex = TransactionRecord_3908.TransactionIndex
+#   AND TransPageRecord_3908.pageinstance = URLRecord_3908.pageinstance
+#   AND URLRecord_3908.childindex = TransPageRecord_3908.childindex
+#   AND TransPageRecord_3908.sessioninstance = URLRecord_3908.sessioninstance
+#   AND ErrorCodes_3908.errorcode =  URLRecord_3908.Status
+#   AND ErrorCodes_3908.ObjectType = 2
+# ORDER BY UrlRecord_3908.StartTime
+# Result is:
+# pageinstance|pagename|urlname|starttime|connectstarttime|connectdonetime|sslhandshakedone|writecompletime|firstbytercdtime|requestcompletedtime|errorname|httpresponsecode|appbytesrcd|conreused|httsreqreused|connectionnumber|flowpathinstance
+# 0|YahooHome|/|177589|177589|177704|177704|177704|177827|177827|Success|302|1103|f|f|0|-1
+# 0|YahooHome|/|177827|177831|177930|177930|177931|178277|178976|Success|200|55241|f|f|1|-1
+
+
+. $NS_WDIR/bin/nsi_db_utils
+
+TRNUM=$1
+DEBUG=0
+
+STARTTIME_SEL=0
+debug_logs()
+{
+  if [ "X$DEBUG" != "X0" ];then
+    echo "$*"
+  fi
+}
+usage()
+{
+  echo "$*"
+  echo "$0 --testrun <value> --object <value> --pageinst <value> --childidx <value> --sessioninst <value> --urlidx <value>
+        --txinst <value>"
+  echo ""
+  echo "WHERE"
+  echo "  --testrun is test run number, which is mandatory argument."
+  echo "  --object is object selection(0-URL, 1-Page, 2-Transaction, 3-Session), which is mandatory argument."
+  echo "  --childidx is the child index, which is mandatory argument."
+  echo "  --sessioninst is the session instance, which is mandatory argument."
+  echo "  --starttime is the startTime used in case of URL only"
+  echo "  --pageinst is the page instance, which is usedin case of Page object type = 1"
+  echo "  --txinst is the transaction instance, which used in case of Transaction object type = 2"
+  echo "  --urlidx  the urlindx, which is used in case of URL object type = 0."
+  exit 1
+}
+
+chk_args()
+{
+  if [ "X$OBJECT" == "X" ]; then
+    usage "Object type is missing"
+  fi
+
+  if [ "X$TRNUM" == "X" ]; then
+    usage "Test run argument is missing"
+  fi
+
+  if [ ! -d $NS_WDIR/logs/TR$TRNUM ]; then
+    usage "Test run $TRNUM is not a valid test run"
+  fi
+
+  if [ $OBJECT -eq 0 ]; then
+    if [ "X$PAGEINST" == "X" ]; then
+      usage "page instance is missing"
+    fi
+    if [ "X$URLIDX" == "X" ]; then
+      usage "url index is missing"
+    fi
+#    if [ "X$STARTTIME" == "X" ]; then
+#      usage "Start time is missing"
+#    fi
+  elif [ $OBJECT -eq 1 ]; then
+
+    if [ "X$PAGEINST" == "X" ]; then
+      usage "page instance is missing"
+    fi
+  elif [ $OBJECT -eq 2 ]; then
+
+    if [ "X$TXINST" == "X" ]; then
+      usage "transaction instance is missing"
+    fi
+  elif [ $OBJECT -eq 3 ]; then
+    echo >/dev/null
+  else 
+    usage "Invalid object type $OBJECT"
+  fi
+}
+
+ECT_PRESENT=0
+check_if_ect_preset()
+{
+  if [ -s $NS_WDIR/logs/TR$TRNUM/reports/csv/ect.csv -o $NS_WDIR/logs/TR$TRNUM/common_files/reports/csv/ect.csv ];then
+    ECT_PRESENT=1
+  fi
+}
+
+
+if [ "X$1" == "X" ];then
+  usage
+fi
+
+ARGS=$*
+
+while [ "$1" != "" ];do
+  debug_logs "ARGS=$1"
+  case $1 in
+#Following are needed for all object types
+    "--testrun")
+        shift
+        TRNUM=$1;;
+    "--object")
+        shift
+        OBJECT=$1;;
+    "--childidx")
+        shift
+        CHILDIDX=$1;;
+    "--sessioninst")
+        shift
+        SESSIONINST=$1;;
+
+#One of these will come based on the object type
+#For URL only
+#Start time is used in case of URL only
+    "--starttime")   #
+        shift
+        STARTTIME=$1;;
+    "--abs_starttime")   #
+        shift
+        ABS_STARTTIME=$1;;
+    "--urlidx") 
+        shift
+        URLIDX=$1;;
+    "--fpinstance")
+        shift
+        FPI=$1;;
+# For URL, Page and TX
+    "--pageinst")
+        shift
+        PAGEINST=$1;;
+
+# For Tx Only
+    "--txinst") 
+        shift
+        TXINST=$1;;
+    "--generatorid")
+        shift
+        GENERATORID=$1;; 
+
+    --*) usage "Invalid options";;
+    *) usage ;;
+  esac
+  shift
+done
+
+query_selector $TRNUM nsi_db_get_obj_timing_detail_old_tr "$ARGS"
+
+debug_logs "TRNUM = $TRNUM, OBJECT = $OBJECT, CHILDIDX = $CHILDIDX, SESSIONINST = $SESSIONINST, STARTTIME = $STARTTIME, URLIDX = $URLIDX, PAGEINST = $PAGEINST, TXINST =$TXINST"
+
+#checking the version and build for setting timestamp in MS
+set_testrun_version_and_build $TRNUM
+if [ \( $VERSION -lt 414 \) -o \( $VERSION -eq 414 -a $BUILD -le 20 \) ]; then
+  $0_old_tr $ALL_ARG
+  exit 0
+fi
+
+
+handle_time_filters_in_ms $TRNUM
+
+
+if [ "XX" == "XX$NS_WDIR" ]
+then
+  NS_WDIR=/home/cavisson/work
+fi
+
+
+set_select()
+{
+  # We convert starttime to starttime relative to NS. Handling for old and new test run
+  # TEST_START_RELATIVE_SINCE_CAV_EPOCH holds the timestamp for NS relative to CAV_Epoch
+  # For old test run, this value is 0
+  NEW_STARTTIME="(URLRecord_$TRNUM.StartTime - $TEST_START_RELATIVE_SINCE_CAV_EPOCH) "
+ 
+  SELECT="SELECT URLRecord_$TRNUM.PageInstance"
+  SELECT="$SELECT, $NEWLINE  PageTable_$TRNUM.PageName"
+  SELECT="$SELECT, $NEWLINE  URLTable_$TRNUM.UrlName"
+
+  SELECT="$SELECT, $NEWLINE  ($NEW_STARTTIME) AS \"StartTime\""
+
+  SELECT="$SELECT, $NEWLINE  (URLRecord_$TRNUM.StartTime + $CAV_EPOCH_TIME) AS \"Absolute Start Time\""
+
+  SELECT="$SELECT, $NEWLINE  ($NEW_STARTTIME) AS DNSStartTime"
+  SELECT="$SELECT, $NEWLINE  (CASE WHEN DNSDuration > 0 THEN DNSDuration ELSE 0 END) + ($NEW_STARTTIME) AS DNSEndTime"
+  SELECT="$SELECT, $NEWLINE  (CASE WHEN DNSDuration > 0 THEN DNSDuration ELSE 0 END) + ($NEW_STARTTIME) AS ConnectStartTime"
+
+  SELECT="$SELECT, $NEWLINE  (CASE WHEN ConnectDuration > 0 THEN ConnectDuration ELSE 0 END) + (CASE WHEN DNSDuration > 0 THEN DNSDuration ELSE 0 END) + ($NEW_STARTTIME) AS ConnectDoneTime"
+
+  SELECT="$SELECT, $NEWLINE  (CASE WHEN DNSDuration > 0 THEN DNSDuration ELSE 0 END) + (CASE WHEN SSLHandshakeDuration > 0 THEN SSLHandshakeDuration ELSE 0 END) + (CASE WHEN ConnectDuration > 0 THEN ConnectDuration ELSE 0 END) + ($NEW_STARTTIME) AS SSLHandshakeDone"
+
+  SELECT="$SELECT, $NEWLINE  (CASE WHEN DNSDuration > 0 THEN DNSDuration ELSE 0 END) + (CASE WHEN ConnectDuration > 0 THEN ConnectDuration ELSE 0 END) + (CASE WHEN SSLHandshakeDuration > 0 THEN SSLHandshakeDuration ELSE 0 END) + (CASE WHEN WriteCompleteDuration > 0 THEN WriteCompleteDuration ELSE 0 END) + ($NEW_STARTTIME) AS WriteCompleTime"
+
+  SELECT="$SELECT, $NEWLINE  (CASE WHEN DNSDuration > 0 THEN DNSDuration ELSE 0 END) + (CASE WHEN ConnectDuration > 0 THEN ConnectDuration ELSE 0 END) + (CASE WHEN SSLHandshakeDuration > 0 THEN SSLHandshakeDuration ELSE 0 END) + (CASE WHEN WriteCompleteDuration > 0 THEN WriteCompleteDuration ELSE 0 END) + (CASE WHEN FirstByteRcdDuration > 0 THEN FirstByteRcdDuration ELSE 0 END) + ($NEW_STARTTIME) AS FirstByteRcdTime"
+
+  SELECT="$SELECT, $NEWLINE  (CASE WHEN DNSDuration > 0 THEN DNSDuration ELSE 0 END) + (CASE WHEN ConnectDuration > 0 THEN ConnectDuration ELSE 0 END) + (CASE WHEN SSLHandshakeDuration > 0 THEN SSLHandshakeDuration ELSE 0 END) + (CASE WHEN WriteCompleteDuration > 0 THEN WriteCompleteDuration ELSE 0 END) + (CASE WHEN FirstByteRcdDuration > 0 THEN FirstByteRcdDuration ELSE 0 END) + (CASE WHEN RequestCompleteDuration > 0 THEN RequestCompleteDuration ELSE 0 END) + ($NEW_STARTTIME) AS  RequestCompletedTime"
+
+  if [ $ECT_PRESENT -eq 1 ]; then
+    SELECT="$SELECT, $NEWLINE  ErrorName"
+  else
+    SELECT="$SELECT, $NEWLINE  URLRecord_$TRNUM.Status"
+  fi
+
+  SELECT="$SELECT, $NEWLINE  HttpResponseCode"
+  SELECT="$SELECT, $NEWLINE  AppBytesRcd"
+  SELECT="$SELECT, $NEWLINE  ConReused"
+  SELECT="$SELECT, $NEWLINE  HttsReqReused"
+  SELECT="$SELECT, $NEWLINE  ConnectionNumber"
+  SELECT="$SELECT, $NEWLINE  FlowPathInstance"
+
+  FROM="FROM URLRecord_$TRNUM, PageTable_$TRNUM, URLTable_$TRNUM"
+
+  if [ $ECT_PRESENT -eq 1 ]; then
+    FROM="$FROM, ErrorCodes_$TRNUM"
+  fi
+}
+
+set_where()
+{
+
+  # Common where for child index and session instance passed for all object types
+  if [ "X$CHILDIDX" != "X" ]; then
+    WHERE="WHERE URLRecord_$TRNUM.ChildIndex = $CHILDIDX"
+  fi
+  if [ "X$SESSIONINST" != "X" ];then
+    WHERE="$WHERE $NEWLINE  AND URLRecord_$TRNUM.SessionInstance = $SESSIONINST"
+  fi
+  # Common join for all objects
+  if [ "X$WHERE" != "X" ];then
+    WHERE="$WHERE $NEWLINE  AND URLRecord_$TRNUM.URLIndex = URLTable_$TRNUM.URLIndex"
+  else
+    WHERE="WHERE $NEWLINE   URLRecord_$TRNUM.URLIndex = URLTable_$TRNUM.URLIndex"
+  fi
+  WHERE="$WHERE $NEWLINE  AND UrlRecord_$TRNUM.pageindex = PageTable_$TRNUM.pageindex"
+
+  #$OBJ = Table name as per the OBJECT type
+
+  # URL
+  if [ $OBJECT -eq 0 ];then
+    WHERE="$WHERE $NEWLINE  AND UrlRecord_$TRNUM.PageInstance = $PAGEINST"
+    WHERE="$WHERE $NEWLINE  AND UrlRecord_$TRNUM.UrlIndex in ($URLIDX)"
+
+    # Here we are passing one extra argument start time because
+    # In case of main URL redirected on same URL (for ex:-url1 -> url2 -> url1), 
+    # Then URL index of main URL and redirected URL became same.
+    # This will create a problem in Screen 8 - 
+    # In screen 8 we are getting 2 records instead of one record. 
+    # Because urlindex, pageinstance , sessioninstance, childidx are same for both URLS 
+    # only start time is different that's why we are passing start time when object type = 0
+    if [ "X$STARTTIME" != "X" ]; then
+      WHERE="$WHERE $NEWLINE  AND UrlRecord_$TRNUM.StartTime = $STARTTIME"
+    fi
+    if [ "X$ABS_STARTTIME" != "X" ]; then
+      WHERE="$WHERE $NEWLINE  AND UrlRecord_$TRNUM.StartTime = $ABS_STARTTIME"
+    fi
+  
+  # Page
+  elif [ $OBJECT -eq 1 ];then
+
+    FROM="$FROM, PageRecord_$TRNUM"
+
+    WHERE="$WHERE $NEWLINE  AND UrlRecord_$TRNUM.PageInstance = $PAGEINST"
+ 
+    # Join page record with url record  
+    WHERE="$WHERE $NEWLINE  AND PageRecord_$TRNUM.ChildIndex = UrlRecord_$TRNUM.ChildIndex"
+    WHERE="$WHERE $NEWLINE  AND PageRecord_$TRNUM.SessionInstance = UrlRecord_$TRNUM.SessionInstance"
+    WHERE="$WHERE $NEWLINE  AND PageRecord_$TRNUM.PageIndex = UrlRecord_$TRNUM.PageIndex"
+    WHERE="$WHERE $NEWLINE  AND PageRecord_$TRNUM.PageInstance = UrlRecord_$TRNUM.PageInstance"
+
+    if [ "X$STARTTIME" != "X" ]; then
+      WHERE="$WHERE $NEWLINE  AND PageRecord_$TRNUM.EndTime = $STARTTIME"
+      WHERE="$WHERE $NEWLINE  AND URLRecord_$TRNUM.EndTime = $STARTTIME"
+    fi
+    if [ "X$ABS_STARTTIME" != "X" ]; then
+      WHERE="$WHERE $NEWLINE  AND PageRecord_$TRNUM.EndTime = $ABS_STARTTIME"
+      WHERE="$WHERE $NEWLINE  AND URLRecord_$TRNUM.EndTime = $ABS_STARTTIME"
+    fi
+  
+  # Transaction
+  elif [ $OBJECT -eq 2  ];then
+
+    FROM="$FROM, TransPageRecord_$TRNUM"
+    WHERE="$WHERE $NEWLINE  AND TranspageRecord_$TRNUM.ChildIndex = UrlRecord_$TRNUM.ChildIndex"
+    WHERE="$WHERE $NEWLINE  AND TranspageRecord_$TRNUM.SessionInstance = UrlRecord_$TRNUM.SessionInstance"
+    WHERE="$WHERE $NEWLINE  AND TransPageRecord_$TRNUM.pageinstance = URLRecord_$TRNUM.pageinstance" 
+    WHERE="$WHERE $NEWLINE  AND TranspageRecord_$TRNUM.TxInstance = $TXINST"
+    # TODO - Why this check for NOT NULL is needed
+    #WHERE="$WHERE $NEWLINE  AND TransactionRecord_$TRNUM.TransactionIndex IS NOT NULL"
+
+    if [ "X$STARTTIME" != "X" ]; then
+      WHERE="$WHERE $NEWLINE  AND TransPageRecord_$TRNUM.EndTime = $STARTTIME"
+      WHERE="$WHERE $NEWLINE  AND URLRecord_$TRNUM.EndTime = $STARTTIME"
+    fi
+    if [ "X$ABS_STARTTIME" != "X" ]; then
+      WHERE="$WHERE $NEWLINE  AND TransPageRecord_$TRNUM.EndTime = $ABS_STARTTIME"
+      WHERE="$WHERE $NEWLINE  AND URLRecord_$TRNUM.EndTime = $ABS_STARTTIME"
+    fi
+  
+  # Session
+  elif [ $OBJECT -eq 3  ];then
+    FROM="$FROM, SessionRecord_$TRNUM"
+    if [ "X$FPI" != "X" ]; then
+      WHERE="$WHERE $NEWLINE  AND URLRecord_$TRNUM.FlowPathInstance = $FPI"
+    fi
+    WHERE="$WHERE $NEWLINE  AND SessionRecord_$TRNUM.ChildIndex = UrlRecord_$TRNUM.ChildIndex"
+    WHERE="$WHERE $NEWLINE  AND SessionRecord_$TRNUM.SessionInstance = UrlRecord_$TRNUM.SessionInstance"
+  
+    if [ "X$STARTTIME" != "X" ]; then
+      WHERE="$WHERE $NEWLINE  AND SessionRecord_$TRNUM.EndTime = $STARTTIME"
+      WHERE="$WHERE $NEWLINE  AND URLRecord_$TRNUM.EndTime = $STARTTIME"
+    fi
+    if [ "X$ABS_STARTTIME" != "X" ]; then
+      WHERE="$WHERE $NEWLINE  AND SessionRecord_$TRNUM.EndTime = $ABS_STARTTIME"
+      WHERE="$WHERE $NEWLINE  AND URLRecord_$TRNUM.EndTime = $ABS_STARTTIME"
+    fi
+  
+  fi
+
+  #if ect present
+  # Note - Since we are showing URL Status, ObjectType must be always 0 here
+  if [ $ECT_PRESENT -eq 1 ]; then
+    WHERE="$WHERE $NEWLINE  AND ErrorCodes_$TRNUM.errorcode =  URLRecord_$TRNUM.Status" 
+    WHERE="$WHERE $NEWLINE  AND ErrorCodes_$TRNUM.ObjectType = 0"
+  fi
+
+  # for generators, if --generatorid is present in filter
+  if [ "X$GENERATORID" != "X" ]; then
+    FROM="$FROM, GeneratorTable_$TRNUM"
+    if [ "$OBJECT" -eq 0 ];then
+      WHERE="$WHERE $NEWLINE  AND URLRecord_$TRNUM.GeneratorId = GeneratorTable_$TRNUM.GeneratorId"
+
+    elif [ "$OBJECT" -eq 1 ];then
+      WHERE="$WHERE $NEWLINE  AND PageRecord_$TRNUM.GeneratorId = GeneratorTable_$TRNUM.GeneratorId"
+
+    elif [ "$OBJECT" -eq 2 ];then
+      WHERE="$WHERE $NEWLINE  AND TransPageRecord_$TRNUM.GeneratorId = GeneratorTable_$TRNUM.GeneratorId"
+
+    elif [ "$OBJECT" -eq 3 ];then
+      WHERE="$WHERE $NEWLINE  AND SessionRecord_$TRNUM.GeneratorId = GeneratorTable_$TRNUM.GeneratorId"
+    fi
+  fi 
+
+  ORDER="ORDER BY $NEWLINE  UrlRecord_$TRNUM.StartTime"
+  ORDER="$ORDER, $NEWLINE  UrlRecord_$TRNUM.CTID"
+}
+
+chk_args
+
+check_if_ect_preset
+
+# Setting query files
+set_query_files $TRNUM
+
+set_select
+
+set_where
+ 
+ns_run_query
+
+show_query_result
+
+exit 0

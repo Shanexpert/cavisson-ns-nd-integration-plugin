@@ -1,0 +1,140 @@
+#!/bin/bash
+
+DATA_RETENT_CONFIG_FILE=$NS_WDIR/sys/data_retention/config.json
+DATA_RET_DIR=$NS_WDIR/sys/data_retention
+TMP_NDE_PURGE_FILE=$NS_WDIR/NDEPurge/config.json
+NDE_PURGE_FILE=$NS_WDIR/NDEPurge/tmp_config.json
+NV_CONFIG_FILE=$HPD_ROOT/rum/config/nv_cb_config.json
+
+copy_and_create_file()
+{
+  sed ':a;N;$!ba;s|",\n      "time"|",     "time"|g ' $TMP_NDE_PURGE_FILE > $NDE_PURGE_FILE 2>/dev/null
+  
+  if [ ! -d "$DATA_RET_DIR" ] ;then  #if data retention directory doesnot exist it will create a new directory
+    mkdir $DATA_RET_DIR
+  fi
+  touch $DATA_RETENT_CONFIG_FILE    #creating new config file for data retention if no config file is present  
+  echo -e "{\n\"CONFIG\":[\n {" >> $DATA_RETENT_CONFIG_FILE
+  Enabled=$(grep "ENABLED"  $NDE_PURGE_FILE 2>/dev/null )    #If any tag is missing while searching files ie ndpruge or nv_config_file
+  if [ -z "$Enabled" ] ;then                                  #then it will fill the default entry 
+    echo "   \"ENABLED\" : \"true\"," >> $DATA_RETENT_CONFIG_FILE
+  else
+    echo "$Enabled" | grep -i "true" 2>/dev/null 1>&2
+    if [ $? = 0 ]; then
+      echo "   \"ENABLED\" : \"true\"," >> $DATA_RETENT_CONFIG_FILE
+    else
+      echo "   \"ENABLED\" : \"false\"," >> $DATA_RETENT_CONFIG_FILE
+    fi
+  fi
+  echo "    \"LOG_FILE_SIZE\" : \"10\"," >> $DATA_RETENT_CONFIG_FILE
+  echo "    \"LOG_LEVEL\" : \"1\"," >> $DATA_RETENT_CONFIG_FILE
+  echo "    \"RECYCLE_BIN_TIME\" : \"0d\"," >> $DATA_RETENT_CONFIG_FILE
+  echo "    \"MODE\" : \"cloud\"," >> $DATA_RETENT_CONFIG_FILE
+  echo "    \"TEST_RUN_NO\" : \"11111\"," >> $DATA_RETENT_CONFIG_FILE
+  echo "    \"CRON_STRING\":\" \"," >> $DATA_RETENT_CONFIG_FILE
+  Backup=$(grep "BACKUP_PATH" $NDE_PURGE_FILE 2>/dev/null)  
+  if [ -z "$Backup" ] ;then
+    echo "   \"BACKUP_PATH\" : \"/home/cavisson/backup\"," >> $DATA_RETENT_CONFIG_FILE
+  else
+    echo " $Backup" >> $DATA_RETENT_CONFIG_FILE
+  fi
+  echo "    \"CONTROLLER\" : \"/home/cavisson/work\"," >> $DATA_RETENT_CONFIG_FILE
+  echo "    \"CLEANUP\": [" >> $DATA_RETENT_CONFIG_FILE
+  raw_data=$(grep "raw_data" $NDE_PURGE_FILE | head -1 | grep "time" | tr -s ' ' 2>/dev/null) 
+  if [ -z "$raw_data" ] ;then
+    echo "  -e \\t { \"name\":\"raw_data\", \"time\" : \"1m\"}, " >> $DATA_RETENT_CONFIG_FILE
+  else
+    DATA=`echo "$raw_data" | tr -d '{' | tr -d '}'`
+    LAST_CHAR=`echo "${DATA: -1}"`
+    if [ "$LAST_CHAR" = "," ]; then
+      DATA=`echo ${DATA:: -1}`
+    fi
+    echo "         {$DATA}," >> $DATA_RETENT_CONFIG_FILE
+  fi
+
+  csv_data=$(grep "csv" $NDE_PURGE_FILE | head -1 |tr -s ' ' 2>/dev/null)
+  if [ -z "$csv_data" ] ;then
+    csv_nv_data=$(grep "CSV" $NV_CONFIG_FILE |tail -1 |tr -s ' ' 2>/dev/null |tr [:upper:] [:lower:]) 
+
+    if [ -z "$csv_nv_data" ] ;then
+      echo "  -e \\t { \"name\":\"csv\", \"time\" : \"6m\"}, " >> $DATA_RETENT_CONFIG_FILE        #print default entry
+    else
+      echo "        $csv_nv_data," >> $DATA_RETENT_CONFIG_FILE                                           #print nv_config entry 
+    fi
+    else
+      DATA=`echo "$csv_data" | tr -d '{' | tr -d '}'`
+      LAST_CHAR=`echo "${DATA: -1}"`
+      if [ "$LAST_CHAR" = "," ]; then
+        DATA=`echo ${DATA:: -1}`
+      fi
+      echo "         {$DATA}," >> $DATA_RETENT_CONFIG_FILE
+  fi
+  
+  graph_data=$(grep "graphdata" $NDE_PURGE_FILE | head -1 |tr -s ' '| cut -d ',' -f 2 2>/dev/null) 
+  if [ -z "$graph_data" ] ;then
+    echo "         { \"name\":\"graph_data\", \"time\": \"15m\"}, " >> $DATA_RETENT_CONFIG_FILE
+  else
+    DATA=`echo "{ \"name\":\"graph_data\",$graph_data" | tr -d '{' | tr -d '}'` 
+    LAST_CHAR=`echo "${DATA: -1}"`
+    if [ "$LAST_CHAR" = "," ]; then
+      DATA=`echo ${DATA:: -1}`
+    fi
+    echo "         {$DATA}," >> $DATA_RETENT_CONFIG_FILE
+  fi
+
+  db_data=$(grep "db" $NDE_PURGE_FILE | head -1 |tr -s ' ' 2>/dev/null)
+ 
+  if [ -z "$db_data" ] ;then
+    db_nv_data=$(grep "DB_TABLES" $NV_CONFIG_FILE|head -1 |tr -s ' ' 2>/dev/null |tr [:upper:] [:lower:])
+    if [ -z "$db_nv_data" ] ;then 
+      echo " { \"name\":\"db\", \"time\": \"6m\"}, " >> $DATA_RETENT_CONFIG_FILE
+    else
+      DATA=`echo "$db_nv_data" | tr -d '{' | tr -d '}'`
+      LAST_CHAR=`echo "${DATA: -1}"`
+      if [ "$LAST_CHAR" = "," ]; then
+        DATA=`echo ${DATA:: -1}`
+      fi
+      echo "        {$DATA}," >> $DATA_RETENT_CONFIG_FILE
+    fi
+  else
+      DATA=`echo "$db_data" | tr -d '{' | tr -d '}'`
+      LAST_CHAR=`echo "${DATA: -1}"`
+      if [ "$LAST_CHAR" = "," ]; then
+        DATA=`echo ${DATA:: -1}`
+      fi
+      echo "         {$DATA}," >> $DATA_RETENT_CONFIG_FILE
+  fi
+
+  dbagg_data=$(grep "AGG" $NV_CONFIG_FILE |tail -1 2>/dev/null | tr [:upper:] [:lower:] | sed 's/agg_tables/db_agg/g' )   
+  if [ -z "$dbagg_data" ] ;then                                        #here sed is used to replace tag from agg_tables to db_agg
+    echo -e \\t { \"name\":\"db_agg\", \"time\": \"1y\"}, >> $DATA_RETENT_CONFIG_FILE 
+  else
+    echo -e \\t $dbagg_data >> $DATA_RETENT_CONFIG_FILE 
+  fi
+  echo -e \\t { \"name\":\"har_file\", \"time\": \"3m\"}, >> $DATA_RETENT_CONFIG_FILE 
+  echo -e \\t { \"name\":\"pagedump\", \"time\": \"1m\"}, >> $DATA_RETENT_CONFIG_FILE 
+  echo -e \\t { \"name\":\"test_data\", \"time\": \"1m\"},>> $DATA_RETENT_CONFIG_FILE
+  echo -e \\t { \"name\":\"logs\", \"time\": \"6m\"},>> $DATA_RETENT_CONFIG_FILE 
+  echo -e \\t { \"name\":\"tr\", \"time\": \"1y\"},>> $DATA_RETENT_CONFIG_FILE 
+  echo -e \\t { \"name\":\"dbg_tr\", \"time\": \"4w\"},>> $DATA_RETENT_CONFIG_FILE 
+  echo -e \\t { \"name\":\"arch_tr\", \"time\": \"3y\"},>> $DATA_RETENT_CONFIG_FILE 
+  echo -e \\t { \"name\":\"gen_tr\", \"time\": \"3m\"}, >> $DATA_RETENT_CONFIG_FILE 
+  ocx_data=$(grep "OCX" $NV_CONFIG_FILE |tail -1 2>/dev/null |tr [:upper:] [:lower:])
+  if [ -z "$ocx_data" ] ;then
+    echo -e \\t { \"name\":\"ocx\", \"time\": \"2w\"}, >> $DATA_RETENT_CONFIG_FILE
+  else
+    echo -e \\t $ocx_data >> $DATA_RETENT_CONFIG_FILE
+  fi
+  echo -e \\t { \"name\":\"na_traces\", \"time\": \"6m\"},>> $DATA_RETENT_CONFIG_FILE 
+  echo -e \\t { \"name\":\"access_log\", \"time\": \"3m\"},>> $DATA_RETENT_CONFIG_FILE
+  echo -e \\t { \"name\":\"reports\", \"time\": \"3m\"},>> $DATA_RETENT_CONFIG_FILE
+  echo -e \\t { \"name\":\"configs\", \"time\": \"2m\"}\\n"      "]\\n"    "}\\n"  "]\\n}  >> $DATA_RETENT_CONFIG_FILE 
+  rm $NDE_PURGE_FILE
+}
+
+if [ -f "$DATA_RETENT_CONFIG_FILE" ]; then
+  exit 0;
+else
+  echo copying file elements exists.
+  copy_and_create_file 
+fi	

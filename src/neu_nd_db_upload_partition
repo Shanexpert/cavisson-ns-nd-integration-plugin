@@ -1,0 +1,204 @@
+#!/bin/sh
+
+########################################################################################
+# Shell       :   neu_nd_db_upload_partition  
+# Author      :   Ambuj Singh
+# Descripton  :   This shell will upload data for a partition in the database
+#
+# Usage       :   ndu_db_upload_partition --testrun --partition
+#                 where --testrun is the test run number
+#                       --partition is the partition name
+########################################################################################
+
+##############
+# Functions
+##############
+usage()
+{
+  echo ""
+  if [ "$1" != "" ]; then
+    echo "$1"
+    echo ""
+  fi
+  echo "Usage : "
+  echo "  ndu_db_upload_partition <testrun> <partition>"
+  echo ""
+  echo "  where"
+  echo "   testrun is the test run number and is mandatory"
+  echo "   partition is the name of the partition and is mandatory"
+  echo ""
+  
+  exit 1
+}
+
+#Check the number of arguments
+if [ $# != 2 ]; then
+  usage "Error: Invalid number of arguments"
+fi
+
+#Parse the arguments
+TRNUM=$1
+PARTITION_NAME=$2
+
+#Checking Test number is valid or not
+if [ -d $PWD/TR$1 ]; then
+  BASE_DIR=$PWD
+elif [ -d $NS_WDIR/logs/TR$1 ]; then
+  BASE_DIR=$NS_WDIR/logs
+else
+  echo "Error: Test run number $1 is not a valid test run number"
+  exit 1
+fi
+
+DISTRO=$(nsi_get_linux_release_ex -d)
+RELEASE=$(nsi_get_linux_release_ex -r)
+
+if [[ $DISTRO == "Ubuntu" &&  $RELEASE -eq 1604 ]];then
+  POSTGRESQL_VERSION=9.5
+else
+  POSTGRESQL_VERSION=9.1
+fi
+
+
+#Check whether partition exists
+if [ ! -d $BASE_DIR/TR$TRNUM/$PARTITION_NAME ]; then
+  echo "Error: Partition $PARTITION_NAME does not exists in TR$TRNUM"
+  exit 1
+fi
+
+if [ ! -d $BASE_DIR/TR$TRNUM/$PARTITION_NAME/nd/csv ]; then
+  echo "Error: csv directory does not exists"
+  exit 1
+fi
+
+#Making array for table names and csv file names
+TABLE_NAME=("ndapplogs" "ndsqlrecord" "ndjms" "ndbciarg" "urlrecord" "flowpath" "ndexceptions" "ndhttpcaptureheader" "ndmethodtiming")
+CSV_NAME=("NDAppLogs.csv" "NDSQLRecord.csv" "NDJMS.csv" "NDBCIArg.csv" "NDURLRecord.csv" "NDFlowPath.csv" "NDExceptions.csv" "NDHTTPCaptureHeader.csv" "NDMethodTiming.csv")
+
+#Drop the partition table
+$NS_WDIR/bin/neu_nd_drop_partition_table $TRNUM $PARTITION_NAME "ALL"
+
+#Create the partition table
+$NS_WDIR/bin/neu_nd_create_partition_table $TRNUM $PARTITION_NAME "ALL"
+
+#loop through instances to upload data in database
+i=0
+j=0
+
+echo "Starting upload at `date`"
+
+for i in $BASE_DIR/TR$TRNUM/$PARTITION_NAME/nd/csv/*
+do
+  for (( j = 0; j < ${#TABLE_NAME[@]}; j++ ))
+  do
+    if [ -f "$i/${CSV_NAME[$j]}" ]; then
+      if [[ $DISTRO == "Ubuntu" ]];then
+        /usr/lib/postgresql/$POSTGRESQL_VERSION/bin/pg_bulkload -d test -U postgres -i "$i/${CSV_NAME[$j]}" -O "${TABLE_NAME[$j]}_${TRNUM}_$PARTITION_NAME" -l "/dev/null" -o $'PARSE_ERRORS=-1' -o $'DELIMITER=,' >/dev/null 2>&1
+      else
+        psql test cavisson <<+
+          \COPY ${TABLE_NAME[$j]}_${TRNUM}_$PARTITION_NAME from $i/${CSV_NAME[$j]} DELIMITER ',' NULL AS '' 
++
+      fi
+    fi
+  done
+done
+
+#Uploading for autosensor hotspot thread table
+if [[ $DISTRO == "Ubuntu" ]];then
+  /usr/lib/postgresql/$POSTGRESQL_VERSION/bin/pg_bulkload -d test -U postgres -i "$BASE_DIR/TR$TRNUM/$PARTITION_NAME/nd/csv/NDAutoSensorHotSpotThreads.csv" -O "ndautosensorhotspotthreads_${TRNUM}_$PARTITION_NAME" -l "/dev/null" -o $'PARSE_ERRORS=-1' -o $'DELIMITER=,' >/dev/null 2>&1 
+else
+   psql test cavisson <<+
+     \COPY ndautosensorhotspotthreads_${TRNUM}_$PARTITION_NAME from $BASE_DIR/TR$TRNUM/$PARTITION_NAME/nd/csv/NDAutoSensorHotSpotThreads.csv DELIMITER ',' NULL AS ''
++
+fi
+
+echo "Finished upload at `date`"
+
+#Applying check constraints
+#Check constraints will be applied on only on following tables
+#FlowPath, NDAppLogs, NDSQLRecord, NDAutoSensorHotSpotThreads, NDExceptions, NDJMS, NDMethodTiming
+
+echo "Started applying check constraints at `date`"
+
+#For Flowpath table
+TIME=(`psql --user=cavisson -d test -t -c "SELECT MIN(flowpathbegintimestamp), MAX(flowpathendtimestamp) FROM Flowpath_${TRNUM}_$PARTITION_NAME;"`)
+ 
+  if [ "${TIME[0]}" == "|" ]; then
+    echo "Could not apply check constraint as No record found in FlowPath_${TRNUM}_$PARTITION_NAME table."
+  else
+    $NS_WDIR/bin/neu_nd_create_check_constraint -TR $TRNUM -PT $PARTITION_NAME -ST "${TIME[0]}" -ET "${TIME[2]}" -CN "NDFlowPath.csv"
+  fi
+
+#For NDAppLogs table
+TIME=(`psql --user=cavisson -d test -t -c "SELECT MIN(date), MAX(date) FROM NDAppLogs_${TRNUM}_$PARTITION_NAME;"`)
+ 
+  if [ "${TIME[0]}" == "|" ]; then
+    echo "Could not apply check constraint as No record found in NDAppLogs_${TRNUM}_$PARTITION_NAME table."
+  else
+    $NS_WDIR/bin/neu_nd_create_check_constraint -TR $TRNUM -PT $PARTITION_NAME -ST "${TIME[0]}" -ET "${TIME[2]}" -CN "NDAppLogs.csv"
+  fi
+
+#For NDSQLRecords Table
+TIME=(`psql --user=cavisson -d test -t -c "SELECT MIN(sqlbegintimestamp), MAX(sqlbegintimestamp + sqlexectime) FROM NDSQLRecord_${TRNUM}_$PARTITION_NAME;"`)
+ 
+  if [ "${TIME[0]}" == "|" ]; then
+    echo "Could not apply check constraint as No record found in NDSQLRecord_${TRNUM}_$PARTITION_NAME table."
+  else
+    $NS_WDIR/bin/neu_nd_create_check_constraint -TR $TRNUM -PT $PARTITION_NAME -ST "${TIME[0]}" -ET "${TIME[2]}" -CN "NDSQLRecord.csv"
+  fi
+
+#For NDAutoSensorHotSpotThreads table
+TIME=(`psql --user=cavisson -d test -t -c "SELECT MIN(hotspotstarttimestamp), MAX(hotspotstarttimestamp + (hotspotduration/1000)) FROM NDAutoSensorHotSpotThreads_${TRNUM}_$PARTITION_NAME;"`)
+
+  if [ "${TIME[0]}" == "|" ]; then
+    echo "Could not apply check constraint as No record found in NDAutoSensorHotSpotThreads_${TRNUM}_$PARTITION_NAME table."
+  else
+    $NS_WDIR/bin/neu_nd_create_check_constraint -TR $TRNUM -PT $PARTITION_NAME -ST "${TIME[0]}" -ET "${TIME[2]}" -CN "NDAutoSensorHotSpotThreads.csv"
+  fi
+
+#For NDExceptions table
+TIME=(`psql --user=cavisson -d test -t -c "SELECT MIN(timestamp), MAX(timestamp) FROM NDExceptions_${TRNUM}_$PARTITION_NAME;"`)
+
+  if [ "${TIME[0]}" == "|" ]; then
+    echo "Could not apply check constraint as No record found in NDExceptions_${TRNUM}_$PARTITION_NAME table."
+  else
+    $NS_WDIR/bin/neu_nd_create_check_constraint -TR $TRNUM -PT $PARTITION_NAME -ST "${TIME[0]}" -ET "${TIME[2]}" -CN "NDExceptions.csv"
+  fi
+
+#For NDJMS table
+TIME=(`psql --user=cavisson -d test -t -c "SELECT MIN(timestamp), MAX(timestamp) FROM NDJMS_${TRNUM}_$PARTITION_NAME;"`)
+
+  if [ "${TIME[0]}" == "|" ]; then
+    echo "Could not apply check constraint as No record found in NDJMS_${TRNUM}_$PARTITION_NAME table."
+  else
+    $NS_WDIR/bin/neu_nd_create_check_constraint -TR $TRNUM -PT $PARTITION_NAME -ST "${TIME[0]}" -ET "${TIME[2]}" -CN "NDJMS.csv"
+  fi
+
+#For NDMethodTiming table
+TIME=(`psql --user=cavisson -d test -t -c "SELECT MIN(starttime), MAX(endtime) FROM NDMethodTiming_${TRNUM}_$PARTITION_NAME;"`)
+
+  if [ "${TIME[0]}" == "|" ]; then
+    echo "Could not apply check constraint as No record found in NDMethodTiming_${TRNUM}_$PARTITION_NAME table."
+  else
+    $NS_WDIR/bin/neu_nd_create_check_constraint -TR $TRNUM -PT $PARTITION_NAME -ST "${TIME[0]}" -ET "${TIME[2]}" -CN "NDMethodTiming.csv"
+  fi
+
+
+echo "Finished applying check constraints at `date`"
+
+echo "Going to analyze tables at `date`"
+
+psql test cavisson <<+
+analyze ndapplogs_${TRNUM}_$PARTITION_NAME; 
+analyze ndsqlrecord_${TRNUM}_$PARTITION_NAME; 
+analyze ndjms_${TRNUM}_$PARTITION_NAME; 
+analyze ndbciarg_${TRNUM}_$PARTITION_NAME; 
+analyze urlrecord_${TRNUM}_$PARTITION_NAME; 
+analyze flowpath_${TRNUM}_$PARTITION_NAME; 
+analyze ndexceptions_${TRNUM}_$PARTITION_NAME; 
+analyze ndhttpcaptureheader_${TRNUM}_$PARTITION_NAME; 
+analyze ndmethodtiming_${TRNUM}_$PARTITION_NAME;
+analyze NDAutoSensorHotSpotThreads_${TRNUM}_$PARTITION_NAME;
++
+
+echo "Finished analyzing tables at `date`"

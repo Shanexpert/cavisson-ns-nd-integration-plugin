@@ -1,0 +1,16 @@
+info|3.1|1|-|-|-1|-1|-
+
+Group|AWS VPC NAT Gateway Stats|11047|vector|13|0|AWS Metrics|AccountName>Region>NATGatewayId|AWS VPC NAT Gateway Stats provides metrics related to NAT Gateway. 
+Graph|AWS Attempt Connections|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of connection attempts made through the NAT gateway.
+Graph|AWS Established Connections|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of connections established through the NAT gateway.
+Graph|AWS Active Connections|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of concurrent active TCP connections through the NAT gateway.
+Graph|AWS Errors In Port Allocation|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of times the NAT gateway could not allocate a source port.
+Graph|AWS Source Received Packets|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of packets received by the NAT gateway from clients in your VPC.
+Graph|AWS Source Transmitted Packets|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of packets sent through the NAT gateway to the clients in your VPC.
+Graph|AWS Destination Received Packets|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of packets received by the NAT gateway from the destination.
+Graph|AWS Destination Transmitted Packets|8|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of packets sent out through the NAT gateway to the destination.
+Graph|AWS Drop Packets|9|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of packets dropped by the NAT gateway.
+Graph|AWS Source Received Bytes|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of bytes received by the NAT gateway from clients in your VPC.
+Graph|AWS Source Transmitted Bytes|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of bytes sent through the NAT gateway to the clients in your VPC.
+Graph|AWS Destination Received Bytes|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of bytes received by the NAT gateway from the destination.
+Graph|AWS Destination Transmitted Bytes|13|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of bytes sent out through the NAT gateway to the destination.

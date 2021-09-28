@@ -1,0 +1,17 @@
+#!/bin/sh
+
+if [ $# -ne 1 ];then
+	echo "Uasge: nsi_get_pagedump TestRunNumber"
+	exit 1
+fi
+
+TNUM=$1
+
+
+FNAME="$NS_WDIR/logs/TR$TNUM/page_dump.txt"
+if [ -f $FNAME ];then
+	cat $FNAME
+	exit 0
+else
+	exit 1
+fi

@@ -1,0 +1,6 @@
+#---------GDFVersionHistory---------
+#1.0-Initial Version
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Windows CPU Stats|10368|vector|1|0|System Metrics|Tier>Server|Windows CPU Stats Monitor capture the metrics related to cpu utilization.
+Graph|CPU Load (PCT)|1|scalar|sample|-|-|0|NA|-1|-1|H|NA|CPU load percentage.

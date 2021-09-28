@@ -1,0 +1,13 @@
+# --- GDF Version History ---
+
+# -- 1.0 -- Initial version ---
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|AWS RDS DBInstanceIdentifier EngineName Stats|11393|vector|3|0|AWS Metrics|AccountName>Region>DbClusterIdentifier>EngineName|(Amazon RDS) makes it easy to set up, operate, and scale a relational database in the cloud. It provides cost-efficient and resizable capacity while automating time-consuming administration tasks such as hardware provisioning, database setup, patching and backups.
+
+Graph|AWS RDS Volume Used (Bytes/Sec)|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average number of volume bytes used
+
+Graph|AWS RDS Volume Read IO/Sec|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average number of IOPS read
+
+Graph|AWS RDS Volume Write IO/Sec|3|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Average number of IOPS Write

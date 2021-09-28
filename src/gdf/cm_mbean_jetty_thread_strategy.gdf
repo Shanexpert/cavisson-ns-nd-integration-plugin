@@ -1,0 +1,25 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+#ObjectName :org.eclipse.jetty.util.thread.strategy:context=HTTP/1.1@2038ae61,type=eatwhatyoukill,id=0
+#ObjectName :org.eclipse.jetty.util.thread.strategy:context=HTTP/1.1@2038ae61,type=eatwhatyoukill,id=1
+info|3.1|1|-|-|-1|-1|-
+Group|Jetty Thread Strategy Stats|14128|vector|8|0|Jetty Metrics|Tier>Server>Instance>StrategyID|This stats give information about eat what you kill execution strategy
+#G1
+Graph|Jetty Thread NonBlocking Tasks Consumed|1|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of non blocking tasks consumed.
+#G2
+Graph|Jetty Thread Blocking Tasks Consumed|2|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of blocking tasks consumed.
+#G3
+Graph|Jetty Thread Blocking Tasks Executed|3|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of blocking tasks executed.
+#G4
+Graph|Jetty Thread Stop Timeout (ms)|4|scalar|sample|-|None|0|AS|-1|-1|NA|NA|The stop timeout in milliseconds.
+#G5
+Graph|Jetty Thread PC Tasks Consumed|5|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of tasks consumed with PC(Produce Consume) mode.
+#G6
+Graph|Jetty Thread PEC Tasks Executed|6|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of tasks executed with PEC(Produce Execute Consume) mode.
+#G7
+Graph|Jetty Thread EPC Tasks Consumed|7|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of tasks consumed with EPC(Execute Produce Consume) mode.
+#G8
+Graph|Jetty Thread PIC Tasks Executed|8|scalar|sample|-|None|0|AS|-1|-1|NA|NA|Number of tasks executed with PIC mode.

@@ -1,0 +1,16 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Oracle Cache Sizes|10121|vector|6|0|Oracle Metrics|Tier>Server>Instance|Oracle monitor Cache Sizes Stats
+
+Graph|Buffer Cache at Snap start (MB)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Buffer cache at beginning of snapshot to store data blocks read from disk
+Graph|Buffer Cache at Snap end (MB)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Buffer cache at end of snapshot to store data blocks read from disk
+Graph|Std Block Size (KB)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Size of std Block
+Graph|Shared Pool Size at Snap start (MB)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Size of shared pool at beginning of snapshot, which contains shared cursors, stored procedures, control structures.
+Graph|Shared Pool Size at Snap end (MB)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Size of shared pool at end of snapshot, which contains shared cursors, stored procedures, control structures.
+Graph|Log Buffer (KB)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Size of Log Buffer

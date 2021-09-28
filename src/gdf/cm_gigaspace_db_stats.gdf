@@ -1,0 +1,11 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Gigaspace DB Stats|10265|vector|4|0|GigaspaceDB Metrics|Tier>Server>Instance|Gigaspace DBConnection Stats.
+Graph|Minimum Connection Pool Size|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Minimum number of connection may exist in Database connection pool.
+Graph|Maximum Connection Pool Size|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Maximum number of connection may exist in Database connection pool.
+Graph|Idle Connection Count|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of idle connection  in Database connection pool.
+Graph|Busy Connection Count|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of busy connection in Database connection pool.
+

@@ -1,0 +1,6 @@
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Kubernetes Cluster Resources Stats|14149|vector|1|0|Kubernetes Control Plane Metrics|Cluster>MasterNode>Resource|Kubernetes Cluster Resources Stats
+
+Graph|Resources Count|1|scalar|sample_4B|-|None|0|NA|-1|-1|H|NA|Number of each resouce(nodes,pods,services) available in the Kubernetes cluster.
+

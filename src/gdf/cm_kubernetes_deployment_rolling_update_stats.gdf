@@ -1,0 +1,9 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|1.0|1|-|-|-1|-1|
+
+Group|Kubernetes Deployment Rolling update|14092|vector|2|0|Kubernetes Metrics|Cluster>NameSpace>Deployments|Provides metrics related to kubernetes deployments stats.
+
+Graph|Kubernetes Maximum Unavailable (Pct)|1|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|Maximum number of unavailable replicas during a rolling update in percentage.
+Graph|Kubernetes Maximum Surge (Pct)|2|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|The maximum number of Pods that can be created over the desired number of Pods in percentage.

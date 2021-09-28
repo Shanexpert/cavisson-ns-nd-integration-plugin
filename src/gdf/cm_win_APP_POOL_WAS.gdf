@@ -1,0 +1,31 @@
+# --- GDF Version History ---
+# # 1.0 - Initial version
+# # 2.0 - Change done for match Long_data and Long_long_data to double
+# # 3.0 - Changes done for Dynamic data in Execution GUI
+# # 3.1 - Use future1 field of group line for Metric group name
+#
+# Command to get data for this gdf on windows server :
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# wmic path Win32_PerfFormattedData_APPPOOLCountersProvider_APPPOOLWAS.Name='_Global_' get TotalApplicationPoolRecycles, TotalApplicationPoolUptime, TotalWorkerProcessFailures, TotalWorkerProcessPingFailures, TotalWorkerProcessShutdownFailures, TotalWorkerProcessStartupFailures, TotalWorkerProcessesCreated /every:10
+#
+# Entry in mprof to get data :
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# CUSTOM_MONITOR 192.168.1.52 cm_win_APP_POOL_WAS.gdf wmi_APP_POOL_WAS 2 wmic path Win32_PerfFormattedData_APPPOOLCountersProvider_APPPOOLWAS.Name='_Global_' get TotalApplicationPoolRecycles, TotalApplicationPoolUptime, TotalWorkerProcessFailures , TotalWorkerProcessPingFailures, TotalWorkerProcessShutdownFailures, TotalWorkerProcessStartupFailures, TotalWorkerProcessesCreated /every:10
+#
+#
+Info|3.1|1|-|-|-1|-1|-
+Group|Application Pool Stats|10091|vector|13|0|Application Metrics|Tier>Server>Instance|WAS Application Pool Stats monitor metrics related to application pool.
+
+Graph|Current Application Pool State|1|scalar|sample|-|-|0|NA|-1|-1|H|NA|Current status of the application pool (1 - Uninitialized, 2 - Initialized, 3 - Running, 4 - Disabling, 5 - Disabled, 6 - Shutdown Pending, 7 - Delete Pending).
+Graph|Current Application Pool Uptime (Sec)|2|scalar|sample|-|-|0|NA|-1|-1|H|NA|Time, in seconds, that the application pool has been running since it was started.
+Graph|Current Worker Processes|3|scalar|sample|-|-|0|NA|-1|-1|L|NA|Number of worker processes that are currently running in the application pool.
+Graph|Maximum Worker Processes|4|scalar|sample|-|-|0|NA|-1|-1|L|NA|Maximum number of worker processes that have been created for the application pool since Windows Process Activation Service (WAS) started.
+Graph|Recent Worker Process Failures|5|scalar|sample|-|-|0|NA|-1|-1|L|NA|Number of times that worker processes for the application pool failed during the rapid-fail protection interval.
+Graph|Time Since Last Worker Process Failure (Sec)|6|scalar|sample|-|-|0|NA|-1|-1|M|NA|Time, in seconds, since the last worker process failure occurred for the application pool.
+Graph|Application Pool Recycled/Sec|7|scalar|rate|-|CumToPS|0|NA|-1|-1|L|NA|Number of times application pool has been recycled per second.
+Graph|Total Application Pool Uptime (Sec)|8|scalar|cumulative|-|-|0|M|-1|-1|NA|NA|Amount of time in seconds, application pool has been running since Windows Activation Service (WAS) started.
+Graph|Worker Process Failures/Sec|9|scalar|rate|-|CumToPS|0|NA|-1|-1|L|NA|Number of times, worker processes have crashed per second.
+Graph|Worker Process Ping Failures/Sec|10|scalar|rate|-|CumToPS|0|NA|-1|-1|L|NA|Number of times, Windows Activation Service (WAS) did not receive a response to ping messages sent per second to a worker process.
+Graph|Worker Process Shutdown Failures/Sec|11|scalar|rate|-|CumToPS|0|NA|-1|-1|L|NA|Number of times, Windows Activation Service (WAS) failed per second to shut down a worker process.
+Graph|Worker Process Startup Failures/Sec|12|scalar|rate|-|CumToPS|0|NA|-1|-1|L|NA|Number of times, Windows Activation Service (WAS) failed per second to start a worker process.
+Graph|Worker Processes Created/Sec|13|scalar|rate|-|CumToPS|0|NA|-1|-1|L|NA|Number of worker processes created for the application pool per second.

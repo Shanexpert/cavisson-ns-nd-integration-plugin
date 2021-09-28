@@ -1,0 +1,16 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|JBoss RAR Deployment|10128|vector|3|0|Application Metrics|Tier>Server>Instance|JBoss RAR Deployment Stats
+ss_server_rardeployment_stats.gdf
+cm_jboss_server_rardeployment_stats.gdf
+
+
+Graph|Resource Adapter Version|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The resource adapter Version
+Graph|Version|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The spec version
+Graph|State|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Service state

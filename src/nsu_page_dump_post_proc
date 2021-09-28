@@ -1,0 +1,11 @@
+#! /bin/sh
+
+COMAND="$NS_WDIR/bin/site_page_dump_post_proc"
+RET=0
+
+if [ -f $COMAND ];then
+  $COMAND $*
+  RET=$?
+fi
+
+exit $RET

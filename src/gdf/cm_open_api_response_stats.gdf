@@ -1,0 +1,15 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Open Api Rest Server Response Stats|10167|vector|5|0|Application Metrics|Tier>Server>Instance|Response stats for open-api rest server.
+
+Graph|Response count|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Response count.
+Graph|Response mean rate(secs)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Request mean rate in seconds.
+Graph|Last 1 minute response rate |3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Last 1 minute response rate in seconds.
+Graph|Last 5 minute response rate |4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Last 5 minute response rate in seconds.
+Graph|Last 15 minute response rate |5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Last 15 minute response rate in seconds.

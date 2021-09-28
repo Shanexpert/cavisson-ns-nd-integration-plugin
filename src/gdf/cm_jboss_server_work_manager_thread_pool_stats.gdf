@@ -1,0 +1,16 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|JBoss Work Manager Thread Pool|10127|vector|6|0|Application Metrics|Tier>Server>Instance|JBoss Work Manager Thread Pool Stats
+
+Graph|Keep Alive Time|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|time duration indicating how long to keep threads when there is nothing to do in milli-seconds (default 60000 == 1 minute).
+Graph|Maximum Pool Size|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|the maximum number of threads that are active (default 100).
+Graph|Maximum Queue Size|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|the maximum number of requests that are waiting to be executed (default 1024).
+Graph|Minimum Pool Size|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|the minimum number of threads to keep active, the pool is not prefilled (default 0 - zero).
+Graph|Pool Number|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|the internal thread pool number.
+Graph|Queue Size|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|the current queue size.

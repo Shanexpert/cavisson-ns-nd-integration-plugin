@@ -1,0 +1,5 @@
+# 1.0 - Initial version
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP ML Response|11609|vector|1|0|GCP Metrics|ProjectID>Region>ModelID>VersionID>PredictionType>ResponseCode|It provides metrics related to prediction response count.
+Graph|GCP ML Response Count/Sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Count of different response codes per seconds.

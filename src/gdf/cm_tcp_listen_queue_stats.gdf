@@ -1,0 +1,9 @@
+#
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|TCP Listen Queue Stats|10613|vector|3|0|Network Metrics|Tier>Server>IPAddress|TCP listen queue stats monitor
+
+Graph|TCP Listen Queue Backlog|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of current backlog connections in listen queue.
+Graph|TCP Listen Queue Size|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total size of the listen queue.
+Graph|TCP Listen Queue Used (Pct)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percentage of the listen queue used calculated as (Listen Queue Backlog * 100 / Listen Queue Size).

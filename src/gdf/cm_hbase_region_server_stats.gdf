@@ -1,0 +1,18 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|HBase Region Server Stats|10335|vector|12|0|Application Metrics|Tier>Server>Cluster>RegionServer|HBase Region Server stats monitors metrics related to store, regions, cache, memory of region server.
+Graph|Regions Count|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of regions served by the region server.
+Graph|Stores Count|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of stores across all regions at the region server.
+Graph|Stores File (KB)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memory consumed by all store file in kilobytes at region server.
+Graph|Requests/Sec|4|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of requests received at region server per second.
+Graph|Read Requests/Sec|5|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of read requests per second received at region server.
+Graph|Write Requests/Sec|6|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of write requests per second received at region server.
+Graph|Cache Hits/Sec|7|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of successful block cache hits requests per second at region server.
+Graph|Cache Misses/Sec|8|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of block cache missed requests per second at region server.
+Graph|Cache Evicted/Sec|9|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of blocks evicted from cache per second at region server.
+Graph|Block Cache Count|10|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of blocks at the region server.
+Graph|Block Cache Size (MB)|11|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memory consumed in MegaBytes by the block cache at region server.
+Graph|Block Cache Free (GB)|12|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memory available in GigaBytes for block cache at region server.

@@ -1,0 +1,55 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# 2.0 - Change done for match Long_data and Long_long_data to double
+# 3.0 - Changes done for Dynamic data in Execution GUI
+# 3.1 - Use future1 field of group line for Metric group name
+
+Info|3.1|1|-|-|-1|-1|-
+Group|TCP Stats (Solaris)|10056|vector|47|0|Network Metrics|Tier>Server|TCP Stats for Solaris
+Graph|Cumulative active opens|1|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of active connections opened since start of the test.
+Graph|Cumulative passive opens|2|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of passive connections opened since start of the test.
+Graph|Cumulative attempt fails|3|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of attempt fails since start of the test.
+Graph|Cumulative estab resets|4|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of estab resets since start of the test.
+Graph|Cumulative curr estab|5|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of curr estab since start of the test.
+Graph|Cumulative out segs|6|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of out segs since start of the test.
+Graph|Cumulative out data segs|7|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of out data segs since start of the test.
+Graph|Cumulative out data bytes|8|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of out data bytes since start of the test.
+Graph|Cumulative retrans segs|9|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of retrans seg since start of the test.
+Graph|Cumulative retrans bytes|10|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of retrans bytes since start of the test.
+Graph|Cumulative out ack|11|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of out ack since start of the test.
+Graph|Cumulative out ack delayed|12|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of out ack delayed since start of the test.
+Graph|Cumulative out urg|13|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of out urg since start of the test.
+Graph|Cumulative out win update|14|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of out win update since start of the test.
+Graph|Cumulative out win probe|15|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of out win probe since start of the test.
+Graph|Cumulative out control|16|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of out control since start of the test.
+Graph|Cumulative out rsts|17|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of out rsts since start of the test.
+Graph|Cumulative out fast retrans|18|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of out fast retrans since start of the test.
+Graph|Cumulative in segs|19|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of in segs since start of the test.
+Graph|Cumulative in ack segs|20|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of in ack segs since start of the test.
+Graph|Cumulative in ack bytes|21|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of in ack bytes since start of the test.
+Graph|Cumulative in dup ack|22|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of in dup ack since start of the test.
+Graph|Cumulative in ack unsent|23|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of in ack unsent since start of the test.
+Graph|Cumulative in inorder segs|24|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of in inorder segs since start of the test.
+Graph|Cumulative in inorder bytes|25|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of in inorder bytes since start of the test.
+Graph|Cumulative in unorder segs|26|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of in unorder segs since start of the test.
+Graph|Cumulative in unorder bytes|27|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of in unorder bytes since start of the test.
+Graph|Cumulative in dup segs|28|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of in dup segs since start of the test.
+Graph|Cumulative in dup bytes|29|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of in dup bytes since start of the test.
+Graph|Cumulative in part dup segs|30|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of in part dup segs since start of the test.
+Graph|Cumulative in part dup bytes|31|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of in part dup bytes since start of the test.
+Graph|Cumulative in past win segs|32|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of in past win segs since start of the test.
+Graph|Cumulative in past win bytes|33|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of in past win bytes since start of the test.
+Graph|Cumulative in win probe|34|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of in win probe since start of the test.
+Graph|Cumulative in win update|35|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of in win update since start of the test.
+Graph|Cumulative in closed|36|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of in closed since start of the test.
+Graph|Cumulative rtt no update|37|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of rtt no update since start of the test.
+Graph|Cumulative rtt update|38|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of rtt update since start of the test.
+Graph|Cumulative tim retrans|39|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of tim retrans since start of the test.
+Graph|Cumulative tim retrans drop|40|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of tim retrans drop since start of the test.
+Graph|Cumulative tim keep alive|41|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of tim keep alive since start of the test.
+Graph|Cumulative tim keep alive probe|42|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of tim keep alive probe since start of the test.
+Graph|Cumulative tim keep alive drop|43|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of tim keep alive dropsince start of the test.
+Graph|Cumulative listen drop|44|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of listen drop since start of the test.
+Graph|Cumulative listen drop q0|45|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of listen drop q0 since start of the test.
+Graph|Cumulative half open drop|46|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of half open drop since start of the test.
+Graph|Cumulative out sack retrans|47|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total Number of out sack retrans since start of the test.

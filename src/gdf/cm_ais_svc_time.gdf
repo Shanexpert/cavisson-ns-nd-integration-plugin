@@ -1,0 +1,14 @@
+# -----------GDF Version History -------
+# 1.0  -InitialVersion
+# 2.0  -Changes done for MatchLong_data and Long_long_data to double
+# 3.0  -Changes done for Dynamic data in Execution GUI
+# 3.1  -Use future 1 field of group line for Metric group name
+Info|3.1|1|-|-|-1|-1|-
+Group|AIS Request Stats|10076|vector|6|0|Application Metrics|Tier>Server>Instance|To keep the record of all requests processed by the AIS server
+
+Graph|Number of request/second|1|scalar|rate|-|None|0|NA|-1|-1|NA|NA|Number of request process in a second.
+Graph|Average service time (Millisecond)|2|scalar|times|-|None|0|NA|-1|-1|NA|NA|Average service time for successful request to specified interval in milliseconds.
+Graph|Minimum service time (Millisecond)|3|scalar|sample|-|None|0|NA|-1|-1|NA|NA|Minimum service time for successful request to specified interval in milliseconds.
+Graph|Maximum service time (Millisecond)|4|scalar|sample|-|None|0|NA|-1|-1|NA|NA|Maximum service time for successful request to specified interval in milliseconds.
+Graph|Success Count|5|scalar|sample|-|None|0|NA|-1|-1|NA|NA|Number of success request count to specified interval.
+Graph|Failure Count|6|scalar|sample|-|None|0|NA|-1|-1|NA|NA|Number of fail request count to specified interval.

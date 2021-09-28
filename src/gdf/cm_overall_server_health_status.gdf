@@ -1,0 +1,10 @@
+
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Overall Server Health Stats|10514|vector|4|0|Server Health Metrics|Tier>Server>Instance|Over all Server Health Stats.
+Graph|Total Servers|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of servers.
+Graph|Available Servers|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of available servers, which are responding.
+Graph|Unavailable Servers|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of unavailable servers, which are not responding.
+Graph|Available Servers (Pct)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Succeses percentage of available servers from all servers.

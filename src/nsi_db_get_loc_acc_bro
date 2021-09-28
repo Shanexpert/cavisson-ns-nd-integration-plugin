@@ -1,0 +1,195 @@
+#!/bin/bash
+#######################################################################################################
+# Name   : nsi_db_get_loc_acc_bro
+# Syntax : nsi_db_get_loc_acc_bro --testrun <value> [--type <name(s)>]
+#
+#   Author : Ankit Agarwal
+#   Date :   25 June 2012
+#   Purpose : This shell will check whether location.dat,access.dat,browser.dat exist for the given test run or not and   #             display the specified files , if these files are not present it will execute query and create these files  
+# Example : nsi_db_get_loc_acc_bro --testrun 11642
+#
+#
+#########################################################################################################
+
+
+######################################################################
+#                     Variables and init settings
+#####################################################################
+
+# Including nsi_db_utils
+. $NS_WDIR/bin/nsi_db_utils
+
+#Set default values of variables
+TRNUM=""
+SELECT=""
+FROM=""
+WHERE=""
+GROUP=""
+FILE_PATH=""
+TYPE=""
+LAB=0
+
+
+########################################################################
+#                       Functions's Definitions
+#######################################################################
+
+#Function for displaying usage
+usage()
+{
+  echo "$*"
+  echo "Usage:"
+  echo "$0 --testrun <value> [--type <name(s)>] "
+  echo ""
+  echo "Where"
+  echo "  --testrun is test run number, which is mandatory argument."
+  echo "  --type is for displaying specific types(location,access,browser) of .dat files, for e.g --type location,access 
+	    for displaying location.dat and access.dat.if not specified all location.dat,browser.dat,access.dat are 
+	    displayed,which is optional argument"
+  exit -1
+}
+
+#Function for checking mandatory arguments
+check_arg()
+{
+   if [ "X$TRNUM" == "X" ]; then
+    usage "Test run argument is missing"
+   fi
+}
+
+#Function for checking whether agrument value is given or not
+chk_args_of_option()
+{
+  if [ "X$2" == "X" ];then
+    echo "Option $1 required a value."
+    usage
+    exit -1
+  fi
+}
+
+#Function for creating .dat files
+save_query_result()
+{
+ sed '$d' $QUERY_OUT_FILE | grep -v "row)" | grep -v "rows)" | grep -v ^$ | sed '2,$s/ //g' > /tmp/nsi_db_get_loc_acc_bro.$$ 
+  case $LAB in
+   1)cat /tmp/nsi_db_get_loc_acc_bro.$$ >$FILE_PATH/location.dat;;
+   2)cat /tmp/nsi_db_get_loc_acc_bro.$$ >$FILE_PATH/access.dat;;
+   3)cat /tmp/nsi_db_get_loc_acc_bro.$$ >$FILE_PATH/browser.dat;;
+  esac 
+  cat /tmp/nsi_db_get_loc_acc_bro.$$ >>tmp2
+  rm -f /tmp/nsi_db_get_loc_acc_bro.$$
+}
+
+#Function for executing query
+exec_query()
+{
+
+log_query
+run_query
+save_query_result 
+}
+
+########################################################################
+#                            calling functions
+########################################################################
+
+#Parsing the arguments
+while [ "$1" != "" ];do
+  case $1 in
+    "--testrun")
+        shift
+        chk_args_of_option "--testrun" "$1"
+        TRNUM=$1;;
+    "--type")
+        shift
+        chk_args_of_option "--type" "$1"
+        TYPE=$1;;
+    --*)usage "Invalid options";;
+    *)usage ;;
+  esac
+  shift
+done
+
+#Checking mendatory arguments
+check_arg
+
+
+#Setting query files
+set_query_files $TRNUM
+
+
+#Checking if Test run exist or not
+if [ ! -d $NS_WDIR/logs/TR$TRNUM ]; then
+   usage "Test run do not exist"
+fi
+
+
+#Setting .dat files path
+FILE_PATH=$NS_WDIR/logs/TR$TRNUM/ready_reports/caching
+
+#Checking if Caching directory exist and creating if it does not exist
+if [ ! -d $FILE_PATH ]; then
+   mkdir $FILE_PATH 
+fi
+
+
+#Checking if location.dat exist and creating if not it does not exist
+if [ ! -f $FILE_PATH/location.dat ]; then
+  LAB=1
+  SELECT="SELECT Userprofile_$TRNUM.ValueIndex As \"Location Index\",
+               	 SessionRecord_$TRNUM.location As \"Location\""
+  FROM="FROM Userprofile_$TRNUM,SessionRecord_$TRNUM" 
+  WHERE="WHERE Uptype='LOCATION' AND SessionRecord_$TRNUM.location=Userprofile_$TRNUM.value" 
+  GROUP="GROUP BY \"Location Index\", Location"
+  exec_query 
+fi
+        
+#Checking if access.dat exist and creating if not it does not exist
+if [ ! -f $FILE_PATH/access.dat ]; then
+  LAB=2
+  SELECT="SELECT Userprofile_$TRNUM.ValueIndex As \"Access Index\",
+      		 SessionRecord_$TRNUM.access As \"Access\""
+  FROM="FROM Userprofile_$TRNUM,SessionRecord_$TRNUM"
+  WHERE="WHERE Uptype='ACCESS' AND SessionRecord_$TRNUM.access=Userprofile_$TRNUM.value"
+  GROUP="GROUP BY \"Access Index\", Access"
+  exec_query 
+fi
+	
+#Checking if browser.dat exist and creating if not it does not exist
+if [ ! -f $FILE_PATH/browser.dat ]; then
+   LAB=3
+   SELECT="SELECT SessionRecord_$TRNUM.BrowserIndex As \"Browser Index\",
+       		  Userprofile_$TRNUM.value As \"Browser\""
+   FROM="FROM Userprofile_$TRNUM,SessionRecord_$TRNUM"
+   WHERE="WHERE Uptype='BROWSER' AND SessionRecord_$TRNUM.browserindex=Userprofile_$TRNUM.valueindex"
+   GROUP="GROUP BY \"Browser Index\", \"Browser\""
+   exec_query 
+fi
+
+if [ -s tmp2 ];then
+  cat tmp2 > $QUERY_OUT_FILE
+  rm tmp2
+fi
+
+
+#Parsing TYPE argument
+if [ "X$TYPE" != "X" ];then
+ NOTYP=`echo $TYPE | awk -F ',' '{print NF}'`
+ for (( i=1 ; i <= $NOTYP ; i++ )) ; do
+      TP=`echo $TYPE | awk -v j=$i -F',' '{print $j}'`
+     case $TP in
+       location)cat $FILE_PATH/location.dat;;
+       access)cat $FILE_PATH/access.dat;;
+       browser)cat $FILE_PATH/browser.dat;;
+       *)usage "Invalid type";;
+     esac
+ done
+
+else
+  cat $FILE_PATH/location.dat
+  cat $FILE_PATH/access.dat
+  cat $FILE_PATH/browser.dat
+fi
+
+
+exit 0

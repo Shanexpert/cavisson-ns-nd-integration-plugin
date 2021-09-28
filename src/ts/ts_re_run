@@ -1,0 +1,280 @@
+#!/bin/sh
+#*****************************************************************
+# * Name    :    ts_re_run 
+# * Author  :    Vikas Verma
+# * Purpose :    Re Execute the Scenario/Test, TestCase and TestSuite
+# * Usage   :
+#                ts_re_run -o <1/2/3> [-n <Test Run Number>] [-c <test cycle number>] [-t <testcase name>] [-D <0/1>] [-w <workspace/profile>]
+# * Modification History:
+# *   05/11/20: Vikas Verma - Initial Version
+#
+#*****************************************************************
+
+#####Global Section#####
+
+DEBUG_LOG_FILE=/tmp/ts_re_run.debug.$$
+
+RE_RUN_MODE=""
+TR_NUM=""
+TSR_CYCLE_NUM=""
+TEST_CASE_NAME=""
+ENABLE_DEBUG=0
+INVOKER="cli"
+DEBUG=""
+IP_ADDR=""
+GUI_USER=""
+ROLE=""
+READ_PROFILE=""
+
+TEST_SUITE_NAME_WITH_PATH=""
+PROJECT=""
+SUB_PROJECT=""
+TEST_SUITE_NAME=""
+#default workspace
+DW="admin"
+#default profile
+DP="default"
+WORKSPACE=""
+PROFILE=""
+WORKSPACE_PROFILE=""
+NS_TA_DIR=""
+NS_RTA_DIR="workspace"
+#####Function Defination#####
+
+debug_log()
+{
+  if [ "$ENABLE_DEBUG" != "1" ]; then
+    return
+  fi
+  echo $* >> $DEBUG_LOG_FILE
+}
+
+usage()
+{
+  echo "Usage: ts_re_run -o <1/2/3> [-n <test run no]> [-c <test cycle>] [-t <testcase name>]"
+  echo "  Where: -o : To specify what need to re run test, testcase or testsuite"
+  echo "              - 1 - To re-run test"
+  echo "              - 2 - To re-run testcase"
+  echo "              - 3 - To re-run testsuite"
+  echo "         -n : To provide Test Run Number for re executing the test"
+  echo "         -c : To provide test cycle number"
+  echo "         -t : To provide testcase name to be re-run"
+  echo "         -w : To provide <workspace>/<profile>. Default values will be used in not provided"
+  echo "  Example: ts_re_run -o 2 -c 201015_232922 -t TC_OO1"
+
+  exit -1
+}
+
+re_run_test()
+{
+  debug_log "Method re_run_test() called." 
+
+  TR_NUM_PATH=$NS_WDIR/logs/TR$TR_NUM
+  if [ ! -d "$TR_NUM_PATH" ];then
+    echo "Error: Test Run Number $TR_NUM does not exist."
+    exit -1
+  fi
+
+  ts_re_test -n $TR_NUM -w $WORKSPACE_PROFILE
+}
+
+fetch_testsuite_info()
+{
+  debug_log "Method fetch_testsuite_info() called." 
+
+  TSR_CYCLE_LOG_DIR=$NS_WDIR/logs/tsr/$TSR_CYCLE_NUM
+  if [ ! -d "$TSR_CYCLE_LOG_DIR" ];then
+    echo "Error: TestSuite Report Cycle Number $TSR_CYCLE_NUM does not exist."
+    exit -1
+  fi
+
+  CYCLE_SUMMARY_REPORT=$TSR_CYCLE_LOG_DIR/cycle_summary.report 
+  if [ ! -f "$CYCLE_SUMMARY_REPORT" ];then
+    echo "Error: cycle_summary.report for TSR Cycle Number $TSR_CYCLE_NUM does not exist."
+    exit -1
+  fi
+
+  TEST_SUITE_NAME=`grep "^Test Suite Name: " $CYCLE_SUMMARY_REPORT | sed 's/Test Suite Name: //'`
+  if [ "XX$TEST_SUITE_NAME" == "XX" ]; then
+    echo "Error: Test Suite information not found for TSR Cycle Number $TSR_CYCLE_NUM."
+    exit -1
+  fi
+
+  debug_log "Test Suite Name: $TEST_SUITE_NAME"
+
+  NUM=`echo "$TEST_SUITE_NAME" | awk -F "/" '{print NF}'`
+  FCHAR=`echo $TEST_SUITE_NAME | cut -c1`
+
+  if [ "X$FCHAR" != "X/" ]; then
+    if [ $NUM == 1 ];then
+      PROJECT="default"
+      SUB_PROJECT="default"
+    elif [ $NUM == 3 ];then
+      PROJECT=`echo "$TEST_SUITE_NAME" | cut -d/ -f1`
+      SUB_PROJECT=`echo "$TEST_SUITE_NAME" | cut -d/ -f2`
+      TEST_SUITE_NAME=`echo "$TEST_SUITE_NAME" | cut -d/ -f3`
+    else
+      echo "'<Project>/<Subproject>/<TestSuiteName>' is not given in proper format for TSR Cycle Number $TSR_CYCLE_NUM."
+      exit -1
+    fi
+  else
+    echo "'<Project>/<Subproject>/<TestSuiteName>' is not given in proper format for TSR Cycle Number $TSR_CYCLE_NUM."
+    exit -1
+  fi
+
+  TEST_SUITE_NAME_CONF="$PROJECT/$SUB_PROJECT/testsuites/${TEST_SUITE_NAME}.conf"
+
+  if [ ! -f $NS_TA_DIR/${TEST_SUITE_NAME_CONF} ];then
+    echo "There is no suite with name $TEST_SUITE_NAME_CONF"
+    exit -1
+  fi
+}
+
+re_run_testcase()
+{
+  debug_log "Method re_run_testcase() called." 
+
+  fetch_testsuite_info
+
+  TEST_CASES_DIR=$NS_TA_DIR/$PROJECT/$SUB_PROJECT/testcases
+  if [ ! -f $TEST_CASES_DIR/$TEST_CASE_NAME/testcase.conf ]; then
+    echo "There is no test case with name '$TEST_CASE_NAME' inside testcases/$PROJECT/$SUB_PROJECT"
+    exit -1
+  fi
+
+  debug_log "Starting Execution of Testcase '$TEST_CASE_NAME' of Testsuite '$PROJECT/$SUB_PROJECT/$TEST_SUITE_NAME'." 
+  #ts_start_test -n $PROJECT/$SUB_PROJECT/$TEST_SUITE_NAME -t $TEST_CASE_NAME $ARGS -w $WORKSPACE_PROFILE 
+   ts_start_test -n $PROJECT/$SUB_PROJECT/$TEST_SUITE_NAME -t $TEST_CASE_NAME $ARGS $WPARGS
+}
+
+re_run_testsuite()
+{
+  debug_log "Method re_run_testsuite() called." 
+
+  fetch_testsuite_info
+
+  debug_log "Starting Execution of Testsuite '$PROJECT/$SUB_PROJECT/$TEST_SUITE_NAME'." 
+#  ts_start_test -n $PROJECT/$SUB_PROJECT/$TEST_SUITE_NAME $ARGS -w $WORKSPACE_PROFILE
+  ts_start_test -n $PROJECT/$SUB_PROJECT/$TEST_SUITE_NAME $ARGS $WPARGS
+}
+#check for workspace/PROFILEile name and RetlativeTestAsset Dir
+check_and_set_workspace_profile()
+{
+  if [ "X${1}" == "X" ];then
+   WORKSPACE=$DW
+   PROFILE=$DP
+   WORKSPACE_PROFILE=${DW}/${DP}
+   return 1
+  fi  
+  
+  WORKSPACE=`echo $1 | egrep "/" | cut -d'/' -f1`
+  PROFILE=`echo $1 | egrep "/" | cut -d'/' -f2`
+    #<workspace> i.e. PROFILEile no given
+  #<workspace>/ i.e. PROFILEile no given
+  #/<PROFILEile> i.e. PROFILEile no given
+  if [ "X$WORKSPACE" == "X" ];then
+     #set default value 
+     WORKSPACE=$DW
+  fi
+  
+  if [ "X$PROFILE" == "X" ];then
+     #set default value
+     PROFILE=$DP
+  fi
+  #if WORKSPACE is NOT default workspace
+  if [ $WORKSPACE != $DW ];then
+     #check if workspace exists
+     if [ ! -d ${NS_WDIR}/${NS_RTA_DIR}/$WORKSPACE ];then
+       #set to default workspace
+       WORKSPACE=$DW
+     fi
+  fi
+  #check if PROFILEile exists
+  if [ ! -d ${NS_WDIR}/${NS_RTA_DIR}/$WORKSPACE/$PROFILE ];then
+      #set to default workspace
+   #set to default workspace
+      PROFILE=$DP
+  fi
+
+  #set workspace and PROFILEile path
+  WORKSPACE_PROFILE=${WORKSPACE}/${PROFILE}
+}
+#det relative test assets dir
+set_rta_dir()
+{
+  NS_RTA_DIR="workspace/$1/$2/cavisson"
+}
+##### Accept Arguments #####
+while getopts Ddo:n:w:c:t:S:i:u:r:C: opt
+do
+  case "$opt" in
+    o) RE_RUN_MODE=$OPTARG ;;
+    n) TR_NUM=$OPTARG ;;
+    c) TSR_CYCLE_NUM=$OPTARG ;;
+    t) TEST_CASE_NAME=$OPTARG ;;
+    d) ENABLE_DEBUG=1 ;;
+    D) DEBUG="-D" ;;
+    S) INVOKER=$OPTARG ;;
+    i) IP_ADDR="-i "$OPTARG ;;
+    u) GUI_USER="-u "$OPTARG ;;
+    r) ROLE="-r "$OPTARG ;;
+    C) READ_PROFILE="-C "$OPTARG ;;
+    w) WORKSPACE_PROFILE=$OPTARG ;;
+    *) echo "Error: Invalid arguments"
+       usage;;
+  esac
+done
+
+debug_log "ts_re_run $@"
+
+ARGS="$DEBUG -S $INVOKER $IP_ADDR $GUI_USER $ROLE $READ_PROFILE"
+
+##### Validate Arguments #####
+if [ $# -lt 1 ]; then
+  echo "Error: Argument is missing."
+  usage
+fi
+
+check_and_set_workspace_profile $WORKSPACE_PROFILE
+set_rta_dir $WORKSPACE $PROFILE
+#set absolute test assets path
+NS_TA_DIR=$NS_WDIR/$NS_RTA_DIR
+#NS_TA_DIR=`nsi_get_work_space_path.sh $WORKSPACE_PROFILE`
+WPARGS="-w  ${WORKSPACE}/${PROFILE}"
+
+if [ "XX$RE_RUN_MODE" == "XX" ]; then
+  echo "Error: Option -o is missing."
+  usage
+elif [ "$RE_RUN_MODE" != "1" -a "$RE_RUN_MODE" != "2" -a "$RE_RUN_MODE" != "3" ]; then
+  echo "Error: Invalid argument($RE_RUN_MODE) with option -o"
+  usage
+elif [ "$RE_RUN_MODE" == "1" -a "XX$TR_NUM" == "XX" ]; then
+  echo "Error: Test Run Number(-n) is missing."
+  usage
+elif [ "$RE_RUN_MODE" == "2" ]; then
+  if [ "XX$TSR_CYCLE_NUM" == "XX" -a "XX$TEST_CASE_NAME" == "XX" ]; then
+    echo "Error: Test Cycle Number(-c) and TestCase Name(-t) are missing."
+    usage
+  elif [ "XX$TSR_CYCLE_NUM" == "XX" -a "XX$TEST_CASE_NAME" != "XX" ]; then
+    echo "Error: Test Cycle Number(-c) is missing."
+    usage
+  elif [ "XX$TSR_CYCLE_NUM" != "XX" -a "XX$TEST_CASE_NAME" == "XX" ]; then
+    echo "Error: TestCase Name(-t) is missing."
+    usage
+  fi
+elif [ "$RE_RUN_MODE" == "3" -a "XX$TSR_CYCLE_NUM" == "XX" ]; then
+    echo "Error: Test Cycle Number(-c) is missing."
+    usage
+fi
+
+##### Process Arguments #####
+
+if [ "$RE_RUN_MODE" == "1" ]; then
+  re_run_test
+elif [ "$RE_RUN_MODE" == "2" ]; then
+  re_run_testcase
+else
+  re_run_testsuite
+fi
+
+exit 0

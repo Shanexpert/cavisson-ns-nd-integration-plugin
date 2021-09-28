@@ -1,0 +1,184 @@
+#!/bin/bash
+#######################################################################################################
+# Name   : nsi_db_get_tr_error_codes
+# Syntax : nsi_db_get_tr_error_codes --testrun <value> --object <value> 
+# 
+#   Author : Ankit Agarwal
+#   Date :   
+#   Purpose : This shell will display only those errors which are present in a
+#             particular test only.
+#             
+#  
+#
+# Example : nsi_db_get_tr_error_codes --testrun 3776 --object 0
+#
+#
+#########################################################################################################
+
+
+######################################################################
+#                     Variables and init settings
+#####################################################################
+
+# Including nsi_db_utils
+. $NS_WDIR/bin/nsi_db_utils
+
+
+#Set default values of variables
+TRNUM=""
+OBJECT=""
+ERCODE=""
+ERNAME=""
+OBTY=""
+TAB=""
+FILE_TYPE=""
+#EXCLUDE=""
+
+#######################################################################
+#                       Functions's Definitions
+#######################################################################
+
+
+#Function for displaying usage
+usage()
+{
+  echo "$*"
+  echo "Usage:"
+  echo "$0 --testrun <value> --object <value>"
+  echo ""
+  echo "Where"
+  echo "  --testrun is test run number, which is mandatory argument."
+  echo "  --object is object selection(0-URL, 1-Page, 2-Transaction, 3-Session), which is mandatory argument."
+  exit -1
+}
+
+
+#Function for checking mandatory arguments
+check_arg()
+{
+   if [ "X$TRNUM" == "X" ]; then
+     usage "Test run argument is missing"
+   fi
+   if [ "X$OBJECT" == "X" ]; then
+     usage "Object type is missing"
+   fi
+
+}
+
+
+
+#for getting faliure type
+get_faliure_type()
+{
+  if [ $RUNNING -ne 2 ];then
+  check_cached $FILE_TYPE
+  RET=$?
+  else 
+    RET=2
+  fi
+  #RET value 0 -if file already cached and test is not running, 
+      #1- if file not cached and test is not running ,              
+      #2- if test is running
+ 
+  if [ $RET -eq 2 -o $RET -eq 1 ];then
+    
+    # debug_logs "Method get_faliure_type called, OBJECT = $1, TABLE= $2"
+    OBTY=$1
+    TAB1=$2
+    
+    TAB2=ErrorCodes_$TRNUM
+    
+    SELECT="SELECT  $TAB2.ObjectType AS \"Object\","
+    SELECT="$SELECT $NEWLINE  $TAB2.ErrorCode AS \"Error Code\","
+    SELECT="$SELECT $NEWLINE  $TAB2.ErrorName AS \"Error Name\" "
+    FROM="FROM $TAB2,
+    (
+      WITH RECURSIVE t(unique_status) AS (
+      SELECT MIN(status) FROM $TAB1
+      UNION ALL
+      SELECT (SELECT $TAB1.status FROM $TAB1 WHERE $TAB1.status > unique_status ORDER BY $TAB1.status LIMIT 1)
+      FROM t WHERE unique_status IS NOT NULL
+      )
+      SELECT unique_status FROM t
+    )inq"
+    WHERE="where errorcode = unique_status
+    and objecttype = 1"
+    ORDER="order by errorname"
+
+    ns_run_query
+  
+    sed '$d' $QUERY_OUT_FILE | grep -v "row)" | grep -v "rows)" | grep -v ^$ | sed '2,$s/ //g' >/tmp/nsi_db_get_tr_error_codes.$$
+    cat /tmp/nsi_db_get_tr_error_codes.$$
+ 
+    if [ $RET -eq 1 ];then
+      cat /tmp/nsi_db_get_tr_error_codes.$$ > $DBQ_CACHE_DIR/$FILE_TYPE
+    fi
+    rm -f /tmp/nsi_db_get_tr_error_codes.$$
+    remove_files
+  else
+    cat $DBQ_CACHE_DIR/$FILE_TYPE
+  fi 
+}
+
+########################################################################
+#                            calling functions
+########################################################################
+
+#Parsing the arguments
+if [ "X$*" = "X" ];then
+usage
+fi
+init $*
+RUNNING=$?
+
+#Checking mendatory arguments
+check_arg
+
+#debug_logs "TRNUM = $TRNUM, OBJECT = $OBJECT"
+
+#Checking Object type
+if [ $OBJECT -gt 3 -o $OBJECT -lt 0 ];then
+  usage "Invalid object type"
+fi
+
+#checking the version and build for setting timestamp in MS
+set_testrun_version_and_build $TRNUM
+if [ \( $VERSION -lt 414 \) -o \( $VERSION -eq 414 -a $BUILD -le 20 \) ]; then
+  $0_old_tr $ALL_ARG
+  exit 0
+fi
+
+# Setting query files
+set_query_files $TRNUM
+
+handle_time_filters_in_ms $TRNUM
+
+#To exclude failed records. URLs are always excluded, aggrgates are excluded
+#based on config
+#if [ -f $NS_WDIR/logs/TR$TRNUM/exclude_failed_aggregate ];then
+#        EXCLUDE=1
+#else
+#        EXCLUDE=0
+#fi
+
+#Calling get() depending upon object type
+case $OBJECT in
+  0)TAB="URLRecord_$TRNUM"
+    INDEX="URLIndex"
+    FILE_TYPE="url_errors.dat"
+    get_faliure_type 0 $TAB;;
+  1)TAB="PageRecord_$TRNUM"
+    INDEX="PageIndex"
+    FILE_TYPE="page_errors.dat"
+    get_faliure_type 1 $TAB;;
+  2)TAB="TransactionRecord_$TRNUM"
+    INDEX="TransactionIndex"
+    FILE_TYPE="tx_errors.dat"
+    get_faliure_type 2 $TAB;;
+  3)TAB="SessionRecord_$TRNUM"
+    INDEX="SessionIndex"
+    FILE_TYPE="sess_errors.dat"
+    get_faliure_type 3 $TAB;;
+esac
+
+exit 0

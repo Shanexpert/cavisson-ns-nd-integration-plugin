@@ -1,0 +1,7 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|GCP CPU Usage Stats|10720|vector|1|0|GCP Metrics|Tier>Server>ProjectID>Instance>Zone>Stats|CPU usage stats provide metrics related to cpu utilization.
+Graph|CPU Usage (Pct)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|CPU usage in percentage. 

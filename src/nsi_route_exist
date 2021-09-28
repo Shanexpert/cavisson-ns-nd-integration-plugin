@@ -1,0 +1,56 @@
+#!/bin/sh
+# Name  : nsi_route_exist
+# usage : nsi_route_exist entity nid/netbits
+# Author: Sanjay/Achint
+#This command is used by nsu_check_ip command
+#This command check routes
+
+CHECK_FORMAT=/home/cavisson/work/bin/nsi_check_format
+if [ "$#" -lt 3 ];then
+  echo "usage:nsi_root_exist entity nid/netbits gateway"
+  exit 1
+fi
+
+ENTITY=$1
+#Check Input for /
+echo $2 | grep / >>/dev/null
+if [ $? -ne 0 ];then
+  echo "usage:nsi_root_exist entity nid/netbits"
+  exit 1
+fi
+nid_netbits=$2
+GATEWAY=$3
+if [ $GATEWAY != "-" ];then
+  $CHECK_FORMAT -i $GATEWAY
+  if [ $? -ne 0 ];then
+    echo "Gateway $GATEWAY not in valid format"
+    exit 1
+  fi
+fi
+
+
+
+if [ "$ENTITY" == "S" ];then
+  SR_ADDRESS=`cat $HOME_DIR/etc/cav.conf | grep "SRAdminIP" | cut -d" " -f2 | cut -d/ -f1`
+   # Run '$NS_WDIR/bin/nsi_route_exist R $nid_netbitsi on $SR_ADDRESS as root
+  ssh $SR_ADDRESS $NS_WDIR/bin/nsi_route_exist R $nid_netbits $GATEWAY
+  if [ $? == 0 ];then
+    exit 0
+  else
+    exit 1
+  fi
+fi
+
+if [ $3 == "-" ];then
+  exit 0
+else
+  NUM=`grep -c $2 /etc/iproute2/rt_tables` >>/dev/null
+  RULE=`sudo /sbin/ip rule show | grep -c "from $2 lookup $2"` >>/dev/null
+  ROUTE=`sudo /sbin/ip route show table $2 | grep -c "via $3"` >>/dev/null
+  if [ $NUM -ne 1 -o $RULE -ne 1 -o $ROUTE -ne 1 ];then
+    exit 1
+  else
+    exit 0
+  fi
+fi
+

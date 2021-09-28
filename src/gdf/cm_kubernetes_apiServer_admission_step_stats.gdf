@@ -1,0 +1,8 @@
+Info|3.1|1|-|-|-1|-1|-
+
+Group|Kubernetes Admission Step Stats|14145|vector|4|0|Kubernetes Control Plane Metrics|Cluster>MasterNode>Operation>Type|Kubernetes Admission Step Stats
+
+Graph|Admission Step Success Request/Sec |1|scalar|rate_4B_1000|-|None|0|I|-1|-1|H|NA|Request successfully executed per second for admission sub-step, broken out for each operation and API resource and type are validate or admit.
+Graph|Admission Step Failed Request/Sec |2|scalar|rate_4B_1000|-|None|0|NA|-1|-1|H|NA|Request failed per second for admission sub-step, broken out for each operation and API resource and type are validate or admit.
+Graph|Admission Step Success Request/Sec |3|scalar|rate_4B_1000|-|None|0|NA|-1|-1|H|NA|Request successfully executed per second for admission sub-step, broken out for each operation and API resource and type are validate or admit.
+Graph|Admission Step Response Time(ms) |4|scalar|sample_4B_1000|-|None|0|NA|-1|-1|H|NA|Response time(ms) for admission sub-step, broken out for each operation and API resource and type are validate or admit.

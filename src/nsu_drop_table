@@ -1,0 +1,57 @@
+#! /bin/sh
+
+#Here we are creating indexes for tables
+#Index will enhance database performance (indexes can be used to obtain fast access)
+
+if [ -d $PWD/TR$1 ]; then
+  BASE_DIR=$PWD
+elif [ -d $NS_WDIR/logs/TR$1 ]; then
+  BASE_DIR=$NS_WDIR/logs
+else
+  echo "Error: Test run number $1 is not a valid test run number"
+  exit -1
+fi
+
+echo "nsu_drop_table: Please wait table will be dropped ..."
+START=`date +%s`
+
+psql test cavisson <<+
+drop table if exists RunProfile_$1;
+drop table if exists UserProfile_$1;
+drop table if exists SessionProfile_$1;
+drop table if exists SessionTable_$1;
+drop table if exists PageTable_$1;
+drop table if exists TransactionTable_$1;
+drop table if exists URLTable_$1;
+drop table if exists RecordedServerTable_$1;
+drop table if exists ActualServerTable_$1;
+drop table if exists SessionRecord_$1 cascade;
+drop table if exists TransactionRecord_$1 cascade;
+drop table if exists PageRecord_$1 cascade;
+drop table if exists URLRecord_$1 cascade;
+drop table if exists ErrorCodes_$1;
+drop table if exists LogPhaseTable_$1;
+drop table if exists TransPageRecord_$1 cascade;
+drop table if exists GeneratorTable_$1;
+drop table if exists PageDumpRecord_$1 cascade;
+drop table if exists AlertHistory_$1 cascade;
+drop table if exists AlertActions_$1 cascade;
++
+
+TR_DIR_PATH=$NS_WDIR/logs/TR$1
+#READER_RUN_MODE=`grep "READER_RUN_MODE" $TR_DIR_PATH/sorted_scenario.conf | cut -d' ' -f2`
+#if [ $READER_RUN_MODE -eq 0 ];then
+if [ -f $TR_DIR_PATH/.oracle_sql_report ];then
+  nsu_orl_drop_table $1 
+elif [ -f $TR_DIR_PATH/common_files/.oracle_sql_report ];then
+  nsu_orl_drop_table $1
+fi
+#fi
+
+END=`date +%s`
+#echo $END
+#echo $START
+DIFF=`expr $END - $START`
+#echo $DIFF
+echo "nsu_drop_table: Deletion of table took $DIFF seconds"
+

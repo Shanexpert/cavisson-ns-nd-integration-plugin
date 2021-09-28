@@ -1,0 +1,51 @@
+#
+# Name: nsi_change_perm
+#
+# Author: Abhishek
+#
+# Purpsose: To change ownership and permissions of a give dir or file. If directory is give, then ownership and permissions of all sub directories and files are changed using recursive option. 
+#
+# Usage: nsi_change_perm  <file or dir>  <owner> <group> <permissions>
+# 
+# Example: change owner to .netstorm., group to .netstorm. and permission to .755. to all folders/files in ./home/cavisson/work/logs., use this command as follows:
+# nsi_change_perm  /home/cavisson/work/logs netstorm netstorm 755 
+#
+# Exit Values:
+#    0 - Success
+#    1 - Validation errors
+#
+# Modification History:
+#   10/11/06: Abhishek - Initial Version
+#
+
+USERID=`id -u`
+if [ $USERID -ne 0 ];then
+    echo "You must be root to execute this command"
+    # Neeraj exit 1
+fi
+
+if [ $# -lt 4 ];then
+  echo "Usage: nsi_change_perm  <file or dir>  <owner> <group> <permissions>"
+  exit 1
+fi
+
+if [ $# -gt 4 ];then
+  echo "Usage: nsi_change_perm  <file or dir>  <owner> <group> <permissions>"
+  exit 1
+fi
+echo $1
+echo $2
+echo $3
+
+if [ -f "$1" -o -d "$1" ]
+then
+  chown -R $2 "$1"
+  chgrp -R $3 "$1"
+  chmod -R $4 "$1"
+else
+  echo "Directory/File does not exist"
+  exit 1
+fi
+
+exit 0
+

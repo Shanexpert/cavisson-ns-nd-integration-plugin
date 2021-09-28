@@ -1,0 +1,6 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+
+Info|3.1|1|-|-|-1|-1|-
+Group|Windows LDAP Disk Utilization|10941|vector|1|0|LDAP Metrics|Tier>Server>Instance|Windows LDAP Disk Utilization provides the disk usage on the server.
+Graph|LDAP Disk Used space (MB)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total disk space used in Megabytes.

@@ -1,0 +1,14 @@
+# ---------GDF Version History---------
+#  1.0  -Initial Version
+#  2.0  -Change done for MatchLong_data and Long_long_data to double
+#  3.0  -Changes done for Dynamic data in Execution GUI
+#  3.1  -Use Future 1 field of group line for Metric group name
+#LAST_MAX_ASSIGNED_GRAPH_ID = 5
+#LAST_MODIFIED_DATE = 11/29/11 04:56:08
+Info|3.1|1|-|-|-1|-1|-
+Group|Weblogic JVM Stats|10084|vector|5|0|Weblogic Metrics|Tier>Server>Instance|Provides methods for retrieving information about the Java Virtual Machine (JVM) within with the current server instance is running.
+Graph|Weblogic JVM Heap Free Memory (MB)|1|scalar|sample|-|-|0|A|-1|-1|L|NA|The current amount of memory (in bytes) that is available in the JVM heap.
+Graph|Weblogic JVM Heap Free Memory (%)|2|scalar|sample|-|-|0|A|-1|-1|L|NA|Percentage of the JVM memory that is free.
+Graph|Weblogic JVM Heap Current Size (MB)|3|scalar|sample|-|-|0|A|-1|-1|L|NA|The current size (in bytes) of the JVM heap.
+Graph|Weblogic JVM Heap Max Size Max (MB)|4|scalar|sample|-|-|0|A|-1|-1|L|NA|The maximum free memory configured for this JVM.
+Graph|Weblogic JVM Uptime (secs)|5|scalar|sample|-|-|0|A|-1|-1|H|NA|The number of seconds that the Virtual Machine has been running.

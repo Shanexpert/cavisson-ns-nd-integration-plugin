@@ -1,0 +1,14 @@
+# --- GDF Version History ---
+# 1.0 - Initial version
+# JBoss7AS JDBC Prepared Statement Stats: PreparedStatementCacheAccessCount, PreparedStatementCacheAddCount, PreparedStatementCacheCurrentSize, PreparedStatementCacheDeleteCount, PreparedStatementCacheHitCount, PreparedStatementCacheMissCount
+
+Info|3.1|1|-|-|-1|-1|-
+
+Group|JBoss7 JDBC Prepared Statement Stats|10629|vector|6|0|Application Metrics|Tier>Server>Instance>JdbcPs|JBoss7 AS JDBC Prepared Statement Stats shows metrics for jdbc prepared statement Cache Access Count, Cache Add Count etc.
+
+Graph|JBoss7 Cache Access/Sec|1|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of times that the statement cache was accessed per second.
+Graph|JBoss7 Cache Added/Sec|2|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of statements added to the statement cache per second.
+Graph|JBoss7 Cache Current Size|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of prepared and callable statements currently cached in the statement cache.
+Graph|JBoss7 Cache Deletes/Sec|4|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of statements discarded from the cache per second.
+Graph|JBoss7 Cache Hits/Sec|5|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of times that statements from the cache were used per second.
+Graph|JBoss7 Cache Misses/Sec|6|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of times that a statement request could not be satisfied with a statement from the cache per second.

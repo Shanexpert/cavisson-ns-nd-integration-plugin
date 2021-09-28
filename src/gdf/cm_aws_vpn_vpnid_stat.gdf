@@ -1,0 +1,7 @@
+info|3.1|1|-|-|-1|-1|-
+
+Group|AWS VPN ID Stats|11409|vector|3|0|AWS Metrics|AccountName>Region>VPNId|VPN connection refers to the connection between your VPC and your own on-premises network.
+
+Graph|AWS VPN Tunnel State|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The state of the tunnel. For static VPNs, 0 indicates DOWN and 1 indicates UP. For BGP VPNs, 1 indicates ESTABLISHED and 0 is used for all other states.
+Graph|AWS VPN Tunnel Received Data (Bytes)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The bytes received through the VPN tunnel.
+Graph|AWS VPN Tunnel Transmitted Data (Bytes)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The bytes sent through the VPN tunnel. 
