@@ -96,6 +96,11 @@
  <f:entry title='Override Baseline with last successful TR'>
     <f:select field ="baselineType"/>
  </f:entry>
+ 
+ 
+ <f:entry title="Generate HTML report for configured checkprofile in testsuite">
+    <f:checkbox id="generateReport" field="generateReport" checked="${instance.generateReport}" default="true"/>
+  </f:entry>
 </f:section>
 
 <f:section>
@@ -159,10 +164,14 @@
  function enableDisableTR(value)
  {
  
-   if(value == 'T')
+   if(value == 'T') {
      document.getElementById('txtBaselineTR').disabled = false;
-  else
+     document.getElementById('generateReport').style.display = "block";
+     } 
+  else {
     document.getElementById('txtBaselineTR').disabled = true;
+    document.getElementById('generateReport').style.display = "none";
+    }
   
 
  }

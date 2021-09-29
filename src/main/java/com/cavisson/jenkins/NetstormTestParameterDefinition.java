@@ -114,6 +114,36 @@ public class NetstormTestParameterDefinition extends ParameterDefinition {
             		  
             	  }
               }
+	      if(keyword.equals("EMAIL_IDS_TO")){
+	    	  try{
+	    		  if(value == null || value.equals(""))
+	    			  return FormValidation.error("Email Ids list should be comma separated if having more than one Email id.");
+	    	  
+	    	  }catch(Exception e){
+	    		  return FormValidation.error("Email Ids list should be comma separated if having more than one Email id.");
+	    	  }  	  
+          }
+	      
+	      if(keyword.equals("EMAIL_IDS_CC")){
+	    	  try{
+	    		  if(value == null || value.equals(""))
+	    			  return FormValidation.error("Email Ids list should be comma separated if having more than one Email id.");
+	    	  
+	    	  }catch(Exception e){
+	    		  return FormValidation.error("Email Ids list should be comma separated if having more than one Email id.");
+	    	  }
+          }
+	      
+	      if(keyword.equals("EMAIL_IDS_BCC")){
+	    	  try{  
+	    		  if(value == null || value.equals(""))
+	    			  return FormValidation.error("Email Ids list should be comma separated if having more than one Email id.");
+	    		  
+	    	  }catch(Exception e){
+	    		  return FormValidation.error("Email Ids list should be comma separated if having more than one Email id.");
+	    	  }
+        	  
+          }
             }
             
             
@@ -137,7 +167,10 @@ public class NetstormTestParameterDefinition extends ParameterDefinition {
            model.add("SLA" , "NS_SLA_CHANGE");
            model.add("Test Name" , "NS_TNAME");
            model.add("Automate Script Path" , "NS_AUTOSCRIPT");
-	   model.add("Ramp up duration" , "NS_RAMP_UP_DURATION");
+	       model.add("Ramp up duration" , "NS_RAMP_UP_DURATION");
+	       model.add("Email Ids", "EMAIL_IDS_TO");
+	       model.add("Email Ids Cc", "EMAIL_IDS_CC");
+	       model.add("Email Ids Bcc", "EMAIL_IDS_BCC");
            
            return model;
         }

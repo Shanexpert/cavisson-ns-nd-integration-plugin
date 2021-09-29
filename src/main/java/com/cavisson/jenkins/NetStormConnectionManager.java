@@ -5,6 +5,7 @@
  */
 package com.cavisson.jenkins;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,6 +45,7 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import hudson.FilePath;
 import hudson.model.Result;
 import hudson.model.Run;
 import hudson.util.Secret;
@@ -83,6 +85,9 @@ public class NetStormConnectionManager {
   private String gitPull = "false";
   private long pollInterval;
   private String result;
+  private String emailIdTo = "";
+  private String emailIdCc = "";
+  private String emailIdBcc = "";
   private String err = "Authentication failure, please check whether username and password given correctly";
 
   private String pollURL;
@@ -101,6 +106,8 @@ public class NetStormConnectionManager {
   private String profile = "";
   private String hiddenBox = "";
   private int timeout = -1;
+  private boolean generateReport = true;
+  
   
   private HashMap<String,String> slaValueMap =  new HashMap<String,String> ();
 
@@ -129,7 +136,6 @@ public class NetStormConnectionManager {
     this.autoScript = autoScript;
   }
   
-
   public String gettName() {
     return tName;
   }
@@ -265,6 +271,38 @@ public class NetStormConnectionManager {
 	this.timeout = timeout;
   }
 
+  public boolean isGenerateReport() {
+	  return generateReport;
+  }
+
+  public void setGenerateReport(boolean generateReport) {
+	  this.generateReport = generateReport;
+  }
+  
+  public String getEmailIdTo() {
+	  return emailIdTo;
+  }
+
+  public void setEmailIdTo(String emailIdTo) {
+	  this.emailIdTo = emailIdTo;
+  }
+
+  public String getEmailIdCc() {
+	  return emailIdCc;
+  }
+
+  public void setEmailIdCc(String emailIdCc) {
+	  this.emailIdCc = emailIdCc;
+  }
+
+  public String getEmailIdBcc() {
+	  return emailIdBcc;
+  }
+
+  public void setEmailIdBcc(String emailIdBcc) {
+	  this.emailIdBcc = emailIdBcc;
+  }
+
 private static void disableSslVerification() 
   {
     try
@@ -341,7 +379,7 @@ private static void disableSslVerification()
     this.timeout = timeout;
   }
 
-  public NetStormConnectionManager(String URLConnectionString, String username, Secret password, String project, String subProject, String scenario, String testMode, String baselineType, String pollInterval, String profile,String hiddenBox,String... gitPull)
+  public NetStormConnectionManager(String URLConnectionString, String username, Secret password, String project, String subProject, String scenario, String testMode, String baselineType, String pollInterval, String profile,String hiddenBox, boolean generateReport, String... gitPull)
   {
     logger.log(Level.INFO, "NetstormConnectionManger constructor called with parameters with username:{0}, project:{2}, subProject:{3}, scenario:{4}, baselineTR:{5}", new Object[]{username, project, subProject, scenario, baselineType});
     logger.log(Level.INFO, "Gitpull - ",gitPull.length);
@@ -360,6 +398,7 @@ private static void disableSslVerification()
     this.hiddenBox = hiddenBox;
 //    this.gitPull = gitPull;
     this.gitPull = (gitPull.length > 0) ? gitPull[0] : "false";
+    this.generateReport = generateReport;
   }
   
   /**
@@ -378,7 +417,7 @@ private static void disableSslVerification()
 	 JSONObject reqObj = new JSONObject();
 	 reqObj.put("username", this.username);
 	 reqObj.put("password" ,this.password.getPlainText()); 
-     reqObj.put("URLConnectionString", urlString); 
+     reqObj.put("URLConnectionString", urlString);
          
 	  URL url ;
 	  String str = getUrlString(); // URLConnectionString.substring(0,URLConnectionString.lastIndexOf("/"));
@@ -753,6 +792,7 @@ public JSONObject pullObjectsFromGit(){
       jsonRequest.put(JSONKeys.BASELINE_TYPE.getValue(),baselineType);
       jsonRequest.put("workProfile",profile);
       jsonRequest.put("scriptHeaders",hiddenBox);
+      jsonRequest.put("generateReport", Boolean.toString(generateReport));
          
       
 //      if(getBaselineTR() != null && !getBaselineTR().trim().equals(""))
@@ -798,6 +838,21 @@ public JSONObject pullObjectsFromGit(){
       if(getAutoScript()!= null && !getAutoScript().trim().equals(""))
       {
         jsonRequest.put("AUTOSCRIPT", getAutoScript());
+      }
+      
+      if(getEmailIdTo()!= null && !getEmailIdTo().trim().equals(""))
+      {
+        jsonRequest.put("EmailIdTo", getEmailIdTo());
+      }
+      
+      if(getEmailIdCc()!= null && !getEmailIdCc().trim().equals(""))
+      {
+        jsonRequest.put("EmailIdCc", getEmailIdCc());
+      }
+      
+      if(getEmailIdBcc()!= null && !getEmailIdBcc().trim().equals(""))
+      {
+        jsonRequest.put("EmailIdBcc", getEmailIdBcc());
       }
       
       if(slaValueMap.size() > 0)
@@ -1325,13 +1380,15 @@ public JSONObject pullObjectsFromGit(){
 
 			  /*Starting Thread and polling to server till test end.*/
 			  connectNSAndPollTestRun();
-			  consoleLogger.println("Getting Netstorm Report. It may take some time. Please wait...");
+			 // consoleLogger.println("Getting Netstorm Report. It may take some time. Please wait...");
 
 			  /*Setting TestRun here.*/
 			  jsonResponse.put("TESTRUN", testRun + "" );
 			  jsonResponse.put("REPORT_STATUS", "");
 
-			  consoleLogger.println("Test Cycle Number - "+testCycleNum);
+			  if(testMode.equals("T"))
+			    consoleLogger.println("Test Cycle Number - "+testCycleNum);
+			  
 			  if(testRun == -1)
 			  {
 
@@ -1372,6 +1429,308 @@ public JSONObject pullObjectsFromGit(){
 
 	  return resultMap;
   }
+  
+  
+  public void checkTestSuiteStatus(PrintStream consoleLoger, FilePath fp, Run build) {
+	  try {
+		  consoleLogger.println("Checking for testsuite execution status.");
+		  String str =   getUrlString();
+		  String url = str + "/ProductUI/productSummary/jenkinsService/checkTestSuiteStatus";
+	      /* Creating the thread. */
+	      Runnable pollTestRunState = new Runnable()
+	      {
+	        public void run()
+	        {
+	          try {
+
+	            /*Keeping flag based on TestRun status on server.*/
+	            boolean isTestSuiteRunning = true;
+	            
+	            /*Initial Sleep Before Polling.*/
+	            try {
+	              
+	              /*Delay to poll due to test is taking time to start.*/
+	              Thread.sleep(30 * 1000);     
+	              
+	            } catch (Exception ex) {
+	              logger.log(Level.SEVERE, "Error in initial sleep before polling.", ex);
+	              build.setResult(Result.UNSTABLE);
+	            }
+
+	            logger.log(Level.INFO, "Starting Polling to server.");
+	            
+	            /*Running Thread till test stopped.*/
+	            while (isTestSuiteRunning) {
+	              try {
+	        	
+	        	/*Creating Polling URL.*/
+	        	String pollURLWithArgs = url + "?testCycleNumber=" + testCycleNum + "&testRun=" + testRun;    	
+	        	URL url = new URL(pollURLWithArgs);
+	        	HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+	        	conn.setConnectTimeout(POLL_CONN_TIMEOUT);
+	        	conn.setReadTimeout(POLL_CONN_TIMEOUT);
+	        	conn.setRequestMethod("GET");
+	        	conn.setRequestProperty("Accept", "application/json");    
+
+	        	if (conn.getResponseCode() != 200) {
+	        	  logger.log(Level.INFO, "Getting Error code on polling  = " + conn.getResponseCode() + ". Retrying in next poll in 5 minutes.");
+	        	}
+
+	        	BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+	        	String pollResString = br.readLine();
+	        	
+	        	try {
+	        	  
+	        	  logger.log(Level.INFO, "Polling Response = " + pollResString);
+	        	  JSONObject pollResponse = (JSONObject) JSONSerializer.toJSON(pollResString);
+	        	      	  
+	        	  
+	        	  String mssg = "";
+	        	  if(pollResponse.getString("mssg") != null && !pollResponse.getString("mssg").equals("")) {
+	        		 mssg = pollResponse.getString("mssg");
+	        		 consoleLoger.println(pollResponse.getString("mssg"));
+	        	  }
+	        	  
+	        	  if(pollResponse.getBoolean("status")) {
+	        	    /*Terminating Loop when test is stopped.*/
+	        	    isTestSuiteRunning = false;
+	        	  }
+	        	  
+	        	  if(mssg.startsWith("TestSuite is Executed Successfully.")) {
+	        		  
+	        		  if(pollResponse.has("Report Status")) {
+	        			  String status = pollResponse.getString("Report Status");
+	        			  consoleLoger.println("Report Status = " + status);
+	        			  if(status.trim().equals("PASS"))
+	        				 build.setResult(Result.SUCCESS);
+	        			  else if(status.trim().equals("FAIL"))
+	        				 build.setResult(Result.FAILURE);
+	        			  
+	        		  }
+	        		  boolean htmlReport = getHTMLReport(fp);
+	        		  if(htmlReport == false)
+	        			 consoleLoger.println("Error in fetching report from server.");
+	        		  else {
+	        			  consoleLoger.println("Successfully fetch the HTML report from server. Now fetching Pdf file.");
+	        			boolean isPdfUploaded = dumpPdfInWorkspace(fp);
+	        			if(isPdfUploaded) {
+	        				consoleLoger.println("Pdf File is Uploaded succesfully.");
+	        			} else
+	        				consoleLoger.println("Error in Uploading Pdf File.");
+	        		  }
+	        	  } else if(mssg.startsWith("TestSuite is Executed Completely.")) {
+	        		  build.setResult(Result.UNSTABLE);
+	        	  
+	        	  }
+	        	  
+	        	  
+	                  
+	        	} catch (Exception e) {
+	        	  logger.log(Level.SEVERE, "Error in parsing polling response = " + pollResString, e);
+	        	  build.setResult(Result.UNSTABLE);
+	        	}
+
+	        	/*Closing Stream.*/
+	        	try {
+	        	  br.close();
+	        	} catch (Exception e) {
+	        	  logger.log(Level.SEVERE, "Error in closing stream inside polling thread.", e);
+	        	  build.setResult(Result.UNSTABLE);
+	        	}
+	              } catch (Exception e) {
+	                logger.log(Level.SEVERE, "Error in polling running testcycleNumber with interval. Retrying after 5 sec.", e);
+	                build.setResult(Result.UNSTABLE);
+	              }
+
+	              /*Repeating till Test Ended.*/
+	              try {
+	        //    consoleLogger.println("Test in progress. Going to check on server. Time = " + new Date() + ", pollInterval = " + pollInterval);
+	        	
+//	            if(testRun > 0)
+//	              pollInterval  = 60;
+	            
+	            if(isTestSuiteRunning == true)
+	              Thread.sleep(30 * 1000);
+	                
+	              } catch (Exception ex) {       	
+	        	logger.log(Level.SEVERE, "Error in polling connection in loop", ex);
+	        	build.setResult(Result.UNSTABLE);
+	              } 
+	            }
+
+	          } catch (Exception e) {
+	            logger.log(Level.SEVERE, "Error in polling running testRun with interval.", e);
+	            build.setResult(Result.UNSTABLE);
+	          }
+	        }   
+	      };
+
+	      // Creating and Starting thread for Getting Graph Data.
+	      Thread pollTestRunThread = new Thread(pollTestRunState, "pollTestRunThread");
+
+	      // Running it with Executor Service to provide concurrency.
+	      ExecutorService threadExecutorService = Executors.newFixedThreadPool(1);
+
+	      // Executing thread in thread Pool.
+	      threadExecutorService.execute(pollTestRunThread);
+
+	      // Shutting down in order.
+	      threadExecutorService.shutdown();
+
+	      // Checking for running state.
+	      // Wait until thread is not terminated.
+	      while (!threadExecutorService.isTerminated())
+	      {
+	      }
+	      
+	     // consoleLogger.println("TestSuite Execution is Completed. Now fetching report from server.");
+	  } catch(Exception e) {
+		  logger.log(Level.SEVERE, "Unknown exception in establishing connection.", e);
+	  }
+  }
+  
+  /*Method to dump pdf file in workspace*/
+  private boolean dumpPdfInWorkspace(FilePath fp) throws IOException, InterruptedException {
+	  /*getting testrun number*/
+	  String testRun = NetStormBuilder.testRunNumber;
+	  /*path of directory i.e. /var/lib/jenkins/workspace/jobName*/
+	  String dir = fp + "/TR" + testRun;
+	  
+	  
+	  logger.log(Level.INFO, "Pdf directory"+dir);
+	  
+	  
+	   FilePath fz = new FilePath(fp.getChannel(), fp + "/TR" + testRun);
+	   fz.mkdirs();
+	   FilePath fk = new FilePath(fp.getChannel(), fz + "/testsuite_report_" + testRun + ".pdf");
+	  logger.log(Level.INFO, "File path for pdf file = " + fk);
+	  
+	  try {
+		  URL urlForPdf;
+		  String str =   getUrlString();
+		  urlForPdf = new URL(str+"/ProductUI/productSummary/jenkinsService/getPdfData");
+		  logger.log(Level.INFO, "urlForPdf-"+urlForPdf);
+
+		  HttpURLConnection connect = (HttpURLConnection) urlForPdf.openConnection();
+		  connect.setConnectTimeout(0);
+		  connect.setReadTimeout(0);
+		  connect.setRequestMethod("POST");
+		  connect.setRequestProperty("Content-Type", "application/octet-stream");
+
+		  connect.setDoOutput(true);
+		  java.io.OutputStream outStream = connect.getOutputStream();
+		  outStream.write(testRun.getBytes());
+		  outStream.flush();
+
+		  if (connect.getResponseCode() == 200) {
+			  logger.log(Level.INFO, "response 200 OK");   
+			  byte[] mybytearray = new byte[1024];
+			  InputStream is = connect.getInputStream();
+			//  FileOutputStream fos = new FileOutputStream(fp);
+			  BufferedOutputStream bos = new BufferedOutputStream(fk.write());
+			  int bytesRead;
+			  while((bytesRead = is.read(mybytearray)) > 0){
+				logger.log(Level.INFO, "bytesRead inside while check"+ bytesRead);
+				bos.write(mybytearray, 0, bytesRead);
+				//fp.write(content, null);
+			  }
+			  bos.close();
+			  is.close();
+		  } else {
+			  logger.log(Level.INFO, "ErrorCode-"+ connect.getResponseCode());
+			  logger.log(Level.INFO, "content type-" + connect.getContentType());
+			  return false;
+		  }
+		  return true;
+	  } catch (Exception e){
+		  logger.log(Level.SEVERE, "Unknown exception. IOException -", e);
+		  return false;
+	  }
+
+  }  
+  
+  private boolean getHTMLReport(FilePath fp) throws IOException, InterruptedException {
+ 	 
+	  /*getting testrun number*/
+	  String testRun = NetStormBuilder.testRunNumber;
+	  /*path of directory i.e. /var/lib/jenkins/workspace/jobName*/
+	  String zipFile = fp + "/TestSuiteReport.zip";
+
+   	 FilePath  fz = new FilePath(fp.getChannel(), zipFile);
+   	   if(fz.exists()) {
+ 		   fz.delete();
+ 		   fz = new FilePath(fp.getChannel(), zipFile);
+   	   }
+	  
+	  try {
+		  JSONObject jsonRequest = new JSONObject();
+		  jsonRequest.put("testRun", testRun);
+		  jsonRequest.put("isNDE", false);
+		  
+		  URL urlForHTMLReport;
+		  String str =   getUrlString();
+		  urlForHTMLReport = new URL(str+"/ProductUI/productSummary/jenkinsService/getHTMLReport");
+		  logger.log(Level.INFO, "urlForPdf-"+urlForHTMLReport);
+
+		  HttpURLConnection connect = (HttpURLConnection) urlForHTMLReport.openConnection();
+		  connect.setConnectTimeout(0);
+		  connect.setReadTimeout(0);
+		  connect.setRequestMethod("POST");
+		  connect.setRequestProperty("Content-Type", "application/octet-stream");
+
+		  connect.setDoOutput(true);
+		  java.io.OutputStream outStream = connect.getOutputStream();
+		  String json =jsonRequest.toString();
+		  outStream.write(json.getBytes());
+		  outStream.flush();
+
+		  if (connect.getResponseCode() == 200) {
+			  logger.log(Level.INFO, "response 200 OK");   
+			  byte[] mybytearray = new byte[1024];
+			  InputStream is = connect.getInputStream();
+			 // FileOutputStream fos = new FileOutputStream(file);
+			  BufferedOutputStream bos = new BufferedOutputStream(fz.write());
+			  int bytesRead;
+			  while((bytesRead = is.read(mybytearray)) > 0){
+				logger.log(Level.INFO, "bytesRead inside while check"+ bytesRead);
+				bos.write(mybytearray, 0, bytesRead);
+			  }
+			  bos.close();
+			  is.close();
+		  } else {
+			  logger.log(Level.INFO, "ErrorCode-"+ connect.getResponseCode());
+			  logger.log(Level.INFO, "content type-" + connect.getContentType());
+			  return false;
+		  }
+		  
+		  String destDir = fp + "/TestSuiteReport";
+		  
+		  FilePath dir = new FilePath(fp.getChannel(), destDir);
+		  if(dir.exists())
+			  dir.deleteRecursive(); 
+		  dir.mkdirs();
+			 
+          unzip(dir, fz);
+		  return true;
+	  } catch (Exception e){
+		  logger.log(Level.SEVERE, "Unknown exception in methid getHTMLreport. IOException -", e);
+		  e.printStackTrace();
+		  return false;
+	  }
+	  
+  }
+  
+  private void unzip(FilePath dir, FilePath zipFile) throws IOException, InterruptedException {
+	    try {
+	    	 logger.log(Level.INFO, "inside unzip method...");
+	    	InputStream in = zipFile.read();
+	    	dir.unzipFrom(in);
+	    } catch (IOException e) {
+	    	logger.log(Level.SEVERE, "Exception in unzipping file = " + e);
+	        e.printStackTrace();
+	    }
+	    
+	}
 
    public void createCheckRuleFile(String restUrl) {
 	 try {
@@ -1443,7 +1802,9 @@ public JSONObject pullObjectsFromGit(){
 	  String testRun= (String)(jsonResponse.get(JSONKeys.TEST_RUN.getValue()));
 	  resultMap.put("STATUS", status);
 	  resultMap.put("TESTRUN",testRun);
-	  resultMap.put("TEST_CYCLE_NUMBER", testCycleNum);
+	  
+	  if(testMode.equals("T"))
+	    resultMap.put("TEST_CYCLE_NUMBER", testCycleNum);
 
 	  consoleLogger.println("Test is executed successfully.");
 	  if(jsonResponse.containsKey("ENV_NAME"))
@@ -1477,7 +1838,7 @@ public JSONObject pullObjectsFromGit(){
   private void connectNSAndPollTestRun() {
     try {
 
-      consoleLogger.println("Test Started. Now tracking TestRun based on running scenario. URL = " + pollURL);
+      consoleLogger.println("Test Started. Now tracking TestRun based on running scenario.");
       
       /* Creating the thread. */
       Runnable pollTestRunState = new Runnable()
@@ -1528,7 +1889,12 @@ public JSONObject pullObjectsFromGit(){
         	      	  
         	  /*Getting TestRun, if not available.*/
         	  if (testRun <= 0) {
-        	    testRun = pollResponse.getInt("testRun");	    
+        	    testRun = pollResponse.getInt("testRun");
+        	    int stopTR = -1;
+        	    stopTR = pollResponse.getInt("testRun");
+        	    logger.log(Level.INFO, "stopTR = " + stopTR);
+        	    String portStr = getUrlString();
+        	    new BuildActionStopTest(stopTR,username,portStr);
         	  }
         	  
         	  if(pollResponse.getBoolean("status")) {

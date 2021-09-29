@@ -183,14 +183,14 @@ public class NetDiagnosticsResultsPublisher extends Recorder implements SimpleBu
  
    logger.println("Verify connection to NetDiagnostics interface ...");
    
-   if (!connection.testNDConnection(errMsg, null)) 
+   if (!connection.testNDConnection(errMsg, null, logger)) 
    {
      logger.println("Connection to netdiagnostics unsuccessful, cannot to proceed to generate report.");
      logger.println("Error: " + errMsg);
        
      return ;
    }
-   logger.println("Connection Done");
+   logger.println("Successfully generated report on server.");
    //Need to pass test run number
    
    //For setting duration in case of netdiagnostics
@@ -223,9 +223,11 @@ public class NetDiagnosticsResultsPublisher extends Recorder implements SimpleBu
    {
     // NetStormReport report = dataCollector.createReportFromMeasurements(logger);
 	   NetStormReport report  = null;
+	   
+	   
 	   boolean pdfUpload = dumpPdfInWorkspace(fp, connection);
 	   boolean htmlReport = getHTMLReport(fp, connection);
-     logger.println("Pdf Uploaded" + pdfUpload);
+     logger.println("Pdf Uploaded = " + pdfUpload);
      
   //   NetStormBuildAction buildAction = new NetStormBuildAction(run, report, true);
      
@@ -258,8 +260,13 @@ public class NetDiagnosticsResultsPublisher extends Recorder implements SimpleBu
     
     private boolean getHTMLReport(FilePath fp, NdConnectionManager connection) {
    	 
+    	String destDirectory = fp + "/TestSuiteReport";
+		  
+		  File dirr = new File(destDirectory);
+		  if(dirr.exists())
+			  dirr.delete();
   	  /*getting testrun number*/
-  	  String testRun = NetStormBuilder.testRunNumber;
+  	  String testRun = NetDiagnosticsResultsPublisher.testRun;
   	  /*path of directory i.e. /var/lib/jenkins/workspace/jobName*/
   	  String zipFile = fp + "/TestSuiteReport.zip";
   	 // logger.log(Level.INFO, "Pdf directory"+zipFile);
@@ -358,13 +365,15 @@ public class NetDiagnosticsResultsPublisher extends Recorder implements SimpleBu
     /*Method to dump pdf file in workspace*/
     private boolean dumpPdfInWorkspace(FilePath fp, NdConnectionManager connection) {
   	  /*getting testrun number*/
-  	  String testRun = NetStormBuilder.testRunNumber;
+  	  String testRun = NetDiagnosticsResultsPublisher.testRun;
   	  /*path of directory i.e. /var/lib/jenkins/workspace/jobName*/
   	  String dir = fp + "/TR" + testRun;
   	  File fl = new File(dir);
-  	  if(!fl.exists()) {
+  	  if(fl.exists()) 
+  		  fl.delete();
+  	  
   		  fl.mkdir();
-  	  }
+  	  
 
   	  File file = new File(dir + "/testsuite_report_" + testRun + ".pdf");
   	  try {
@@ -529,7 +538,7 @@ public FormValidation doTestNetDiagnosticsConnection(@QueryParameter("netdiagnos
   NdConnectionManager connection = new NdConnectionManager(netdiagnosticRestUri, username, Secret.fromString(password), true);
   
   String check = netdiagnosticRestUri + "@@" + username +"@@" + password;
-  if (!connection.testNDConnection(errMsg, check)) 
+  if (!connection.testNDConnection(errMsg, check, logger)) 
   { 
     validationResult = FormValidation.warning("Connection to netdiagnostics unsuccessful, due to: "+  errMsg);
   }
@@ -604,6 +613,7 @@ public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
  private String failThreshold;
  String duration;
  private String profile;
+ public static String testRun = "-1";
  
  
 public String getCriThreshold() {

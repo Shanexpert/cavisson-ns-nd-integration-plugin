@@ -75,12 +75,13 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
     private String advanceSett="";
     private String urlHeader="";
     private String hiddenBox="";
+    private final boolean generateReport;
 
 
     @DataBoundConstructor
     public NetStormBuilder(String URLConnectionString, String username, String password, String project,
             String subProject, String scenario, String testMode, String baselineType, String pollInterval, String protocol,
-            String repoIp, String repoPort, String repoPath, String repoUsername, String repoPassword, String profile,String script,String page,String advanceSett,String urlHeader,String hiddenBox,String gitPull) {
+            String repoIp, String repoPort, String repoPath, String repoUsername, String repoPassword, String profile,String script,String page,String advanceSett,String urlHeader,String hiddenBox,String gitPull, boolean generateReport) {
     	 logger.log(Level.INFO, "inside a constructor..............gitpull -"+gitPull);
          logger.log(Level.INFO, "profile -"+profile+", advanceSett -"+advanceSett+", urlHeader -"+urlHeader+", hiddenBox -"+hiddenBox);
         this.project = project;
@@ -105,11 +106,12 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
         this.advanceSett = advanceSett;
         this.urlHeader = urlHeader;
         this.hiddenBox = hiddenBox;
+        this.generateReport = generateReport;
         logger.log(Level.INFO, "hiddenBox -"+this.hiddenBox+", testmode ="+testMode);
     }
 
     public NetStormBuilder(String URLConnectionString, String username, String password, String project,
-            String subProject, String scenario, String testMode, String baselineType, String pollInterval,String profile) {
+            String subProject, String scenario, String testMode, String baselineType, String pollInterval,String profile, boolean generateReport) {
     	 logger.log(Level.INFO, "inside second constructor..............");
         
         this.project = project;
@@ -122,6 +124,7 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
         this.baselineType = baselineType;
         this.pollInterval = pollInterval;
         this.profile = profile; 
+        this.generateReport = generateReport;
     }
 
     public String getProject() 
@@ -250,21 +253,21 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
 	public void setProfile(String profile) {
 		this.profile = profile;
 	}
+	
+	public boolean isGenerateReport() {
+		return generateReport;
+	}
 
 @Override
   public void perform(Run<?, ?> run, FilePath fp, Launcher lnchr, TaskListener taskListener) throws InterruptedException, IOException {
-   
-   Boolean fileUpload = false;
+	run.addAction(new NetStormStopAction(run));
+	Boolean fileUpload = false;
 
    Map<String, String> envVarMap = run instanceof AbstractBuild ? ((AbstractBuild<?, ?>) run).getBuildVariables() : Collections.<String, String>emptyMap();
    PrintStream logg = taskListener.getLogger();
    
-   logg.println("Calling NetstormConnectionManager constructor ..........");
-   logg.println("hiddenBox ---------->"+hiddenBox);
-   NetStormConnectionManager netstormConnectionManger = new NetStormConnectionManager(URLConnectionString, username, password, project, subProject, scenario, testMode, baselineType, pollInterval,profile,hiddenBox,gitPull);      
+   NetStormConnectionManager netstormConnectionManger = new NetStormConnectionManager(URLConnectionString, username, password, project, subProject, scenario, testMode, baselineType, pollInterval,profile,hiddenBox,generateReport,gitPull);      
    StringBuffer errMsg = new StringBuffer();
-   
-   logg.println("Starting loop ............");
    
     @SuppressWarnings("rawtypes")
       Set keyset = envVarMap.keySet();
@@ -272,6 +275,7 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
      String path = "";
      String jobName = "";
      String automateScripts = "";
+     String testsuiteName = "";
       for(Object key : keyset)
       {
         Object value = envVarMap.get(key);
@@ -279,11 +283,26 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
        	if(key.equals("JENKINS_HOME")) {
  	     path = (String)envVarMap.get(key);
        	}
+       	
+       	
+       	if(key.equals("Testsuite Name")) {
+       		testsuiteName = (String)envVarMap.get(key);
+       		logger.log(Level.INFO, "Test Suite Name = " + testsuiteName);
+       		String[] testsuite = testsuiteName.split("/");
+       		if(testsuite.length == 3) {
+       			netstormConnectionManger.setProject(testsuite[0]);
+       			netstormConnectionManger.setSubProject(testsuite[1]);
+       			netstormConnectionManger.setScenario(testsuite[2]);
+       		} else
+       		  netstormConnectionManger.setScenario(testsuiteName);
+       	}
        			
        			
         if(value instanceof String)
         {
            String envValue = (String) value;
+           
+           logger.log(Level.INFO, "env value = " + envValue);
            
            if(envValue.startsWith("NS_SESSION"))
            {
@@ -325,24 +344,35 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
            }
            else if(envValue.startsWith("NS_AUTOSCRIPT"))
            {
-        	   logg.println("Inside Autoscript check .........."+envValue);
-             String temp [] = envValue.split("_", 3);
-             logg.println("temp length .........."+temp.length);
-             logg.println("auto sccript string ....."+automateScripts);
-             if(temp.length > 2){
-//                netstormConnectionManger.setAutoScript(temp[2]);
-            	 if(automateScripts.equals(""))
-            		 automateScripts = temp[2];
-            	 else
-            		 automateScripts = automateScripts + "," +temp[2];
-             }
+        	   String temp [] = envValue.split("_", 3);
+        	   if(temp.length > 2){
+        		   //                netstormConnectionManger.setAutoScript(temp[2]);
+        		   if(automateScripts.equals(""))
+        			   automateScripts = temp[2];
+        		   else
+        			   automateScripts = automateScripts + "," +temp[2];
+        	   }
            }
-	   else if(envValue.startsWith("NS_RAMP_UP_DURATION")){
+           else if(envValue.startsWith("NS_RAMP_UP_DURATION")){
         	   String temp [] = envValue.split("_");
-               if(temp.length > 4)
-                  netstormConnectionManger.setRampUpDuration(temp[4]);
-               logg.println("Ramp up duration .........."+temp[4]);
-               logg.println("getRampUpDuration ="+netstormConnectionManger.getRampUpDuration());
+        	   if(temp.length > 4)
+        		   netstormConnectionManger.setRampUpDuration(temp[4]);
+           }
+
+           else if(envValue.startsWith("EMAIL_IDS_TO")) {
+        	   String temp [] = envValue.split("_");
+        	   if(temp.length > 3)
+        		   netstormConnectionManger.setEmailIdTo(temp[3]);
+           }
+           else if(envValue.startsWith("EMAIL_IDS_CC")) {
+        	   String temp [] = envValue.split("_");
+        	   if(temp.length > 3)
+        		   netstormConnectionManger.setEmailIdCc(temp[3]);
+           }
+           else if(envValue.startsWith("EMAIL_IDS_BCC")) {
+        	   String temp [] = envValue.split("_");
+        	   if(temp.length > 3)
+        		   netstormConnectionManger.setEmailIdBcc(temp[3]);
            }
            
            if(envValue.equalsIgnoreCase(fileName))
@@ -353,7 +383,6 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
       }
       
       netstormConnectionManger.setAutoScript(automateScripts);
-      logg.println("set auto script ="+netstormConnectionManger.getAutoScript());
      
       if(testMode == null)
       {
@@ -389,6 +418,13 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
        }
         
       netstormConnectionManger.setJkRule(json);
+      
+      String destDir = fp + "/TestSuiteReport";
+	  
+	  FilePath direc = new FilePath(fp.getChannel(), destDir);
+	  if(direc.exists())
+		  direc.deleteRecursive(); 
+	  
       HashMap result = netstormConnectionManger.startNetstormTest(errMsg ,logg);
       
       boolean status = (Boolean )result.get("STATUS");
@@ -405,14 +441,20 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
           
           /*set a test run number in static refrence*/
           testRunNumber = (String)result.get("TESTRUN");
-          testCycleNumber = (String) result.get("TEST_CYCLE_NUMBER");         
+          
+          if(testMode.equals("T")) {
+            testCycleNumber = (String) result.get("TEST_CYCLE_NUMBER");  
+            if(generateReport == true)
+             netstormConnectionManger.checkTestSuiteStatus(logg, fp, run);
+          }
+          
  
           if(result.get("ENV_NAME") != null && !result.get("ENV_NAME").toString().trim().equals(""))
             run.setDescription((String)result.get("ENV_NAME")); 
          
           
           //To set the host and user name in a file for using in other publisher.
-          logg.println("path  - " + path);
+          
           File dir = new File(path.trim()+"/Property");
           if (!dir.exists()) {
               if (dir.mkdir()) {

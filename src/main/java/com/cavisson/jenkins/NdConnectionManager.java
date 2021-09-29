@@ -187,10 +187,10 @@ public class NdConnectionManager {
    * @return true , if Successfully connected and authenticated false ,
    * otherwise
    */
-  public boolean testNDConnection(StringBuffer errMsg, String test) 
+  public boolean testNDConnection(StringBuffer errMsg, String test, PrintStream consoleLogger) 
   {
     logger.log(Level.INFO, "testNDConnection() method is  called. rest url -"+ restUrl);
-    if(checkAndMakeConnection(URLConnectionString, restUrl, errMsg, test))
+    if(checkAndMakeConnection(URLConnectionString, restUrl, errMsg, test, consoleLogger))
     {
       logger.log(Level.INFO, "After check connection method.");
 
@@ -216,9 +216,9 @@ public class NdConnectionManager {
 
   }
 
-  private boolean checkAndMakeConnection(String urlString, String restUrl, StringBuffer errMsg)
+  private boolean checkAndMakeConnection(String urlString, String restUrl, StringBuffer errMsg, PrintStream consoleLogger)
   {
-    return checkAndMakeConnection(urlString, restUrl,errMsg, null);
+    return checkAndMakeConnection(urlString, restUrl,errMsg, null, consoleLogger);
   }
 
   /**
@@ -230,7 +230,7 @@ public class NdConnectionManager {
    * @param aa 
    * @return true if connection successfully made false, otherwise
    */
-  private boolean checkAndMakeConnection(String urlString, String restUrl, StringBuffer errMsg, String test)
+  private boolean checkAndMakeConnection(String urlString, String restUrl, StringBuffer errMsg, String test, PrintStream consoleLogger)
   {
     logger.log(Level.INFO, "checkAndMakeConnection method called. with arguments restUrl : ", new Object[]{restUrl});
     try
@@ -271,13 +271,13 @@ public class NdConnectionManager {
 	    else
 		  ndParam.setBase3EndTime(null);
 	    
-	    if(ndParam.getBase1MSRName().equals(""))
+	    if(ndParam.getBase1MSRName() != null && ndParam.getBase1MSRName().equals(""))
 		  ndParam.setBase1MSRName(null);
 	    
-	    if(ndParam.getBase2MSRName().equals(""))
+	    if(ndParam.getBase2MSRName() != null && ndParam.getBase2MSRName().equals(""))
 			  ndParam.setBase2MSRName(null);
 	    
-	    if(ndParam.getBase3MSRName().equals(""))
+	    if(ndParam.getBase3MSRName() != null && ndParam.getBase3MSRName().equals(""))
 			  ndParam.setBase3MSRName(null);
       }
 
@@ -317,7 +317,12 @@ public class NdConnectionManager {
       resonseObj =  (JSONObject) JSONSerializer.toJSON(this.result);
       System.out.println("resonseObj -- "+resonseObj);
       Boolean status = (Boolean)resonseObj.get("status");
-         
+         if(resonseObj.has("TestRun")) {
+        	 String testRun = (String)resonseObj.get("TestRun");
+        	 if(!testRun.equals("-1"))
+               consoleLogger.println("NDE Test Run Number  = " + testRun);
+        	 NetDiagnosticsResultsPublisher.testRun = testRun;
+         }
 //      if(status == false && !((String)resonseObj.get("errMsg")).equals(""))
 //        err = (String)resonseObj.get("errMsg");
       
