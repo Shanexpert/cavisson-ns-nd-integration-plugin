@@ -1,8 +1,0 @@
-# --- GDF Version History ---
-# 1.0 - Initial version
-
-Info|1.0|1|-|-|-1|-1|-
-
-Group|Rmi Port Check|10184|vector|1|0|Application Metrics|Tier>Server>Instance|Rmi Port Check.
-
-Graph|Response Time(ms)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Response Time for executing LocateRegistry.getRegistry in miliseconds 

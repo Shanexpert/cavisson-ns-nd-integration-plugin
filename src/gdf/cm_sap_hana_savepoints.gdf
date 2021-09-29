@@ -1,9 +1,0 @@
-# --- GDF Version History ---
-# 1.0 - Initial version
-
-
-Info|3.1|1|-|-|-1|-1|-
-Group|SAP HANA SavePoints|10820|vector|1|0|SAP Metrics|Tier>Server>Host>Port|It provides the SavePoints  metrics related to database based on queries.
-
-Graph|HANA Flushed Pages|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Display the Save Points(flushed pages) stats of database.
-

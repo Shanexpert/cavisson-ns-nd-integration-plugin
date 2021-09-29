@@ -1,9 +1,0 @@
-# --- GDF Version History ---
-# -- 1.0 -- Initial version ---
-
-Info|3.1|1|-|-|-1|-1|-
-
-Group|Pgpool Session Waiting Status|10893|vector|1|0|Pgpool Metrics|Tier>Server>Node>Database|This monitor will show the  current waiting status of this session.
-
-Graph|Pgpool Waiting State|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|True if this backend is currently waiting on a lock, False otherwise.
-	

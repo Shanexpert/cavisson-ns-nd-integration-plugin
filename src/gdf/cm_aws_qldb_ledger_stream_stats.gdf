@@ -1,9 +1,0 @@
-# --- GDF Version History ---
-
-# -- 1.0 -- Initial version ---
-
-Info|3.1|1|-|-|-1|-1|-
-
-Group|AWS QLDB Ledger Stream Stats|11284|vector|1|0|AWS Metrics|AccountName>Region>LedgerName>StreamId|Amazon Quantum Ledger Database (Amazon QLDB) is a fully managed ledger database owned by a central trusted authority that provides a transparent, immutable, and cryptographically verifiable transaction log of all of your application changes.
-
-Graph|AWS QLDB Impaired Status|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The flag that indicates if a journal stream to Kinesis Data Streams is impaired, reported in one-minute intervals. A value of 1 indicates that the stream is in impaired state and 0 indicates otherwise.

@@ -1,8 +1,0 @@
-#
-  JMX_PORT=`ps -ef | grep $1 |egrep -o "$2[[:alnum:][:punct:]]*" | cut -d "$3" -f2 2>/dev/null`
-  
- if [ "X$JMX_PORT" = "X" ]; then
-    echo -n 0
-  else
-    echo -n ${JMX_PORT}
-  fi

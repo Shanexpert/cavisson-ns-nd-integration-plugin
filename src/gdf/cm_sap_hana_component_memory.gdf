@@ -1,8 +1,0 @@
-# --- GDF Version History ---
-# 1.0 - Initial version
-
-
-Info|3.1|1|-|-|-1|-1|-
-Group|SAP HANA Memory Component|10815|vector|1|0|SAP Metrics|Tier>Server>Host>Component|It provides the metrics related to database based on queries.
-
-Graph|HANA Memory Component|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Display the component memory in MB of database.

@@ -1,6 +1,0 @@
-Info|3.1|1|-|-|-1|-1|-
-Group|Alert Tier Category Stats|10871|vector|2|0|Cavisson Metrics|Tier>Category>Severity|Alert Tier Category Stats provide metrics related to alert count on tier based on category. Category can be Business or Infra.
-Graph|Number of Alerts|1|scalar|sum|-|-|0|NA|-1|-1|NA|NA|Number of alerts per alert category.
-Graph|Alerts/Minute|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Alerts per minute based on alert category.
-
-

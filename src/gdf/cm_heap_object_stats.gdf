@@ -1,4 +1,0 @@
-Info|1.0|1|-|-|-1|-1|-
-Group|Heap object Stats|10307|vector|2|0|Application Metrics|Tier>Server>Instance|Heap object stats monitor
-Graph|Instances |1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of intances of java class
-Graph|Object Size (kb)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Size of object in kb

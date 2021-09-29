@@ -1,3 +1,0 @@
-V	190809142807Z		01	unknown	/C=US/ST=California/O=Cavisson Systems, Inc./CN=Client
-R	190809142808Z	090811142808Z	02	unknown	/C=US/ST=California/O=Cavisson Systems, Inc./CN=Client_revoke
-V	190809142808Z		03	unknown	/C=US/ST=California/O=Cavisson Systems, Inc./CN=Intermediate0

@@ -1,5 +1,0 @@
-Info|3.1|1|-|-|-1|-1|-
-
-Group|GCP Spanner Backup Stats|11510|vector|1|0|GCP Metrics|ProjectID>InstanceConfig>InstanceId>Database>BackUp|Spanner backup stats provided metrics related to spanner backup.
-
-Graph|GCP Spanner Backup Storage Used (KB)|1|scalar|sample|-|-|0|D|-1|-1|NA|DIV(G1,1024)|Backup storage used in kilobytes.

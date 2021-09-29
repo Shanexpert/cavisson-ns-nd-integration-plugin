@@ -1,8 +1,0 @@
-
-Info|3.1|1|-|-|-1|-1|-
-
-Group|GCP PubSub Stats|10955|vector|4|0|GCP Metrics|Tier>Server>ProjectID|GCP PubSub stats.
-Graph|GCP Topic Count|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of Topic in PubSub.
-Graph|GCP Topic Message Size (Bytes)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Topic Message Size in PubSub in bytes.
-Graph|GCP Subscription Count|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of Subscription in PubSub.
-Graph|GCP Send Message Operation count|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of Send Message operation in PubSub.

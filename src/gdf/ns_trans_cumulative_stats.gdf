@@ -1,7 +1,0 @@
-Info|3.1|17|-1|-|-1|-1|-
-
-Group|Transaction Cumulative Stats|103|vector|3|0|Test Metrics|Transaction|Transaction Cumulative Stats
-
-Graph|Transaction Completed|1|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Total number of transactions completed
-Graph|Transaction Successful|2|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Total number of successful transactions
-Graph|Transaction Failures|3|scalar|cumulative|-|-|0|AS|-1|-1|NA|NA|Total number of failure transactions

@@ -1,3 +1,0 @@
-Info|3.1|1|-|-|-1|-1|-
-Group|URL Status|10589|vector|1|0|Application Metrics|Tier>Server|URL Status.
-Graph|URL Accessible|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|URL Accessible. 1=Connected (Statuc Code 200), 0=Disconnected (Otherwise).

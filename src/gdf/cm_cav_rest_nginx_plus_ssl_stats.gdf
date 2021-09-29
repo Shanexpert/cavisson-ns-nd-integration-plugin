@@ -1,6 +1,0 @@
-info|3.1|1|-|-|-1|-1|-
-
-Group|NGINX Plus SSL Stats|10999|vector|3|0|NGINX Metrics|Tier>Server>Instance|NGINX Plus SSL Stats provides metrics related to ssl handshake and sessions.
-Graph|NGINX SSL Successful Handshake|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of successful SSL handshakes.
-Graph|NGINX SSL Failed Handshake|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of failed SSL handshakes. 
-Graph|NGINX SSL Reuse Sessions|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of session reuses during SSL handshake.

@@ -1,9 +1,0 @@
-# --- GDF Version History ---
-# # 1.0 - Initial version
-#
-Info|3.1|1|-|-|-1|-1|-
-#
-Group|HTTP Request By Location|10554|vector|3|0|UX Metrics|Channel>Location|NetVision http request by Location
-Graph|HTTP Requests/Min|1|scalar|rate|-|CumToPM|0|A|-1|-1|NA|NA|Number of http requests recieved per minute
-Graph|HTTP Error/Min|2|scalar|rate|-|CumToPM|0|A|-1|-1|NA|NA|Number of http error per minute
-Graph|HTTP Response Time|3|scalar|times|-|-|0|A|-1|-1|NA|NA|http response time in seconds

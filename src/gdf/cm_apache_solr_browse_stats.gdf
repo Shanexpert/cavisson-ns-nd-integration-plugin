@@ -1,3 +1,0 @@
-Info|3.1|1|-|-|-1|-1|-
-Group|Apache Solr Browse Stats|10712|vector|1|0|Apache Solr|Tier>Server>Instance|Apache Solr Browse Stats.
-Graph|Browse Records|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of browse records.

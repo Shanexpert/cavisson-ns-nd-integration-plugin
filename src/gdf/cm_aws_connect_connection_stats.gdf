@@ -1,9 +1,0 @@
-# --- GDF Version History ---
-
-# -- 1.0 -- Initial version ---
-
-Info|3.1|1|-|-|-1|-1|-
-
-Group|AWS Connect Connection Stats|14069|vector|1|0|AWS Metrics|AccountName>Region>InstanceID>Participant>StreamType>TypeOfConnection|Amazon Connect enables customer service representatives to respond to phone calls or chat inquiries from end customers
-
-Graph|AWS Connect Packet Loss Rate (%)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The ratio of packet loss for calls in the instance.

@@ -1,9 +1,0 @@
-Info|3.1|1|-|-|-1|-1|-
-Group|Kubernetes ApiServer Resource Stats|14147|vector|4|0|Kubernetes Control Plane Metrics|Cluster>MasterNode>Scope>Resource>Version>Verb|Kubernetes ApiServer Resource Stats
-
-Graph|ApiServer Request/Sec |1|scalar|sample_4B|-|CumToPS|0|NA|-1|-1|H|NA|Request per sec for each verb, versionand resource.
-Graph|ApiServer Response Time(ms) |2|scalar|sample_4B_1000|-|None|0|NA|-1|-1|H|NA|This graphs show the response latency distribution in milliseconds for each verb, version, resource.
-Graph|ApiServer Active Long Running Requests |3|scalar|sample_4B|-|None|0|NA|-1|-1|H|NA|Count of all active long-running apiserver requests which are point out by verb, version and resource.
-Graph|ApiServer Request Terminations/Sec |4|scalar|sample_4B|-|CumToPS|0|NA|-1|-1|H|NA|Number of requests terminated (sec) by ApiServer
-
-

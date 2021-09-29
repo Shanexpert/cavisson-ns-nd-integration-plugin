@@ -1,8 +1,0 @@
-# --- GDF Version History ---
-#  1.0 - Initial version
-
-Info|3.1|1|-|-|-1|-1|-
-Group|Redis Slave Stats|10467|vector|3|0|Redis Metrics|Tier>Server>Instance|Redis Slave stats monitor measure health of redis slaves nodes. It provides metrics related to logging system RDB, master-slave communication.
-Graph|Redis DataBase Operations/Sec|1|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of changes to the database per second since last dump operation to database.
-Graph|Redis Slave Last IO Elapsed Time (Sec)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Time in seconds since last interaction between slave and master.
-Graph|Redis Link Down Time (Sec)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Time in seconds of the link between master and slave being down.

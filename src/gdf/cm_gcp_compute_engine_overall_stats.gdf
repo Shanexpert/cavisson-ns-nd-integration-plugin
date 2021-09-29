@@ -1,7 +1,0 @@
-
-Info|3.1|1|-|-|-1|-1|-
-Group|GCP Compute Engine Stats|10952|vector|4|0|GCP Metrics|Tier>Server>ProjectID|GCP Compute Engine stats.
-Graph|GCP Host Count|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of Running Hosts.
-Graph|GCP Available Zones|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of Available Zones.
-Graph|GCP Disk Size (GB)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Size of Disk in Gigabytes.
-Graph|GCP Snapshot Count|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of Snapshots.

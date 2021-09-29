@@ -1,3 +1,0 @@
-Info|3.1|1|-|-|-1|-1|-
-Group|Consul Member Stats|10617|vector|1|0|Application Metrics|Tier>Server>Member|Consul Member Stats provides metrics related to members of the cluster.
-Graph|Consul Leader Last Contact Time (ms)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Time since the leader was last able to contact the follower nodes when checking its leader lease in milliseconds. 

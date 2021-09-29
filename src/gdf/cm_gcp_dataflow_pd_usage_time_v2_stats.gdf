@@ -1,4 +1,0 @@
-Info|3.1|1|-|-|-1|-1|-
-
-Group|GCP Dataflow PD Usage Stats V2|11308|vector|1|0|GCP Metrics|ProjectID>Region>Job|GCP Dataflow persistent disk usage stats provided metrics related to dataflow components.
-Graph|Dataflow Job Total PD Usage Time (GB Sec)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total GB seconds for all persistent disk used by all workers associated with this Dataflow job.

@@ -1,8 +1,0 @@
-Info|3.1|1|-|-|-1|-1|-
-Group|Apache Spark Executor Stats|10908|vector|5|0|Apache Spark Metrics|Tier>Server|Apache Spark Server Stats related to executors.
-
-Graph|Spark Total Executors|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of total executors running on Spark server.
-Graph|Spark Pending Executors To Remove|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of pending executors to remove from Spark server.
-Graph|Spark Executors To Add|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of executors to add on Spark server.
-Graph|Spark Maximum Needed Executors|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of maximum needed executors on Spark server.
-Graph|Spark Target Executors|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of target executors on Spark server.

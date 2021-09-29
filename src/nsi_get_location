@@ -1,9 +1,0 @@
-#!/bin/sh
-
-if [ $# -ne 1 ];then
-	echo "Usage: nsi_get_locations TR-NUM"
-	exit 1
-fi
-
-awk -F, '{print $9}' $NS_WDIR/logs/TR$1/reports/csv/src.csv | sort -u
-exit 0

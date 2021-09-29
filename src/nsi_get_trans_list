@@ -1,3 +1,0 @@
-#!/bin/sh
-PROFILE="$1/$2"
-grep  -w ns_start_transaction $NS_WDIR/workspace/$PROFILE/cavisson/*/*/scripts/*/*.c | cut -d'"' -f2 | sort | uniq

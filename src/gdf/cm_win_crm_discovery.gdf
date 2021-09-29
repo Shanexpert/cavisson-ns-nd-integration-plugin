@@ -1,5 +1,0 @@
-Info|3.1|1|-|-|-1|-1|-
-Group|Windows CRM Discovery|14272|vector|3|0|CRM Metrics|Tier>Server|Windows CRM Discovery Stats.
-Graph|Failed Discovery Service Requests|1|scalar|sample|-|-|0|NA|-1|-1|H|NA|Number of requests to the Microsoft Dynamics CRM Discovery service that are unsuccessful for any reason
-Graph|Successful Discovery Service Requests|2|scalar|sample|-|-|0|NA|-1|-1|H|NA|Number of requests to the Microsoft Dynamics CRM Discovery service that completed successfully.
-Graph|Total Discovery Service Requests|3|scalar|sample|-|-|0|NA|-1|-1|H|NA|Total number of requests (successful and unsuccessful) received by the Microsoft Dynamics CRM Discovery service.

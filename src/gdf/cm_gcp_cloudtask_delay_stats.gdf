@@ -1,5 +1,0 @@
-# 1.0 - Initial version
-Info|3.1|1|-|-|-1|-1|-
-
-Group|GCP Cloud Task Delay|11604|vector|1|0|GCP Metrics|ProjectID|It provides number of delay tasks between each scheduled attempt time and actual attempt time.
-Graph|GCP Cloud Task Attempt Delay (ms)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Delay between each scheduled attempt time and actual attempt time in milliseconds.

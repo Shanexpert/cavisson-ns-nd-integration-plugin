@@ -1,3 +1,0 @@
-#!/bin/sh
-
-$NS_WDIR/bin/nsi_har_to_page_speed_ex $1 $2 2>/dev/null

@@ -1,7 +1,0 @@
-# --- GDF Version History ---
-# # 1.0 - Initial version
-
-Info|3.1|1|-|-|-1|-1|-
-Group|CartDb Order Stats|10760|vector|2|0|Application Metrics|Tier>Server|Cart order Stats provides total orders and orders submitted per minute.
-Graph|Total Submitted Orders|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total orders submitted.
-Graph|Total Orders Submitted/Min|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total orders submitted per minute.

@@ -1,8 +1,0 @@
-# --- GDF Version History ---
-# # 1.0 - Initial version
-#
-Info|3.1|1|-|-|-1|-1|-
-#
-Group|EventStats By Segments|10660|vector|1|0|UX Metrics|Channel>Segments>Events|NetVision EventStats By Segments
-#
-Graph|Events/Min|1|scalar|rate|-|CumToPM|0|A|-1|-1|NA|NA|Number of events received per minute

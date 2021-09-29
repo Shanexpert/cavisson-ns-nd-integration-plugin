@@ -1,7 +1,0 @@
-# --- GDF Version History ---
-# 1.0 - Initial version
-
-Info|3.1|1|-|-|-1|-1|-
-
-Group|GCP BigQuery JobType Slot Stats V2|11423|vector|1|0|GCP Metrics|ProjectID>JobType|BigQuery jobtype slot stats provides metrics related to slots as per bigquery job type.
-Graph|BigQuery Slots Allocated For Project And JobType|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of bigquery slots currently allocated for the project and job type.

@@ -1,5 +1,0 @@
-Info|3.1|1|-|-|-1|-1|-
-Group|GKE CBP Service StatsV2|10755|vector|3|0|Application Metrics|Tier>Server>Instance>Channel>Response|GKE CBP Service Stats provides information about the request with multiple responses channel wise.
-Graph|GKE CBP Access Log Response/Sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of responses per second for the request at same response index.
-Graph|GKE CBP Access Log Average Response Time(ms)|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Response time per response for all request.
-Graph|GKE CBP Access Log Total Responses|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of responses for the request at same response index.

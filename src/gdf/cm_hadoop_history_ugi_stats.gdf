@@ -1,8 +1,0 @@
-Info|3.1|1|-|-|-1|-1|-
-Group|History Server DataNode UGI Stats|10788|vector|6|0|Application Metrics|Tier>Server>Instance|History Server DataNode UGI (User and Group Information) Stats provides metrics related to  user and group information activities of a DataNode group.
-Graph|Groups Average Time (ms)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average time for group resolution in milliseconds.
-Graph|Groups Resolutions|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of group resolutions.
-Graph|Login Failure Average Time (ms)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average time for failed kerberos logins in milliseconds.
-Graph|Login Failure/Sec|4|scalar|sample|-|CumToPS|0|NA|-1|-1|NA|NA|Number of failed kerberos logins per second.
-Graph|Login Success Average Time (ms)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average time for successful kerberos logins in milliseconds.
-Graph|Login Success/Sec|6|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of successful kerberos logins per second.

@@ -1,7 +1,0 @@
-Info|1.0|1|-|-|-1|-1|-
-
-Group|CPU Stats|10437|vector|4|0|Container Metrics|Tier>Server>Pod>Container|Container CPU Stats
-Graph|User CPU Time/Sec|1|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Time spent by tasks of the container in user mode per second.
-Graph|System CPU Time/Sec|2|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Time spent by tasks of the container in kernel mode per second.
-Graph|Throttled Count/Sec|3|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Number of times, task in this container has been throttled per second.
-Graph|Throttled Time (Sec)|4|scalar|cumulative|-|-|0|NA|-1|-1|NA|NA|Total time (in seconds) for which tasks in container have been throttled.

@@ -1,4 +1,0 @@
-Info|3.1|1|-|-|-1|-1|-
-Group|WinRT Application Stats|10675|vector|2|0|Windows RT Metrics|Tier>Server>Application|Windows RT application stats monitor metrics related to running application on windows platform.
-Graph|WinRT Private Commit Usage (MB)|1|scalar|sample|-|-|0|NA|-1|-1|H|NA|The application's usage of private commit in Mega bytes.
-Graph|WinRT Total Commit Usage (MB)|2|scalar|sample|-|-|0|NA|-1|-1|H|NA|The application total cap for private plus shared commit in Mega bytes.

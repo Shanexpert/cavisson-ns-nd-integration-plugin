@@ -1,6 +1,0 @@
-info|3.1|1|-|-|-1|-1|-
-
-Group|AWS DynamoDB Operation Stats|11039|vector|2|0|AWS Metrics|AccountName>Region>TableName>Operation|AWS DynamoDB Operation Stats provides metrics related to DynamoDB. 
-
-Graph|AWS Successful Request Latency (ms)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The successful requests to DynamoDB or Amazon DynamoDB Streams during the specified time period.
-Graph|AWS Returned Item Count|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of items returned by Query or Scan operations during the specified time period.

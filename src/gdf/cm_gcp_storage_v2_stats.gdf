@@ -1,8 +1,0 @@
-Info|3.1|1|-|-|-1|-1|-
-
-Group|GCP Storage Bucket Stats V2|11306|vector|4|0|GCP Metrics|ProjectID>Location>BucketName>BucketOperation>OperationResponse|GCP Storage bucket stats provided metrics related to client requests on cloud storage bucket.
-
-Graph|Storage bytes received over the network (KB)|1|scalar|sample|-|-|0|D|-1|-1|NA|DIV(G1,1024)|Count of bytes received over the network in kilobyte, grouped by the API method (Write, Read ,Delete etc.) and response code.
-Graph|Storage bytes sent over the network (KB)|2|scalar|sample|-|-|0|D|-1|-1|NA|DIV(G2,1024)|Count of bytes sent over the network in kilobyte, grouped by the API method (Write, Read ,Delete etc.) and response code.
-Graph|Storage Request Counts/Sec|3|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of API calls, grouped by the API method (Write, Read ,Delete etc.) and response code per second.
-Graph|Storage Bucket Size (KB)|4|scalar|sample|-|-|0|D|-1|-1|NA|DIV(G4,1024)|Total size of all objects in the bucket.

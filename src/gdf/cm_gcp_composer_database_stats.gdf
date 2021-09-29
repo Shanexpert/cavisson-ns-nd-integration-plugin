@@ -1,5 +1,0 @@
-Info|3.1|1|-|-|-1|-1|-
-
-Group|GCP Composer Database Health|14035|vector|1|0|GCP Metrics|ProjectID>LocationID>EnvironmentName>EnvironmentType>ImageVersion|It provides metrics related to database health stats for composer.
-
-Graph|GCP Composer Database Healthy|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Healthiness of composer airflow database . 1-healthy database, 0-unhealthy database.

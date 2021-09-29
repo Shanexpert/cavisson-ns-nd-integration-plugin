@@ -1,8 +1,0 @@
-Info|3.1|1|-|-|-1|-1|-
-Group|GigaSpace Cache Stats|10564|vector|6|0|Application Metrics|Tier>Server>Cache|GigaSpace Cache statistics
-Graph|GigaSpace Cache Utilities Department|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of gigaspace cache utility department. 
-Graph|GigaSpace Cache Utilities Division|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of gigaspace cache utility division.
-Graph|GigaSpace Cache Utilities MajorClasses|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of gigaspace cache utility majorClasses. 
-Graph|GigaSpace Cache Utilities Sku|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of gigaspace cache utility sku.
-Graph|GigaSpace Cache Utilities Style|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of gigaspace cache utility style.
-Graph|GigaSpace Cache Utilities SubClasses|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of gigaspace cache utility subClasses.

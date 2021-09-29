@@ -1,7 +1,0 @@
-# --- GDF Version History ---
-# 1.0 - Initial version
-
-Info|3.1|1|-|-|-1|-1|-
-Group|Camel Server Message Count Stats|10501|vector|1|0|Camel Metrics|Tier>Server>Instance>Message Type|Camel message count stats.
-
-Graph|Messages/Min|1|scalar|rate|-|CumToPM|0|NA|-1|-1|NA|NA|Number of messages which are responce by camel server.

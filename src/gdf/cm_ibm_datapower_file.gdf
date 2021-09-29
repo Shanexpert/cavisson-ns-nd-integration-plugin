@@ -1,8 +1,0 @@
-Info|3.1|1|-|-|-1|-1|-
-Group|IBM DataPower File Stats|10861|vector|6|0|Application Metrics|Tier>Server>Domain|IBM DataPower File Statistics.
-Graph|IBM DataPower Free Encrypted Space (MB)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Free, or unused and available, encrypted storage space on the device. All files placed in encrypted storage are automatically encrypted for security by the device.
-Graph|IBM DataPower Free Internal Space (MB)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Free, or unused and available, internal storage space on the device. The device uses internal storage for import, export, firmware upgrades and debug captures.
-Graph|IBM DataPower Free Temporary Space (MB)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Free, or unused and available, temporary storage space on the device. The device uses temporary storage for processing, logging and debugging.
-Graph|IBM DataPower Total Encrypted Space (MB)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total encrypted storage space on the device (the maximum capacity). All files placed in encrypted storage are automatically encrypted for security by the device.
-Graph|IBM DataPower Total Temporary Space (MB)|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total temporary storage space on the device. The device uses temporary storage for processing, logging and debugging.
-Graph|IBM DataPower Total Internal Space (MB)|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total internal storage space on the device. The device uses internal storage for import, export, firmware upgrades and debug captures.

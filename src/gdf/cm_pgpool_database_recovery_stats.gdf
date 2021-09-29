@@ -1,8 +1,0 @@
-# --- GDF Version History ---
-# -- 1.0 -- Initial version ---
-
-Info|3.1|1|-|-|-1|-1|-
-
-Group|Pgpool Database Recovery Status|10888|vector|1|0|Pgpool Metrics|Tier>Server>Database|Stats to show the recovery state of database - either true or false.
-
-Graph|Pgpool Recovery State|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|This Graph will show that any database is in recovery mode or not. 0 - not , 1 - yes.			

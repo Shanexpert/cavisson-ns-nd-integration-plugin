@@ -1,4 +1,0 @@
-Info|3.1|1|-|-|-1|-1|-
-Group|GKE Container Image Stats|10585|vector|2|0|Kubernetes Metrics|Tier>Server>NameSpace>Container|Monitor provides information related to container image pull operation failure.
-Graph|GKE Container Image Pull Failed|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Cumulative number of GKE container image pulled operations failed.
-Graph|GKE Container Image Pulled|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of GKE container image pulled.

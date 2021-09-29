@@ -1,6 +1,0 @@
-#---------GDFVersionHistory----------
-#1.0-Initial Version
-
-Info|3.1|1|-|-|-1|-1|-
-Group|Check Pattern Monitor|10797|vector|1|0|System Metrics|Tier>Server>Instance|Windows check pattern Monitor capture the metrics related to the pattern match in the file.
-Graph|Status|1|scalar|sample|-|-|0|NA|-1|-1|H|NA|Pattern match in a file.                                      

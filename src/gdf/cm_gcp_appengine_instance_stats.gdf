@@ -1,5 +1,0 @@
-# 1.0 - Initial version
-Info|3.1|1|-|-|-1|-1|-
-
-Group|GCP App Engine Instance Count|11595|vector|1|0|GCP Metrics|ProjectID>Zone>ModuleID>VersionID>State|It provide metric related to number of instance count exist.
-Graph|GCP App Engine Instance Count|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of instances that exist.

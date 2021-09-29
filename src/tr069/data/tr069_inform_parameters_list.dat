@@ -1,7 +1,0 @@
-InternetGatewayDevice.DeviceInfo.SpecVersion|string|yyyy
-InternetGatewayDevice.DeviceInfo.HardwareVersion|string|xxxx
-InternetGatewayDevice.DeviceInfo.SoftwareVersion|string|1.1.1.1
-InternetGatewayDevice.DeviceInfo.ProvisioningCode|string|00100A
-InternetGatewayDevice.ManagementServer.ConnectionRequestURL|string|http://127.0.1.1:8001/ConnectionRequest?command=cr&amp;sn=9999
-InternetGatewayDevice.ManagementServer.ParameterKey|string|zzzz
-InternetGatewayDevice.WANDevice.1.WANConnectionDevice.1.WANPPPConnection.1.ExternalIPAddress|string|172.0.0.1

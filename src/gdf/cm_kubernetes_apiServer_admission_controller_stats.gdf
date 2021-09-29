@@ -1,8 +1,0 @@
-Info|3.1|1|-|-|-1|-1|-
-
-Group|Kubernetes Admission Controller Stats|14144|vector|4|0|Kubernetes Control Plane Metrics|Cluster>MasterNode>Name>Operation>Type|Kubernetes Admission Controller Stats
-
-Graph|Admission Controller Total Request/Sec |1|scalar|rate_4B_1000|-|None|0|I|-1|-1|H|NA|Request successfully executed per second for admission controller , point out by name and broken out for each operation and API resource and type are validate or admit.
-Graph|Admission Controller Failed Request/Sec |2|scalar|rate_4B_1000|-|None|0|NA|-1|-1|H|NA|Request failed per second for admission controller , point out by name and broken out for each operation and API resource and type are validate or admit.
-Graph|Admission Controller Success Request/Sec |3|scalar|rate_4B_1000|-|None|0|NA|-1|-1|H|NA|Request successfully executed per second for admission controller , point out by name and broken out for each operation and API resource and type are validate or admit.
-Graph|Admission Controller Response Time(ms) |4|scalar|sample_4B_1000|-|None|0|NA|-1|-1|H|NA|Response Time(ms) for admission controller , point out by name and broken out for each operation and API resource and type are validate or admit.

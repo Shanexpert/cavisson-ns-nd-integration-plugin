@@ -1,9 +1,0 @@
-
-Info|3.1|1|-|-|-1|-1|-
-
-Group|GCP PubSub Overall|11539|vector|4|0|GCP Metrics|ProjectID|GCP PubSub overall monitor provides overall data related to pubsub topic and subscriptions.
-
-Graph|GCP Topic Count|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of Ttpic in pubsub.
-Graph|GCP Topic Message Size (Bytes)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Topic message size in pubsub in bytes.
-Graph|GCP Subscription Count|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of subscription in pubsub.
-Graph|GCP Send Message Operation count|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of send message operation in pubsub.

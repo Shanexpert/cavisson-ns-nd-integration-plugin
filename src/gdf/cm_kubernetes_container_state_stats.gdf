@@ -1,8 +1,0 @@
-# --- GDF Version History ---
-# 1.0 - Initial version
-
-Info|1.0|1|-|-|-1|-1|
-
-Group|Kubernetes Container State|14090|vector|2|0|Kubernetes Metrics|Cluster>NameSpace>Pod>Container|Provides metrics related to kubernetes container state.
-Graph|Kubernetes Restart Count|1|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|The number of times the container has been restarted.
-Graph|Kubernetes Ready|2|scalar|sample|-|NA|0|NA|-1|-1|NA|NA|Whether the containers readiness check succeeded with status.(0-false, 1-true).

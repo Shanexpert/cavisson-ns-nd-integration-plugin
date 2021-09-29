@@ -1,4 +1,0 @@
-Info|3.1|1|-|-|-1|-1|-
-Group|Windows CRM Sandbox Client|14268|vector|2|0|CRM Metrics|Tier>Server>Instance|Windows CRM Sandbox Client Stats.
-Graph|Execute failures (pct)|1|scalar|sample|-|-|0|NA|-1|-1|H|NA|Outgoing execution failure rate percentage.
-Graph|SDK failures (pct)|2|scalar|sample|-|-|0|NA|-1|-1|H|NA|Outgoing SDK Request failure rate percentage.

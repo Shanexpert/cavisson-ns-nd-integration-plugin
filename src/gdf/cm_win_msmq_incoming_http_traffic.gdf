@@ -1,9 +1,0 @@
-# --- GDF Version History ---
-# 1.0 - Initial version
-
-Info|3.1|1|-|-|-1|-1|-
-Group|Windows MSMQ Incoming HTTP Traffic Stats|10849|vector|4|0|MSMQ Metrics|Tier>Server|Windows MSMQ Incoming HTTP Traffic Stats provides information about incoming HTTP Message Queuing messages.
-Graph|MSMQ Incoming HTTP Bytes|1|scalar|sample|-|-|0|NA|-1|-1|L|NA|Total number of message bytes that arrived at the computer in the incoming HTTP connection.
-Graph|MSMQ Incoming HTTP Bytes/sec|2|scalar|sample|-|-|0|NA|-1|-1|L|NA|Rate at which message bytes are arriving at the computer in the incoming HTTP connection.
-Graph|MSMQ Incoming HTTP Messages|3|scalar|sample|-|-|0|NA|-1|-1|L|NA|Total number of HTTP Message Queuing messages that arrived at the computer.
-Graph|MSMQ Incoming HTTP Messages/sec|4|scalar|sample|-|-|0|NA|-1|-1|L|NA|Rate at which HTTP Message Queuing messages are arriving at the computer.

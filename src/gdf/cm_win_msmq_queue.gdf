@@ -1,9 +1,0 @@
-# --- GDF Version History ---
-# 1.0 - Initial version
-
-Info|3.1|1|-|-|-1|-1|-
-Group|Windows MSMQ Queue Stats|10845|vector|4|0|MSMQ Metrics|Tier>Server>Instance|Windows MSMQ Queue Stats provides information about message statistics for the selected Message Queuing queue
-Graph|MSMQ Messages in Queue|1|scalar|sample|-|-|0|NA|-1|-1|L|NA|Total number of Message Queuing messages that currently reside in the selected queue.
-Graph|MSMQ Messages in Journal Queue|2|scalar|sample|-|-|0|NA|-1|-1|L|NA|Total number of Message Queuing messages that currently reside in the selected journal.
-Graph|MSMQ Bytes in Queue|3|scalar|sample|-|-|0|NA|-1|-1|L|NA|Total number of bytes in all Message Queuing messages that currently reside in the selected queue.
-Graph|MSMQ Bytes in Journal Queue|4|scalar|sample|-|-|0|NA|-1|-1|L|NA|Total number of bytes in all Message Queuing messages that currently reside in the selected journal.

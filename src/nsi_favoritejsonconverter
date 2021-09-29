@@ -1,8 +1,0 @@
-
-#@version 1.0
-#@author  Sumit tyagi. 
-#@Description This Shell is used to Convert all .fav files (available at $NS_WDIR/webapps/.favorites/) into .json file 
-
-  java -cp $NS_WDIR/webapps/netstorm/WEB-INF/lib/netstorm_bean.jar:$NS_WDIR/webapps/netstorm/lib/commons-io-2.2.jar:$NS_WDIR/webapps/DashboardServer/WEB-INF/lib/gson-2.2.2.jar -DNS_WDIR=$NS_WDIR pac1.Bean.Favorite.Tools.FavoriteJsonConverter $*
-  exit $?
-

@@ -1,6 +1,0 @@
-Info|3.1|1|-|-|-1|-1|-
-Group|WinRT Wifi Stats|10689|vector|3|0|Windows RT Metrics|Tier>Server>ConnectionProfile|Windows RT Wifi stats monitor provide metrics related to the connected profile.
-Graph|WinRT Wifi Signal Strength|1|scalar|sample|-|-|0|NA|-1|-1|H|NA|The strength of wifi signal. It ranges from 0-5. The higher the value the higher the bandwidth.
-Graph|WinRT Wifi Access Level|2|scalar|sample|-|-|0|NA|-1|-1|H|NA|The Wifi access level (0-Constrained Internet Access, 1-Internet Access, 2-Local Access, 3-None).
-Graph|WinRT Wifi Access State|3|scalar|sample|-|-|0|NA|-1|-1|H|NA|The state of Wifi network (0-Not Connected, 1-Connected).
-

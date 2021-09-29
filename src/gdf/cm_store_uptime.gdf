@@ -1,5 +1,0 @@
-Info|3.1|1|-|-|-1|-1|-
-
-Group|Store POS Uptime|10608|vector|1|0|System Metrics|Country>State>City>StoreName|Store Status
-
-Graph|Store POS Uptime(Minutes)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Uptime of POS device of store in Minutes.

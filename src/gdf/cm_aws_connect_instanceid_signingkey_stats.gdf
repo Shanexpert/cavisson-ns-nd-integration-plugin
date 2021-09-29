@@ -1,9 +1,0 @@
-# --- GDF Version History ---
-
-# -- 1.0 -- Initial version ---
-
-Info|3.1|1|-|-|-1|-1|-
-
-Group|AWS Connect InstanceId SigningKey Stats|14066|vector|1|0|AWS Metrics|AccountName>Region>InstanceId>SigningKeyId|Amazon Connect enables customer service representatives to respond to phone calls or chat inquiries from
-
-Graph|AWS Connect Public Signing Key Usage|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of times a contact flow security key was used to encrypt customer input in a contact flow.

@@ -1,4 +1,0 @@
-Info|3.1|1|-|-|-1|-1|-
-Group|Network Device Env Stats|10606|vector|2|0|System Metrics|Tier>Server>RestaurantId>Device>SubDevice|Network Env Stats
-Graph|Device Temperature(Celsius)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Temperature of the device in Celsius.
-Graph|Fan Status|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Shows device fan status 1 for Normal and 3 for Critical.

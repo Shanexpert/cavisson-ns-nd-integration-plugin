@@ -1,5 +1,0 @@
-Info|3.1|1|-|-|-1|-1|-
-Group|Network Device Health Stats|10607|vector|3|0|System Metrics|Tier>Server>RestaurantId>Device|Network Device Health Stats
-Graph|Uptime (Hours)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The time since the network management portion of the system was last re-initialized.
-Graph|CPU Utilization (pct)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The overall CPU busy percentage in the last 1 minute period. This object deprecates the object cpmCPUTotal1min and increases the value range to (0..100).
-Graph|Memory Utilization (pct)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The average utilization of memory on the active supervisor.

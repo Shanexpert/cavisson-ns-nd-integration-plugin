@@ -1,6 +1,0 @@
-# 1.0 - Initial version
-Info|3.1|1|-|-|-1|-1|-
-
-Group|GCP Compute Engine Packet Mirrored|11583|vector|2|0|GCP Metrics|ProjectID>Zone>InstanceId|Packet Mirroring clones the traffic of specified instances in Virtual Private Cloud (VPC) network and forwards it for examination.
-Graph|GCP Compute Engine Mirrored Bytes/Sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Count of mirrored bytes in per seconds.
-Graph|GCP Compute Engine Mirrored Packets/Sec|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Count of mirrored packets in per seconds.

@@ -1,7 +1,0 @@
-# --- GDF Version History ---
-# -- 1.0 -- Initial version ---
-
-Info|3.1|1|-|-|-1|-1|-
-
-Group|DB2 SQL Stats|10965|vector|1|0|DB2 Metrics|Tier>Server>DatabaseName|DB2 long running sql stats.
-Graph|DB2 Long Running SQL Count|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of long running sql queries.

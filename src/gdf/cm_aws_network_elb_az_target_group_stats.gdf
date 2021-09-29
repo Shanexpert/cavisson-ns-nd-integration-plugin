@@ -1,6 +1,0 @@
-info|3.1|1|-|-|-1|-1|-
-
-Group|AWS Network ELB AZ LoadB TargetG Stats|11386|vector|2|0|AWS Metrics|AccountName>Region>AvailabilityZone>LoadBalancer>TargetGroup| The load balancer distributes incoming traffic across multiple targets, such as Amazon EC2 instances
-
-Graph|AWS Network ELB Healthy Host|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of targets that are considered healthy.
-Graph|AWS Network ELB Unhealthy Host|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of targets that are considered unhealthy.

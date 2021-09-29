@@ -1,5 +1,0 @@
-Info|3.1|1|-|-|-1|-1|-
-Group|Windows CRM Async Service|14270|vector|3|0|CRM Metrics|Tier>Server>Instance|Windows CRM Asynchronous Service Stats.
-Graph|Items in memory (High)|1|scalar|sample|-|-|0|NA|-1|-1|H|NA|Maximum number of asynchronous operations to hold in memory for processing.
-Graph|Items in memory (Low)|2|scalar|sample|-|-|0|NA|-1|-1|H|NA|Threshold of asynchronous operations to trigger loading of additional operations.
-Graph|Threads in use|3|scalar|sample|-|-|0|NA|-1|-1|H|NA|Number of threads currently employed in the processing of asynchronous operations.

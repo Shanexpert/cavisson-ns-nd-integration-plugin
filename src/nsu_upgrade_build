@@ -1,8 +1,0 @@
-#!/bin/sh
-
-cd $NS_WDIR/upgrade/
-./$*
-
-#Setting the environment variable so as to put the conditional sleep in nsi_gui_tomcat_restart
-export UPGRADE_FROM_GUI=1
-exit 0

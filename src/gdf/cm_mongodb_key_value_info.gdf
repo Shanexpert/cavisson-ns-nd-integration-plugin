@@ -1,7 +1,0 @@
-# --- GDF Version History ---
-# -- 1.0 -- Initial version ---
-
-Info|3.1|1|-|-|-1|-1|-
-
-Group|MongoDB Key Value Info|10832|vector|1|0|MongoDB Metrics|Tier>Server>Database|Mongodb stats provides value of the perticular key.
-Graph|ONERA_CALL_ENABLED|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|ONERA_CALL_ENABLED description.

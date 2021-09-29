@@ -1,5 +1,0 @@
-Info|3.1|1|-|-|-1|-1|-
-
-Group|GCP Composer Task Instance|14039|vector|1|0|GCP Metrics|ProjectID>LocationID>EnvironmentName>State>ImageVersion|It provides metrics related to task instance stats for composer.
-
-Graph|GCP Composer Task Instance Count/Sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Overall task instances per second.

@@ -1,8 +1,0 @@
-# --- GDF Version History ---
-# 1.0 - Initial version
-
-Info|3.1|1|-|-|-1|-1|-
-Group|Windows LDAP Replication Failure|10939|vector|3|0|LDAP Metrics|Tier>Server>Controller>Instance|Windows LDAP Replication Failure provide information for replication failure of each domain controller.
-Graph|LDAP Replica Failure Count|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of replica links failing to replicate.
-Graph|LDAP Replica Occured Count|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of replication occured.
-Graph|LDAP Replica Failure (Pct)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Percentage of failures in relation to the total replica links on the domain controller.

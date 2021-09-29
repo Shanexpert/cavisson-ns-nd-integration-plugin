@@ -1,6 +1,0 @@
-Info|3.1|1|-|-|-1|-1|-
-
-Group|GCP Logging|14036|vector|2|0|GCP Metrics|ProjectID>Name>Destination|It provides metrics related to logging.
-
-Graph|GCP Logging Exported Log KB/sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of bytes in log entries that were exported per second.
-Graph|GCP Logging Exported Log Entries/Sec|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of log entries that were exported per second.

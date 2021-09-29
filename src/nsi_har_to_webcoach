@@ -1,3 +1,0 @@
-node $NS_WDIR/webapps/harviewer/pagescore/index.js $1 $2
-#node $NS_WDIR/bin/index.js $1 $2
-#node $NS_WDIR/bin/index.js /home/cavisson/controller_neha//logs/TR1055/20190129152207/rbu_logs/harp_files/P_index_html+NSAppliance-controller_neha-cavisson-TR1055-1-1+10.10.70.8-9019+2019-01-29+15-22-36+0_0_0_0_0_0_0_0_0.har /tmp/P_index_html+NSAppliance-controller_neha-cavisson-TR1055-1-1+10.10.70.8-9019+2019-01-29+15-22-36+0_0_0_0_0_0_0_0_0.json

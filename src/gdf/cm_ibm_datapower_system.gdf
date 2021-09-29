@@ -1,8 +1,0 @@
-Info|3.1|1|-|-|-1|-1|-
-Group|IBM DataPower System Stats|10863|vector|5|0|Application Metrics|Tier>Server>Domain>Task|IBM DataPower System Statistics.
-Graph|IBM DataPower CPU Utilization (Pct)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of CPU used by the task.
-Graph|IBM DataPower Open Files|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of open file handles. The file count increases when the appliance accepts new connections, or opens a file for reading. The count decreases when this file handle is closed. The file count helps to identify which tasks are contributing to high open file counts.
-Graph|IBM DataPower Task Load (Pct)|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of total load for the task during the measurement interval. A load above 90 indicates that the task is at or near load capacity. High load values are not necessarily indicative of a problem, provided that transaction latencies are not affected. Low load values mean that the task is looking for work, high load values mean that the task is doing work.
-Graph|IBM DataPower Memory Used (Pct)|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The percentage of memory used by this task. This ratio is relative to the amount of memory accessible to each task, rather than the memory accessible to the appliance as a whole. The cumulative task memory is not comparable to the memory usage as reported by the memory usage status provider.
-Graph|IBM DataPower Worklist|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The number of pending work items including internal communication in the queue for processing by the appliance. This number is for internal diagnostics and is not intended for purposes of capacity planning.
-

@@ -1,7 +1,0 @@
-Info|3.1|1|-|-|-1|-1|-
-Group|Windows CRM Authentication|14271|vector|5|0|CRM Metrics|Tier>Server|Windows CRM Authentication Stats.
-Graph|Authentication Failure claims in the last minute|1|scalar|sample|-|-|0|NA|-1|-1|H|NA|Total number of failed authentication requests processed per minute using claims. This counter measures the whole deployment including all organizations.
-Graph|ConfigDB Windows Authentication Failures in the last minute|2|scalar|sample|-|-|0|NA|-1|-1|H|NA|Number of unsuccessful authentication requests per minute that are processed by using Active Directory authentication credentials. This counter measures the entire Microsoft Dynamics CRM deployment including all organizations.
-Graph|CRM Post Authentication Failure in the last minute|3|scalar|sample|-|-|0|NA|-1|-1|H|NA|Number of unsuccessful authentication requests per minute that are processed by using Microsoft Dynamics CRM authentication credentials. This counter measures the entire deployment including all organizations.
-Graph|Passport Authentication failure in the last minute|4|scalar|sample|-|-|0|NA|-1|-1|H|NA|Number of failed authentication requests per minute that are processed by using Microsoft account authentication credentials. This counter measures the entire pn_crm_online deployment including all organizations.
-Graph|Windows Authentication Failure in the last minute|5|scalar|sample|-|-|0|NA|-1|-1|H|NA|Number of unsuccessful authentication requests per minute.

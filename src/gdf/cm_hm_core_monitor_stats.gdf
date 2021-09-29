@@ -1,6 +1,0 @@
-# --- GDF Version History ---
-# 1.0 - Initial version
-
-Group|Core Dump Stats|10671|vector|1|0|Cavisson Metrics|Tier>Server>Module|Provide Number of cores on the basis of their modules.
-
-Graph|Number of Cores|1|scalar|sample|-|-|0|AS|-1|-1|NA|NA|Number of cores on the basis of their modules 

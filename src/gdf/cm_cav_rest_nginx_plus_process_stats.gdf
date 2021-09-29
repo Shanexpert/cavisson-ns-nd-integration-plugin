@@ -1,4 +1,0 @@
-info|3.1|1|-|-|-1|-1|-
-
-Group|NGINX Plus Process Stats|10998|vector|1|0|NGINX Metrics|Tier>Server>Instance|Nginx Plus Processes Stats provides metrics related to accepted and drpped connections and ssl handshakes.
-Graph|NGINX Respawned Child Processes|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of abnormally terminated and respawned child processes.

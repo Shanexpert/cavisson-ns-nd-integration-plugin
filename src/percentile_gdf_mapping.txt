@@ -1,7 +1,0 @@
-#ResponseTimeGroupID,ResponseTimeGraphID,PercentileGroupID,PercentileGraphID
-#For BT Graphs
-10245,2,10793,1
- 
-#For IP Graphs
-10270,2,10794,1
-

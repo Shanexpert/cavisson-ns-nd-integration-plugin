@@ -1,1 +1,0 @@
-psql -X -A -U postgres -d demo -t -c "select server_name, server_ip, blade_name, build_version from allocation where machine_type = 'Generator' and team = '$1' and channel = '$2'"

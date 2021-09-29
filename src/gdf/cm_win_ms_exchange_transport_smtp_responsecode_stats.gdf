@@ -1,3 +1,0 @@
-Info|3.1|1|-|-|-1|-1|-
-Group|Windows MsExchange Transport SMTP Response Code Stats|10947|vector|1|0|Application Metrics|Tier>Server>Instance|Windows MsExchange Transport SMTP Response Code Stats.
-Graph|MsExchange Transport SMTP Responses By Code in the last hour|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total responses over the last hour instanced by combination of status code and enhanced status code. In Perfmon: SMTP responses by code in the last hour.

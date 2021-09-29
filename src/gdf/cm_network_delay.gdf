@@ -1,9 +1,0 @@
-#---------GDFVersionHistory---------
-#1.0-Initial Version
-#2.0-Change done for MatchLong_data and Long _long_data to double
-#3.0-Changes done for Dynamic data in Execution GUI
-#3.1-Use future 1 field of group line for Metric group name
-Info|3.1|1|-|-|-1|-1|-
-Group|Network Delay|10103|vector|2|0|Network Metrics|Tier>Server>Destination|Network Delay
-Graph|Network Delay (ms)|1|scalar|times|-|-|0|NA|-1|-1|H|NA|Network delay in milli-seconds
-Graph|Network Packet Loss (pct)|2|scalar|sample|-|-|0|NA|-1|-1|H|NA|Percentage of loss of packets while travelling from one node to another across the network

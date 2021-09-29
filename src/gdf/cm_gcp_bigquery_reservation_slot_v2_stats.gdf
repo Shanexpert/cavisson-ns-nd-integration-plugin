@@ -1,7 +1,0 @@
-# --- GDF Version History ---
-# 1.0 - Initial version
-
-Info|3.1|1|-|-|-1|-1|-
-
-Group|GCP BigQuery Reservation Slot Stats V2|11425|vector|1|0|GCP Metrics|ProjectID>Location>JobType>Reservation|BigQuery reservation slot stats provides metrics related to slots as per bigquery reservation.
-Graph|BigQuery Slots Allocated For Project And Reservation|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of bigQuery slots currently allocated for project based on reservation and job type.

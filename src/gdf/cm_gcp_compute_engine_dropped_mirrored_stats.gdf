@@ -1,5 +1,0 @@
-# 1.0 - Initial version
-Info|3.1|1|-|-|-1|-1|-
-
-Group|GCP Compute Engine Dropped Mirrored|11582|vector|1|0|GCP Metrics|ProjectID>Zone>InstanceId>Reason|It provide metrics related to compute engine dropped mirrored packets.
-Graph|GCP Compute Engine Dropped Mirrored Packets/Sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Count of dropped mirrored packets in per seconds.

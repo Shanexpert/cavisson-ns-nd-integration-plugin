@@ -1,5 +1,0 @@
-Info|3.1|1|-|-|-1|-1|-
-
-Group|GCP Firestore Rules Stats|11508|vector|1|0|GCP Metrics|ProjectID>Module>Version>RequestMethod>RuleSetLabel>Result|GCP Firestore rules stats provides metrics details related to security rules evaluation metrics.
-
-Graph|GCP Firestore Rule evaluations/Sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The number of Cloud Firestore Security Rule evaluations performed in response to write(create, update, delete) or read requests per second.

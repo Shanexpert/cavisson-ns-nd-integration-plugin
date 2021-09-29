@@ -1,5 +1,0 @@
-Info|3.1|1|-|-|-1|-1|-
-
-Group|Kubernetes Service Stats|10566|vector|2|0|Kubernetes Metrics|Tier>Server>NameSpace|Kubernetes Service Stats monitor service active and inactive counts.
-Graph|Active Services|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of active services.
-Graph|InActive Services|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of inactive services.

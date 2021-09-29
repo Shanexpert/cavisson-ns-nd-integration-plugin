@@ -1,3 +1,0 @@
-#FILE|TYPE|ISSUER|CN|DIV|ORG|LOC|STATE|COUNTRY|EMAIL|EXP|KEYSIZE
-client.pem|PEM|CA|Client|-|Cavisson Systems, Inc.|-|-|US|-|Aug  9 14:27:43 2019 GMT|1024
-server.pem|PEM|CA|Server|-|Cavisson Systems, Inc.|-|-|US|-|Aug  9 14:27:43 2019 GMT|1024

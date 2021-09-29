@@ -1,6 +1,0 @@
-Info|3.1|1|-|-|-1|-1|-
-
-Group|GCP Firebase DB API Stats|11500|vector|2|0|GCP Metrics|ProjectID>Location>TableName>OperationType|GCP Firebase database api stats provides metrics details related to api hits & db load metrics.
-
-Graph|GCP Firebase DB API Hits/Sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The number of hits against your database grouped by type per second.
-Graph|GCP Firebase DB Database Load (Pct)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Fraction of database load, grouped by type in percentage.

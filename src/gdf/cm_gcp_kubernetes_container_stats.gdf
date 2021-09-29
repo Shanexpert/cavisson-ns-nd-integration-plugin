@@ -1,9 +1,0 @@
-Info|3.1|1|-|-|-1|-1|-
-
-Group|GCP Kubernetes Container Stats|11579|vector|6|0|GCP Metrics|ProjectID>Location>ClusterName>ContainerName>NameSpace>Pod|It provides metrics related to kubernetes container engine.
-Graph|GCP Kubernetes Container Cpu Limit Utilization|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The fraction of the CPU limit that is currently in use on the instance. 
-Graph|GCP Kubernetes Container Cpu Request Utilization|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The fraction of the requested CPU that is currently in use on the instance.
-Graph|GCP Kubernetes Container CPU Usage Time/Sec|3|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Cumulative CPU usage on all cores used by the container in seconds.
-Graph|GCP Kubernetes Container Memory Limit Utilization|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The fraction of the memory limit that is currently in use on the instance. 
-Graph|GCP Kubernetes Container Memory Usage|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Memory usage in bytes.
-Graph|GCP Kubernetes Container Restart Count/Sec|6|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Number of times the container has restarted in seconds.

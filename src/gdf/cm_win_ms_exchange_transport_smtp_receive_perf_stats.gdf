@@ -1,4 +1,0 @@
-Info|3.1|1|-|-|-1|-1|-
-Group|Windows MsExchange Transport SMTP Receive Performance Stats|10945|vector|2|0|Application Metrics|Tier>Server>Instance|Windows MsExchange Transport SMTP Receive Performance Stats.
-Graph|MsExchange Transport Session Count (Executing SMTP Command)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Average time each SMTP command takes to execute, averaged over the last 10 minutes. In Perfmon: Count of sessions currently executing an SMTP command.
-Graph|MsExchange Transport Average Processing Time for SMTP command in the last 10 minutes (ms)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of sessions that are currently executing the given SMTP command. In Perfmon: Average time taken (in ms) to process an SMTP command in the last 10 minutes.

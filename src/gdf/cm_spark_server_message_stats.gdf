@@ -1,7 +1,0 @@
-# --- GDF Version History ---
-# 1.0 - Initial version
-
-Info|3.1|1|-|-|-1|-1|-
-Group|Availability Calculator Message Count Stats|10503|vector|1|0|Spark Metrics|Tier>Server>Instance>Message Type|Spark Server Message stats.
-
-Graph|Messages/Min|1|scalar|rate|-|CumToPM|0|NA|-1|-1|NA|NA|Number of messages which are consumed by spark server.

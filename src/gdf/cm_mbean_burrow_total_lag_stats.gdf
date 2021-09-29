@@ -1,8 +1,0 @@
-# --- GDF Version History ---
-# 1.0 - Initial version
-
-Info|3.1|1|-|-|-1|-1|-
-
-Group|Burrow Total Lag and Partition Stats|10831|vector|2|0|Kafka Metrics|Tier>Server>Cluster>Group|Burrow total lag and partition Stats monitors metrics related to consumer partition total lag and consumer group total partitions.
-Graph|Burrow Total Lag|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total lag of the partitions.
-Graph|Burrow Total Partitions/Sec|2|scalar|rate|-|CumToPS|0|NA|-1|-1|NA|NA|Total number of partitions per second.

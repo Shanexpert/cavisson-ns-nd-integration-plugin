@@ -1,6 +1,0 @@
-# --- GDF Version History ---
-# 1.0 - Initial version
-
-Info|3.1|1|-|-|-1|-1|-
-Group|Macys Batch Job Log Stats|10434|vector|1|0|Application Metrics|Tier>Server>Instance|Macys Batch Job Log Stats provide information of response stats time taken by batch job.
-Graph|Job Response Time (Sec)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Batch job response time in seconds.

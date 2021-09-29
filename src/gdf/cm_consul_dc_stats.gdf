@@ -1,7 +1,0 @@
-Info|3.1|1|-|-|-1|-1|-
-Group|Consul Datacenter Stats|10616|vector|5|0|Application Metrics|Tier>Server>Datacenter|Consul Datacenter Stats provides metrics related members of consul datacenters.
-Graph|Consul Active Members|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of active servers and clients in the datacenter.
-Graph|Consul Inactive Members|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of inactive servers and clients in the datacenter.
-Graph|Consul Failed Members|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of failed servers and clients in the datacenter.
-Graph|Consul Servers|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of servers in the datacenter.
-Graph|Consul Clients|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of clients in the datacenter.

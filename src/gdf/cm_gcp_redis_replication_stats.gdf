@@ -1,5 +1,0 @@
-Info|3.1|1|-|-|-1|-1|-
-
-Group|GCP Redis Node Stats|14031|vector|1|0|GCP Metrics|ProjectID>Region>InsatanceID>NodeID|It provides metrics related to memory store for redis.
-
-Graph|GCP Redis Node Role|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Returns a value indicating the node role 1 indicates master and 0 indicates replica. 

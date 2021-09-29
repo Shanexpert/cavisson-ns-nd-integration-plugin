@@ -1,9 +1,0 @@
-# --- GDF Version History ---
-# -- 1.0 -- Initial version ---
-
-Info|3.1|1|-|-|-1|-1|-
-
-Group|Pgpool Replication Slot Stats|10884|vector|2|0|Pgpool Metrics|Tier>Server>Slot|showing replication slot name used by this WAL receiver with the slot type and active status.
-
-Graph|Pgpool Slot Type|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Slot type , either physical(0) or logical(1).
-Graph|Pgpool Active State|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|State is active(1) or inactive(0).

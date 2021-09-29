@@ -1,8 +1,0 @@
-# 1.0 - Initial version
-Info|3.1|1|-|-|-1|-1|-
-
-Group|GCP Compute Engine Peak Disk|11585|vector|4|0|GCP Metrics|ProjectID>Zone>InstanceId>DeviceName|PeakDisk provide metric related to compute engine maximum disk.
-Graph|GCP Compute Engine Peak Disk Read Bytes|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Disk's maximum read throughput over a period of time specified by the user.
-Graph|GCP Compute Engine Peak Disk Read Operations Count|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Disk's maximum read requests count over a period of time specified by the user.
-Graph|GCP Compute Engine Peak Disk Write Bytes|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Disk's maximum write throughput over a period of time specified by the user. 
-Graph|GCP Compute Engine Peak Disk Write Operations Count|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Disk's maximum write requests count over a period of time specified by the user. 

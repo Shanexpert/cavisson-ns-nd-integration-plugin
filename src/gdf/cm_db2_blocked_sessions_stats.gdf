@@ -1,9 +1,0 @@
-# --- GDF Version History ---
-# -- 1.0 -- Initial version ---
-
-Info|3.1|1|-|-|-1|-1|-
-
-Group|DB2 Blocked Database Sessions Stats|10963|vector|3|0|DB2 Metrics|Tier>Server>DatabaseName|DB2 blocked database sessions stats.
-Graph|DB2 Total Blocked Sessions|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total blocked database sessions.
-Graph|DB2 Blocked Sessions By Append Write Mode|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total blocked sessions due to append write mode.
-Graph|DB2 Blocked Sessions By Replace Write Mode|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total blocked sessions due to replace write mode.

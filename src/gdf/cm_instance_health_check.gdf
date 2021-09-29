@@ -1,9 +1,0 @@
-# --- GDF Version History ---
-# # 1.0 - Initial version
-
-Info|3.1|1|-|-|-1|-1|-
-
-Group|Instance health check|10279|vector|2|0|Application Metrics|IntegrationPoint|Check health of an instance.
-
-Graph|Instance Port Status|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Status of the Instance.
-Graph|Instance Ping Response Time(msecs)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Response time (msecs) for Instance.

@@ -1,5 +1,0 @@
-Info|3.1|1|-|-|-1|-1|-
-Group|Windows CRM Async Service Organization|14266|vector|3|0|CRM Metrics|Tier>Server>Instance|Windows CRM Asynchronous Service Stats for an Organization.
-Graph|Active organizations|1|scalar|sample|-|-|0|NA|-1|-1|H|NA|Number of organizations that currently have a sandbox worker process active.
-Graph|Capacity per organization|2|scalar|sample|-|-|0|NA|-1|-1|H|NA|Number of asynchronous operations to be removed from the processing queue that are currently allocated to an organization.
-Graph|Total organizations|3|scalar|sample|-|-|0|NA|-1|-1|H|NA|Number of organizations being monitored for the entire Microsoft Dynamics CRM deployment.

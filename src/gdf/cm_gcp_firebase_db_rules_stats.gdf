@@ -1,5 +1,0 @@
-Info|3.1|1|-|-|-1|-1|-
-
-Group|GCP Firebase DB Rules Stats|11502|vector|1|0|GCP Metrics|ProjectID>Location>TableName>RequestMethod>RuleSetLabel>Result|GCP Firebase database rules stats provides metrics details related to db rules evaluation metrics.
-
-Graph|GCP Firebase DB Rule evaluations/Sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|The number of Firebase Realtime Database Security Rule evaluations performed in response to write and read requests per second.

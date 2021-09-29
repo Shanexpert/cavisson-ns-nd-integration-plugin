@@ -1,8 +1,0 @@
-# 1.0 - Initial version
-Info|3.1|1|-|-|-1|-1|-
-
-Group|GCP ML Latency|11610|vector|4|0|GCP Metrics|ProjectID>Region>ModelID>VersionID>PredictionType>LatencyType|It provides metrics related to prediction latency.
-Graph|GCP ML 5th Percentile Latency(ms)|1|scalar|sample|-|-|0|D|-1|-1|NA|DIV(G1,1000000)|5th Percentile Latency of a certain type in milliseconds.
-Graph|GCP ML 50th Percentile Latency(ms)|2|scalar|sample|-|-|0|D|-1|-1|NA|DIV(G2,1000000)|50th Percentile Latency of a certain type in milliseconds.
-Graph|GCP ML 95th Percentile Latency(ms)|3|scalar|sample|-|-|0|D|-1|-1|NA|DIV(G3,1000000)|95th Percentile Latency of a certain type in milliseconds.
-Graph|GCP ML 99th Percentile Latency(ms)|4|scalar|sample|-|-|0|D|-1|-1|NA|DIV(G4,1000000)|99th Percentile Latency of a certain type in milliseconds.

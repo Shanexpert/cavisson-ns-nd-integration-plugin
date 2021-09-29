@@ -1,8 +1,0 @@
-# --- GDF Version History ---
-# -- 1.0 -- Initial version ---
-
-Info|3.1|1|-|-|-1|-1|-
-
-Group|DB2 Database Availability Stats|10960|vector|2|0|DB2 Metrics|Tier>Server>DatabaseName|Databases availability stats.
-Graph|DB2 Status|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The current status of the database. Status are ACTIVE-1, QUIESCE_PEND-2, QUIESCED-3, ROLLFWD-4, ACTIVE_STANDBY-5 and STANDBY-6, Otherwise-0.
-Graph|DB2 Uptime (Sec)|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Database uptime in seconds.

@@ -1,8 +1,0 @@
-.iso.org.dod.internet.mgmt.mib-2.tcp.tcpActiveOpens.0
-.iso.org.dod.internet.mgmt.mib-2.tcp.tcpPassiveOpens.0
-.iso.org.dod.internet.mgmt.mib-2.tcp.tcpAttemptFails.0
-.iso.org.dod.internet.mgmt.mib-2.tcp.tcpEstabResets.0
-.iso.org.dod.internet.mgmt.mib-2.tcp.tcpCurrEstab.0
-.iso.org.dod.internet.mgmt.mib-2.tcp.tcpInSegs.0
-.iso.org.dod.internet.mgmt.mib-2.tcp.tcpOutSegs.0
-.iso.org.dod.internet.mgmt.mib-2.tcp.tcpRetransSegs.0

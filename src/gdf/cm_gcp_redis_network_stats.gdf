@@ -1,5 +1,0 @@
-Info|3.1|1|-|-|-1|-1|-
-
-Group|GCP Redis Network Stats|14030|vector|1|0|GCP Metrics|ProjectID>Region>InsatanceID>NodeID>Direction>Role|It provides metrics related to memory store for redis.
-
-Graph|GCP Redis Total Traffic|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Total number of bytes sent to/from redis (includes bytes from commands themselves, payload data, and delimiters).

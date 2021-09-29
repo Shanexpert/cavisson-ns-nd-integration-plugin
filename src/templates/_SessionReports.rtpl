@@ -1,9 +1,0 @@
-Name|Description|Creation Date|Modified Date
-_SessionReports|Template for Session reports as simple Report|10/15/07 15:42:51|10/15/07 15:43:18
-Report Description|Graph View Type|Graph Type|Granularity|X-Axis Time Format|Time|Time Selection Format|Start Date|Start Time|End Date|End Time|Report Info
-Sessions Started/Minute|Simple Graph|Normal|0|Elapsed|Total Run|Elapsed|NA|NA|NA|NA|RptGrpId=5:RptId=4:SSO=NA:SN=NA
-Sessions/Minute|Simple Graph|Normal|0|Elapsed|Total Run|Elapsed|NA|NA|NA|NA|RptGrpId=5:RptId=1:SSO=NA:SN=NA
-Successful Sessions/Minute|Simple Graph|Normal|0|Elapsed|Total Run|Elapsed|NA|NA|NA|NA|RptGrpId=5:RptId=2:SSO=NA:SN=NA
-Average Session Response Time (Seconds)|Simple Graph|Normal|0|Elapsed|Total Run|Elapsed|NA|NA|NA|NA|RptGrpId=5:RptId=3:SSO=NA:SN=NA
-Failed Sessions (All Errors)/Minute|Simple Graph|Normal|0|Elapsed|Total Run|Elapsed|NA|NA|NA|NA|RptGrpId=9:RptId=1:SSO=NA:SN=NA
-Failed Sessions/Minute|Simple Graph|Normal|0|Elapsed|Total Run|Elapsed|NA|NA|NA|NA|RptGrpId=9:RptId=2:SSO=1:SN=All

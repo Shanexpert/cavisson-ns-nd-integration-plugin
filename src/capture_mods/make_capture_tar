@@ -1,3 +1,0 @@
-#!/bin/sh
-
-tar cvfz capture.tar.gz docshell/base/nsDocShell.cpp netwerk/protocol/http/src/nsHttpChannel.cpp netwerk/protocol/http/src/nsHttpChannel.h netwerk/protocol/http/src/nsHttpTransaction.cpp netwerk/protocol/http/src/nsHttpTransaction.h embedding/browser/gtk/tests/TestGtkEmbed.cpp netwerk/protocol/http/src/nsHttpRequestHead.cpp netwerk/protocol/http/src/nsHttpRequestHead.h netwerk/protocol/http/src/nsHttpHeaderArray.cpp netwerk/protocol/http/src/nsHttpHeaderArray.h profile/src/nsProfileAccess.cpp capture_urls.c

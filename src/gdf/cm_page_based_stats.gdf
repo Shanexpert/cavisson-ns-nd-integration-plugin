@@ -1,8 +1,0 @@
-Info|3.1|1|-|-|-1|-1|-
-
-Group|Page Stats|108|vector|4|0|Test Metrics|Group>Page|Page timings
-
-Graph|Page Think Time (Sec)|1|scalar|times|-|-|0|AS|-1|-1|NA|NA|Page Think Time is the time provided between two pages to get executed, shown in Seconds.
-Graph|InLine Delay Time (Sec)|2|scalar|times|-|-|0|AS|-1|-1|NA|NA|InLine Delay Time is the delay time provided to between two inline URL, shown in Seconds.
-Graph|Block Time (Sec)|3|scalar|times|-|-|0|AS|-1|-1|NA|NA|Block Time check the difference in the timestamp, shown in Seconds.
-Graph|Connection Reuse Delay (Sec)|4|scalar|times|-|-|0|AS|-1|-1|NA|NA|Delay from the time connection Is available and next request is send on the connection. This is applicable to only InLine resources. In case, inline is scheduled some time later than connection is available, this time is the additional delay applied to reuse the connection.

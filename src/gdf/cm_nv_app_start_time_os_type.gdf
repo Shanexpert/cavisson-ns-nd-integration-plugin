@@ -1,8 +1,0 @@
-# --- GDF Version History ---
-# # 1.0 - Initial version
-#
-Info|3.1|1|-|-|-1|-1|-
-#
-Group|App Start Time OS|14213|vector|1|0|UX Metrics|Channel>OperatingSystem>Version|NetVision App Start OS
-#
-Graph|App Start Time|1|scalar|times|-|-|0|A|-1|-1|NA|NA|app start time in seconds

@@ -1,4 +1,0 @@
-Info|3.1|1|-|-|-1|-1|-
-Group|Taskscheduler Stats|10791|vector|1|0|Application Metrics|Tier>Server>TaskStatusID>TaskName|Task Scheduler status.
-Graph|Taskscheduler Task Status|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Status of the task (1 - task is executed, 0 - task is not executed)
-

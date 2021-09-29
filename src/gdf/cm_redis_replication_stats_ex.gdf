@@ -1,8 +1,0 @@
-# --- GDF Version History ---
-#  1.0 - Initial version
-
-Info|3.1|1|-|-|-1|-1|-
-Group|Redis Replication StatsEx|10919|vector|2|0|Redis Metrics|Tier>Server>Namespace>Pod>Slave|Redis server Replication stats monitor measure health of redis server. It provides metrics related to sync delayed and replay backlog.
-
-Graph|Redis Sync Delayed|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Redis sync delayed state. SyncDelay is 1= delay in syncing master to slave, 0 = no delay.
-Graph|Redis Replication Backlog (Pct)|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Replication BackLog in percentage with respect to master replication backlog.

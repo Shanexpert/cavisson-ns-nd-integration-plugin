@@ -1,7 +1,0 @@
-Info|3.1|1|-|-|-1|-1|-
-
-Group|GCP VPC Access Connector Stats|11527|vector|4|0|GCP Metrics|ProjectID>Location>ConnectorName|It provides metrics related to connector that can communicate with devices within a VPC.
-Graph|GCP VPC Access Connector Bytes Received/Sec|1|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Delta of bytes transferred by a VPC Access Connector.
-Graph|GCP VPC Access Connector Bytes Sent/Sec|2|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Delta of bytes sent by a VPC Access Connector.
-Graph|GCP VPC Access Connector Packet Received/Sec|3|scalar|rate|-|-|0|NA|-1|-1|NA|NA| Delta of packets received by a VPC Access Connector.
-Graph|GCP VPC Access Connector Packet Sent/Sec|4|scalar|rate|-|-|0|NA|-1|-1|NA|NA|Delta of packets sent by a VPC Access Connector.

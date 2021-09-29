@@ -1,8 +1,0 @@
-# --- GDF Version History ---
-# 1.0 - Initial version
-
-
-Info|3.1|1|-|-|-1|-1|-
-Group|SAP HANA Schema Memory|10814|vector|1|0|SAP Metrics|Tier>Server>Schema|It provides the CPU  metrics related to database based on queries.
-
-Graph|HANA Schema Memory (MB)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Display the Schema Memory in MB of database.

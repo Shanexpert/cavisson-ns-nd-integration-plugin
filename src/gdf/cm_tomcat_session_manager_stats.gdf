@@ -1,8 +1,0 @@
-# --- GDF Version History ---
-# 1.0 - Initial version
-
-Info|3.1|1|-|-|-1|-1|-
-
-Group|Tomcat Session Manager Stats|10347|vector|2|0|Tomcat Metrics|Tier>Server>Instance>Application|Tomcat Session Manager Stats monitors metrics related to HTTP sessions as requested by the associated web application.
-Graph|Tomcat Expired Sessions/Min|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of sessions expired per minute.
-Graph|Tomcat Sessions Created/Min|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of sessions created per minute.

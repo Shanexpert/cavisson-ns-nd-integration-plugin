@@ -1,7 +1,0 @@
-info|3.1|1|-|-|-1|-1|-
-
-Group|NGINX Plus Slab Slot Stats|11621|vector|4|0|NGINX Metrics|Tier>Server>SharedMemory>Slot|It provides metrics related to slab slots usage for nginx shared memory.
-Graph|NGINX Plus Slab Slot Used|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The current number of used memory slots.
-Graph|NGINX Plus Slab Slot Free|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The current number of free memory slots.
-Graph|NGINX Plus Slab Slot Requests|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of attempts to allocate memory of specified size.
-Graph|NGINX Plus Slab Slot Fails|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|The total number of unsuccessful attempts to allocate memory of specified size.

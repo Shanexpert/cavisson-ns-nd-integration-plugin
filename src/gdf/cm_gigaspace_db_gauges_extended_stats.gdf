@@ -1,9 +1,0 @@
-Info|3.1|1|-|-|-1|-1|-
-Group|GigaSpace Gauges Extended Stats|10565|vector|7|0|Application Metrics|Tier>Server>Instance|GigaSpace Gauges Extended statistics.
-Graph|GigaSpace FileStorage Usage (Pct)|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Gigaspace file storage usage percentage. 
-Graph|GigaSpace Batches In Queue|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Gigaspace number of batches in queue.
-Graph|GigaSpace Batche Executing|3|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Gigaspace number of executing in queue.
-Graph|GigaSpace CacheHitRate Offer|4|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Gigaspace number of executing in queue.
-Graph|GigaSpace SkuPriceSet|5|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Sku price set.
-Graph|GigaSpace Store|6|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Sku promo set.
-Graph|GigaSpace StoreGroupToStore|7|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Store group to store.

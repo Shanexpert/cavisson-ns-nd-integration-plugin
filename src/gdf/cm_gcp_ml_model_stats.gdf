@@ -1,6 +1,0 @@
-# 1.0 - Initial version
-Info|3.1|1|-|-|-1|-1|-
-
-Group|GCP ML Model|11606|vector|2|0|GCP Metrics|ProjectID>Region>ModelID>VersionID|ML(Machine Learning) Model provides metrics related to Replica.
-Graph|GCP ML Replica Count|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Number of active model replicas.
-Graph|GCP ML Replica Target|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Aspired number of active model replicas.

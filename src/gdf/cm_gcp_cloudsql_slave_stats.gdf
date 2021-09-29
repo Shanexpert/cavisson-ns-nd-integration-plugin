@@ -1,6 +1,0 @@
-Info|3.1|1|-|-|-1|-1|-
-
-Group|GCP Cloud SQL Slave Running Stats|11499|vector|2|0|GCP Metrics|ProjectID>Region>DatabaseID>State|GCP CloudSQL Slave running stats provides metrics details related to cloud sql slave io thread & sql thread metrics.
-
-Graph|CloudSql Slave IO Running|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Indicates whether the I/O thread for reading the master's binary log is running. Possible values are Yes, No and Connecting.
-Graph|CloudSql Slave SQL Running|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Indicates whether the SQL thread for reading the master's binary log is running. Possible values are Yes, No and Connecting.

@@ -1,8 +1,0 @@
-# --- GDF Version History ---
-# 1.0 - Initial version
-
-Info|3.1|1|-|-|-1|-1|-
-
-Group|GCP BigQuery Scanned Statement Stats|10974|vector|2|0|GCP Metrics|Tier>Server>ProjectID>Location>StatementType>Priority|BigQuery scanned statement stats provides metrics related to bigquery statement.
-Graph|BigQuery Statement Scanned Bytes|1|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Scanned bytes broken down by statement type.
-Graph|BigQuery Statement Scanned Bytes Billed|2|scalar|sample|-|-|0|NA|-1|-1|NA|NA|Scanned bytes billed broken down by statement type.

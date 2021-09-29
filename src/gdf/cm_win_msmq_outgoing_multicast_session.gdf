@@ -1,9 +1,0 @@
-# --- GDF Version History ---
-# 1.0 - Initial version
-
-Info|3.1|1|-|-|-1|-1|-
-Group|Windows MSMQ Outgoing Multicast Session Stats|10844|vector|4|0|MSMQ Metrics|Tier>Server>Instance|Windows MSMQ Outgoing Multicast Session Stats provides information about active outgoing multicast sessions.
-Graph|MSMQ Outgoing Multicast Bytes|1|scalar|sample|-|-|0|NA|-1|-1|L|NA|Total number of message bytes that were sent from the computer in the selected session.
-Graph|MSMQ Outgoing Multicast Bytes/sec|2|scalar|sample|-|-|0|NA|-1|-1|L|NA|Rate at which message bytes are being sent from the computer in the selected session.
-Graph|MSMQ Outgoing Multicast Messages|3|scalar|sample|-|-|0|NA|-1|-1|L|NA|Total number of Message Queuing messages that were sent from the computer in the selected session.
-Graph|MSMQ Outgoing Multicast Messages/sec|4|scalar|sample|-|-|0|NA|-1|-1|L|NA|Rate at which Message Queuing messages are being sent from the computer in the selected session.
