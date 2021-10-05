@@ -34,7 +34,7 @@ THE SOFTWARE.
 
    <groupId>io.jenkins.plugins</groupId>
    <artifactId>cavisson-ns-nd-integration</artifactId>
-    <version>{4.6.1.79}-SNAPSHOT</version>
+    <version>4.6.1.79-SNAPSHOT</version>
     <packaging>hpi</packaging>
 
     <name>NS-ND Integration Performance Publisher Plugin</name>
