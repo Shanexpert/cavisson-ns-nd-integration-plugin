@@ -1,6 +1,0 @@
-# informational; use java -jar sezpoz.jar to see authoritative contents
-com.cavisson.jenkins.NSNDIntegrationResultsPublisher#DESCRIPTOR
-com.cavisson.jenkins.NetDiagnosticsResultsPublisher#DESCRIPTOR
-com.cavisson.jenkins.NetStormBuilder$Descriptor
-com.cavisson.jenkins.NetStormResultsPublisher#DESCRIPTOR
-com.cavisson.jenkins.NetstormTestParameterDefinition$DescriptorImpl

@@ -1,2 +1,0 @@
-#Wed Oct 13 21:11:01 IST 2021
-constructor=nsIntegrationUri,nsUsername,nsPassword,ndIntegrationUri,ndUsername,ndPassword,base1StartTime,base1EndTime,base2StartTime,base2EndTime,base3StartTime,base3EndTime,checkProfilePath,criThreshold,warThreshold,failThreshold,timePeriod,curStartTimeAbsolute,curEndTimeAbsolute,curStartTimeElapsed,curEndTimeElapsed,phase,base1MSRName,base2MSRName,base3MSRName
