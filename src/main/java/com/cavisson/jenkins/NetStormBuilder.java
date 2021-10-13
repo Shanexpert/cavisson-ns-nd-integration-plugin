@@ -107,6 +107,7 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
         this.urlHeader = urlHeader;
         this.hiddenBox = hiddenBox;
         this.generateReport = generateReport;
+        
         logger.log(Level.INFO, "hiddenBox -"+this.hiddenBox+", testmode ="+testMode);
     }
 
@@ -276,6 +277,7 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
      String jobName = "";
      String automateScripts = "";
      String testsuiteName = "";
+     String dataDir = "";
       for(Object key : keyset)
       {
         Object value = envVarMap.get(key);
@@ -295,6 +297,16 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
        			netstormConnectionManger.setScenario(testsuite[2]);
        		} else
        		  netstormConnectionManger.setScenario(testsuiteName);
+       	}
+       	
+       	if(key.equals("Override DataDir")) {
+       		dataDir = (String)envVarMap.get(key);
+       		if(dataDir != null && !dataDir.equals(""))
+       		  netstormConnectionManger.setDataDir(dataDir);
+       		else if(key.equals("DataDir List"))  {
+       		  dataDir = (String)envVarMap.get(key);
+       		  netstormConnectionManger.setDataDir(dataDir);
+       		}
        	}
        			
        			

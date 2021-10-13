@@ -88,6 +88,7 @@ public class NetStormConnectionManager {
   private String emailIdTo = "";
   private String emailIdCc = "";
   private String emailIdBcc = "";
+  private String dataDir = "";
   private String err = "Authentication failure, please check whether username and password given correctly";
 
   private String pollURL;
@@ -301,6 +302,14 @@ public class NetStormConnectionManager {
 
   public void setEmailIdBcc(String emailIdBcc) {
 	  this.emailIdBcc = emailIdBcc;
+  }
+
+  public String getDataDir() {
+	  return dataDir;
+  }
+
+  public void setDataDir(String dataDir) {
+	  this.dataDir = dataDir;
   }
 
 private static void disableSslVerification() 
@@ -855,6 +864,12 @@ public JSONObject pullObjectsFromGit(){
         jsonRequest.put("EmailIdBcc", getEmailIdBcc());
       }
       
+     logger.log(Level.INFO, "getDataDir = " + getDataDir());
+      if(getDataDir() != null && !getDataDir().trim().equals(""))
+      {
+    	  logger.log(Level.INFO, "inside check");
+        jsonRequest.put("DataDir", getDataDir());
+      } 
       if(slaValueMap.size() > 0)
       {
         JSONArray  jsonArray = new JSONArray();
@@ -1303,6 +1318,7 @@ public JSONObject pullObjectsFromGit(){
 		  JSONObject jsonRequest =    makeRequestObject("START_TEST");
 		  consoleLogger.println("Starting Test ... ");
 
+                  logger.log(Level.INFO, "json object" + jsonRequest);
 		  try{
 			if(gitPull.equals("true")){
 			  logger.log(Level.INFO, "Going to pull from GIT...");
@@ -1657,6 +1673,8 @@ public JSONObject pullObjectsFromGit(){
 	  String zipFile = fp + "/TestSuiteReport.zip";
 
    	 FilePath  fz = new FilePath(fp.getChannel(), zipFile);
+   	 
+   	
    	   if(fz.exists()) {
  		   fz.delete();
  		   fz = new FilePath(fp.getChannel(), zipFile);
