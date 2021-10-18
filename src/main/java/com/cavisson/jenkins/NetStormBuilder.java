@@ -1,5 +1,6 @@
 package com.cavisson.jenkins;
 
+import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
@@ -76,9 +77,9 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
     private String urlHeader="";
     private String hiddenBox="";
     private final boolean generateReport;
+    Map<String, String> envVarMap = null;
 
 
-    @DataBoundConstructor
     public NetStormBuilder(String URLConnectionString, String username, String password, String project,
             String subProject, String scenario, String testMode, String baselineType, String pollInterval, String protocol,
             String repoIp, String repoPort, String repoPath, String repoUsername, String repoPassword, String profile,String script,String page,String advanceSett,String urlHeader,String hiddenBox,String gitPull, boolean generateReport) {
@@ -107,6 +108,40 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
         this.urlHeader = urlHeader;
         this.hiddenBox = hiddenBox;
         this.generateReport = generateReport;
+        
+        logger.log(Level.INFO, "hiddenBox -"+this.hiddenBox+", testmode ="+testMode);
+    }
+    
+    @DataBoundConstructor
+    public NetStormBuilder(String URLConnectionString, String username, String password, String project,
+            String subProject, String scenario, String testMode, String baselineType, String pollInterval, String protocol,
+            String repoIp, String repoPort, String repoPath, String repoUsername, String repoPassword, String profile,String script,String page,String advanceSett,String urlHeader,String hiddenBox,String gitPull, boolean generateReport, Map<String, String> envVarMap) {
+    	 logger.log(Level.INFO, "inside a constructor..............gitpull -"+gitPull);
+         logger.log(Level.INFO, "profile -"+profile+", advanceSett -"+advanceSett+", urlHeader -"+urlHeader+", hiddenBox -"+hiddenBox);
+        this.project = project;
+        this.subProject = subProject;
+        this.scenario = scenario;
+        this.URLConnectionString = URLConnectionString;
+        this.username = username;
+ 	    this.password = StringUtils.isEmpty(password) ? null : Secret.fromString(password);
+        this.testMode = testMode;
+        this.baselineType = baselineType;
+        this.pollInterval = pollInterval;
+        this.protocol = protocol;
+        this.repoIp = repoIp;
+        this.repoPort = repoPort;
+        this.repoPath = repoPath;
+        this.repoUsername = repoUsername;
+        this.repoPassword = repoPassword;
+        this.profile = profile;
+        this.gitPull = gitPull; 
+        this.script = script;
+        this.page = page;
+        this.advanceSett = advanceSett;
+        this.urlHeader = urlHeader;
+        this.hiddenBox = hiddenBox;
+        this.generateReport = generateReport;
+        this.envVarMap = envVarMap;
         
         logger.log(Level.INFO, "hiddenBox -"+this.hiddenBox+", testmode ="+testMode);
     }
@@ -264,20 +299,31 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
 	run.addAction(new NetStormStopAction(run));
 	Boolean fileUpload = false;
 
-   Map<String, String> envVarMap = run instanceof AbstractBuild ? ((AbstractBuild<?, ?>) run).getBuildVariables() : Collections.<String, String>emptyMap();
+	if(envVarMap == null)
+       envVarMap = run instanceof AbstractBuild ? ((AbstractBuild<?, ?>) run).getBuildVariables() : Collections.<String, String>emptyMap();
    PrintStream logg = taskListener.getLogger();
    
    NetStormConnectionManager netstormConnectionManger = new NetStormConnectionManager(URLConnectionString, username, password, project, subProject, scenario, testMode, baselineType, pollInterval,profile,hiddenBox,generateReport,gitPull);      
    StringBuffer errMsg = new StringBuffer();
    
+//   EnvVars envVarMap;
+//   if (run instanceof AbstractBuild) {
+//	   envVarMap = run.getEnvironment(taskListener);
+//	   envVarMap.overrideAll(((AbstractBuild<?,?>) run).getBuildVariables());
+//   } else {
+//	   envVarMap = new EnvVars();
+//	   
+//   }
+   logger.log(Level.INFO, "before if check" + envVarMap.size());
     @SuppressWarnings("rawtypes")
       Set keyset = envVarMap.keySet();
-    
+    logger.log(Level.INFO, "key set = " + keyset.size());
      String path = "";
      String jobName = "";
      String automateScripts = "";
      String testsuiteName = "";
      String dataDir = "";
+     String serverhost = "";
       for(Object key : keyset)
       {
         Object value = envVarMap.get(key);
@@ -286,8 +332,8 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
  	     path = (String)envVarMap.get(key);
        	}
        	
-       	
-       	if(key.equals("Testsuite Name")) {
+       	logger.log(Level.INFO, "keys loop = " + key);
+       	if(key.equals("Testsuite")) {
        		testsuiteName = (String)envVarMap.get(key);
        		logger.log(Level.INFO, "Test Suite Name = " + testsuiteName);
        		String[] testsuite = testsuiteName.split("/");
@@ -299,15 +345,23 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
        		  netstormConnectionManger.setScenario(testsuiteName);
        	}
        	
-       	if(key.equals("Override DataDir")) {
-       		dataDir = (String)envVarMap.get(key);
-       		if(dataDir != null && !dataDir.equals(""))
-       		  netstormConnectionManger.setDataDir(dataDir);
-       		else if(key.equals("DataDir List"))  {
-       		  dataDir = (String)envVarMap.get(key);
-       		  netstormConnectionManger.setDataDir(dataDir);
-       		}
-       	}
+       	if(key.equals("DataDirectory")) {
+       	logger.log(Level.INFO, "data dir = " + (String)envVarMap.get(key));
+      	  dataDir = (String)envVarMap.get(key);
+      	  netstormConnectionManger.setDataDir(dataDir);
+        }
+
+        if(key.equals("Override DataDir")) {
+          dataDir = (String)envVarMap.get(key);
+          if(!dataDir.equals(""))
+        	 netstormConnectionManger.setDataDir(dataDir);
+        }
+        
+        if(key.equals("Server_Host")) {
+            serverhost = (String)envVarMap.get(key);
+          	 netstormConnectionManger.setServerHost(serverhost);
+          }
+          
        			
        			
         if(value instanceof String)
@@ -316,6 +370,7 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
            
            logger.log(Level.INFO, "env value = " + envValue);
            
+           netstormConnectionManger.addSLAValue("1" , "2");
            if(envValue.startsWith("NS_SESSION"))
            {
              String temp [] = envValue.split("_");
@@ -369,6 +424,7 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
         	   String temp [] = envValue.split("_");
         	   if(temp.length > 4)
         		   netstormConnectionManger.setRampUpDuration(temp[4]);
+        	   logg.println("Ramp up duration .........."+temp[4]);
            }
 
            else if(envValue.startsWith("EMAIL_IDS_TO")) {
