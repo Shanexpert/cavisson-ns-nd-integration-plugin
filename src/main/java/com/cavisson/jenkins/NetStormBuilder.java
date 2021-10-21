@@ -78,6 +78,7 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
     private String hiddenBox="";
     private final boolean generateReport;
     Map<String, String> envVarMap = null;
+    private boolean doNotWaitForTestCompletion = false;
 
 
     public NetStormBuilder(String URLConnectionString, String username, String password, String project,
@@ -115,7 +116,7 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
     @DataBoundConstructor
     public NetStormBuilder(String URLConnectionString, String username, String password, String project,
             String subProject, String scenario, String testMode, String baselineType, String pollInterval, String protocol,
-            String repoIp, String repoPort, String repoPath, String repoUsername, String repoPassword, String profile,String script,String page,String advanceSett,String urlHeader,String hiddenBox,String gitPull, boolean generateReport, Map<String, String> envVarMap) {
+            String repoIp, String repoPort, String repoPath, String repoUsername, String repoPassword, String profile,String script,String page,String advanceSett,String urlHeader,String hiddenBox,String gitPull, boolean generateReport, Map<String, String> envVarMap, boolean doNotWaitForTestCompletion) {
     	 logger.log(Level.INFO, "inside a constructor..............gitpull -"+gitPull);
          logger.log(Level.INFO, "profile -"+profile+", advanceSett -"+advanceSett+", urlHeader -"+urlHeader+", hiddenBox -"+hiddenBox);
         this.project = project;
@@ -142,8 +143,9 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
         this.hiddenBox = hiddenBox;
         this.generateReport = generateReport;
         this.envVarMap = envVarMap;
+        this.doNotWaitForTestCompletion = doNotWaitForTestCompletion;
         
-        logger.log(Level.INFO, "hiddenBox -"+this.hiddenBox+", testmode ="+testMode);
+        logger.log(Level.INFO, "hiddenBox -"+this.hiddenBox+", testmode ="+testMode + ", doNotWaitForTestCompletion = " + doNotWaitForTestCompletion);
     }
 
     public NetStormBuilder(String URLConnectionString, String username, String password, String project,
@@ -293,6 +295,20 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
 	public boolean isGenerateReport() {
 		return generateReport;
 	}
+	
+	public boolean isDoNotWaitForTestCompletion() {
+		return doNotWaitForTestCompletion;
+	}
+
+	public void setDoNotWaitForTestCompletion(boolean doNotWaitForTestCompletion) {
+		this.doNotWaitForTestCompletion = doNotWaitForTestCompletion;
+	}
+	
+
+	public Map<String, String> getEnvVarMap() {
+		return envVarMap;
+	}
+
 
 @Override
   public void perform(Run<?, ?> run, FilePath fp, Launcher lnchr, TaskListener taskListener) throws InterruptedException, IOException {
@@ -303,7 +319,7 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
        envVarMap = run instanceof AbstractBuild ? ((AbstractBuild<?, ?>) run).getBuildVariables() : Collections.<String, String>emptyMap();
    PrintStream logg = taskListener.getLogger();
    
-   NetStormConnectionManager netstormConnectionManger = new NetStormConnectionManager(URLConnectionString, username, password, project, subProject, scenario, testMode, baselineType, pollInterval,profile,hiddenBox,generateReport,gitPull);      
+   NetStormConnectionManager netstormConnectionManger = new NetStormConnectionManager(URLConnectionString, username, password, project, subProject, scenario, testMode, baselineType, pollInterval,profile,hiddenBox,generateReport, doNotWaitForTestCompletion, gitPull);      
    StringBuffer errMsg = new StringBuffer();
    
 //   EnvVars envVarMap;
@@ -497,6 +513,14 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
       
       boolean status = (Boolean )result.get("STATUS");
       
+      if(doNotWaitForTestCompletion == true) {
+    	  if(result.get("TESTRUN") != null && !result.get("TESTRUN").toString().trim().equals("")) {
+    	   logg.println("Test Run Number - " + result.get("TESTRUN"));
+    	   run.setDisplayName((String)result.get("TESTRUN"));
+    	   run.setResult(Result.SUCCESS);
+    	  }
+    	  return;
+      }
       logg.println("Test Run Status - " + status);
       
       if(result.get("TESTRUN") != null && !result.get("TESTRUN").toString().trim().equals(""))

@@ -108,6 +108,7 @@ public class NetStormConnectionManager {
   private String hiddenBox = "";
   private int timeout = -1;
   private boolean generateReport = true;
+  private boolean doNotWaitforTestCompletion = false;
   
   
   private HashMap<String,String> slaValueMap =  new HashMap<String,String> ();
@@ -312,6 +313,14 @@ public class NetStormConnectionManager {
 	  this.dataDir = dataDir;
   }
 
+  public boolean isDoNotWaitforTestCompletion() {
+	  return doNotWaitforTestCompletion;
+  }
+
+  public void setDoNotWaitforTestCompletion(boolean doNotWaitforTestCompletion) {
+	  this.doNotWaitforTestCompletion = doNotWaitforTestCompletion;
+  }
+
 private static void disableSslVerification() 
   {
     try
@@ -388,12 +397,12 @@ private static void disableSslVerification()
     this.timeout = timeout;
   }
 
-  public NetStormConnectionManager(String URLConnectionString, String username, Secret password, String project, String subProject, String scenario, String testMode, String baselineType, String pollInterval, String profile,String hiddenBox, boolean generateReport, String... gitPull)
+  public NetStormConnectionManager(String URLConnectionString, String username, Secret password, String project, String subProject, String scenario, String testMode, String baselineType, String pollInterval, String profile,String hiddenBox, boolean generateReport, boolean doNotWaitforTestCompletion, String... gitPull)
   {
     logger.log(Level.INFO, "NetstormConnectionManger constructor called with parameters with username:{0}, project:{2}, subProject:{3}, scenario:{4}, baselineTR:{5}", new Object[]{username, project, subProject, scenario, baselineType});
     logger.log(Level.INFO, "Gitpull - ",gitPull.length);
     logger.log(Level.INFO, "profile - ",profile);
-    logger.log(Level.INFO, "NetStormConnectionManager: profile - ",hiddenBox);
+    logger.log(Level.INFO, "NetStormConnectionManager: profile - ",hiddenBox + ", doNotWaitForTestCompletio = " + doNotWaitforTestCompletion);
     this.URLConnectionString = URLConnectionString;
     this.username = username;
     this.project = project;
@@ -405,9 +414,9 @@ private static void disableSslVerification()
     this.pollInterval = Long.parseLong(pollInterval);
     this.profile = profile;
     this.hiddenBox = hiddenBox;
-//    this.gitPull = gitPull;
     this.gitPull = (gitPull.length > 0) ? gitPull[0] : "false";
     this.generateReport = generateReport;
+    this.doNotWaitforTestCompletion = doNotWaitforTestCompletion;
   }
   
   /**
@@ -1371,7 +1380,7 @@ public JSONObject pullObjectsFromGit(){
 				  throw new RuntimeException("Failed : HTTP error code : "+ conn.getResponseCode());
 			  }
 
-			  consoleLogger.println("Test is Started Successfully. Now waiting for Test to End ...");
+			  //consoleLogger.println("Test is Started Successfully. Now waiting for Test to End ...");
 
 			  BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
 			  setResult(br.readLine());
@@ -1424,7 +1433,10 @@ public JSONObject pullObjectsFromGit(){
 			  if(this.jkRule != null) {
 				  createCheckRuleFile(str);
 			  }
-			  logger.log(Level.INFO, "Test is Ended. Now checking the server response.");
+			  
+			  if(doNotWaitforTestCompletion == false)
+			    logger.log(Level.INFO, "Test is Ended. Now checking the server response.");
+			  
 			  parseTestResponseData(jsonResponse, resultMap, consoleLogger);
 
 		  }	
@@ -1796,7 +1808,7 @@ public JSONObject pullObjectsFromGit(){
   public void parseTestResponseData(JSONObject jsonResponse, HashMap resultMap, PrintStream consoleLogger) {
     try {
       
-      consoleLogger.println("Processing Server Response ....");
+      //consoleLogger.println("Processing Server Response ....");
       
       if(jsonResponse != null) {
 	boolean status = false;
@@ -1813,7 +1825,7 @@ public JSONObject pullObjectsFromGit(){
 	if(jsonResponse.get(JSONKeys.REPORT_STATUS.getValue()) != null) {
 
 	  String repotStatus = (String)(jsonResponse.get(JSONKeys.REPORT_STATUS.getValue()));
-	  consoleLogger.println(repotStatus); 
+	 // consoleLogger.println(repotStatus); 
 	}
 
 	if(jsonResponse.get(JSONKeys.TEST_RUN.getValue()) != null) {
@@ -1824,7 +1836,6 @@ public JSONObject pullObjectsFromGit(){
 	  if(testMode.equals("T"))
 	    resultMap.put("TEST_CYCLE_NUMBER", testCycleNum);
 
-	  consoleLogger.println("Test is executed successfully.");
 	  if(jsonResponse.containsKey("ENV_NAME"))
 	  { 
 	    String envNames = "";
@@ -1839,8 +1850,10 @@ public JSONObject pullObjectsFromGit(){
 	    }
 
 	    resultMap.put("ENV_NAME", envNames);
-	  }       
-	  consoleLogger.println("Test is executed successfully.");
+	  }   
+	  
+	  if(doNotWaitforTestCompletion == false)
+	    consoleLogger.println("Test is executed successfully.");
 	}
       }
     } catch (Exception ex) {
@@ -1921,6 +1934,12 @@ public JSONObject pullObjectsFromGit(){
         	  }
                   
         	  testCycleNum = pollResponse.getString("testCycleNumber");  
+        	  
+        	 if(doNotWaitforTestCompletion == true) {
+        		 if(testRun > 0) {
+        			 isTestRunning = false;
+        		 }
+        	 }
         	} catch (Exception e) {
         	  logger.log(Level.SEVERE, "Error in parsing polling response = " + pollResString, e);
         	}
@@ -1974,7 +1993,7 @@ public JSONObject pullObjectsFromGit(){
       {
       }
       
-      consoleLogger.println("TestRun is stopped. Now checking the server state.");
+     // consoleLogger.println("TestRun is stopped. Now checking the server state.");
       
     } catch (Exception e) {
       logger.log(Level.SEVERE, "Error in polling running testRun.", e);

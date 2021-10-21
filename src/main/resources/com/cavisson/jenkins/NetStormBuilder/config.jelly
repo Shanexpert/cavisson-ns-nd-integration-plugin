@@ -101,6 +101,9 @@
  <f:entry title="Generate HTML report for configured checkprofile in testsuite">
     <f:checkbox id="generateReport" field="generateReport" checked="${instance.generateReport}" default="true"/>
   </f:entry>
+  <f:entry title="Do Not Wait For Test Completion">
+    <f:checkbox id="doNotWaitForTestCompletion" field="doNotWaitForTestCompletion" checked="${instance.doNotWaitForTestCompletion}" default="false"/><i class = "fa fa-question" style="color:blue;cursor:pointer;margin-left:4px;" title="If you enable this option, Jenkins will initiate the test on NetStorm and display the test cycle and test run number in the console output log and stop the job."></i>
+  </f:entry>
 </f:section>
 
 <f:section>
