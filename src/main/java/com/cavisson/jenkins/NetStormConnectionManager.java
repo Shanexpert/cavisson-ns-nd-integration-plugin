@@ -1327,7 +1327,7 @@ public JSONObject pullObjectsFromGit(){
 		  JSONObject jsonRequest =    makeRequestObject("START_TEST");
 		  consoleLogger.println("Starting Test ... ");
 
-                  logger.log(Level.INFO, "json object" + jsonRequest);
+                 // logger.log(Level.INFO, "json object" + jsonRequest);
 		  try{
 			if(gitPull.equals("true")){
 			  logger.log(Level.INFO, "Going to pull from GIT...");
@@ -1385,7 +1385,7 @@ public JSONObject pullObjectsFromGit(){
 			  BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
 			  setResult(br.readLine());
 
-			  logger.log(Level.INFO, "RESPONSE for metric startNetstormTest  -> " + this.result.toString());
+			//  logger.log(Level.INFO, "RESPONSE for metric startNetstormTest  -> " + this.result.toString());
 			  jsonResponse = (JSONObject) JSONSerializer.toJSON(this.result);
 
 			  /*Getting scenario name from server.*/

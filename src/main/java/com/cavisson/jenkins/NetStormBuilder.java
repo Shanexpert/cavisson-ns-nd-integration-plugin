@@ -79,6 +79,24 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
     private final boolean generateReport;
     Map<String, String> envVarMap = null;
     private boolean doNotWaitForTestCompletion = false;
+    private String totalusers = "";
+    private String rampUpSec = "";
+    private String rampupmin = "";
+    private String rampuphour = "";
+    private String duration = "";
+    private String serverhost = "";
+    private String sla = "";
+    private String testName = "";
+    private String scriptPath = "";
+    private String rampupDuration = "";
+    private String emailid = "";
+    private String emailidCC = "";
+    private String emailidBcc = "";
+    private String testsuite = "";
+    private String dataDir = "";
+    private String checkRuleFileUpload = "";
+    private boolean fileUpload = false;
+    NetStormConnectionManager netstormConnectionManger = null;
 
 
     public NetStormBuilder(String URLConnectionString, String username, String password, String project,
@@ -113,7 +131,7 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
         logger.log(Level.INFO, "hiddenBox -"+this.hiddenBox+", testmode ="+testMode);
     }
     
-    @DataBoundConstructor
+    
     public NetStormBuilder(String URLConnectionString, String username, String password, String project,
             String subProject, String scenario, String testMode, String baselineType, String pollInterval, String protocol,
             String repoIp, String repoPort, String repoPath, String repoUsername, String repoPassword, String profile,String script,String page,String advanceSett,String urlHeader,String hiddenBox,String gitPull, boolean generateReport, Map<String, String> envVarMap, boolean doNotWaitForTestCompletion) {
@@ -144,6 +162,59 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
         this.generateReport = generateReport;
         this.envVarMap = envVarMap;
         this.doNotWaitForTestCompletion = doNotWaitForTestCompletion;
+        
+        logger.log(Level.INFO, "hiddenBox -"+this.hiddenBox+", testmode ="+testMode + ", doNotWaitForTestCompletion = " + doNotWaitForTestCompletion);
+    }
+
+    @DataBoundConstructor
+    public NetStormBuilder(String URLConnectionString, String username, String password, String project,
+            String subProject, String scenario, String testMode, String baselineType, String pollInterval, String protocol,
+            String repoIp, String repoPort, String repoPath, String repoUsername, String repoPassword, String profile,
+            String script,String page,String advanceSett,String urlHeader,String hiddenBox,String gitPull, boolean generateReport, boolean doNotWaitForTestCompletion,
+            String totalusers, String rampUpSec, String rampupmin,String rampuphour, String duration, String serverhost, 
+            String sla, String testName, String scriptPath, String  rampupDuration, String emailid, String emailidCC, String emailidBcc, String testsuite, String dataDir, String checkRuleFileUpload) {
+        this.project = project;
+        this.subProject = subProject;
+        this.scenario = scenario;
+        this.URLConnectionString = URLConnectionString;
+        this.username = username;
+ 	    this.password = StringUtils.isEmpty(password) ? null : Secret.fromString(password);
+        this.testMode = testMode;
+        this.baselineType = baselineType;
+        this.pollInterval = pollInterval;
+        this.protocol = protocol;
+        this.repoIp = repoIp;
+        this.repoPort = repoPort;
+        this.repoPath = repoPath;
+        this.repoUsername = repoUsername;
+        this.repoPassword = repoPassword;
+        this.profile = profile;
+        this.gitPull = gitPull; 
+        this.script = script;
+        this.page = page;
+        this.advanceSett = advanceSett;
+        this.urlHeader = urlHeader;
+        this.hiddenBox = hiddenBox;
+        this.generateReport = generateReport;
+        this.doNotWaitForTestCompletion = doNotWaitForTestCompletion;
+        this.totalusers = totalusers;
+        this.rampUpSec = rampUpSec;
+        this.rampupmin = rampupmin;
+        this.rampuphour = rampuphour;
+        this.duration = duration;
+        this.serverhost = serverhost;
+        this.sla = sla;
+        this.testName = testName;
+        this.scriptPath = scriptPath;
+        this.rampupDuration = rampupDuration;
+        this.emailid = emailid;
+        this.emailidCC = emailidCC;
+        this.emailidBcc = emailidBcc;
+        this.testsuite = testsuite;
+        this.dataDir = dataDir;
+        this.checkRuleFileUpload = checkRuleFileUpload;
+        
+        this.setParametersValue();
         
         logger.log(Level.INFO, "hiddenBox -"+this.hiddenBox+", testmode ="+testMode + ", doNotWaitForTestCompletion = " + doNotWaitForTestCompletion);
     }
@@ -310,16 +381,175 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
 	}
 
 
+public String getTotalusers() {
+		return totalusers;
+	}
+
+
+	public void setTotalusers(String totalusers) {
+		this.totalusers = totalusers;
+	}
+
+
+	public String getRampupsec() {
+		return rampUpSec;
+	}
+
+
+	public void setRampupsec(String rampupsec) {
+		this.rampUpSec = rampupsec;
+	}
+
+
+	public String getRampupmin() {
+		return rampupmin;
+	}
+
+
+	public void setRampupmin(String rampupmin) {
+		this.rampupmin = rampupmin;
+	}
+
+
+	public String getRampuphour() {
+		return rampuphour;
+	}
+
+
+	public void setRampuphour(String rampuphour) {
+		this.rampuphour = rampuphour;
+	}
+
+
+	public String getDuration() {
+		return duration;
+	}
+
+
+	public void setDuration(String duration) {
+		this.duration = duration;
+	}
+
+
+	public String getServerhost() {
+		return serverhost;
+	}
+
+
+	public void setServerhost(String serverhost) {
+		this.serverhost = serverhost;
+	}
+
+
+	public String getSla() {
+		return sla;
+	}
+
+
+	public void setSla(String sla) {
+		this.sla = sla;
+	}
+
+
+	public String getTestName() {
+		return testName;
+	}
+
+
+	public void setTestName(String testName) {
+		this.testName = testName;
+	}
+
+
+	public String getScriptPath() {
+		return scriptPath;
+	}
+
+
+	public void setScriptPath(String scriptPath) {
+		this.scriptPath = scriptPath;
+	}
+
+
+	public String getRampupDuration() {
+		return rampupDuration;
+	}
+
+
+	public void setRampupDuration(String rampupDuration) {
+		this.rampupDuration = rampupDuration;
+	}
+
+
+	public String getEmailidTo() {
+		return emailid;
+	}
+
+
+	public void setEmailidTo(String emailidTo) {
+		this.emailid = emailidTo;
+	}
+
+
+	public String getEmailIdCC() {
+		return emailidCC;
+	}
+
+
+	public void setEmailIdCC(String emailIdCC) {
+		this.emailidCC = emailIdCC;
+	}
+
+
+	public String getEmailIdBcc() {
+		return emailidBcc;
+	}
+
+
+	public void setEmailIdBcc(String emailIdBcc) {
+		this.emailidBcc = emailIdBcc;
+	}
+
+
+	public String getTestsuite() {
+		return testsuite;
+	}
+
+
+	public void setTestsuite(String testsuite) {
+		this.testsuite = testsuite;
+	}
+
+
+	public String getDataDir() {
+		return dataDir;
+	}
+
+
+	public void setDataDir(String dataDir) {
+		this.dataDir = dataDir;
+	}
+
+
+	public String getCheckRuleFileUpload() {
+		return checkRuleFileUpload;
+	}
+
+
+	public void setCheckRuleFileUpload(String checkRuleFileUpload) {
+		this.checkRuleFileUpload = checkRuleFileUpload;
+	}
+
+
 @Override
   public void perform(Run<?, ?> run, FilePath fp, Launcher lnchr, TaskListener taskListener) throws InterruptedException, IOException {
 	run.addAction(new NetStormStopAction(run));
-	Boolean fileUpload = false;
+	
 
 	if(envVarMap == null)
        envVarMap = run instanceof AbstractBuild ? ((AbstractBuild<?, ?>) run).getBuildVariables() : Collections.<String, String>emptyMap();
    PrintStream logg = taskListener.getLogger();
    
-   NetStormConnectionManager netstormConnectionManger = new NetStormConnectionManager(URLConnectionString, username, password, project, subProject, scenario, testMode, baselineType, pollInterval,profile,hiddenBox,generateReport, doNotWaitForTestCompletion, gitPull);      
    StringBuffer errMsg = new StringBuffer();
    
 //   EnvVars envVarMap;
@@ -340,8 +570,13 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
      String testsuiteName = "";
      String dataDir = "";
      String serverhost = "";
+    // NetStormConnectionManager netstormConnectionManger = null;
+     if(keyset.size() > 0) {
+       netstormConnectionManger = new NetStormConnectionManager(URLConnectionString, username, password, project, subProject, scenario, testMode, baselineType, pollInterval,profile,hiddenBox,generateReport, doNotWaitForTestCompletion, gitPull);      
+     }
       for(Object key : keyset)
       {
+    	  
         Object value = envVarMap.get(key);
        	
        	if(key.equals("JENKINS_HOME")) {
@@ -466,7 +701,8 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
         }
       }
       
-      netstormConnectionManger.setAutoScript(automateScripts);
+      if(!automateScripts.isEmpty())
+        netstormConnectionManger.setAutoScript(automateScripts);
      
       if(testMode == null)
       {
@@ -592,6 +828,125 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
    
    
   }  
+
+public void setParametersValue() {
+	try {
+		
+	    netstormConnectionManger = new NetStormConnectionManager(URLConnectionString, username, password, project, subProject, scenario, testMode, baselineType, pollInterval,profile,hiddenBox,generateReport, doNotWaitForTestCompletion, gitPull);      
+		if(testsuite != null && !testsuite.isEmpty()) {
+       		logger.log(Level.INFO, "Test Suite Name = " + testsuite);
+       		String[] testsuites = testsuite.split("/");
+       		if(testsuites.length == 3) {
+       			netstormConnectionManger.setProject(testsuites[0]);
+       			netstormConnectionManger.setSubProject(testsuites[1]);
+       			netstormConnectionManger.setScenario(testsuites[2]);
+       		} else
+       		  netstormConnectionManger.setScenario(testsuite);
+       	}
+       	
+       	if(dataDir != null && !dataDir.isEmpty()) {
+       	logger.log(Level.INFO, "data dir = " + dataDir);
+      	 
+      	  netstormConnectionManger.setDataDir(dataDir);
+        }
+       			
+           
+           netstormConnectionManger.addSLAValue("1" , "2");
+           if(duration != null && duration.startsWith("NS_SESSION"))
+           {
+             String temp [] = duration.split("_");
+             if(temp.length > 2)
+             {
+                netstormConnectionManger.setDuration(temp[2]);
+             }
+           }
+           
+           if(totalusers != null &&  totalusers.startsWith("NS_NUM_USERS"))
+           {
+             String temp [] = totalusers.split("_");
+             if(temp.length > 3)
+                netstormConnectionManger.setvUsers(temp[3]);
+           }  
+           
+           if(serverhost != null && serverhost.startsWith("NS_SERVER_HOST"))
+           {
+             String temp [] = serverhost.split("_");
+             if(temp.length > 3)
+                netstormConnectionManger.setServerHost(temp[3]);
+           }  
+           
+           if(sla != null && sla.startsWith("NS_SLA_CHANGE"))
+           {
+             String temp [] = sla.split("_");
+             if(temp.length > 3)
+                netstormConnectionManger.addSLAValue(temp[4] , temp [3] );
+           }
+           
+           if(rampUpSec != null && rampUpSec.startsWith("NS_RAMP_UP_SEC"))
+           {
+             String temp [] = rampUpSec.split("_");
+             if(temp.length > 4)
+                netstormConnectionManger.setRampUp(temp[4] + "_" + temp[3]);
+           }
+           
+           if(rampupmin != null && rampupmin.startsWith("NS_RAMP_UP_MIN")) {
+        	   String temp [] = rampupmin.split("_");
+               if(temp.length > 4)
+                  netstormConnectionManger.setRampUp(temp[4] + "_" + temp[3]);
+           }
+           
+           if (rampuphour != null && rampuphour.startsWith("NS_RAMP_UP_HR")) {
+        	   String temp [] = rampupmin.split("_");
+               if(temp.length > 4)
+                  netstormConnectionManger.setRampUp(temp[4] + "_" + temp[3]);
+           }
+           
+           if(testName != null && testName.startsWith("NS_TNAME"))
+           {
+             String tName = getSubString(testName, 2, "_");
+             if(!tName.equals(""))
+               netstormConnectionManger.settName(tName);
+           }
+           
+           if(scriptPath.startsWith("NS_AUTOSCRIPT"))
+           {
+        	   String temp [] = scriptPath.split("_", 3);
+        	   if(temp.length > 2)
+        	     netstormConnectionManger.setAutoScript(temp[2]);
+           }
+           
+           if(rampupDuration != null && rampupDuration.startsWith("NS_RAMP_UP_DURATION")){
+        	   String temp [] = rampupDuration.split("_");
+        	   if(temp.length > 4)
+        		   netstormConnectionManger.setRampUpDuration(temp[4]);
+           }
+
+           if(emailid != null && emailid.startsWith("EMAIL_IDS_TO")) {
+        	   String temp [] = emailid.split("_");
+        	   if(temp.length > 3)
+        		   netstormConnectionManger.setEmailIdTo(temp[3]);
+           }
+           
+           if(emailidCC != null && emailidCC.startsWith("EMAIL_IDS_CC")) {
+        	   String temp [] = emailidCC.split("_");
+        	   if(temp.length > 3)
+        		   netstormConnectionManger.setEmailIdCc(temp[3]);
+           }
+           
+           if(emailidBcc != null && emailidBcc.startsWith("EMAIL_IDS_BCC")) {
+        	   String temp [] = emailidBcc.split("_");
+        	   if(temp.length > 3)
+        		   netstormConnectionManger.setEmailIdBcc(temp[3]);
+           }
+           
+           if(checkRuleFileUpload.equalsIgnoreCase(fileName))
+           {
+             fileUpload = true;
+           }
+	} catch(Exception e) {
+
+	}
+}
   
 public void getGitConfigurationFromNS(){
 	  try{
