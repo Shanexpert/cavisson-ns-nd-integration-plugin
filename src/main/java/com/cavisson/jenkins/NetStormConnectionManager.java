@@ -109,6 +109,10 @@ public class NetStormConnectionManager {
   private int timeout = -1;
   private boolean generateReport = true;
   private boolean doNotWaitforTestCompletion = false;
+  List<String> testsuitelist = null;
+  HashMap<String, ParameterDTO> testsuiteParameterDTO = null;
+  private String job_id = "";
+  private String errMsg = "";
   
   
   private HashMap<String,String> slaValueMap =  new HashMap<String,String> ();
@@ -319,6 +323,22 @@ public class NetStormConnectionManager {
 
   public void setDoNotWaitforTestCompletion(boolean doNotWaitforTestCompletion) {
 	  this.doNotWaitforTestCompletion = doNotWaitforTestCompletion;
+  }
+
+  public List<String> getTestsuitelist() {
+	  return testsuitelist;
+  }
+
+  public void setTestsuitelist(List<String> testsuitelist) {
+	  this.testsuitelist = testsuitelist;
+  }
+
+  public HashMap<String, ParameterDTO> getTestsuiteParameterDTO() {
+	  return testsuiteParameterDTO;
+  }
+
+  public void setTestsuiteParameterDTO(HashMap<String, ParameterDTO> testsuiteParameterDTO) {
+	  this.testsuiteParameterDTO = testsuiteParameterDTO;
   }
 
 private static void disableSslVerification() 
@@ -894,6 +914,33 @@ public JSONObject pullObjectsFromGit(){
         jsonRequest.put("SLA_CHANGES", jsonArray);
       }
     }
+    else if(type.equals("START_MULTIPLE_TEST")) {
+    	JSONArray testsuiteArray = new JSONArray();
+		for(int i=0; i < testsuitelist.size(); i++) {
+			String prefix[] = testsuitelist.get(i).split("_");
+			if(prefix.length > 1) {
+				logger.log(Level.INFO, "parameter dto = " + testsuiteParameterDTO.get(prefix[0]));
+			 JSONObject obj = testsuiteParameterDTO.get(prefix[0]).testsuiteJson();
+			 obj.put("scenario", testsuitelist.get(i));
+			 obj.put("project", project);
+			 obj.put("subproject", subProject);
+			 obj.put("testmode", testMode);
+			 obj.put("scriptHeaders",hiddenBox);
+			 obj.put("baselineType", baselineType);
+			 testsuiteArray.add(obj);
+			}
+		}
+		
+		jsonRequest.put(JSONKeys.USERNAME.getValue(), username);
+	    jsonRequest.put(JSONKeys.PASSWORD.getValue(), password.getPlainText()); 
+	    jsonRequest.put(JSONKeys.URLCONNECTION.getValue(), URLConnectionString);
+		jsonRequest.put("scenario", testsuiteArray);
+		jsonRequest.put("workProfile",profile);
+	    jsonRequest.put("generateReport", Boolean.toString(generateReport));
+	    String uniqueID = UUID.randomUUID().toString();
+	    job_id = uniqueID;
+	    jsonRequest.put("JOB_ID", uniqueID);
+    }
     else if(type.equals("TEST_CONNECTION"))
     {
       jsonRequest.put(JSONKeys.USERNAME.getValue(), username);
@@ -1413,6 +1460,171 @@ public JSONObject pullObjectsFromGit(){
 
 			  if(testMode.equals("T"))
 			    consoleLogger.println("Test Cycle Number - "+testCycleNum);
+			 
+			  if(testRun == -1)
+			  {
+
+				  logger.log(Level.INFO, "Test is Failed .");
+				  if(!scenario.equals("") && scenario != null && !scenario.equals("---Select Scenarios ---")){
+        			  if(testMode.equals("N"))
+        				  consoleLogger.println("Test is either not started or failed due to some error in the scenario.");
+        			  else
+        				  consoleLogger.println("Test is either not started or failed due to some error in the scenario. The test suite execution ended with status 'NetStorm Fail'.");
+            	  }else{
+				  consoleLogger.println("Test is either not started or failed due to some reason");
+            	  }
+                  return resultMap;            
+			  }
+
+			  /** if check rule file is imported then call this method. */
+			  if(this.jkRule != null) {
+				  createCheckRuleFile(str);
+			  }
+			  
+			  if(doNotWaitforTestCompletion == false)
+			    logger.log(Level.INFO, "Test is Ended. Now checking the server response.");
+			  
+			  parseTestResponseData(jsonResponse, resultMap, consoleLogger);
+
+		  }	
+		  catch (MalformedURLException e) {
+			  logger.log(Level.SEVERE, "Unknown exception in establishing connection. MalformedURLException -", e);
+		  } catch (IOException e) {
+			  logger.log(Level.SEVERE, "Unknown exception in establishing connection. IOException -", e);
+		  } catch (Exception e) {
+			  logger.log(Level.SEVERE, "Unknown exception in establishing connection.", e);
+		  }
+
+	  }
+	  catch (Exception ex) 
+	  {
+		  logger.log(Level.SEVERE, "Exception in closing connection.", ex);
+		  return resultMap;
+	  }
+
+	  return resultMap;
+  }
+  
+  public HashMap startMultipleTest(StringBuffer errMsg , PrintStream consoleLogger)
+  {
+	  logger.log(Level.INFO, "startNetstormTest() called.");
+	  
+	  logger.log(Level.INFO, "startNetstormTest: hiddenBox -"+hiddenBox);
+
+	  this.consoleLogger = consoleLogger; 
+	  HashMap resultMap = new HashMap(); 
+	  resultMap.put("STATUS", false);
+
+	  try 
+	  {
+		  logger.log(Level.INFO, "Making connection to Netstorm with following request uri- " + URLConnectionString);
+		  consoleLogger.println("Making connection to Netstorm with following request uri- " + URLConnectionString);
+		  JSONObject jsonResponse =null;
+		  //      if (checkAndMakeConnection(URLConnectionString, servletName, errMsg))
+		  //      { 
+		  JSONObject jsonRequest = new JSONObject();
+
+			   jsonRequest = makeRequestObject("START_MULTIPLE_TEST");
+		  consoleLogger.println("Job Id = " + job_id);
+		  consoleLogger.println("Starting Test ... ");
+
+                 // logger.log(Level.INFO, "json object" + jsonRequest);
+		  try{
+			if(gitPull.equals("true")){
+			  logger.log(Level.INFO, "Going to pull from GIT...");
+			  consoleLogger.println("Starting Git pull ... ");
+			  JSONObject res = pullObjectsFromGit();
+//			  if(res != null && !res.isEmpty()){
+//				  logger.log(Level.INFO, "res -"+res);
+//			  }else{
+//	            consoleLogger.println("GIT Pull was unsuccessful.");
+//	          }
+			  if(res != null && !res.isEmpty()){
+	            	if(!res.get("ErrMsg").toString().equals("")){
+	            		logger.log(Level.INFO, "Err exists ...");
+	            		consoleLogger.println(res.get("ErrMsg").toString());
+	            	}else{
+	            		logger.log(Level.INFO, "No Err ...");
+	            		consoleLogger.println(res.get("msg").toString());
+	            	}
+	            }else{
+	            	consoleLogger.println("GIT Pull was unsuccessful.");
+	            }
+		  	}
+		  }catch(Exception ex){
+			  logger.log(Level.SEVERE, "Exception in pulling from Git -", ex);
+		  }
+
+		  try {
+			  URL url;
+			  String str =   getUrlString();//URLConnectionString.substring(0,URLConnectionString.lastIndexOf("/"));
+
+			  logger.log(Level.INFO, "this.jkRule- " + this.jkRule);    
+			  url = new URL(str+"/ProductUI/productSummary/jenkinsService/startMultipleTest");
+
+			  logger.log(Level.INFO, "startNetstormTest. method called. with arguments for metric  url"+  url);
+			  HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			  conn.setConnectTimeout(0);
+			  conn.setReadTimeout(0);
+			  conn.setRequestMethod("POST");
+			  conn.setRequestProperty("Accept", "application/json");
+
+			  String json =jsonRequest.toString();
+			  conn.setDoOutput(true);
+			  OutputStream os = conn.getOutputStream();
+			  os.write(json.getBytes());
+			  os.flush();
+
+			  if (conn.getResponseCode() != 200) {
+				  consoleLogger.println("Failed to Start Test with Error Code = " +  conn.getResponseCode());
+				  logger.log(Level.INFO, "Getting Error code = " + conn.getResponseCode());
+				  throw new RuntimeException("Failed : HTTP error code : "+ conn.getResponseCode());
+			  }
+
+			  //consoleLogger.println("Test is Started Successfully. Now waiting for Test to End ...");
+
+			  BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+			  setResult(br.readLine());
+
+			//  logger.log(Level.INFO, "RESPONSE for metric startNetstormTest  -> " + this.result.toString());
+			  jsonResponse = (JSONObject) JSONSerializer.toJSON(this.result);
+
+			  logger.log(Level.INFO, jsonResponse.toString());
+			  /*Getting scenario name from server.*/
+//			  JSONArray testsuiteArr = (JSONArray)jsonResponse.get("scenario");
+//			  if(testsuiteArr.size() > 0) {
+//				  JSONObject obj = (JSONObject)testsuiteArr.get(0);
+//				  if (jsonResponse.containsKey("scenario")) {
+//					  scenario = jsonResponse.get("scenario").toString();
+//				  }
+//			  }
+			  String portStr = getUrlString();
+			  new BuildActionStopThread(job_id,username,portStr);
+			  
+
+			  /*Here checking the scenario Name of server.*/
+//			  if (scenarioName == null || scenarioName.equals("NA")) {
+//				  consoleLogger.println("Getting Empty Response from server. Something went wrong.");     
+//			  }
+
+			  logger.log(Level.INFO, "Here starting the thread for checking the running scenario of server.");
+
+			  /*Creating URL for polling.*/
+			  pollURL = str + "/ProductUI/productSummary/jenkinsService/checkTestStatus";
+
+			  /*Starting Thread and polling to server till test end.*/
+			  connectNSPollTestRun();
+			 // consoleLogger.println("Getting Netstorm Report. It may take some time. Please wait...");
+
+			  /*Setting TestRun here.*/
+			  jsonResponse.put("TESTRUN", testRun + "" );
+			  jsonResponse.put("REPORT_STATUS", "");
+			  
+			  if(!this.errMsg.isEmpty())
+			    jsonResponse.put("errMsg", this.errMsg);
+
+			  if(testMode.equals("T"))
+			    consoleLogger.println("Test Cycle Number - "+testCycleNum);
 			  
 			  if(testRun == -1)
 			  {
@@ -1457,6 +1669,7 @@ public JSONObject pullObjectsFromGit(){
 
 	  return resultMap;
   }
+  
   
   
   public void checkTestSuiteStatus(PrintStream consoleLoger, FilePath fp, Run build) {
@@ -1934,6 +2147,152 @@ public JSONObject pullObjectsFromGit(){
         	  }
                   
         	  testCycleNum = pollResponse.getString("testCycleNumber");  
+        	  
+        	 if(doNotWaitforTestCompletion == true) {
+        		 if(testRun > 0) {
+        			 isTestRunning = false;
+        		 }
+        	 }
+        	} catch (Exception e) {
+        	  logger.log(Level.SEVERE, "Error in parsing polling response = " + pollResString, e);
+        	}
+
+        	/*Closing Stream.*/
+        	try {
+        	  br.close();
+        	} catch (Exception e) {
+        	  logger.log(Level.SEVERE, "Error in closing stream inside polling thread.", e);
+        	}
+              } catch (Exception e) {
+                logger.log(Level.SEVERE, "Error in polling running testRun with interval. Retrying after 5 sec.", e);
+              }
+
+              /*Repeating till Test Ended.*/
+              try {
+            consoleLogger.println("Test in progress. Going to check on server. Time = " + new Date() + ", pollInterval = " + pollInterval);
+        	
+            if(testRun > 0)
+              pollInterval  = 60;
+            
+            if(isTestRunning == true)
+              Thread.sleep(pollInterval * 1000);
+                
+              } catch (Exception ex) {       	
+        	logger.log(Level.SEVERE, "Error in polling connection in loop", ex);
+              } 
+            }
+
+          } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error in polling running testRun with interval.", e);
+          }
+        }   
+      };
+
+      // Creating and Starting thread for Getting Graph Data.
+      Thread pollTestRunThread = new Thread(pollTestRunState, "pollTestRunThread");
+
+      // Running it with Executor Service to provide concurrency.
+      ExecutorService threadExecutorService = Executors.newFixedThreadPool(1);
+
+      // Executing thread in thread Pool.
+      threadExecutorService.execute(pollTestRunThread);
+
+      // Shutting down in order.
+      threadExecutorService.shutdown();
+
+      // Checking for running state.
+      // Wait until thread is not terminated.
+      while (!threadExecutorService.isTerminated())
+      {
+      }
+      
+     // consoleLogger.println("TestRun is stopped. Now checking the server state.");
+      
+    } catch (Exception e) {
+      logger.log(Level.SEVERE, "Error in polling running testRun.", e);
+    }
+    
+  }
+  
+  /**
+   * Method is used for checking connection with netstorm and polling netstorm for testrun running status based on scenario name.
+   * @param scenarioName
+   * @param consoleLogger
+   */
+  private void connectNSPollTestRun() {
+    try {
+
+      consoleLogger.println("Test Started. Now tracking TestRun based on running scenario.");
+      
+      /* Creating the thread. */
+      Runnable pollTestRunState = new Runnable()
+      {
+        public void run()
+        {
+          try {
+
+            /*Keeping flag based on TestRun status on server.*/
+            boolean isTestRunning = true;
+            
+            /*Initial Sleep Before Polling.*/
+            try {
+              
+              /*Delay to poll due to test is taking time to start.*/
+              Thread.sleep(pollInterval * 1000);     
+              
+            } catch (Exception ex) {
+              logger.log(Level.SEVERE, "Error in initial sleep before polling.", ex);
+            }
+
+            logger.log(Level.INFO, "Starting Polling to server.");
+            
+            /*Running Thread till test stopped.*/
+            while (isTestRunning) {
+              try {
+        	
+        	/*Creating Polling URL.*/
+        	String pollURLWithArgs = pollURL + "?JOB_ID=" + job_id + "&testMode=" + testMode + "&testRun=" + testRun + "&testCycleNum=" + testCycleNum;    	
+        	URL url = new URL(pollURLWithArgs);
+        	HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        	conn.setConnectTimeout(POLL_CONN_TIMEOUT);
+        	conn.setReadTimeout(POLL_CONN_TIMEOUT);
+        	conn.setRequestMethod("GET");
+        	conn.setRequestProperty("Accept", "application/json");    
+
+        	if (conn.getResponseCode() != 200) {
+        	  logger.log(Level.INFO, "Getting Error code on polling  = " + conn.getResponseCode() + ". Retrying in next poll in 5 minutes.");
+        	}
+
+        	BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        	String pollResString = br.readLine();
+        	
+        	try {
+        	  
+        	  logger.log(Level.INFO, "Polling Response = " + pollResString);
+        	  JSONObject pollResponse = (JSONObject) JSONSerializer.toJSON(pollResString);
+        	      	  
+        	  /*Getting TestRun, if not available.*/
+        	  if (testRun <= 0) {
+        	    testRun = pollResponse.getInt("testRun");
+        	    int stopTR = -1;
+        	    stopTR = pollResponse.getInt("testRun");
+        	    logger.log(Level.INFO, "stopTR = " + stopTR);
+        	    String portStr = getUrlString();
+        	    new BuildActionStopTest(stopTR,username,portStr);
+        	  }
+        	  
+        	  if(pollResponse.getBoolean("status")) {
+        	    /*Terminating Loop when test is stopped.*/
+        	    isTestRunning = false;
+        	  }
+               
+        	  if(testMode.equals("T") && pollResponse.has("testCycleNumber"))
+        	    testCycleNum = pollResponse.getString("testCycleNumber"); 
+        	  
+        	  if(pollResponse.has("errMsg")) {
+        		  errMsg = pollResponse.getString("errMsg");
+        		 consoleLogger.println(errMsg); 
+        	  }
         	  
         	 if(doNotWaitforTestCompletion == true) {
         		 if(testRun > 0) {

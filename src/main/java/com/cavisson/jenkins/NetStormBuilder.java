@@ -22,13 +22,18 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.Iterator;
+import java.util.List;
+
 import jenkins.tasks.SimpleBuildStep;
 import net.sf.json.JSONObject;
 import net.sf.json.*;
@@ -97,7 +102,9 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
     private String checkRuleFileUpload = "";
     private boolean fileUpload = false;
     NetStormConnectionManager netstormConnectionManger = null;
-
+    List<String> testsuiteList = new ArrayList<String>();
+    HashMap<String, ParameterDTO> testsuiteParameterMap = new HashMap<String, ParameterDTO>();
+  
 
     public NetStormBuilder(String URLConnectionString, String username, String password, String project,
             String subProject, String scenario, String testMode, String baselineType, String pollInterval, String protocol,
@@ -544,7 +551,7 @@ public String getTotalusers() {
 @Override
   public void perform(Run<?, ?> run, FilePath fp, Launcher lnchr, TaskListener taskListener) throws InterruptedException, IOException {
 	run.addAction(new NetStormStopAction(run));
-	
+	run.addAction(new NetStormStopThread(run));
 
 	if(envVarMap == null)
        envVarMap = run instanceof AbstractBuild ? ((AbstractBuild<?, ?>) run).getBuildVariables() : Collections.<String, String>emptyMap();
@@ -574,32 +581,69 @@ public String getTotalusers() {
      if(keyset.size() > 0) {
        netstormConnectionManger = new NetStormConnectionManager(URLConnectionString, username, password, project, subProject, scenario, testMode, baselineType, pollInterval,profile,hiddenBox,generateReport, doNotWaitForTestCompletion, gitPull);      
      }
-      for(Object key : keyset)
+     
+    
+     if( (String) envVarMap.get("Testsuite") != null) {
+    		testsuiteName = (String)envVarMap.get("Testsuite");
+    		logger.log(Level.INFO, "Test Suite Name = " + testsuiteName);
+    		
+    		testsuiteList = Arrays.asList(testsuiteName.split("\\s*,\\s*"));
+    		testsuiteParameterMap = new HashMap<String, ParameterDTO>();
+    		logger.log(Level.INFO, "testsuite size  = " + testsuiteList.size());
+    		if(testsuiteList.size() > 1) {
+    			for(int i=0; i < testsuiteList.size(); i++) {
+    				String suiteName = testsuiteList.get(i);
+    				String prefix[] = suiteName.split("_");
+    				if(prefix.length > 1)  {
+    					logger.log(Level.INFO, "testsuiteParameterMap = " + testsuiteParameterMap);
+    				  testsuiteParameterMap.put(prefix[0], new ParameterDTO());
+    				}
+    			}
+    		} else if(testsuiteList.size() == 1) {
+    		
+    			String[] testsuite = testsuiteName.split("/");
+    			if(testsuite.length == 3) {
+    				netstormConnectionManger.setProject(testsuite[0]);
+    				netstormConnectionManger.setSubProject(testsuite[1]);
+    				netstormConnectionManger.setScenario(testsuite[2]);
+    			} else
+    				netstormConnectionManger.setScenario(testsuiteName);
+    		}
+    	}
+      for(Object keys : keyset)
       {
     	  
-        Object value = envVarMap.get(key);
+        Object value = envVarMap.get(keys);
+        String key = (String) keys;
        	
        	if(key.equals("JENKINS_HOME")) {
  	     path = (String)envVarMap.get(key);
        	}
        	
        	logger.log(Level.INFO, "keys loop = " + key);
-       	if(key.equals("Testsuite")) {
-       		testsuiteName = (String)envVarMap.get(key);
-       		logger.log(Level.INFO, "Test Suite Name = " + testsuiteName);
-       		String[] testsuite = testsuiteName.split("/");
-       		if(testsuite.length == 3) {
-       			netstormConnectionManger.setProject(testsuite[0]);
-       			netstormConnectionManger.setSubProject(testsuite[1]);
-       			netstormConnectionManger.setScenario(testsuite[2]);
-       		} else
-       		  netstormConnectionManger.setScenario(testsuiteName);
-       	}
        	
-       	if(key.equals("DataDirectory")) {
+       	
+       	if(key.endsWith("DataDirectory")) {
        	logger.log(Level.INFO, "data dir = " + (String)envVarMap.get(key));
       	  dataDir = (String)envVarMap.get(key);
-      	  netstormConnectionManger.setDataDir(dataDir);
+      	  
+      	  if(testsuiteList.size() > 1) {
+      		  String prefix[] = key.split("_");
+      		  if(prefix.length > 1) {
+      			  if(testsuiteParameterMap.containsKey(prefix[0]))
+      				  testsuiteParameterMap.get(prefix[0]).setDataDir(dataDir);
+      			  else {
+      				  for (Map.Entry<String,ParameterDTO> entry : testsuiteParameterMap.entrySet()) {
+      					  testsuiteParameterMap.get(entry.getKey()).setDataDir(dataDir);	
+      				  }
+      			  }
+      		  } else {
+      			  for (Map.Entry<String,ParameterDTO> entry : testsuiteParameterMap.entrySet()) {
+      				  testsuiteParameterMap.get(entry.getKey()).setDataDir(dataDir);	
+      			  }
+      		  }
+      	  } else if(testsuiteList.size() == 1)
+      	     netstormConnectionManger.setDataDir(dataDir);
         }
 
         if(key.equals("Override DataDir")) {
@@ -608,9 +652,27 @@ public String getTotalusers() {
         	 netstormConnectionManger.setDataDir(dataDir);
         }
         
-        if(key.equals("Server_Host")) {
+        if(key.endsWith("Server_Host")) {
             serverhost = (String)envVarMap.get(key);
-          	 netstormConnectionManger.setServerHost(serverhost);
+            if(testsuiteList.size() > 1) {
+        		  String prefix[] = key.split("_");
+        		  if(prefix.length > 1) {
+        			  
+        			  if(testsuiteParameterMap.containsKey(prefix[0]))
+          				  testsuiteParameterMap.get(prefix[0]).setServerhost(serverhost);
+          			  else {
+          				  for (Map.Entry<String,ParameterDTO> entry : testsuiteParameterMap.entrySet()) {
+          					  testsuiteParameterMap.get(entry.getKey()).setServerhost(serverhost);
+          				  }
+          			  }
+          		  } else {
+          			  for (Map.Entry<String,ParameterDTO> entry : testsuiteParameterMap.entrySet()) {
+          				  testsuiteParameterMap.get(entry.getKey()).setServerhost(serverhost);	
+          			  }
+          		  }
+        		  
+        	  } else if(testsuiteList.size() == 1)
+          	     netstormConnectionManger.setServerHost(serverhost);
           }
           
        			
@@ -627,38 +689,91 @@ public String getTotalusers() {
              String temp [] = envValue.split("_");
              if(temp.length > 2)
              {
-                netstormConnectionManger.setDuration(temp[2]);
+            	 
+            	 if(testsuiteList.size() > 1) {
+             		  String prefix[] = key.split("_");
+             		  if(prefix.length > 1) {
+             			  testsuiteParameterMap.get(prefix[0]).setDuration(temp[2]);
+             		  }
+             	  } else if(testsuiteList.size() == 1)
+                    netstormConnectionManger.setDuration(temp[2]);
              }
            }
            else if(envValue.startsWith("NS_NUM_USERS"))
            {
-             String temp [] = envValue.split("_");
-             if(temp.length > 3)
-                netstormConnectionManger.setvUsers(temp[3]);
+        	   String temp [] = envValue.split("_");
+        	   if(temp.length > 3) {
+        		   if(testsuiteList.size() > 1) {
+        			   String prefix[] = key.split("_");
+        			   if(prefix.length > 1) {
+        				   testsuiteParameterMap.get(prefix[0]).setTotalusers(temp[3]);
+        			   }
+        		   } else if(testsuiteList.size() == 1)
+        			   netstormConnectionManger.setvUsers(temp[3]);
+        	   }
            }  
            else if(envValue.startsWith("NS_SERVER_HOST"))
            {
              String temp [] = envValue.split("_");
-             if(temp.length > 3)
-                netstormConnectionManger.setServerHost(temp[3]);
+             if(temp.length > 3) {
+            	 if(testsuiteList.size() > 1) {
+             		  String prefix[] = key.split("_");
+             		  if(prefix.length > 1) {
+             			 if(testsuiteParameterMap.containsKey(prefix[0]))
+             				  testsuiteParameterMap.get(prefix[0]).setServerhost(temp[3]);
+             			  else {
+             				  for (Map.Entry<String,ParameterDTO> entry : testsuiteParameterMap.entrySet()) {
+             					  testsuiteParameterMap.get(entry.getKey()).setServerhost(temp[3]);
+             				  }
+             			  }
+             		  } else {
+             			  for (Map.Entry<String,ParameterDTO> entry : testsuiteParameterMap.entrySet()) {
+             				  testsuiteParameterMap.get(entry.getKey()).setServerhost(temp[3]);	
+             			  }
+             		  }
+             			
+             	  } else if(testsuiteList.size() == 1)
+                    netstormConnectionManger.setServerHost(temp[3]);
+             }
            }  
            else if(envValue.startsWith("NS_SLA_CHANGE"))
            {
              String temp [] = envValue.split("_");
-             if(temp.length > 3)
-                netstormConnectionManger.addSLAValue(key.toString() , temp [3] );
+             if(temp.length > 3) {
+            	 if(testsuiteList.size() > 1) {
+             		  String prefix[] = key.split("_");
+             		  if(prefix.length > 1) {
+             			  testsuiteParameterMap.get(prefix[0]).addSLAValue(prefix[1], temp[3]);
+             		  }
+             	  } else if(testsuiteList.size() == 1)
+                     netstormConnectionManger.addSLAValue(key.toString() , temp [3] );
+             }
            }
            else if(envValue.startsWith("NS_RAMP_UP_SEC") || envValue.startsWith("NS_RAMP_UP_MIN") || envValue.startsWith("NS_RAMP_UP_HR"))
            {
              String temp [] = envValue.split("_");
-             if(temp.length > 4)
-                netstormConnectionManger.setRampUp(temp[4] + "_" + temp[3]);
+             if(temp.length > 4) {
+            	 if(testsuiteList.size() > 1) {
+             		  String prefix[] = key.split("_");
+             		  if(prefix.length > 1) {
+             			  testsuiteParameterMap.get(prefix[0]).setRampUp(temp[4] + "_" + temp[3]);
+             		  }
+             	  } else if(testsuiteList.size() == 1)
+                    netstormConnectionManger.setRampUp(temp[4] + "_" + temp[3]);
+             }
            }
            else if(envValue.startsWith("NS_TNAME"))
            {
              String tName = getSubString(envValue, 2, "_");
-             if(!tName.equals(""))
-               netstormConnectionManger.settName(tName);
+             if(!tName.equals("")) {
+            	 if(testsuiteList.size() > 1) {
+             		  String prefix[] = key.split("_");
+             		  if(prefix.length > 1) {
+             			  testsuiteParameterMap.get(prefix[0]).setTestName(tName);
+             		  }
+             	  } else if(testsuiteList.size() == 1)
+                    netstormConnectionManger.settName(tName);
+             }
            }
            else if(envValue.startsWith("NS_AUTOSCRIPT"))
            {
@@ -673,25 +788,92 @@ public String getTotalusers() {
            }
            else if(envValue.startsWith("NS_RAMP_UP_DURATION")){
         	   String temp [] = envValue.split("_");
-        	   if(temp.length > 4)
-        		   netstormConnectionManger.setRampUpDuration(temp[4]);
-        	   logg.println("Ramp up duration .........."+temp[4]);
+        	   if(temp.length > 4) {
+        		   if(testsuiteList.size() > 1) {
+        	      		  String prefix[] = key.split("_");
+        	      		  if(prefix.length > 1) {
+        	      			  testsuiteParameterMap.get(prefix[0]).setRampupDuration(temp[4]);
+        	      		  }
+        	      	  } else if(testsuiteList.size() == 1)
+        		        netstormConnectionManger.setRampUpDuration(temp[4]);
+        	   }
+        	 
            }
 
            else if(envValue.startsWith("EMAIL_IDS_TO")) {
         	   String temp [] = envValue.split("_");
-        	   if(temp.length > 3)
-        		   netstormConnectionManger.setEmailIdTo(temp[3]);
+        	   if(temp.length > 3)  {
+        		   String mail = envValue.split("IDS_TO_")[1].replaceAll("\\|", ",");
+        		   if(testsuiteList.size() > 1) {
+        	      		  String prefix[] = key.split("_");
+        	      		  if(prefix.length > 1) { 
+        	      			if(testsuiteParameterMap.containsKey(prefix[0]))
+                				  testsuiteParameterMap.get(prefix[0]).setEmailid(mail);
+                			  else {
+                				  for (Map.Entry<String,ParameterDTO> entry : testsuiteParameterMap.entrySet()) {
+                					  testsuiteParameterMap.get(entry.getKey()).setEmailid(mail);
+                				  }
+                			  }
+                		  } else {
+                			  for (Map.Entry<String,ParameterDTO> entry : testsuiteParameterMap.entrySet()) {
+                				  testsuiteParameterMap.get(entry.getKey()).setEmailid(mail);
+                			  }
+                		  }
+        	      			 
+        	      	  } else if(testsuiteList.size() == 1) {
+        		        netstormConnectionManger.setEmailIdTo(mail);
+        	      	  }
+        	   }
            }
            else if(envValue.startsWith("EMAIL_IDS_CC")) {
         	   String temp [] = envValue.split("_");
-        	   if(temp.length > 3)
-        		   netstormConnectionManger.setEmailIdCc(temp[3]);
+        	   if(temp.length > 3) {
+        		   String mail = envValue.split("IDS_CC_")[1].replaceAll("\\|", ",");
+        		   if(testsuiteList.size() > 1) {
+        	      		  String prefix[] = key.split("_");
+        	      		  if(prefix.length > 1) {
+        	      			if(testsuiteParameterMap.containsKey(prefix[0]))
+              				  testsuiteParameterMap.get(prefix[0]).setEmailidCC(mail);
+              			  else {
+              				  for (Map.Entry<String,ParameterDTO> entry : testsuiteParameterMap.entrySet()) {
+              					  testsuiteParameterMap.get(entry.getKey()).setEmailidCC(mail);
+              				  }
+              			  }
+              		  } else {
+              			  for (Map.Entry<String,ParameterDTO> entry : testsuiteParameterMap.entrySet()) {
+              				  testsuiteParameterMap.get(entry.getKey()).setEmailidCC(mail);
+              			  }
+              		  }
+      	      			 
+        	      	  } else if(testsuiteList.size() == 1) {
+        		        netstormConnectionManger.setEmailIdCc(mail);
+        	      	  }
+        	   }
            }
            else if(envValue.startsWith("EMAIL_IDS_BCC")) {
         	   String temp [] = envValue.split("_");
-        	   if(temp.length > 3)
-        		   netstormConnectionManger.setEmailIdBcc(temp[3]);
+        	   if(temp.length > 3) {
+        		   String mail = envValue.split("IDS_BCC_")[1].replaceAll("\\|", ",");
+        		   if(testsuiteList.size() > 1) {
+        	      		  String prefix[] = key.split("_");
+        	      		  if(prefix.length > 1) {
+        	      			if(testsuiteParameterMap.containsKey(prefix[0]))
+                				  testsuiteParameterMap.get(prefix[0]).setEmailidBcc(mail);
+                			  else {
+                				  for (Map.Entry<String,ParameterDTO> entry : testsuiteParameterMap.entrySet()) {
+                					  testsuiteParameterMap.get(entry.getKey()).setEmailidBcc(mail);
+                				  }
+                			  }
+                		  } else {
+                			  for (Map.Entry<String,ParameterDTO> entry : testsuiteParameterMap.entrySet()) {
+                				  testsuiteParameterMap.get(entry.getKey()).setEmailidBcc(mail);
+                			  }
+                		  }
+        	      			
+        	      	  } else if(testsuiteList.size() == 1) {
+        		        netstormConnectionManger.setEmailIdBcc(mail);
+        	      	  }
+        	   }
            }
            
            if(envValue.equalsIgnoreCase(fileName))
@@ -745,10 +927,21 @@ public String getTotalusers() {
 	  if(direc.exists())
 		  direc.deleteRecursive(); 
 	  
-      HashMap result = netstormConnectionManger.startNetstormTest(errMsg ,logg);
+	  HashMap result= new HashMap();
+	  if(testsuiteList != null && testsuiteList.size() > 1) {
+		  netstormConnectionManger.setTestsuitelist(testsuiteList);
+		  netstormConnectionManger.setTestsuiteParameterDTO(testsuiteParameterMap);
+		  result = netstormConnectionManger.startMultipleTest(errMsg ,logg);
+	  // JSONObject requestObj = getTestsuiteJson();  
+	  } else{
+	    result = netstormConnectionManger.startNetstormTest(errMsg ,logg);
+	  }
+	 
+	  
       
       boolean status = (Boolean )result.get("STATUS");
       
+      logger.log(Level.INFO, "result 11111 = " + result.toString());
       if(doNotWaitForTestCompletion == true) {
     	  if(result.get("TESTRUN") != null && !result.get("TESTRUN").toString().trim().equals("")) {
     	   logg.println("Test Run Number - " + result.get("TESTRUN"));
@@ -770,7 +963,7 @@ public String getTotalusers() {
           /*set a test run number in static refrence*/
           testRunNumber = (String)result.get("TESTRUN");
           
-          if(testMode.equals("T")) {
+          if(testMode.equals("T") && (result.get("errMsg") == null || result.get("errMsg").toString().trim().equals(""))) {
             testCycleNumber = (String) result.get("TEST_CYCLE_NUMBER");  
             if(generateReport == true)
              netstormConnectionManger.checkTestSuiteStatus(logg, fp, run);
@@ -824,120 +1017,431 @@ public String getTotalusers() {
       else
        run.setResult(Result.FAILURE);
       
-      //return status;
-   
-   
-  }  
+      //return status;  
+}
+
+public JSONObject getTestsuiteJson() {
+	try {
+		JSONArray testsuiteArray = new JSONArray();
+		for(int i=0; i < testsuiteList.size(); i++) {
+			String prefix[] = testsuiteList.get(i).split("_");
+			if(prefix.length > 1) {
+				logger.log(Level.INFO, "parameter dto = " + testsuiteParameterMap.get(prefix[0]));
+			 JSONObject obj = testsuiteParameterMap.get(prefix[0]).testsuiteJson();
+			 obj.put("scenario", testsuiteList.get(i));
+			 obj.put("project", project);
+			 obj.put("subproject", subProject);
+			 obj.put("testmode", testMode);
+			 obj.put("scriptHeaders",hiddenBox);
+			 obj.put("baselineType", baselineType);
+			 testsuiteArray.add(obj);
+			}
+		}
+		
+		JSONObject requestObj = new JSONObject();
+		requestObj.put("username", username);
+		requestObj.put("password", password.getPlainText());
+		requestObj.put("URLConnectionString", URLConnectionString);
+		requestObj.put("scenario", testsuiteArray);
+		requestObj.put("workProfile",profile);
+	    requestObj.put("generateReport", Boolean.toString(generateReport));
+	    String uniqueID = UUID.randomUUID().toString();
+	    requestObj.put("JOB_ID", uniqueID);
+	    return requestObj;
+		
+	} catch(Exception e) {
+		return null;
+	}
+}
 
 public void setParametersValue() {
 	try {
 		
 	    netstormConnectionManger = new NetStormConnectionManager(URLConnectionString, username, password, project, subProject, scenario, testMode, baselineType, pollInterval,profile,hiddenBox,generateReport, doNotWaitForTestCompletion, gitPull);      
-		if(testsuite != null && !testsuite.isEmpty()) {
-       		logger.log(Level.INFO, "Test Suite Name = " + testsuite);
-       		String[] testsuites = testsuite.split("/");
-       		if(testsuites.length == 3) {
-       			netstormConnectionManger.setProject(testsuites[0]);
-       			netstormConnectionManger.setSubProject(testsuites[1]);
-       			netstormConnectionManger.setScenario(testsuites[2]);
-       		} else
-       		  netstormConnectionManger.setScenario(testsuite);
-       	}
-       	
-       	if(dataDir != null && !dataDir.isEmpty()) {
-       	logger.log(Level.INFO, "data dir = " + dataDir);
-      	 
-      	  netstormConnectionManger.setDataDir(dataDir);
-        }
-       			
-           
-           netstormConnectionManger.addSLAValue("1" , "2");
-           if(duration != null && duration.startsWith("NS_SESSION"))
-           {
-             String temp [] = duration.split("_");
-             if(temp.length > 2)
-             {
-                netstormConnectionManger.setDuration(temp[2]);
-             }
-           }
-           
-           if(totalusers != null &&  totalusers.startsWith("NS_NUM_USERS"))
-           {
-             String temp [] = totalusers.split("_");
-             if(temp.length > 3)
-                netstormConnectionManger.setvUsers(temp[3]);
-           }  
-           
-           if(serverhost != null && serverhost.startsWith("NS_SERVER_HOST"))
-           {
-             String temp [] = serverhost.split("_");
-             if(temp.length > 3)
-                netstormConnectionManger.setServerHost(temp[3]);
-           }  
-           
-           if(sla != null && sla.startsWith("NS_SLA_CHANGE"))
-           {
-             String temp [] = sla.split("_");
-             if(temp.length > 3)
-                netstormConnectionManger.addSLAValue(temp[4] , temp [3] );
-           }
-           
-           if(rampUpSec != null && rampUpSec.startsWith("NS_RAMP_UP_SEC"))
-           {
-             String temp [] = rampUpSec.split("_");
-             if(temp.length > 4)
-                netstormConnectionManger.setRampUp(temp[4] + "_" + temp[3]);
-           }
-           
-           if(rampupmin != null && rampupmin.startsWith("NS_RAMP_UP_MIN")) {
-        	   String temp [] = rampupmin.split("_");
-               if(temp.length > 4)
-                  netstormConnectionManger.setRampUp(temp[4] + "_" + temp[3]);
-           }
-           
-           if (rampuphour != null && rampuphour.startsWith("NS_RAMP_UP_HR")) {
-        	   String temp [] = rampupmin.split("_");
-               if(temp.length > 4)
-                  netstormConnectionManger.setRampUp(temp[4] + "_" + temp[3]);
-           }
-           
-           if(testName != null && testName.startsWith("NS_TNAME"))
-           {
-             String tName = getSubString(testName, 2, "_");
-             if(!tName.equals(""))
-               netstormConnectionManger.settName(tName);
-           }
-           
-           if(scriptPath.startsWith("NS_AUTOSCRIPT"))
-           {
-        	   String temp [] = scriptPath.split("_", 3);
-        	   if(temp.length > 2)
-        	     netstormConnectionManger.setAutoScript(temp[2]);
-           }
-           
-           if(rampupDuration != null && rampupDuration.startsWith("NS_RAMP_UP_DURATION")){
-        	   String temp [] = rampupDuration.split("_");
-        	   if(temp.length > 4)
-        		   netstormConnectionManger.setRampUpDuration(temp[4]);
-           }
+	logger.log(Level.INFO, "parameter values testsuite = " + testsuite + ", data dir = " + dataDir);	
+	  //  if(testsuiteList.size() == 1) {
+	    	if(testsuite != null && !testsuite.isEmpty()) {
+	    		logger.log(Level.INFO, "Test Suite Name = " + testsuite);
+	    		testsuiteList = Arrays.asList(testsuite.split("\\s*,\\s*"));
+	    		testsuiteParameterMap = new HashMap<String, ParameterDTO>();
+	    		
+	    		logger.log(Level.INFO, "testsuite size  = " + testsuiteList.size());
+	    		if(testsuiteList.size() > 1) {
+	    			for(int i=0; i < testsuiteList.size(); i++) {
+	    				String suiteName = testsuiteList.get(i);
+	    				String prefix[] = suiteName.split("_");
+	    				if(prefix.length > 1)  {
+	    					logger.log(Level.INFO, "testsuiteParameterMap = " + testsuiteParameterMap);
+	    					testsuiteParameterMap.put(prefix[0], new ParameterDTO());
+	    				}
+	    			}
+	    		} else if(testsuiteList.size() == 1) {
+	    			String[] testsuites = testsuite.split("/");
+	    			if(testsuites.length == 3) {
+	    				netstormConnectionManger.setProject(testsuites[0]);
+	    				netstormConnectionManger.setSubProject(testsuites[1]);
+	    				netstormConnectionManger.setScenario(testsuites[2]);
+	    			} else
+	    				netstormConnectionManger.setScenario(testsuite);
+	    		}
+	    	}
 
-           if(emailid != null && emailid.startsWith("EMAIL_IDS_TO")) {
-        	   String temp [] = emailid.split("_");
-        	   if(temp.length > 3)
-        		   netstormConnectionManger.setEmailIdTo(temp[3]);
-           }
-           
-           if(emailidCC != null && emailidCC.startsWith("EMAIL_IDS_CC")) {
-        	   String temp [] = emailidCC.split("_");
-        	   if(temp.length > 3)
-        		   netstormConnectionManger.setEmailIdCc(temp[3]);
-           }
-           
-           if(emailidBcc != null && emailidBcc.startsWith("EMAIL_IDS_BCC")) {
-        	   String temp [] = emailidBcc.split("_");
-        	   if(temp.length > 3)
-        		   netstormConnectionManger.setEmailIdBcc(temp[3]);
-           }
+	    	if(dataDir != null && !dataDir.isEmpty()) {
+	    		logger.log(Level.INFO, "data dir = " + dataDir);
+	    		if(testsuiteList.size() > 1) {
+	        		  List<String> dataDirNames = Arrays.asList(dataDir.split("\\s*,\\s*"));
+	        		  for(int i = 0 ; i < dataDirNames.size(); i++) {
+	        			  String dirName = dataDirNames.get(i);
+	        			  String prefix[] = dirName.split("_");
+	        			  if(prefix.length > 1) {
+	        				  if(testsuiteParameterMap.containsKey(prefix[0]))
+	        					  testsuiteParameterMap.get(prefix[0]).setDataDir(dirName.substring(dirName.indexOf("_") + 1, dirName.length()));
+	        				  else {
+	        					  for (Map.Entry<String,ParameterDTO> entry : testsuiteParameterMap.entrySet()) {
+	        						  testsuiteParameterMap.get(entry.getKey()).setDataDir(dirName.substring(dirName.indexOf("_") + 1, dirName.length()));	
+	        					  }
+	        				  }
+	        			  }
+	        		  }
+	        	 } else if(testsuiteList.size() == 1)
+	        	    netstormConnectionManger.setDataDir(dataDir);
+	    	}
+
+
+	    	netstormConnectionManger.addSLAValue("1" , "2");
+	    	if(duration != null && duration.contains("NS_SESSION"))
+	    	{
+	    		if(testsuiteList.size() > 1) {
+	    			List<String> durationValue = Arrays.asList(duration.split("\\s*,\\s*"));
+	    			for(int i = 0 ; i < durationValue.size(); i++) {
+	    				String durtn = durationValue.get(i);
+	    				String prefix[] = durtn.split("_");
+	    				if(prefix.length > 1) {
+	    					if(testsuiteParameterMap.containsKey(prefix[0]))
+	        					  testsuiteParameterMap.get(prefix[0]).setDuration(prefix[3]);
+	        				  else {
+	        					  for (Map.Entry<String,ParameterDTO> entry : testsuiteParameterMap.entrySet()) {
+	        						  testsuiteParameterMap.get(entry.getKey()).setDuration(prefix[2]);
+	        					  }
+	        				  }
+	    				}
+	    			}
+	    		} else if(testsuiteList.size() == 1) {
+	    			String temp [] = duration.split("_");
+	    			if(temp.length > 2)
+	    				netstormConnectionManger.setDuration(temp[2]);
+	    		}
+	    	}
+
+	    	if(totalusers != null &&  totalusers.contains("NS_NUM_USERS"))
+	    	{
+	    		
+	    		if(testsuiteList.size() > 1) {
+	    			List<String> users = Arrays.asList(totalusers.split("\\s*,\\s*"));
+	    			for(int i = 0 ; i < users.size(); i++) {
+	    				String vusers = users.get(i);
+	    				String prefix[] = vusers.split("_");
+	    					if(testsuiteParameterMap.containsKey(prefix[0])) {
+	    						if(prefix.length > 3)
+	        					  testsuiteParameterMap.get(prefix[0]).setTotalusers(prefix[3]);
+	    					}
+	        				  else {
+	        					  for (Map.Entry<String,ParameterDTO> entry : testsuiteParameterMap.entrySet()) {
+	        						  
+	        						  if(prefix.length > 2)
+	        						  testsuiteParameterMap.get(entry.getKey()).setTotalusers(prefix[2]);
+	        					  }
+	        				  }
+	 
+	    			}
+	    		} else if(testsuiteList.size() == 1) {
+
+	    			String temp [] = totalusers.split("_");
+	    			if(temp.length > 3)
+	    				netstormConnectionManger.setvUsers(temp[3]);
+	    		}
+	    	}  
+
+	    	logger.log(Level.INFO, "server host = " + serverhost);
+	    	if(serverhost != null && serverhost.contains("NS_SERVER_HOST"))
+	    	{
+	    		logger.log(Level.INFO, "inside server host = " + serverhost);
+	    		if(testsuiteList.size() > 1) {
+	    			List<String> host = Arrays.asList(serverhost.split("\\s*,\\s*"));
+	    			for(int i = 0 ; i < host.size(); i++) {
+	    				String shost = host.get(i);
+	    				String prefix[] = shost.split("_");
+	    				
+	    					if(testsuiteParameterMap.containsKey(prefix[0])) {
+	    						if(prefix.length > 3)
+	        					  testsuiteParameterMap.get(prefix[0]).setServerhost(shost.split("HOST_")[1]);
+	    					}
+	        				  else {
+	        					  for (Map.Entry<String,ParameterDTO> entry : testsuiteParameterMap.entrySet()) {
+	        						  
+	        						  if(prefix.length > 2)
+	        						  testsuiteParameterMap.get(entry.getKey()).setServerhost(shost.split("HOST_")[1]);
+	        					  }
+	        				  }
+	    			}
+	    		} else if(testsuiteList.size() == 1) {
+	    			String temp [] = serverhost.split("_");
+	    			if(temp.length > 3)
+	    				netstormConnectionManger.setServerHost(serverhost.split("HOST_")[1]);
+	    		}
+	    	}  
+
+	    	if(sla != null && sla.contains("NS_SLA_CHANGE"))
+	    	{
+	    		if(testsuiteList.size() > 1) {
+	    			List<String> slas = Arrays.asList(sla.split("\\s*,\\s*"));
+	    			for(int i = 0 ; i < slas.size(); i++) {
+	    				String checkRuleSla = slas.get(i);
+	    				String prefix[] = checkRuleSla.split("_");
+	    
+	    				if(testsuiteParameterMap.containsKey(prefix[0])) {
+    						if(prefix.length > 5)
+        					  testsuiteParameterMap.get(prefix[0]).addSLAValue(prefix[5], prefix[4]);
+    					}
+        				  else {
+        					  for (Map.Entry<String,ParameterDTO> entry : testsuiteParameterMap.entrySet()) {
+        						  
+        						  if(prefix.length > 4)
+        						  testsuiteParameterMap.get(entry.getKey()).addSLAValue(prefix[4], prefix[3]);
+        					  }
+        				  }
+	    			
+	    			}
+	    		} else if(testsuiteList.size() == 1) {
+	    		String temp [] = sla.split("_");
+	    		if(temp.length > 3)
+	    			netstormConnectionManger.addSLAValue(temp[4] , temp [3] );
+	    		}
+	    	}
+
+	    	if(rampUpSec != null && rampUpSec.contains("NS_RAMP_UP_SEC"))
+	    	{
+	    		if(testsuiteList.size() > 1) {
+	    			List<String> rampup = Arrays.asList(rampUpSec.split("\\s*,\\s*"));
+	    			for(int i = 0 ; i < rampup.size(); i++) {
+	    				String rampupsec = rampup.get(i);
+	    				String prefix[] = rampupsec.split("_");
+	    				
+	    					if(testsuiteParameterMap.containsKey(prefix[0])) {
+	    						if(prefix.length > 5)
+	        					  testsuiteParameterMap.get(prefix[0]).setRampUp(prefix[5] + "_" + prefix[4]);
+	    					}
+	        				  else {
+	        					  for (Map.Entry<String,ParameterDTO> entry : testsuiteParameterMap.entrySet()) {
+	        						  
+	        						  if(prefix.length > 4)
+	        						  testsuiteParameterMap.get(entry.getKey()).setRampUp(prefix[4] + "_" + prefix[3]);
+	        					  }
+	        				  }
+	    				
+	    			}
+	    		} else if(testsuiteList.size() == 1) {
+	    			String temp [] = rampUpSec.split("_");
+	    			if(temp.length > 4)
+	    				netstormConnectionManger.setRampUp(temp[4] + "_" + temp[3]);
+	    		}
+	    	}
+
+	    	if(rampupmin != null && rampupmin.contains("NS_RAMP_UP_MIN")) {
+	    		if(testsuiteList.size() > 1) {
+	    			
+	    			List<String> rampup = Arrays.asList(rampupmin.split("\\s*,\\s*"));
+	    			for(int i = 0 ; i < rampup.size(); i++) {
+	    				String rampupsec = rampup.get(i);
+	    				String prefix[] = rampupsec.split("_");
+	    				
+	    					if(testsuiteParameterMap.containsKey(prefix[0])) {
+	    						if(prefix.length > 5)
+	        					  testsuiteParameterMap.get(prefix[0]).setRampUp(prefix[5] + "_" + prefix[4]);
+	    					}
+	        				  else {
+	        					  for (Map.Entry<String,ParameterDTO> entry : testsuiteParameterMap.entrySet()) {
+	        						  
+	        						  if(prefix.length > 4)
+	        						  testsuiteParameterMap.get(entry.getKey()).setRampUp(prefix[4] + "_" + prefix[3]);
+	        					  }
+	        				  }
+	    				
+	    			}
+	    		} else if(testsuiteList.size() == 1) {
+	    			String temp [] = rampupmin.split("_");
+	    			if(temp.length > 4)
+	    				netstormConnectionManger.setRampUp(temp[4] + "_" + temp[3]);
+	    		}
+	    	}
+
+	    	if (rampuphour != null && rampuphour.contains("NS_RAMP_UP_HR")) {
+	    		if(testsuiteList.size() > 1) {
+	    			List<String> rampup = Arrays.asList(rampuphour.split("\\s*,\\s*"));
+	    			for(int i = 0 ; i < rampup.size(); i++) {
+	    				String rampupsec = rampup.get(i);
+	    				String prefix[] = rampupsec.split("_");
+	    				if(testsuiteParameterMap.containsKey(prefix[0])) {
+    						if(prefix.length > 5)
+        					  testsuiteParameterMap.get(prefix[0]).setRampUp(prefix[5] + "_" + prefix[4]);
+    					}
+        				  else {
+        					  for (Map.Entry<String,ParameterDTO> entry : testsuiteParameterMap.entrySet()) {
+        						  
+        						  if(prefix.length > 4)
+        						  testsuiteParameterMap.get(entry.getKey()).setRampUp(prefix[4] + "_" + prefix[3]);
+        					  }
+        				  }
+	    			}
+	    		} else if(testsuiteList.size() == 1) {
+	    			String temp [] = rampupmin.split("_");
+	    			if(temp.length > 4)
+	    				netstormConnectionManger.setRampUp(temp[4] + "_" + temp[3]);
+	    		}
+	    	}
+
+	    	if(testName != null && testName.contains("NS_TNAME"))
+	    	{	
+	    		String tName = getSubString(testName, 2, "_");
+	    		if(!tName.equals(""))
+	    			netstormConnectionManger.settName(tName);
+	    	}
+
+	    	if(scriptPath.startsWith("NS_AUTOSCRIPT"))
+	    	{
+	    		String temp [] = scriptPath.split("_", 3);
+	    		if(temp.length > 2)
+	    			netstormConnectionManger.setAutoScript(temp[2]);
+	    	}
+
+	    	if(rampupDuration != null && rampupDuration.contains("NS_RAMP_UP_DURATION")){
+	    		if(testsuiteList.size() > 1) {
+	    			List<String> rampup = Arrays.asList(rampupDuration.split("\\s*,\\s*"));
+	    			for(int i = 0 ; i < rampup.size(); i++) {
+	    				String rampupsec = rampup.get(i);
+	    				String prefix[] = rampupsec.split("_");
+	    				
+	    					if(testsuiteParameterMap.containsKey(prefix[0])) {
+	    						if(prefix.length > 5)
+	    						testsuiteParameterMap.get(prefix[0]).setRampupDuration(prefix[5]);
+	    					}
+	    					else {
+	    						for (Map.Entry<String,ParameterDTO> entry : testsuiteParameterMap.entrySet()) {
+	    							if(prefix.length > 4)
+	    							testsuiteParameterMap.get(entry.getKey()).setEmailid(rampupsec.split("UP_DURATION_")[1]);
+	    						}
+	    					}
+	    				
+	    			}
+	    		} else if(testsuiteList.size() == 1) {
+	    			String temp [] = rampupDuration.split("_");
+	    			if(temp.length > 4)
+	    				netstormConnectionManger.setRampUpDuration(temp[4]);
+	    		}
+	    	}
+
+	    	logger.log(Level.INFO, "email id to = " + emailid);
+	    	if(emailid != null && emailid.contains("EMAIL_IDS_TO")) {
+	    		if(testsuiteList.size() > 1) {
+	    			logger.log(Level.INFO, "inside email id = " + emailid);
+	    			List<String> emailidto = Arrays.asList(emailid.split("\\s*,\\s*"));
+	    			for(int i = 0 ; i < emailidto.size(); i++) {
+	    				String email = emailidto.get(i);
+	    				String prefix[] = email.split("_");
+	    					logger.log(Level.INFO, "insideeeee email id = " + email);
+	    					if(testsuiteParameterMap.containsKey(prefix[0])) {
+	    						if(prefix.length > 4) {
+	    							//logger.log(Level.INFO, "email id = "+ email.split("IDS_TO_")[1].replaceAll("\\|", ","));
+	    							String mail = email.split("IDS_TO_")[1].replaceAll("\\|", ",");
+	    							logger.log(Level.INFO, "mail = " + mail);
+	    						testsuiteParameterMap.get(prefix[0]).setEmailid(mail);
+	    						}
+	    					}else {
+	    						for (Map.Entry<String,ParameterDTO> entry : testsuiteParameterMap.entrySet()) {
+	    							if(prefix.length > 3) {
+	    								String mail = email.split("IDS_TO_")[1].replaceAll("\\|", ",");
+	    								logger.log(Level.INFO, "mail = " + mail);
+	    							    testsuiteParameterMap.get(entry.getKey()).setEmailid(mail);
+	    							}
+	    						}
+	    					}
+	    				
+	    			}
+	    		} else if(testsuiteList.size() == 1) {
+	    			String temp [] = emailid.split("_");
+	    			if(temp.length > 3) {
+	    				String mail = emailid.split("IDS_TO_")[1].replaceAll("\\|", ",");
+	    				logger.log(Level.INFO, "mail = " + mail);
+	    				netstormConnectionManger.setEmailIdTo(mail);
+	    			}
+	    			}
+	    	}
+
+	    	if(emailidCC != null && emailidCC.contains("EMAIL_IDS_CC")) {
+	    		
+	    		if(testsuiteList.size() > 1) {
+	    			List<String> emailidcc = Arrays.asList(emailidCC.split("\\s*,\\s*"));
+	    			for(int i = 0 ; i < emailidcc.size(); i++) {
+	    				String email = emailidcc.get(i);
+	    				String prefix[] = email.split("_");
+	    				if(prefix.length > 1) {
+	    					if(testsuiteParameterMap.containsKey(prefix[0])) {
+	    						if(prefix.length > 4) {
+	    							String mail = email.split("IDS_CC_")[1].replaceAll("\\|", ",");
+	    						 testsuiteParameterMap.get(prefix[0]).setEmailidCC(mail);
+	    						}
+	    						}else {
+	    						for (Map.Entry<String,ParameterDTO> entry : testsuiteParameterMap.entrySet()) {
+	    							if(prefix.length > 3) {
+	    								String mail = email.split("IDS_TO_")[1].replaceAll("\\|", ",");
+	    							 testsuiteParameterMap.get(entry.getKey()).setEmailidCC(mail);
+	    							}
+	    							}
+	    					}
+	    				}
+	    				
+	    			}
+	    		} else if(testsuiteList.size() == 1) {
+
+	    			String temp [] = emailidCC.split("_");
+	    			if(temp.length > 3) {
+	    				String mail = emailidCC.split("IDS_TO_")[1].replaceAll("\\|", ",");
+	    				netstormConnectionManger.setEmailIdCc(mail);
+	    			}
+	    			}
+	    	}
+
+	    	if(emailidBcc != null && emailidBcc.contains("EMAIL_IDS_BCC")) {
+	    		
+	    		if(testsuiteList.size() > 1) {
+	    			List<String> emailidbcc = Arrays.asList(emailidBcc.split("\\s*,\\s*"));
+	    			for(int i = 0 ; i < emailidbcc.size(); i++) {
+	    				String email = emailidbcc.get(i);
+	    				String prefix[] = email.split("_");
+	    				if(prefix.length > 1) {
+	    					if(testsuiteParameterMap.containsKey(prefix[0])) {
+	    						if(prefix.length > 4) {
+	    							String mail = email.split("IDS_BCC_")[1].replaceAll("\\|", ",");
+	    						 testsuiteParameterMap.get(prefix[0]).setEmailidBcc(mail);
+	    						}
+	    						}else {
+	    						for (Map.Entry<String,ParameterDTO> entry : testsuiteParameterMap.entrySet()) {
+	    							if(prefix.length > 3) {
+	    								String mail = email.split("IDS_TO_")[1].replaceAll("\\|", ",");
+	    							 testsuiteParameterMap.get(entry.getKey()).setEmailidBcc(mail);
+	    							}
+	    							}
+	    					}
+	    				}
+	    			}
+	    		} else if(testsuiteList.size() == 1) {
+	    		String temp [] = emailidBcc.split("_");
+	    		if(temp.length > 3) {
+	    			String mail = emailidBcc.split("IDS_TO_")[1].replaceAll("\\|", ",");
+	    			netstormConnectionManger.setEmailIdBcc(mail);
+	    		}
+	    		}
+	    	}
            
            if(checkRuleFileUpload.equalsIgnoreCase(fileName))
            {
