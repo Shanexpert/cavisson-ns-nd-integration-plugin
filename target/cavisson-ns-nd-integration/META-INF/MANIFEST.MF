@@ -1,0 +1,20 @@
+Manifest-Version: 1.0
+Built-By: cavisson
+Created-By: Apache Maven
+Build-Jdk: 1.8.0_292
+Extension-Name: cavisson-ns-nd-integration
+Specification-Title: The Jenkins Plugins Parent POM Project
+Implementation-Title: cavisson-ns-nd-integration
+Implementation-Version: 4.6.1.85
+Group-Id: io.jenkins.plugins
+Short-Name: cavisson-ns-nd-integration
+Long-Name: NS-ND Integration Performance Publisher Plugin
+Plugin-Version: 4.6.1.85
+Hudson-Version: 2.54
+Jenkins-Version: 2.54
+Mask-Classes: org.objectweb.asm.
+PluginFirstClassLoader: true
+Plugin-Dependencies: dashboard-view:2.9.11;resolution:=optional,struct
+ s:1.10
+Plugin-Developers: 
+

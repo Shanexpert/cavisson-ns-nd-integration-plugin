@@ -1,0 +1,2 @@
+#Fri Dec 10 22:07:02 IST 2021
+constructor=URLConnectionString,username,password,project,subProject,scenario,testMode,baselineType,pollInterval,protocol,repoIp,repoPort,repoPath,repoUsername,repoPassword,profile,script,page,advanceSett,urlHeader,hiddenBox,gitPull,generateReport,doNotWaitForTestCompletion,totalusers,rampUpSec,rampupmin,rampuphour,duration,serverhost,sla,testName,scriptPath,rampupDuration,emailid,emailidCC,emailidBcc,testsuite,dataDir,checkRuleFileUpload

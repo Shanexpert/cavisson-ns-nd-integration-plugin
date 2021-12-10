@@ -1,0 +1,64 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:st="jelly:stapler">
+    <l:layout> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+        <l:main-panel> 
+  		    
+  		    <div class="inputBox">
+  		      <b>Enter Url: </b><input type="text" placeholder="Url" id="url" style="border-color: #ffffff8c;width: 150px;height: 30px;margin-top: 10px;margin-left:63px;"/>
+  		    </div>
+  		    <div class="inputBox">
+  		      <b>Enter User Name: </b><input type="text" placeholder="User Name" id="username" style="border-color: #ffffff8c;width: 150px;height: 30px;margin-top: 10px;margin-left:12px;"/>
+  		    </div>
+  		    <div class="inputBox">
+  		      <b>Enter Job Id: </b><input type="text" placeholder="Job Id" id="jobid" style="border-color: #ffffff8c;width: 150px;height: 30px;margin-top: 10px;margin-left:43px;"/>
+  		    </div>
+            <div style="margin: 6px;">
+            <div style="background-color: #0b6aa2;display: inline-block;color: white;font-weight: 700;width: 31px;padding-bottom: 2px;font-size: 13px;cursor: pointer;text-align: center;">
+      	    	<span onclick="stopTest(1)">Stop</span>
+      		</div>
+      		
+      		<div style="background-color: #0b6aa2;display: inline-block;color: white;margin-left: 10px;font-weight: 700;width: 64px;padding-bottom: 2px;line-height: 21px;font-size: 13px;cursor: pointer;text-align: center;">
+      	    	<span onclick="stopTest(0)">Cancel</span>
+      		</div>
+      		</div>
+      		
+      		<div id="msg" style="display:none;margin-top:10px;"><i style="margin-right: 8px;" class="fa fa-circle-o-notch fa-spin"></i>Checking test run state</div>
+        </l:main-panel>
+    </l:layout>
+    
+    <st:bind var="instance" value="${it}"/>
+ 	<script>
+ 		function stopTest(value){
+ 			if(value == 1){
+ 			var jobid = document.getElementById("jobid").value;
+ 			var username = document.getElementById("username").value;
+ 			var url = document.getElementById("url").value;
+ 			if(url == ""){
+ 			  alert("Please enter url");
+ 			  return;
+ 			}
+ 			if(username == "") {
+ 			  alert("Please enter user name.");
+ 			  return;
+ 			}
+ 			if(jobid == "") {
+ 			  alert("Please enter job id.");
+ 			  return;
+ 			}
+ 			
+ 			
+ 			
+ 			document.getElementById('msg').style.display = "block";
+ 			instance.stopRunningTest(jobid,username,url, function(t) {
+ 				var res = t.responseObject();
+ 				document.getElementById('msg').style.display = "none";
+ 				alert(res);
+				window.history.back();
+ 			});
+ 			}else if(value == 0){
+ 				window.history.back();
+ 			}
+ 		}
+ 	</script>
+</j:jelly>
