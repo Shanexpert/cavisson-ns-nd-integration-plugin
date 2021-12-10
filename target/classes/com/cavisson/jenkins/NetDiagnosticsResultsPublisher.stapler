@@ -1,2 +1,0 @@
-#Fri Dec 10 22:07:02 IST 2021
-constructor=netdiagnosticsUri,username,password,base1StartTime,base1EndTime,base2EndTime,base2StartTime,base3StartTime,base3EndTime,checkProfilePath,criThreshold,warThreshold,failThreshold,curStartTime,curEndTime,base1MSRName,base2MSRName,base3MSRName,profile
