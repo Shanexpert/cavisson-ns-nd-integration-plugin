@@ -11,6 +11,8 @@
  .secDiv {display: inline-block;float: right;cursor: pointer;background-color: #0b6aa2;border-radius: 2px;color: white;padding-right: 2px;padding-left: 2px;}
  .outer{display: flex;align-items: center;justify-content: space-between;width: 100%;}
  .inputBox{display: flex;flex-direction: column;}
+ #scen_table tr td:first-child {text-align: right;}
+ #scen_table tr td:last-child {text-align: center;}
 </style>
  <script src ="${rootURL}/plugin/cavisson-ns-nd-integration/js/jenkins_utils.js"/>
   <f:entry title="${%netstorm.url.title}"  description="${%netstorm.url.description}">
@@ -86,9 +88,19 @@
   </f:entry>
 
   <f:entry title='Select Test Profile'>
-      <f:select  field="scenario" id="S" onfocus="getPulledObjects(this.id)"/>
+      <f:select  field="scenario" id="S" onfocus="getPulledObjects(this.id)" onchange="addToTable(this.value)"/>
   </f:entry>
  
+	<div id="scen_box" style="display:none">
+     <table id="scen_table" field="hdrTableData" class="tablecss">
+        <tr>
+        	<th style="width:15%;" class="ths">Sl. No.</th>
+        	<th style="width:70%;" class="ths">Test Profile Name</th>
+        	<th class="ths">Action</th>
+        </tr>
+     </table>
+  	</div>
+
  <f:entry title='Polling interval' description="${%netstorm.pollInterval.description}">
     <f:textbox field="pollInterval" id='pollInterval' default="60"/>
   </f:entry>
@@ -158,6 +170,9 @@
     	<f:textbox field="hiddenBox" id="hiddenTxt" />
   	  </f:invisibleEntry>
       
+	  <f:invisibleEntry>
+    	<f:textbox field="testProfileBox" id="testProfileTxt" />
+  	  </f:invisibleEntry>
     </div>
 </f:section>
    
@@ -168,12 +183,14 @@
  {
  
    if(value == 'T') {
-     document.getElementById('txtBaselineTR').disabled = false;
+     //document.getElementById('txtBaselineTR').disabled = false;
      document.getElementById('generateReport').style.display = "block";
+		document.getElementById("testProfileTxt").value = "";
      } 
   else {
-    document.getElementById('txtBaselineTR').disabled = true;
+    //document.getElementById('txtBaselineTR').disabled = true;
     document.getElementById('generateReport').style.display = "none";
+		document.getElementById("testProfileTxt").value = "";
     }
   
 
@@ -214,7 +231,39 @@
 	
 	}
 	var hiddenData = "";
+	var testProfileData = "";
 	var table = document.getElementById("tabl");
+	var tab = document.getElementById("scen_table");
+
+	instance.getTableValue(function(t){
+		if(t.responseObject() != ""){
+		testProfileData = t.responseObject();
+
+	console.log("testProfileData value",testProfileData);
+
+	document.getElementById("testProfileTxt").value = testProfileData;
+
+	const arr = testProfileData.split(",");
+	console.log(arr);
+	if(testProfileData != "")
+	{
+		if(arr.length>0) document.getElementById("scen_box").style.display="block";
+	for(i=0;i &lt; arr.length;i++)
+		{
+		console.log(arr[i]);
+
+		var row = tab.insertRow(i+1);
+			var cell1 = row.insertCell(0);
+			var cell2 = row.insertCell(1);
+			var cell3 = row.insertCell(2);
+
+			cell1.innerHTML =i+1;
+			cell2.innerHTML =arr[i];
+			cell3.innerHTML = '<i class="fa fa-trash" onclick="deleteEntry(this)"></i>';
+		}
+	  }
+	}
+	})
 	instance.getAddedHeaders(function(t){
 		if(t.responseObject() != ""){
 		hiddenData = t.responseObject();
@@ -424,8 +473,6 @@ function saveTableData(){
 		}
 	}	
 	}
-	
-	
 	for (i=1;i &lt; table.rows.length;i++){
 		var cells = table.rows.item(i).cells;
 		const obj = {script:cells.item(0).innerHTML, page:cells.item(1).innerHTML, url:cells.item(2).innerHTML, headerName:cells.item(3).innerHTML , headerValue:cells.item(4).innerHTML };
@@ -457,7 +504,79 @@ function deleteRow(r) {
 	document.getElementById("myTd").style.textAlign = 'center';
   }
 }
- 
+ function addToTable(value)
+ {
+ 	var table = document.getElementById("scen_table");
+	 var box = document.getElementById("scen_box");
+	var rowlength = table.rows.length;
+	
+	if(!value.startsWith("-"))
+	{
+		var testProfileData = document.getElementById("testProfileTxt");
+		const arr = testProfileData.value.split(",");
+		if(!arr.includes(value))
+		{
+			var row = table.insertRow(rowlength);
+			var cell1 = row.insertCell(0);
+			var cell2 = row.insertCell(1);
+			var cell3 = row.insertCell(2);
+
+			cell1.innerHTML =rowlength;
+			cell2.innerHTML =value;
+			cell3.innerHTML = '<i class="fa fa-trash" onclick="deleteEntry(this)"></i>';
+
+			if(testProfileData.value=="")
+			testProfileData.value = value;
+			else
+			testProfileData.value  = testProfileData.value + "," + value ;
+
+			console.log(testProfileData.value);
+		}
+		else
+		alert("Duplicate values not allowed !");
+	}
+	
+	if(rowlength > 0)
+	box.style.display = "block";
+ }
+function deleteEntry(r) {
+  var i = r.parentNode.parentNode.rowIndex;
+  var testProfileData = document.getElementById("testProfileTxt");
+  console.log("value of i = ",i);
+  const arr = testProfileData.value.split(",");
+  var len = arr.length;
+  arr.splice(i-1, 1);
+
+  console.log("Updated array = ",arr);
+  testProfileData.value = arr.join(",");
+  console.log("Updated testProfileBox = ",testProfileData.value);
+
+  var table= document.getElementById("scen_table");
+  var box=document.getElementById("scen_box");
+
+  table.innerHTML='<tr>
+        	<th style="width:15%;" class="ths">Sl. No.</th>
+        	<th style="width:70%;" class="ths">Test Profile Name</th>
+        	<th class="ths">Action</th>
+        </tr>';
+
+		for(i=0;i &lt; arr.length;i++)
+		{
+		console.log(arr[i]);
+
+		var row = table.insertRow(i+1);
+			var cell1 = row.insertCell(0);
+			var cell2 = row.insertCell(1);
+			var cell3 = row.insertCell(2);
+
+			cell1.innerHTML =i+1;
+			cell2.innerHTML =arr[i];
+			cell3.innerHTML = '<i class="fa fa-trash" onclick="deleteEntry(this)"></i>';
+		}
+
+	  if(table.rows.length ==1)
+	  box.style.display="none";
+}
 
 </script>
    

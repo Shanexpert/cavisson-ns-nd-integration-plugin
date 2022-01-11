@@ -81,6 +81,7 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
     private String advanceSett="";
     private String urlHeader="";
     private String hiddenBox="";
+    private String testProfileBox="";
     private final boolean generateReport;
     Map<String, String> envVarMap = null;
     private boolean doNotWaitForTestCompletion = false;
@@ -108,9 +109,9 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
 
     public NetStormBuilder(String URLConnectionString, String username, String password, String project,
             String subProject, String scenario, String testMode, String baselineType, String pollInterval, String protocol,
-            String repoIp, String repoPort, String repoPath, String repoUsername, String repoPassword, String profile,String script,String page,String advanceSett,String urlHeader,String hiddenBox,String gitPull, boolean generateReport) {
+            String repoIp, String repoPort, String repoPath, String repoUsername, String repoPassword, String profile,String script,String page,String advanceSett,String urlHeader,String hiddenBox,String gitPull, boolean generateReport,String testProfileBox) {
     	 logger.log(Level.INFO, "inside a constructor..............gitpull -"+gitPull);
-         logger.log(Level.INFO, "profile -"+profile+", advanceSett -"+advanceSett+", urlHeader -"+urlHeader+", hiddenBox -"+hiddenBox);
+         logger.log(Level.INFO, "profile -"+profile+", advanceSett -"+advanceSett+", urlHeader -"+urlHeader+", hiddenBox -"+hiddenBox+", testProfileBox -"+testProfileBox);
         this.project = project;
         this.subProject = subProject;
         this.scenario = scenario;
@@ -133,17 +134,18 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
         this.advanceSett = advanceSett;
         this.urlHeader = urlHeader;
         this.hiddenBox = hiddenBox;
+        this.testProfileBox = testProfileBox;
         this.generateReport = generateReport;
         
-        logger.log(Level.INFO, "hiddenBox -"+this.hiddenBox+", testmode ="+testMode);
+        logger.log(Level.INFO, "hiddenBox -"+this.hiddenBox+", testmode ="+testMode+ "testProfileBox -"+this.testProfileBox);
     }
     
     
     public NetStormBuilder(String URLConnectionString, String username, String password, String project,
             String subProject, String scenario, String testMode, String baselineType, String pollInterval, String protocol,
-            String repoIp, String repoPort, String repoPath, String repoUsername, String repoPassword, String profile,String script,String page,String advanceSett,String urlHeader,String hiddenBox,String gitPull, boolean generateReport, Map<String, String> envVarMap, boolean doNotWaitForTestCompletion) {
+            String repoIp, String repoPort, String repoPath, String repoUsername, String repoPassword, String profile,String script,String page,String advanceSett,String urlHeader,String hiddenBox,String gitPull, boolean generateReport, Map<String, String> envVarMap, boolean doNotWaitForTestCompletion ,String testProfileBox) {
     	 logger.log(Level.INFO, "inside a constructor..............gitpull -"+gitPull);
-         logger.log(Level.INFO, "profile -"+profile+", advanceSett -"+advanceSett+", urlHeader -"+urlHeader+", hiddenBox -"+hiddenBox);
+         logger.log(Level.INFO, "profile -"+profile+", advanceSett -"+advanceSett+", urlHeader -"+urlHeader+", hiddenBox -"+hiddenBox+", testProfileBox -"+testProfileBox);
         this.project = project;
         this.subProject = subProject;
         this.scenario = scenario;
@@ -166,11 +168,12 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
         this.advanceSett = advanceSett;
         this.urlHeader = urlHeader;
         this.hiddenBox = hiddenBox;
+        this.testProfileBox = testProfileBox;
         this.generateReport = generateReport;
         this.envVarMap = envVarMap;
         this.doNotWaitForTestCompletion = doNotWaitForTestCompletion;
         
-        logger.log(Level.INFO, "hiddenBox -"+this.hiddenBox+", testmode ="+testMode + ", doNotWaitForTestCompletion = " + doNotWaitForTestCompletion);
+        logger.log(Level.INFO, "hiddenBox -"+this.hiddenBox+", testmode ="+testMode + ", doNotWaitForTestCompletion = " + doNotWaitForTestCompletion +"testProfileBox -"+this.testProfileBox);
     }
 
     @DataBoundConstructor
@@ -202,6 +205,7 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
         this.advanceSett = advanceSett;
         this.urlHeader = urlHeader;
         this.hiddenBox = hiddenBox;
+       // this.testProfileBox = testProfileBox;
         this.generateReport = generateReport;
         this.doNotWaitForTestCompletion = doNotWaitForTestCompletion;
         this.totalusers = totalusers;
@@ -581,13 +585,29 @@ public String getTotalusers() {
      if(keyset.size() > 0) {
        netstormConnectionManger = new NetStormConnectionManager(URLConnectionString, username, password, project, subProject, scenario, testMode, baselineType, pollInterval,profile,hiddenBox,generateReport, doNotWaitForTestCompletion, gitPull);      
      }
-     
-    
      if( (String) envVarMap.get("Testsuite") != null) {
-    		testsuiteName = (String)envVarMap.get("Testsuite");
-    		logger.log(Level.INFO, "Test Suite Name = " + testsuiteName);
-    		
-    		testsuiteList = Arrays.asList(testsuiteName.split("\\s*,\\s*"));
+    	 logger.log(Level.INFO, "Test Suite Nameee = " + (String)envVarMap.get("Testsuite"));
+ 		testsuiteName = (String)envVarMap.get("Testsuite");
+ 		if(!testsuiteName.isEmpty()) {
+ 		logger.log(Level.INFO, "Test Suite Name = " + testsuiteName);
+ 		
+ 		testsuiteList = Arrays.asList(testsuiteName.split("\\s*,\\s*"));
+ 		}
+     }
+     else if(!testProfileBox.isEmpty())
+     {
+  		logger.log(Level.INFO, "testProfileBox = " + testProfileBox);
+  		
+  		testsuiteList = Arrays.asList(testProfileBox.split("\\s*,\\s*"));
+     }
+    
+//     if( (String) envVarMap.get("Testsuite") != null) {
+//    		testsuiteName = (String)envVarMap.get("Testsuite");
+//    		logger.log(Level.INFO, "Test Suite Name = " + testsuiteName);
+//    		
+//    		testsuiteList = Arrays.asList(testsuiteName.split("\\s*,\\s*"));
+     if(keyset.size() > 0 && testsuiteList !=null)
+     {
     		testsuiteParameterMap = new HashMap<String, ParameterDTO>();
     		logger.log(Level.INFO, "testsuite size  = " + testsuiteList.size());
     		if(testsuiteList.size() > 1) {
@@ -1090,14 +1110,17 @@ public void setParametersValue() {
 	    		logger.log(Level.INFO, "data dir = " + dataDir);
 	    		if(testsuiteList.size() > 1) {
 	        		  List<String> dataDirNames = Arrays.asList(dataDir.split("\\s*,\\s*"));
+	        		  ArrayList<String> prefixList = new ArrayList<String>();
 	        		  for(int i = 0 ; i < dataDirNames.size(); i++) {
 	        			  String dirName = dataDirNames.get(i);
 	        			  String prefix[] = dirName.split("_");
 	        			  if(prefix.length > 1) {
-	        				  if(testsuiteParameterMap.containsKey(prefix[0]))
+	        				  if(testsuiteParameterMap.containsKey(prefix[0])) {
+	        					  prefixList.add(prefix[0]);
 	        					  testsuiteParameterMap.get(prefix[0]).setDataDir(dirName.substring(dirName.indexOf("_") + 1, dirName.length()));
-	        				  else {
+	        				  }else {
 	        					  for (Map.Entry<String,ParameterDTO> entry : testsuiteParameterMap.entrySet()) {
+	        						  if(!prefixList.contains(entry.getKey()))
 	        						  testsuiteParameterMap.get(entry.getKey()).setDataDir(dirName.substring(dirName.indexOf("_") + 1, dirName.length()));	
 	        					  }
 	        				  }
@@ -1113,15 +1136,19 @@ public void setParametersValue() {
 	    	{
 	    		if(testsuiteList.size() > 1) {
 	    			List<String> durationValue = Arrays.asList(duration.split("\\s*,\\s*"));
+	    			ArrayList<String> prefixList = new ArrayList<String>();
 	    			for(int i = 0 ; i < durationValue.size(); i++) {
 	    				String durtn = durationValue.get(i);
 	    				String prefix[] = durtn.split("_");
 	    				if(prefix.length > 1) {
-	    					if(testsuiteParameterMap.containsKey(prefix[0]))
+	    					if(testsuiteParameterMap.containsKey(prefix[0])) {
+	    						  prefixList.add(prefix[0]);
 	        					  testsuiteParameterMap.get(prefix[0]).setDuration(prefix[3]);
+	    					}
 	        				  else {
 	        					  for (Map.Entry<String,ParameterDTO> entry : testsuiteParameterMap.entrySet()) {
-	        						  testsuiteParameterMap.get(entry.getKey()).setDuration(prefix[2]);
+	        						  if(!prefixList.contains(entry.getKey()))
+	        						    testsuiteParameterMap.get(entry.getKey()).setDuration(prefix[2]);
 	        					  }
 	        				  }
 	    				}
@@ -1138,18 +1165,23 @@ public void setParametersValue() {
 	    		
 	    		if(testsuiteList.size() > 1) {
 	    			List<String> users = Arrays.asList(totalusers.split("\\s*,\\s*"));
+	    			ArrayList<String> prefixList = new ArrayList<String>();
 	    			for(int i = 0 ; i < users.size(); i++) {
 	    				String vusers = users.get(i);
 	    				String prefix[] = vusers.split("_");
 	    					if(testsuiteParameterMap.containsKey(prefix[0])) {
-	    						if(prefix.length > 3)
+	    						if(prefix.length > 3) {
+	    						  prefixList.add(prefix[0]);
 	        					  testsuiteParameterMap.get(prefix[0]).setTotalusers(prefix[3]);
+	    						}
 	    					}
 	        				  else {
 	        					  for (Map.Entry<String,ParameterDTO> entry : testsuiteParameterMap.entrySet()) {
 	        						  
-	        						  if(prefix.length > 2)
-	        						  testsuiteParameterMap.get(entry.getKey()).setTotalusers(prefix[2]);
+	        						  if(prefix.length > 2) {
+	        							  if(!prefixList.contains(entry.getKey()))
+	        						       testsuiteParameterMap.get(entry.getKey()).setTotalusers(prefix[2]);
+	        						  }
 	        					  }
 	        				  }
 	 
@@ -1168,19 +1200,24 @@ public void setParametersValue() {
 	    		logger.log(Level.INFO, "inside server host = " + serverhost);
 	    		if(testsuiteList.size() > 1) {
 	    			List<String> host = Arrays.asList(serverhost.split("\\s*,\\s*"));
+	    			ArrayList<String> prefixList = new ArrayList<String>();
 	    			for(int i = 0 ; i < host.size(); i++) {
 	    				String shost = host.get(i);
 	    				String prefix[] = shost.split("_");
 	    				
 	    					if(testsuiteParameterMap.containsKey(prefix[0])) {
-	    						if(prefix.length > 3)
+	    						if(prefix.length > 4) {
+	    							prefixList.add(prefix[0]);
 	        					  testsuiteParameterMap.get(prefix[0]).setServerhost(shost.split("HOST_")[1]);
+	    						}
 	    					}
 	        				  else {
 	        					  for (Map.Entry<String,ParameterDTO> entry : testsuiteParameterMap.entrySet()) {
 	        						  
-	        						  if(prefix.length > 2)
-	        						  testsuiteParameterMap.get(entry.getKey()).setServerhost(shost.split("HOST_")[1]);
+	        						  if(prefix.length > 3) {
+	        							  if(!prefixList.contains(entry.getKey()))
+	        						        testsuiteParameterMap.get(entry.getKey()).setServerhost(shost.split("HOST_")[1]);
+	        						  }
 	        					  }
 	        				  }
 	    			}
@@ -1195,20 +1232,25 @@ public void setParametersValue() {
 	    	{
 	    		if(testsuiteList.size() > 1) {
 	    			List<String> slas = Arrays.asList(sla.split("\\s*,\\s*"));
+	    			ArrayList<String> prefixList = new ArrayList<String>();
 	    			for(int i = 0 ; i < slas.size(); i++) {
 	    				String checkRuleSla = slas.get(i);
 	    				String prefix[] = checkRuleSla.split("_");
 	    
 	    				if(testsuiteParameterMap.containsKey(prefix[0])) {
-    						if(prefix.length > 5)
+    						if(prefix.length > 5) {
+    							prefixList.add(prefix[0]);
         					  testsuiteParameterMap.get(prefix[0]).addSLAValue(prefix[5], prefix[4]);
-    					}
+    						}
+    					  }
         				  else {
         					  for (Map.Entry<String,ParameterDTO> entry : testsuiteParameterMap.entrySet()) {
         						  
-        						  if(prefix.length > 4)
-        						  testsuiteParameterMap.get(entry.getKey()).addSLAValue(prefix[4], prefix[3]);
-        					  }
+        						  if(prefix.length > 4) {
+        							if(!prefixList.contains(entry.getKey()))
+        						     testsuiteParameterMap.get(entry.getKey()).addSLAValue(prefix[4], prefix[3]);
+        						  }
+        						 }
         				  }
 	    			
 	    			}
@@ -1223,20 +1265,25 @@ public void setParametersValue() {
 	    	{
 	    		if(testsuiteList.size() > 1) {
 	    			List<String> rampup = Arrays.asList(rampUpSec.split("\\s*,\\s*"));
+	    			ArrayList<String> prefixList = new ArrayList<String>();
 	    			for(int i = 0 ; i < rampup.size(); i++) {
 	    				String rampupsec = rampup.get(i);
 	    				String prefix[] = rampupsec.split("_");
 	    				
 	    					if(testsuiteParameterMap.containsKey(prefix[0])) {
-	    						if(prefix.length > 5)
+	    						if(prefix.length > 5) {
+	    							prefixList.add(prefix[0]);
 	        					  testsuiteParameterMap.get(prefix[0]).setRampUp(prefix[5] + "_" + prefix[4]);
-	    					}
+	    						}
+	    					 }
 	        				  else {
 	        					  for (Map.Entry<String,ParameterDTO> entry : testsuiteParameterMap.entrySet()) {
 	        						  
-	        						  if(prefix.length > 4)
-	        						  testsuiteParameterMap.get(entry.getKey()).setRampUp(prefix[4] + "_" + prefix[3]);
-	        					  }
+	        						  if(prefix.length > 4) {
+	        							if(!prefixList.contains(entry.getKey()))
+	        						     testsuiteParameterMap.get(entry.getKey()).setRampUp(prefix[4] + "_" + prefix[3]);
+	        						  }
+	        					   }
 	        				  }
 	    				
 	    			}
@@ -1251,19 +1298,24 @@ public void setParametersValue() {
 	    		if(testsuiteList.size() > 1) {
 	    			
 	    			List<String> rampup = Arrays.asList(rampupmin.split("\\s*,\\s*"));
+	    			ArrayList<String> prefixList = new ArrayList<String>();
 	    			for(int i = 0 ; i < rampup.size(); i++) {
 	    				String rampupsec = rampup.get(i);
 	    				String prefix[] = rampupsec.split("_");
 	    				
 	    					if(testsuiteParameterMap.containsKey(prefix[0])) {
-	    						if(prefix.length > 5)
+	    						if(prefix.length > 5) {
+	    							prefixList.add(prefix[0]);
 	        					  testsuiteParameterMap.get(prefix[0]).setRampUp(prefix[5] + "_" + prefix[4]);
+	    						}
 	    					}
 	        				  else {
 	        					  for (Map.Entry<String,ParameterDTO> entry : testsuiteParameterMap.entrySet()) {
 	        						  
-	        						  if(prefix.length > 4)
-	        						  testsuiteParameterMap.get(entry.getKey()).setRampUp(prefix[4] + "_" + prefix[3]);
+	        						  if(prefix.length > 4) {
+	        							  if(!prefixList.contains(entry.getKey()))
+	        						       testsuiteParameterMap.get(entry.getKey()).setRampUp(prefix[4] + "_" + prefix[3]);
+	        						  }
 	        					  }
 	        				  }
 	    				
@@ -1278,19 +1330,24 @@ public void setParametersValue() {
 	    	if (rampuphour != null && rampuphour.contains("NS_RAMP_UP_HR")) {
 	    		if(testsuiteList.size() > 1) {
 	    			List<String> rampup = Arrays.asList(rampuphour.split("\\s*,\\s*"));
+	    			ArrayList<String> prefixList = new ArrayList<String>();
 	    			for(int i = 0 ; i < rampup.size(); i++) {
 	    				String rampupsec = rampup.get(i);
 	    				String prefix[] = rampupsec.split("_");
 	    				if(testsuiteParameterMap.containsKey(prefix[0])) {
-    						if(prefix.length > 5)
+    						if(prefix.length > 5) {
+    							prefixList.add(prefix[0]);
         					  testsuiteParameterMap.get(prefix[0]).setRampUp(prefix[5] + "_" + prefix[4]);
-    					}
+    						}
+    					 }
         				  else {
         					  for (Map.Entry<String,ParameterDTO> entry : testsuiteParameterMap.entrySet()) {
         						  
-        						  if(prefix.length > 4)
-        						  testsuiteParameterMap.get(entry.getKey()).setRampUp(prefix[4] + "_" + prefix[3]);
-        					  }
+        						  if(prefix.length > 4) {
+        							  if(!prefixList.contains(entry.getKey()));
+        						       testsuiteParameterMap.get(entry.getKey()).setRampUp(prefix[4] + "_" + prefix[3]);
+        						  }
+        					   }
         				  }
 	    			}
 	    		} else if(testsuiteList.size() == 1) {
@@ -1317,18 +1374,23 @@ public void setParametersValue() {
 	    	if(rampupDuration != null && rampupDuration.contains("NS_RAMP_UP_DURATION")){
 	    		if(testsuiteList.size() > 1) {
 	    			List<String> rampup = Arrays.asList(rampupDuration.split("\\s*,\\s*"));
+	    			ArrayList<String> prefixList = new ArrayList<String>();
 	    			for(int i = 0 ; i < rampup.size(); i++) {
 	    				String rampupsec = rampup.get(i);
 	    				String prefix[] = rampupsec.split("_");
 	    				
 	    					if(testsuiteParameterMap.containsKey(prefix[0])) {
-	    						if(prefix.length > 5)
-	    						testsuiteParameterMap.get(prefix[0]).setRampupDuration(prefix[5]);
+	    						if(prefix.length > 5) {
+	    							prefixList.add(prefix[0]);
+	    						  testsuiteParameterMap.get(prefix[0]).setRampupDuration(prefix[5]);
+	    						}
 	    					}
 	    					else {
 	    						for (Map.Entry<String,ParameterDTO> entry : testsuiteParameterMap.entrySet()) {
-	    							if(prefix.length > 4)
-	    							testsuiteParameterMap.get(entry.getKey()).setEmailid(rampupsec.split("UP_DURATION_")[1]);
+	    							if(prefix.length > 4) {
+	    								if(!prefixList.contains(entry.getKey()))
+	    							     testsuiteParameterMap.get(entry.getKey()).setEmailid(rampupsec.split("UP_DURATION_")[1]);
+	    							}
 	    						}
 	    					}
 	    				
@@ -1345,13 +1407,14 @@ public void setParametersValue() {
 	    		if(testsuiteList.size() > 1) {
 	    			logger.log(Level.INFO, "inside email id = " + emailid);
 	    			List<String> emailidto = Arrays.asList(emailid.split("\\s*,\\s*"));
+	    			ArrayList<String> prefixList = new ArrayList<String>();
 	    			for(int i = 0 ; i < emailidto.size(); i++) {
 	    				String email = emailidto.get(i);
 	    				String prefix[] = email.split("_");
 	    					logger.log(Level.INFO, "insideeeee email id = " + email);
 	    					if(testsuiteParameterMap.containsKey(prefix[0])) {
 	    						if(prefix.length > 4) {
-	    							//logger.log(Level.INFO, "email id = "+ email.split("IDS_TO_")[1].replaceAll("\\|", ","));
+	    					        prefixList.add(prefix[0]);
 	    							String mail = email.split("IDS_TO_")[1].replaceAll("\\|", ",");
 	    							logger.log(Level.INFO, "mail = " + mail);
 	    						testsuiteParameterMap.get(prefix[0]).setEmailid(mail);
@@ -1359,9 +1422,11 @@ public void setParametersValue() {
 	    					}else {
 	    						for (Map.Entry<String,ParameterDTO> entry : testsuiteParameterMap.entrySet()) {
 	    							if(prefix.length > 3) {
-	    								String mail = email.split("IDS_TO_")[1].replaceAll("\\|", ",");
-	    								logger.log(Level.INFO, "mail = " + mail);
-	    							    testsuiteParameterMap.get(entry.getKey()).setEmailid(mail);
+	    								if(!prefixList.contains(entry.getKey())) {
+	    									String mail = email.split("IDS_TO_")[1].replaceAll("\\|", ",");
+	    									logger.log(Level.INFO, "mail = " + mail);
+	    									testsuiteParameterMap.get(entry.getKey()).setEmailid(mail);
+	    								}
 	    							}
 	    						}
 	    					}
@@ -1381,20 +1446,24 @@ public void setParametersValue() {
 	    		
 	    		if(testsuiteList.size() > 1) {
 	    			List<String> emailidcc = Arrays.asList(emailidCC.split("\\s*,\\s*"));
+	    			ArrayList<String> prefixList = new ArrayList<String>();
 	    			for(int i = 0 ; i < emailidcc.size(); i++) {
 	    				String email = emailidcc.get(i);
 	    				String prefix[] = email.split("_");
 	    				if(prefix.length > 1) {
 	    					if(testsuiteParameterMap.containsKey(prefix[0])) {
 	    						if(prefix.length > 4) {
+	    							prefixList.add(prefix[0]);
 	    							String mail = email.split("IDS_CC_")[1].replaceAll("\\|", ",");
 	    						 testsuiteParameterMap.get(prefix[0]).setEmailidCC(mail);
 	    						}
 	    						}else {
 	    						for (Map.Entry<String,ParameterDTO> entry : testsuiteParameterMap.entrySet()) {
 	    							if(prefix.length > 3) {
-	    								String mail = email.split("IDS_TO_")[1].replaceAll("\\|", ",");
-	    							 testsuiteParameterMap.get(entry.getKey()).setEmailidCC(mail);
+	    								if(prefixList.contains(entry.getKey())) {
+	    									String mail = email.split("IDS_CC_")[1].replaceAll("\\|", ",");
+	    									testsuiteParameterMap.get(entry.getKey()).setEmailidCC(mail);
+	    								}
 	    							}
 	    							}
 	    					}
@@ -1405,7 +1474,7 @@ public void setParametersValue() {
 
 	    			String temp [] = emailidCC.split("_");
 	    			if(temp.length > 3) {
-	    				String mail = emailidCC.split("IDS_TO_")[1].replaceAll("\\|", ",");
+	    				String mail = emailidCC.split("IDS_CC_")[1].replaceAll("\\|", ",");
 	    				netstormConnectionManger.setEmailIdCc(mail);
 	    			}
 	    			}
@@ -1415,29 +1484,33 @@ public void setParametersValue() {
 	    		
 	    		if(testsuiteList.size() > 1) {
 	    			List<String> emailidbcc = Arrays.asList(emailidBcc.split("\\s*,\\s*"));
+	    			ArrayList<String> prefixList = new ArrayList<String>();
 	    			for(int i = 0 ; i < emailidbcc.size(); i++) {
 	    				String email = emailidbcc.get(i);
 	    				String prefix[] = email.split("_");
 	    				if(prefix.length > 1) {
 	    					if(testsuiteParameterMap.containsKey(prefix[0])) {
 	    						if(prefix.length > 4) {
+	    							prefixList.add(prefix[0]);
 	    							String mail = email.split("IDS_BCC_")[1].replaceAll("\\|", ",");
 	    						 testsuiteParameterMap.get(prefix[0]).setEmailidBcc(mail);
 	    						}
 	    						}else {
 	    						for (Map.Entry<String,ParameterDTO> entry : testsuiteParameterMap.entrySet()) {
 	    							if(prefix.length > 3) {
-	    								String mail = email.split("IDS_TO_")[1].replaceAll("\\|", ",");
-	    							 testsuiteParameterMap.get(entry.getKey()).setEmailidBcc(mail);
+	    								if(!prefixList.contains(entry.getKey())) {
+	    									String mail = email.split("IDS_BCC_")[1].replaceAll("\\|", ",");
+	    									testsuiteParameterMap.get(entry.getKey()).setEmailidBcc(mail);
+	    								}
 	    							}
-	    							}
+	    						}
 	    					}
 	    				}
 	    			}
 	    		} else if(testsuiteList.size() == 1) {
 	    		String temp [] = emailidBcc.split("_");
 	    		if(temp.length > 3) {
-	    			String mail = emailidBcc.split("IDS_TO_")[1].replaceAll("\\|", ",");
+	    			String mail = emailidBcc.split("IDS_BCC_")[1].replaceAll("\\|", ",");
 	    			netstormConnectionManger.setEmailIdBcc(mail);
 	    		}
 	    		}
@@ -1493,6 +1566,17 @@ public void getGitConfigurationFromNS(){
 			return this.hiddenBox;
 		}catch(Exception e){
 			logger.log(Level.SEVERE, "Unknown exception in getAddedHeaders.",e);
+			return "";
+		}
+	}
+	
+	@JavaScriptMethod
+	public String getTableValue() {
+		try{
+			logger.log(Level.INFO, "getTableValue called ...testProfileBox -"+this.testProfileBox);
+			return this.testProfileBox;
+		}catch(Exception e){
+			logger.log(Level.SEVERE, "Unknown exception in getTableValue.",e);
 			return "";
 		}
 	}
