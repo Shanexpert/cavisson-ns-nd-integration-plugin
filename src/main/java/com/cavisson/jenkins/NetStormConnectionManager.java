@@ -7,6 +7,7 @@ package com.cavisson.jenkins;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -819,7 +820,7 @@ public JSONObject pullObjectsFromGit(){
     {
       jsonRequest.put(JSONKeys.USERNAME.getValue(), username);
       jsonRequest.put(JSONKeys.PASSWORD.getValue(), password.getPlainText()); 
-      jsonRequest.put(JSONKeys.URLCONNECTION.getValue(), URLConnectionString);
+      jsonRequest.put(JSONKeys.URLCONNECTION.getValue(), getUrlString());
       jsonRequest.put(JSONKeys.OPERATION_TYPE.getValue(), OperationType.START_TEST.toString());
       jsonRequest.put(JSONKeys.PROJECT.getValue(), project);
       jsonRequest.put(JSONKeys.SUBPROJECT.getValue(), subProject);
@@ -1359,7 +1360,7 @@ public JSONObject pullObjectsFromGit(){
 	  logger.log(Level.INFO, "startNetstormTest() called.");
 	  
 	  logger.log(Level.INFO, "startNetstormTest: hiddenBox -"+hiddenBox);
-
+      testRun = -1;
 	  this.consoleLogger = consoleLogger; 
 	  HashMap resultMap = new HashMap(); 
 	  resultMap.put("STATUS", false);
@@ -1404,7 +1405,7 @@ public JSONObject pullObjectsFromGit(){
 		  try {
 			  URL url;
 			  String str =   getUrlString();//URLConnectionString.substring(0,URLConnectionString.lastIndexOf("/"));
-
+              logger.log(Level.INFO, "url str = "+ str);
 			  logger.log(Level.INFO, "this.jkRule- " + this.jkRule);    
 			  url = new URL(str+"/ProductUI/productSummary/jenkinsService/startTest");
 
@@ -1450,6 +1451,7 @@ public JSONObject pullObjectsFromGit(){
 			  /*Creating URL for polling.*/
 			  pollURL = str + "/ProductUI/productSummary/jenkinsService/checkConnectionStatus";
 
+			  logger.log(Level.INFO, "testrun before polling = " + testRun);
 			  /*Starting Thread and polling to server till test end.*/
 			  connectNSAndPollTestRun();
 			 // consoleLogger.println("Getting Netstorm Report. It may take some time. Please wait...");
@@ -2110,8 +2112,11 @@ public JSONObject pullObjectsFromGit(){
             while (isTestRunning) {
               try {
         	
+             logger.log(Level.INFO, "testrun= "+ testRun);
         	/*Creating Polling URL.*/
         	String pollURLWithArgs = pollURL + "?proSubProject=" + scenarioName + "&testRun=" + testRun;    	
+        	logger.log(Level.INFO, "poll url = "+ pollURLWithArgs);
+        	
         	URL url = new URL(pollURLWithArgs);
         	HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         	conn.setConnectTimeout(POLL_CONN_TIMEOUT);
@@ -3858,7 +3863,59 @@ public JSONObject pullObjectsFromGit(){
 
      return urlAddrs;
   }
-  
+ 
+  public void updateNCDataFile(FilePath fp, String scriptName, PrintStream consoleLogger) {
+	  try {
+		  URL url;
+		  String str =   getUrlString();//URLConnectionString.substring(0,URLConnectionString.lastIndexOf("/"));
+
+
+		  url = new URL(str+"/ProductUI/productSummary/jenkinsService/updateDataFiles?scriptName=" + scriptName);
+
+		  logger.log(Level.INFO, "url for updating data files = "+  url);
+		  String Boundary = UUID.randomUUID().toString();
+		  HttpURLConnection connect = (HttpURLConnection) url.openConnection();
+		  connect.setConnectTimeout(0);
+		  connect.setReadTimeout(0);
+		  connect.setRequestMethod("POST");
+		  connect.setRequestProperty("Content-Type", "multipart/form-data; boundary="+Boundary);
+
+		  connect.setDoOutput(true);
+
+		  DataOutputStream out = new DataOutputStream(connect.getOutputStream());
+		  out.writeUTF("--"+Boundary+"\r\n"
+				  +"Content-Disposition: form-data; name=\"file\"; filename="+ fp.getName() + "\r\n"
+				  +"Content-Type: application/octet-stream; charset=utf-8"+"\r\n\r\n");
+		  InputStream in = fp.read();
+		  byte[] b = new byte[1024];
+		  int l = 0;
+		  while((l = in.read(b)) != -1) out.write(b,0,l); // Write to file
+		  out.writeUTF("\r\n--"+Boundary+"--\r\n");
+		  out.flush();
+		  out.close();
+
+		  logger.log(Level.INFO, "sttaus code = " + connect.getResponseCode());
+		  if (connect.getResponseCode() == 200) {
+			  BufferedReader br = new BufferedReader(new InputStreamReader((connect.getInputStream())));
+			  JSONObject output = (JSONObject) JSONSerializer.toJSON(br.readLine());
+			  String mssg = (String) output.get("Message");
+			  logger.log(Level.INFO, "mssg = " + mssg);
+			  consoleLogger.println(mssg);
+
+		  } else {
+			  consoleLogger.println("Error in uploading data files.");
+		  }
+		  
+		  if(fp.exists()) {
+			  fp.delete();
+			logger.log(Level.INFO, "Uploaded file deleted successfully.");
+		  }
+		  
+	  } catch(Exception e) {
+         consoleLogger.println("Error in uploading data files.");
+            }
+  }
+ 
   public JSONArray getScriptList(String profile,String scenario,String project,String subProject,String testMode){
 	  try{
 	  	 JSONArray scripts = new JSONArray();

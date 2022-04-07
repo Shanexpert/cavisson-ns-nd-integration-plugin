@@ -75,6 +75,7 @@ public class NetStormBuilder extends Builder implements SimpleBuildStep {
     private String repoUsername="";
     private String repoPassword="";
     private String gitPull = "";
+    String uploadFileName = "";  // file name uploaded for NC data files
     private String profile="";
     private String script="";
     private String page="";
@@ -556,6 +557,10 @@ public String getTotalusers() {
   public void perform(Run<?, ?> run, FilePath fp, Launcher lnchr, TaskListener taskListener) throws InterruptedException, IOException {
 	run.addAction(new NetStormStopAction(run));
 	run.addAction(new NetStormStopThread(run));
+       
+       Boolean fileUpload = false;
+       boolean uploadNCDataFile = false;
+       String scriptName = "";
 
 	if(envVarMap == null)
        envVarMap = run instanceof AbstractBuild ? ((AbstractBuild<?, ?>) run).getBuildVariables() : Collections.<String, String>emptyMap();
@@ -703,6 +708,10 @@ public String getTotalusers() {
            
            logger.log(Level.INFO, "env value = " + envValue);
            
+           /*Need script name for updating data files*/
+           if(((String) key).startsWith("Script Name")) {
+              scriptName = envValue;
+           }
            netstormConnectionManger.addSLAValue("1" , "2");
            if(envValue.startsWith("NS_SESSION"))
            {
@@ -940,7 +949,25 @@ public String getTotalusers() {
        }
         
       netstormConnectionManger.setJkRule(json);
-      
+     
+    /*If script name is given in string parameter then update data file which is uploaded on path workspace/jobname/uploadNCDataFiles/filename. */
+      if(scriptName != null && !scriptName.equals("")) {
+         FilePath file = new FilePath(fp.getChannel(), fp +"/uploadNCDataFiles");
+                 logger.log(Level.INFO, "File path for uploading data file = " + file);
+                 if(file.isDirectory())
+                 {
+                         logger.log(Level.INFO, "List of files = " + file.list());
+                         
+                   if(file.list().size() > 0) {
+                       FilePath files = file.list().get(0);
+                       netstormConnectionManger.updateNCDataFile(files, scriptName, logg);
+                   } else {
+                       logg.println("No Data file is uploaded");
+                   }
+                   
+                 // updateScriptFile(scriptName, qqq);
+                 }
+      } 
       String destDir = fp + "/TestSuiteReport";
 	  
 	  FilePath direc = new FilePath(fp.getChannel(), destDir);
