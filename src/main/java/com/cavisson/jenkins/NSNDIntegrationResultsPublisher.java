@@ -6,7 +6,7 @@
 
 package com.cavisson.jenkins;
 
-
+import hudson.Util;
 import hudson.Extension;
 import hudson.Launcher;
 import hudson.model.*;
@@ -482,7 +482,7 @@ public FormValidation doTestNsNdIntegratedConnection(@QueryParameter("nsIntegrat
   
   StringBuffer errMsg = new StringBuffer();
  
-  if (FieldValidator.isEmptyField(nsIntegrationUri))
+  if (Util.fixEmptyAndTrim(nsIntegrationUri) == null || FieldValidator.isEmptyField(nsIntegrationUri))
   {
     return validationResult = FormValidation.error("URL connection string for NS cannot be empty and should start with http:// or https://");
   } 
@@ -491,17 +491,17 @@ public FormValidation doTestNsNdIntegratedConnection(@QueryParameter("nsIntegrat
     return validationResult = FormValidation.error("URL connection string should start with http:// or https://");
   }
   
-  if(FieldValidator.isEmptyField(nsUsername))
+  if(Util.fixEmptyAndTrim(nsUsername) == null || FieldValidator.isEmptyField(nsUsername))
   {
     return validationResult = FormValidation.error("Please enter user name.");
   }
 
-  if(FieldValidator.isEmptyField(nsPassword))
+  if(Util.fixEmptyAndTrim(nsPassword) == null || FieldValidator.isEmptyField(nsPassword))
   {
     return validationResult = FormValidation.error("Please enter password.");
   }
   
-  if (FieldValidator.isEmptyField(ndIntegrationUri))
+  if (Util.fixEmptyAndTrim(ndIntegrationUri) == null || FieldValidator.isEmptyField(ndIntegrationUri))
   {
     return validationResult = FormValidation.error("URL connection string for ND cannot be empty and should start with http:// or https://");
   } 
@@ -510,12 +510,12 @@ public FormValidation doTestNsNdIntegratedConnection(@QueryParameter("nsIntegrat
     return validationResult = FormValidation.error("URL connection string should start with http:// or https://");
   }
   
-  if(FieldValidator.isEmptyField(ndUsername))
+  if(Util.fixEmptyAndTrim(ndUsername) == null || FieldValidator.isEmptyField(ndUsername))
   {
     return validationResult = FormValidation.error("Please enter user name.");
   }
 
-  if(FieldValidator.isEmptyField(ndPassword))
+  if(Util.fixEmptyAndTrim(ndPassword) == null || FieldValidator.isEmptyField(ndPassword))
   {
     return validationResult = FormValidation.error("Please enter password.");
   }
