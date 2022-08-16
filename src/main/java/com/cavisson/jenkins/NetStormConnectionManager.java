@@ -497,7 +497,7 @@ private static void disableSslVerification()
   
   }
 
-public JSONObject checkGitConfiguration(String protocol,String repoIp,String repoPort,String repoPath,String username,String password,String passPhrase){
+public JSONObject checkGitConfiguration(String repoPath,String username,String password,String passPhrase){
 		try
         {
 			logger.log(Level.INFO, "checkGitConfiguration method called. with password ="+password+",passPhrase ="+passPhrase);
@@ -538,17 +538,24 @@ public JSONObject checkGitConfiguration(String protocol,String repoIp,String rep
 	  reqObj.put("productType", "NS");
 	  reqObj.put("userName", this.username);
 	  	 
-	  String testString = "GIT_HOST = ";
-	  testString = testString + repoIp+" "+repoPort+" "+repoPath+" "+username+" "+password+" true "+passPhrase+" NA "+protocol+" NA";
-	  logger.log(Level.INFO, "testString ="+testString);
-	  reqObj.put("testString", testString);
+	 // String testString = "GIT_HOST = ";
+	 // testString = testString + repoIp+" "+repoPort+" "+repoPath+" "+username+" "+password+" true "+passPhrase+" NA "+protocol+" NA";
+	 // logger.log(Level.INFO, "testString ="+testString);
+	 // reqObj.put("testString", testString);
+	  reqObj.put("repoUrl", repoPath);
+	  reqObj.put("u", username);
+	  reqObj.put("p", "NA");
+	  reqObj.put("passType", "0");
+	  reqObj.put("passValue", password);
+	  reqObj.put("proxyIpPort", "NA");
+	  reqObj.put("validateSshkey", "false");
 	  logger.log(Level.INFO, "reqObj = "+  reqObj);
 	  	 
   	  URL url ;
   	  String response="";
   	  JSONObject finalRes = new JSONObject();
   	  String str = getUrlString(); // URLConnectionString.substring(0,URLConnectionString.lastIndexOf("/"));
-  	  url = new URL(str+"/ProductUI/productSummary/ScenarioWebService/versionControl/TEST");
+  	  url = new URL(str+"/ProductUI/productSummary/gitRepositoryService/fetchBranch");
   	  
   	     
   	  logger.log(Level.INFO, "versionControl method called. with arguments url = "+  url);
@@ -572,32 +579,21 @@ public JSONObject checkGitConfiguration(String protocol,String repoIp,String rep
   	      try
   	      {
   	    	org.json.simple.JSONObject jsonObj = (org.json.simple.JSONObject)new JSONParser().parse(output);
-  	        logger.log(Level.INFO, "data = "+  jsonObj.get("data"));
-  	        org.json.simple.JSONObject data = (org.json.simple.JSONObject)jsonObj.get("data");
-  	        response = (String)data.get("response");
-  	        logger.log(Level.INFO, "response = "+  response);
+  	       
+  	        String status = (String)jsonObj.get("status");
   	        
-	  	 	if(!response.equals("") && response != null){
-	  	 	logger.log(Level.INFO, "in check of response ...");
-	 		String[] temp = response.split("\n");
-	 		logger.log(Level.INFO, "temp ..."+temp);
-	 		if(temp.length>1){
-	 		logger.log(Level.INFO, "ERRRORRRRR in temp ...");
-	 		String resStr = "";
-	 		for(int i=0;i<temp.length;i++){
-	 			resStr=resStr+temp[i];
-	 			if(i<temp.length){
-	 			  resStr=resStr+"\n";}
-	 			finalRes.put("errMsg", resStr);
-	 		  }
-	 		logger.log(Level.INFO, "finalRes with error ..."+finalRes);
-	 		}
-	 		else{
-	 			logger.log(Level.INFO, "no error ...");
-	 			finalRes.put("msg", temp[0]);
-	 			finalRes.put("errMsg", "");
-	 			logger.log(Level.INFO, "finalRes without error ..."+finalRes);
-	 		}	 		
+  	        logger.log(Level.INFO, "status = "+  status);
+  	        
+	  	 	if(status != null && !status.isEmpty()){
+	  	 		if(status.equals("pass")) {
+	  	 			finalRes.put("msg", "Git Configuration passed.");
+		 			finalRes.put("errMsg", "");
+	  	 		} else {
+	  	 			String mssg = (String)jsonObj.get("data");
+	  	 			finalRes.put("msg", mssg);
+		 			finalRes.put("errMsg", mssg);
+	  	 		}
+	  	 			
 	  	 }
 	  	 	else{
 	  	 		logger.log(Level.INFO, "response is null ...");
@@ -624,7 +620,7 @@ public JSONObject checkGitConfiguration(String protocol,String repoIp,String rep
 	}
   }
 
-public String saveGitConfiguration(String protocol,String repoIp,String repoPort,String repoPath,String username,String password,String passPhrase){
+public String saveGitConfiguration(String repoPath,String username,String password,String passPhrase){
 	try{
 		
 		/*Encrypting password and passphrase*/  	
@@ -658,20 +654,37 @@ public String saveGitConfiguration(String protocol,String repoIp,String repoPort
 	    
 	    /*Saving git configuration*/
 	    JSONObject saveParam = new JSONObject();
+	    saveParam.put("GIT_HOST_branch", "main");
 	    saveParam.put("GIT_HOST_email", "NA");
+	    saveParam.put("GIT_HOST_fname", username);
 	    saveParam.put("GIT_HOST_enable", "true");
-	    saveParam.put("GIT_HOST_ip", repoIp);
+	    saveParam.put("GIT_HOST_ip", "");
+	    saveParam.put("GIT_HOST_ssl", "true");
 	    saveParam.put("GIT_HOST_isSSLCertificateDisable", "false");
 	    saveParam.put("GIT_HOST_pass_phrase", passPhrase);
-	    saveParam.put("GIT_HOST_protocol", protocol);
 	    saveParam.put("GIT_HOST_pwd", password);
-	    saveParam.put("GIT_HOST_repo_name", repoPath);
-	    saveParam.put("GIT_HOST_repo_port", repoPort);
+	    saveParam.put("GIT_HOST_url", repoPath);
 	    saveParam.put("GIT_HOST_uname", username);
+	    saveParam.put("SSH_KEY", "0");
+	    saveParam.put("VERSION_CONTROL", "1");
+	    saveParam.put("git_author", "");
+	    saveParam.put("git_email", "");
+	    saveParam.put("git_proxy", "");
+	    saveParam.put("git_url", repoPath);
+	    saveParam.put("git_user", username);
+	    saveParam.put("http_proxy", "");
+	    saveParam.put("https_proxy", "");
+	    saveParam.put("isSaveForFutureProfile", true);
+	    saveParam.put("operationMode", "0");
+	    saveParam.put("passphrase", passPhrase);
+	    saveParam.put("ssh_proxy", "");
+	    saveParam.put("useproxy", "false");
+	    saveParam.put("validateSshkey", "false");
+	    
 	    logger.log(Level.INFO, "saveGitConfiguration: saveParam = "+  saveParam);
 	    
 	    StringBuilder result = new StringBuilder();
-	    URL url = new URL(strr+"/DashboardServer/web/commons/setGitConfiguration");
+	    URL url = new URL(strr+"/DashboardServer/web/commons/setGitConfiguration?userName=" + this.username);
 	    logger.log(Level.INFO, "saveGitConfiguration: url = "+  url);
 	    
 	    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -708,7 +721,7 @@ public String getGitConfiguration(){
 		StringBuffer errMsg = new StringBuffer();
 		JSONObject resObj = new JSONObject();
 		String str = getUrlString(); // URLConnectionString.substring(0,URLConnectionString.lastIndexOf("/"));
-		urll = new URL(str+"/DashboardServer/web/commons/getGitConfiguration");
+		urll = new URL(str+"/DashboardServer/web/commons/getGitConfiguration?userName=" + username+  "&activeProfile=");
 		try{
 		  	HttpURLConnection connectt = (HttpURLConnection) urll.openConnection();
 		  	connectt.setConnectTimeout(POLL_CONN_TIMEOUT);
@@ -734,51 +747,93 @@ public String getGitConfiguration(){
 	}
 }
 
-public JSONObject pullObjectsFromGit(){
+public String pullObjectsFromGit(){
 	try{
 		logger.log(Level.INFO, "pullObjectsFromGit called...");
 		/*Checking if git is already configured*/
 		String res="";
-		JSONObject resObj = new JSONObject();
+		String response = "";
+		//JSONObject resObj = new JSONObject();
 		String str = getUrlString(); // URLConnectionString.substring(0,URLConnectionString.lastIndexOf("/"));
-		try{
 		String resMsg = getGitConfiguration();
+		try{
 	  	logger.log(Level.INFO, "pullObjectsFromGit: resMsg -"+resMsg);
 	  	if(resMsg == null||resMsg.equals("")||resMsg.equals("notConfigured")){
 	  		logger.log(Level.INFO, "Git is not configured ...");
 	  		res = "Git configuration is unavailable. Configure git repository first";
-	  		resObj.put("ErrMsg", res);
-	  		resObj.put("msg", "");
-	  		return resObj;
+	  		response = res;
+	  		return res;
 	  	}
 		}catch(Exception e){
 			logger.log(Level.SEVERE, "Unknown exception in checking if git is configured -", e);
 		}
 	  	
 		logger.log(Level.INFO, "Going to pull objects ...");
-	  	/*If git is configured, pull/clone scenario, scripts, testcases, checkprofiles and testsuites from configured repo*/
-		URL url ;
-		url = new URL(str+"/ProductUI/productSummary/jenkinsService/getPulledObjectsFromGit");
-		try{
-	  	HttpURLConnection con = (HttpURLConnection) url.openConnection();
-//	  	con.setConnectTimeout(POLL_CONN_TIMEOUT);
-//	  	con.setReadTimeout(POLL_CONN_TIMEOUT);
-	  	con.setRequestMethod("GET");
-//	  	con.setRequestProperty("Accept", "application/json");    
-
-	  	if (con.getResponseCode() != 200) {
-	  	  logger.log(Level.INFO, "pullObjectsFromGit: Getting Error code while pulling objects from git  = " + con.getResponseCode());
-	  	}
-	  	BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-	  	String pullRes = br.readLine();
-	  	logger.log(Level.INFO, "pullRes -"+pullRes);
-	  	resObj = (JSONObject) JSONSerializer.toJSON(pullRes);
-	  	logger.log(Level.INFO, "pullRes msg -"+resObj.get("msg").toString());
-	  	
-		}catch(Exception e){
-			logger.log(Level.SEVERE, "Unknown exception while pulling objects from git -", e);
+		String gitResponse[] = resMsg.split(" ");
+		String repoUrl = "";
+		if(gitResponse != null && gitResponse.length > 0) {
+			repoUrl = gitResponse[0];
 		}
-	  	return resObj;
+	  	/*If git is configured, pull/clone scenario, scripts, testcases, checkprofiles and testsuites from configured repo*/
+		JSONObject obj = new JSONObject();
+		obj.put("masterRepo", repoUrl);
+		obj.put("passType", "0");
+		obj.put("passValue", "");
+		obj.put("productType", "NS");
+		obj.put("repoProject", "configuration");
+		obj.put("userName", this.username);
+		
+		logger.log(Level.INFO, "clone request object = " + obj);
+		URL url ;
+		url = new URL(str+"/ProductUI/productSummary/gitRepositoryService/gitClone");
+		
+	  	HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+	  	conn.setRequestMethod("POST");  
+	  	conn.setRequestProperty("Content-Type", "application/json");
+	  	conn.setRequestProperty("Accept", "application/json");
+	  	conn.setDoOutput(true);
+	  	String json =obj.toString();
+	  	OutputStream os = conn.getOutputStream();
+	  	os.write(json.getBytes());
+	  	os.flush();
+
+	  	if (conn.getResponseCode() != 200) {
+	  	  logger.log(Level.INFO, "Getting Error code while git clonning  = " + conn.getResponseCode());
+	  	}
+	  	BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+	  	String cloneRes = br.readLine();
+	  	logger.log(Level.INFO, "cloneRes -"+cloneRes);
+	  	
+	  	/*Now after clonning, doing git pull*/
+	  	JSONObject objreq = new JSONObject();
+		objreq.put("activeProfile", "");
+		objreq.put("passType", "0");
+		objreq.put("passValue", "");
+		objreq.put("productType", "NS");
+		objreq.put("repo", "configuration");
+		objreq.put("userName", this.username);
+		
+		logger.log(Level.INFO, "pull request object = " + objreq);
+		url = new URL(str+"/ProductUI/productSummary/gitRepositoryService/gitRefresh");
+		
+	  	HttpURLConnection urlconn = (HttpURLConnection) url.openConnection();
+	  	urlconn.setRequestMethod("POST");  
+	  	urlconn.setRequestProperty("Content-Type", "application/json");
+	  	urlconn.setRequestProperty("Accept", "application/json");
+	  	urlconn.setDoOutput(true);
+	  	String data =objreq.toString();
+	  	OutputStream os1 = urlconn.getOutputStream();
+	  	os1.write(data.getBytes());
+	  	os1.flush();
+
+	  	if (urlconn.getResponseCode() != 200) {
+	  	  logger.log(Level.INFO, "Getting Error code while git clonning  = " + urlconn.getResponseCode());
+	  	}
+	  	BufferedReader brreader = new BufferedReader(new InputStreamReader(urlconn.getInputStream()));
+	    response = brreader.readLine();
+		
+	    logger.log(Level.INFO, "Git Pull response = " + response);
+	  	return response;
 	}catch(Exception e){
 		logger.log(Level.SEVERE, "Unknown exception in pullObjectsFromGit method.", e);
 	    return (null);
@@ -1355,7 +1410,7 @@ public JSONObject pullObjectsFromGit(){
    return null;
   }
 
-  public HashMap startNetstormTest(StringBuffer errMsg , PrintStream consoleLogger)
+  public HashMap startNetstormTest(StringBuffer errMsg , PrintStream consoleLogger, String repoPath)
   {
 	  logger.log(Level.INFO, "startNetstormTest() called.");
 	  
@@ -1380,23 +1435,18 @@ public JSONObject pullObjectsFromGit(){
 			if(gitPull.equals("true")){
 			  logger.log(Level.INFO, "Going to pull from GIT...");
 			  consoleLogger.println("Starting Git pull ... ");
-			  JSONObject res = pullObjectsFromGit();
+			  String res = pullObjectsFromGit();
 //			  if(res != null && !res.isEmpty()){
 //				  logger.log(Level.INFO, "res -"+res);
 //			  }else{
 //	            consoleLogger.println("GIT Pull was unsuccessful.");
 //	          }
 			  if(res != null && !res.isEmpty()){
-	            	if(!res.get("ErrMsg").toString().equals("")){
-	            		logger.log(Level.INFO, "Err exists ...");
-	            		consoleLogger.println(res.get("ErrMsg").toString());
-	            	}else{
-	            		logger.log(Level.INFO, "No Err ...");
-	            		consoleLogger.println(res.get("msg").toString());
-	            	}
-	            }else{
-	            	consoleLogger.println("GIT Pull was unsuccessful.");
-	            }
+	             consoleLogger.println(res);
+	           
+	           }else{
+	             consoleLogger.println("GIT Pull was unsuccessful.");
+	          }
 		  	}
 		  }catch(Exception ex){
 			  logger.log(Level.SEVERE, "Exception in pulling from Git -", ex);
@@ -1507,7 +1557,7 @@ public JSONObject pullObjectsFromGit(){
 	  return resultMap;
   }
   
-  public HashMap startMultipleTest(StringBuffer errMsg , PrintStream consoleLogger)
+  public HashMap startMultipleTest(StringBuffer errMsg , PrintStream consoleLogger, String repoPath)
   {
 	  logger.log(Level.INFO, "startNetstormTest() called.");
 	  
@@ -1535,23 +1585,17 @@ public JSONObject pullObjectsFromGit(){
 			if(gitPull.equals("true")){
 			  logger.log(Level.INFO, "Going to pull from GIT...");
 			  consoleLogger.println("Starting Git pull ... ");
-			  JSONObject res = pullObjectsFromGit();
+			  String res = pullObjectsFromGit();
 //			  if(res != null && !res.isEmpty()){
 //				  logger.log(Level.INFO, "res -"+res);
 //			  }else{
 //	            consoleLogger.println("GIT Pull was unsuccessful.");
 //	          }
 			  if(res != null && !res.isEmpty()){
-	            	if(!res.get("ErrMsg").toString().equals("")){
-	            		logger.log(Level.INFO, "Err exists ...");
-	            		consoleLogger.println(res.get("ErrMsg").toString());
-	            	}else{
-	            		logger.log(Level.INFO, "No Err ...");
-	            		consoleLogger.println(res.get("msg").toString());
-	            	}
-	            }else{
-	            	consoleLogger.println("GIT Pull was unsuccessful.");
-	            }
+				  consoleLogger.println(res);
+			  }else{
+				  consoleLogger.println("GIT Pull was unsuccessful.");
+			  }
 		  	}
 		  }catch(Exception ex){
 			  logger.log(Level.SEVERE, "Exception in pulling from Git -", ex);
@@ -3864,13 +3908,13 @@ public JSONObject pullObjectsFromGit(){
      return urlAddrs;
   }
  
-  public void updateNCDataFile(FilePath fp, String scriptName, PrintStream consoleLogger) {
+  public void updateNCDataFile(FilePath fp, String scriptName, String username, String profile, PrintStream consoleLogger) {
 	  try {
 		  URL url;
 		  String str =   getUrlString();//URLConnectionString.substring(0,URLConnectionString.lastIndexOf("/"));
 
 
-		  url = new URL(str+"/ProductUI/productSummary/jenkinsService/updateDataFiles?scriptName=" + scriptName);
+		  url = new URL(str+"/ProductUI/productSummary/jenkinsService/updateDataFiles?scriptName=" + scriptName + "&username="  + username + "&profile=" + profile);
 
 		  logger.log(Level.INFO, "url for updating data files = "+  url);
 		  String Boundary = UUID.randomUUID().toString();

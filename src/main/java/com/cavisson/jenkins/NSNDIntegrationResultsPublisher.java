@@ -6,7 +6,7 @@
 
 package com.cavisson.jenkins;
 
-import hudson.Util;
+
 import hudson.Extension;
 import hudson.Launcher;
 import hudson.model.*;
@@ -19,6 +19,7 @@ import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
 import hudson.util.FormValidation;
 import hudson.util.ListBoxModel;
+import hudson.Util;
 import hudson.EnvVars;
 import hudson.FilePath;
 import java.io.IOException;

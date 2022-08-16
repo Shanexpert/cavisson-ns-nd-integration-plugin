@@ -1,0 +1,36 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler"
+ xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson"  xmlns:f="/lib/form">
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/> 
+ 
+ <script src ="${rootURL}/plugin/cavisson-ns-nd-integration/js/jenkins_utils.js"/>
+ 
+ <f:entry title="Host" description="">
+    <f:textbox field="host" id="host"/>
+  </f:entry>
+  
+  <f:entry title="UserName"  description="">
+    <f:textbox field="username" id="username"/>
+  </f:entry>
+
+  <f:entry title="Token"  description="">
+    <f:textbox field="token" id="token"/>
+  </f:entry>
+  
+  <f:entry title="Password" description="">
+    <f:password field="password" id="password"/>
+  </f:entry>
+ 
+  <f:entry title="Config"  description="">
+    <f:textarea field="config" id="config"/>
+  </f:entry>
+  
+  <f:entry title="RR Pair File Path" description="">
+    <f:textbox field="rrFilePath" id="rrFilePath"/>
+  </f:entry>
+  
+   <f:entry title="Execute Test Suite after service creation." description="">
+    <f:checkbox name="isstart" field="isstart" id="isstart" checked="${isstart}" />
+  </f:entry>
+  
+  </j:jelly>

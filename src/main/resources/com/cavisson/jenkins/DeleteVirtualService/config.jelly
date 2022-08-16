@@ -1,0 +1,13 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler"
+ xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson"  xmlns:f="/lib/form">
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/> 
+ 
+ <script src ="${rootURL}/plugin/cavisson-ns-nd-integration/js/jenkins_utils.js"/>
+ 
+  <f:entry title="Service Name"  description="">
+    <f:textbox field="serviceName" id="serviceName"/> 
+  </f:entry>
+ 
+  
+  </j:jelly>
