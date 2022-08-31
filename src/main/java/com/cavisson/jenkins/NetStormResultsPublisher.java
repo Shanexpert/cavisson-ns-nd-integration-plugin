@@ -5,6 +5,7 @@
  */
 package com.cavisson.jenkins;
 
+import org.kohsuke.stapler.verb.*;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
@@ -195,9 +196,10 @@ public String getUsername()
  /*
   Need to test connection on given credientials
   */
+ @POST
  public FormValidation doTestNetStormConnection(@QueryParameter("netstormUri") final String netstormRestUri, @QueryParameter("username") final String username, @QueryParameter("password") String password ) 
  {
-
+   Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
    FormValidation validationResult;
    
    StringBuffer errMsg = new StringBuffer();

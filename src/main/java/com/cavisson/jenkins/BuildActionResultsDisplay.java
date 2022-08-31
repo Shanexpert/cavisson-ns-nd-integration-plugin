@@ -5,6 +5,8 @@
  */
 package com.cavisson.jenkins;
 
+import org.kohsuke.stapler.verb.*;
+import jenkins.model.Jenkins;
 import hudson.model.Run;
 import hudson.model.ModelObject;
 import hudson.model.TaskListener;
@@ -110,7 +112,8 @@ public class BuildActionResultsDisplay implements ModelObject{
    * Graph of metric points over time.
    */
   public void doSummarizerGraph(final StaplerRequest request, final StaplerResponse response) throws IOException
-  {    
+  {
+    Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
     final String metricKey = request.getParameter("metricDataKey");
     final MetricData metricData = this.currentReport.getMetricByKey(metricKey);
     final MetricData metricDataBaseLine = this.currentReport.getMetricByKey(metricKey , "BASELINE");

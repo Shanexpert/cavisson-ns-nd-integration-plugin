@@ -1,5 +1,6 @@
 package com.cavisson.jenkins;
 
+import org.kohsuke.stapler.verb.*;
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
@@ -1601,7 +1602,6 @@ public void getGitConfigurationFromNS(){
 			  protocol = "";
 		  }else{
 			  String[] resArr = res.split(" ");
-//			  gitlab.com 443 vikasverma4795/demo vikasverma4795 Cavisson1! true NA NA https false
 			  if(resArr.length>8){
 			//  repoIp = resArr[0];
 			//  repoPort = resArr[1];
@@ -1937,9 +1937,10 @@ public void getGitConfigurationFromNS(){
          * @param password
          * @return
          */
+	@POST
         public FormValidation doTestNetstormConnection(@QueryParameter("URLConnectionString") final String URLConnectionString, @QueryParameter("username") final String username, @QueryParameter("password") String password) {
 
-        	
+            Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);	
             FormValidation validationResult;
             
             
@@ -1954,10 +1955,11 @@ public void getGitConfigurationFromNS(){
                        
             return validationResult;
         }
-        
+       
+        @POST	
         public FormValidation doPullObjectsFromGit(@QueryParameter("URLConnectionString") final String URLConnectionString, @QueryParameter("username") final String username, @QueryParameter("password") String password, @QueryParameter("profile") String profile, @QueryParameter("repoPath") String repoPath) {
 
-        	
+            Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);	
             FormValidation validationResult;
             StringBuffer errMsg = new StringBuffer();
                         
@@ -1977,8 +1979,10 @@ public void getGitConfigurationFromNS(){
 //            ArrayList<String> projectList = netstormConnectionManger.getProjectList(errMsg);
             return validationResult;
         }
-        
+       
+	@POST
         public FormValidation doTestGitConfiguration(@QueryParameter("repoPath") String repoPath,@QueryParameter("repoUsername") String repoUserName, @QueryParameter("repoPassword") String repoPassword,@QueryParameter("username") String username,@QueryParameter("password") String password,@QueryParameter("URLConnectionString") String URLConnectionString) {
+		Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
         	FormValidation validationResult;
         	
         	
@@ -2015,7 +2019,9 @@ public void getGitConfigurationFromNS(){
         	return validationResult;
         }
         
+	@POST
         public FormValidation doSaveGitConfiguration(@QueryParameter("repoPath") String repoPath,@QueryParameter("repoUsername") String repoUserName, @QueryParameter("repoPassword") String repoPassword,@QueryParameter("username") String username,@QueryParameter("password") String password,@QueryParameter("URLConnectionString") String URLConnectionString) {
+		Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
         	FormValidation validationResult;
         	
         	if(URLConnectionString.equals("")||URLConnectionString.equals("NA")||URLConnectionString.equals(" ")||URLConnectionString == null || password.equals("") || password.equals("NA") || password.equals(" ") || password == null||username.equals("") || username.equals("NA") || username.equals(" ") || username == null){
@@ -2043,10 +2049,11 @@ public void getGitConfigurationFromNS(){
         	return validationResult;
         }
         
-     // method for git profiles.............
+     // method for git profiles............
+     	@POST
         public synchronized ListBoxModel doFillProfileItems(@QueryParameter("URLConnectionString") final String URLConnectionString, @QueryParameter("username") final String username, @QueryParameter("password") String password)
         {
-        	
+          Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);	
           ListBoxModel models = new ListBoxModel();
           StringBuffer errMsg = new StringBuffer();
           
@@ -2075,10 +2082,10 @@ public void getGitConfigurationFromNS(){
           return models;
         }
         
-                 
+        @POST 
         public synchronized ListBoxModel doFillProjectItems(@QueryParameter("URLConnectionString") final String URLConnectionString, @QueryParameter("username") final String username, @QueryParameter("password") String password,@QueryParameter("profile") final String profile)
         {
-        	
+          Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);	
           ListBoxModel models = new ListBoxModel();
           StringBuffer errMsg = new StringBuffer();
           
@@ -2125,10 +2132,11 @@ public void getGitConfigurationFromNS(){
             
             return models;
         }
-       
+      
+	@POST
         public synchronized ListBoxModel doFillSubProjectItems(@QueryParameter("URLConnectionString") final String URLConnectionString, @QueryParameter("username") final String username, @QueryParameter("password") String password, @QueryParameter("profile") final String profile, @QueryParameter("project") final String project )
         {
-        	
+          Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);	
           ListBoxModel models = new ListBoxModel();
           
           if(URLConnectionString == null || URLConnectionString.trim().equals("") || username == null || username.trim().equals("") || password == null || password.trim().equals("") || project == null || project.trim().equals(""))
@@ -2160,10 +2168,11 @@ public void getGitConfigurationFromNS(){
              
           return models;
         }
-        
+       
+	@POST
         public synchronized ListBoxModel doFillScenarioItems(@QueryParameter("URLConnectionString") final String URLConnectionString, @QueryParameter("username") final String username, @QueryParameter("password") String password, @QueryParameter("profile") final String profile, @QueryParameter("project") final String project, @QueryParameter("subProject") final String subProject , @QueryParameter("testMode") final String testMode )
         {
-        	        	
+          Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);	        	
           ListBoxModel models = new ListBoxModel();
          
           if(URLConnectionString == null || URLConnectionString.trim().equals("") || username == null || username.trim().equals("") || password == null || password.trim().equals("") || project == null || project.trim().equals("") || subProject == null || subProject.trim().equals(""))
@@ -2205,10 +2214,11 @@ public void getGitConfigurationFromNS(){
            
            return model;
         }
-        
+       
+	@POST
         public synchronized ListBoxModel doFillScriptItems(@QueryParameter("URLConnectionString") final String URLConnectionString, @QueryParameter("username") final String username, @QueryParameter("password") String password,@QueryParameter("profile") String profile,@QueryParameter("scenario") String scenario,@QueryParameter("project") String project,@QueryParameter("subProject") String subProject,@QueryParameter("testMode") String testMode)
         {
-        	
+          Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);	
           ListBoxModel models = new ListBoxModel();
           StringBuffer errMsg = new StringBuffer();
           logger.log(Level.INFO, "scriptList: url -"+URLConnectionString+",username -"+username+",password -"+password);
@@ -2246,10 +2256,11 @@ public void getGitConfigurationFromNS(){
 
           return models;
         }
-        
+       
+	@POST
         public synchronized ListBoxModel doFillPageItems(@QueryParameter("URLConnectionString") final String URLConnectionString, @QueryParameter("username") final String username, @QueryParameter("password") String password, @QueryParameter("script") String script,@QueryParameter("profile") String profile,@QueryParameter("scenario") String scenario,@QueryParameter("project") String project,@QueryParameter("subProject") String subProject,@QueryParameter("testMode") String testMode)
         {
-        	
+          Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);	
           ListBoxModel models = new ListBoxModel();
           StringBuffer errMsg = new StringBuffer();
           logger.log(Level.INFO, "pageList: url -"+URLConnectionString+",username -"+username+",password -"+password);

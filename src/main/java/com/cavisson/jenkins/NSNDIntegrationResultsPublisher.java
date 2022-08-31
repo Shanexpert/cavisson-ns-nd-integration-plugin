@@ -6,7 +6,8 @@
 
 package com.cavisson.jenkins;
 
-
+import org.kohsuke.stapler.verb.*;
+import jenkins.model.Jenkins;
 import hudson.Extension;
 import hudson.Launcher;
 import hudson.model.*;
@@ -476,9 +477,10 @@ public class NSNDIntegrationResultsPublisher extends Recorder implements SimpleB
  /*
  Need to test connection on given credientials
  */
+@POST
 public FormValidation doTestNsNdIntegratedConnection(@QueryParameter("nsIntegrationUri") final String nsIntegrationUri, @QueryParameter("nsUsername") final String nsUsername, @QueryParameter("nsPassword") String nsPassword, @QueryParameter("ndIntegrationUri") final String ndIntegrationUri, @QueryParameter("ndUsername") final String ndUsername, @QueryParameter("ndPassword") String ndPassword ) 
-{ 
-  
+{
+  Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
   FormValidation validationResult;
   
   StringBuffer errMsg = new StringBuffer();

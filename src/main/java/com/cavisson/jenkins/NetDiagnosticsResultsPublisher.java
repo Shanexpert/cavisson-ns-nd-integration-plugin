@@ -1,6 +1,6 @@
 package com.cavisson.jenkins;
 
-
+import org.kohsuke.stapler.verb.*;
 import hudson.Extension;
 import hudson.Launcher;
 import hudson.model.*;
@@ -481,9 +481,10 @@ public class NetDiagnosticsResultsPublisher extends Recorder implements SimpleBu
  /*
  Need to test connection on given credientials
  */
+@POST
 public FormValidation doTestNetDiagnosticsConnection(@QueryParameter("netdiagnosticsUri") final String netdiagnosticRestUri, @QueryParameter("username") final String username, @QueryParameter("password") String password, @QueryParameter("curStartTime") final String curStartTime,@QueryParameter("curEndTime") final String curEndTime,@QueryParameter("baseStartTime") final String baseStartTime,@QueryParameter("baseEndTime") final String baseEndTime,@QueryParameter("criThreshold") final String criThreshold,@QueryParameter("warThreshold") final String warThreshold,@QueryParameter("failThreshold") final String failThreshold,@QueryParameter("initDuration") final Boolean initDuration,@QueryParameter("initStartTime") final String initStartTime,@QueryParameter("initEndTime") final String initEndTime) 
 {
-   
+  Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER); 
   FormValidation validationResult;
   
   StringBuffer errMsg = new StringBuffer();
@@ -547,9 +548,10 @@ public FormValidation doTestNetDiagnosticsConnection(@QueryParameter("netdiagnos
 
   return validationResult;
 }
-
+@POST
 public synchronized ListBoxModel doFillProfileItems(@QueryParameter("netdiagnosticsUri") final String netdiagnosticRestUri, @QueryParameter("username") final String username, @QueryParameter("password") String password)
 {
+  Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
 	
   ListBoxModel models = new ListBoxModel();
   StringBuffer errMsg = new StringBuffer();

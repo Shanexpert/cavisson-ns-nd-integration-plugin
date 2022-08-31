@@ -3,27 +3,27 @@
  xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson"  xmlns:f="/lib/form">
 
   <f:entry title="${%NSIntegration.uri.title}" description="${%NSIntegration.uri.description}">
-    <f:textbox field="nsIntegrationUri"/>
+    <f:textbox field="nsIntegrationUri" checkMethod="post"/>
   </f:entry>
 
   <f:entry title="${%NSIntegration.username.title}" description="${%NSIntegration.username.description}">
-    <f:textbox field="nsUsername" default="${descriptor.defaultUsername}"/>
+    <f:textbox field="nsUsername" default="${descriptor.defaultUsername}" checkMethod="post"/>
   </f:entry>
 
    <f:entry title="${%NSIntegration.password.title}" description="${%NSIntegration.password.description}">
-    <f:password field="nsPassword"/>
+    <f:password field="nsPassword" checkMethod="post"/>
    </f:entry>
 
   <f:entry title="${%NDIntegration.uri.title}" description="${%NDIntegration.uri.description}">
-    <f:textbox field="ndIntegrationUri"/>
+    <f:textbox field="ndIntegrationUri" checkMethod="post"/>
   </f:entry>
 
   <f:entry title="${%NDIntegration.username.title}" description="${%NDIntegration.username.description}">
-    <f:textbox field="ndUsername" default="${descriptor.defaultUsername}"/>
+    <f:textbox field="ndUsername" default="${descriptor.defaultUsername}" checkMethod="post"/>
   </f:entry>
 
    <f:entry title="${%NDIntegration.password.title}" description="${%NDIntegration.password.description}">
-    <f:password field="ndPassword"/>
+    <f:password field="ndPassword" checkMethod="post"/>
    </f:entry>
 
   <f:entry title="${%NDIntegration.checkprofile.title}" description="${%NDIntegration.checkprofile.description}">
@@ -93,3 +93,4 @@
 
 
 </j:jelly>
+

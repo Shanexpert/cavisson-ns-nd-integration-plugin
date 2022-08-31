@@ -322,7 +322,7 @@
              <table border='1' class='table1'  width="100%" bgcolor="#F0F0F0" cellspacing="0" cellpadding="5" id="reportID">
           <thead id ='pfh'><tr>
              <th align='left' class='th td_color' >Metric Under Test</th>
-             <th align='right' class='th td_color' tooltip='${testReport.currentDescription}' >Current (${testReport.testRun}) [${testReport.currentDateTime}] </th>
+             <th align='right' class='th td_color' tooltip='h.escape(${testReport.currentDescription})' >Current (${testReport.testRun}) [${testReport.currentDateTime}] </th>
              <j:if test='${!testReport.operator.equals("NA")}'>
                <th align='right' class='th td_color' > </th>
              </j:if>
@@ -334,16 +334,16 @@
              </j:if>
   
              <j:if test='${!testReport.baseLineTestRun.equals("-1")}'>
-               <th align='right' class='th td_color' tooltip='${testReport.baselineDescription}'>Baseline (${testReport.baseLineTestRun}) [${testReport.baselineDateTime}]</th>
+               <th align='right' class='th td_color' tooltip='h.escape(${testReport.baselineDescription})'>Baseline (${testReport.baseLineTestRun}) [${testReport.baselineDateTime}]</th>
              </j:if>
 
              <j:if test='${!testReport.previousTestRun.equals("-1")}'>
-               <th align='right' class='th td_color' tooltip='${testReport.previousDescription}'>Previous (${testReport.previousTestRun}) [${testReport.previousDateTime}]</th>
+               <th align='right' class='th td_color' tooltip='h.escape(${testReport.previousDescription})'>Previous (${testReport.previousTestRun}) [${testReport.previousDateTime}]</th>
              </j:if>
 
 
              <j:if test='${!testReport.initialTestRun.equals("-1")}'>
-               <th align='right' class='th td_color' tooltip='${testReport.initialDescription}'>Initial (${testReport.initialTestRun}) [${testReport.initialDateTime}]</th>
+               <th align='right' class='th td_color' tooltip='h.escape(${testReport.initialDescription})'>Initial (${testReport.initialTestRun}) [${testReport.initialDateTime}]</th>
              </j:if>
            
             <j:forEach var="test_metric" items="${testReport.testMetrics}"/> 
@@ -437,16 +437,14 @@
                   
                   <j:if test='${!suit_metric.transactiontStatus.equals("-1")}'>
                    <j:if test='${!suit_metric.statusColour.equals("NA")}'>   
-                     <td align='right' style='background:${suit_metric.statusColour};' tooltip='${suit_metric.transactionTooltip}'>${suit_metric.transactiontStatus} </td>
+                     <td align='right' style='background:${suit_metric.statusColour};' tooltip='h.escape(${suit_metric.transactionTooltip})'>${suit_metric.transactiontStatus} </td>
                   </j:if>
      
                   <j:if test='${suit_metric.statusColour.equals("NA")}'>
-                     <td align='right' style='background:#FFFFFF;' tooltip='${suit_metric.transactionTooltip}'>${suit_metric.transactiontStatus} </td>
+                     <td align='right' style='background:#FFFFFF;' tooltip='h.escape(${suit_metric.transactionTooltip})'>${suit_metric.transactiontStatus} </td>
                   </j:if>
               </j:if>
             <td  style="background:#FFFFFF;color:blue;cursor:pointer;" > 
-             <i title="Trend Graph" onclick="openTrend('${suit_metric.linkForTrend}')" class='fa fa-line-chart' aria-hidden='true'></i>&#160;
-            <i title="Metric Graph" onclick="openMetric('${suit_metric.metricLink}')" class='fa fa-bar-chart' aria-hidden='true'></i> </td>
             </tr>
             </j:if>
             </j:if>
@@ -469,7 +467,7 @@
      <table class="custom-table">
       <thead ><tr>
            <j:forEach var="header" items="${testReport.pageDetailHeader}">
-               <th align='left' class='th td_color' tooltip='${header}'>${header}</th>
+               <th align='left' class='th td_color' tooltip='h.escape(${header})'>${header}</th>
            </j:forEach>
             
           </tr></thead>
@@ -477,97 +475,97 @@
           <tbody>
           <j:forEach var="pageDetailData" items="${testReport.pageDetail}">
           <tr>
-          <td tooltip='${pageDetailData.strPageName}'>${pageDetailData.strPageName}</td>
-          <td tooltip='${pageDetailData.strHostName}'>${pageDetailData.strHostName}</td>
-          <td tooltip='${pageDetailData.groupName}'>${pageDetailData.groupName}</td>
-          <td tooltip='${pageDetailData.browserName}'>${pageDetailData.browserName}</td>
+          <td tooltip='h.escape(${pageDetailData.strPageName})'>${pageDetailData.strPageName}</td>
+          <td tooltip='h.escape(${pageDetailData.strHostName})'>${pageDetailData.strHostName}</td>
+          <td tooltip='h.escape(${pageDetailData.groupName})'>${pageDetailData.groupName}</td>
+          <td tooltip='h.escape(${pageDetailData.browserName})'>${pageDetailData.browserName}</td>
           
           <j:if test='${!pageDetailData.strScreenSize.equals("")}'>
-          <td tooltip='${pageDetailData.strScreenSize}'>${pageDetailData.strScreenSize}</td>
+          <td tooltip='h.escape(${pageDetailData.strScreenSize})'>${pageDetailData.strScreenSize}</td>
           </j:if>
           <j:if test='${pageDetailData.strScreenSize.equals("")}'>
           <td>-</td>
           </j:if>
           
           <j:if test='${!pageDetailData.strSessionCount.equals("-1")}'>
-          <td tooltip='${pageDetailData.strSessionCount}'>${pageDetailData.strSessionCount}</td>
+          <td tooltip='h.escape(${pageDetailData.strSessionCount})'>${pageDetailData.strSessionCount}</td>
           </j:if>
           <j:if test='${pageDetailData.strSessionCount.equals("-1")}'>
           <td>-</td>
           </j:if>
           
           <j:if test='${!pageDetailData.strAverageDOM.equals("-1.00")}'>
-          <td tooltip='${pageDetailData.strAverageDOM}'>${pageDetailData.strAverageDOM}</td>
+          <td tooltip='h.escape(${pageDetailData.strAverageDOM})'>${pageDetailData.strAverageDOM}</td>
           </j:if>
           <j:if test='${pageDetailData.strAverageDOM.equals("-1.00")}'>
           <td>-</td>
           </j:if>
           
           <j:if test='${!pageDetailData.strAverageOnload.equals("-1.00")}'>
-          <td tooltip='${pageDetailData.strAverageOnload}'>${pageDetailData.strAverageOnload}</td>
+          <td tooltip='h.escape(${pageDetailData.strAverageOnload})'>${pageDetailData.strAverageOnload}</td>
           </j:if>
           <j:if test='${pageDetailData.strAverageOnload.equals("-1.00")}'>
           <td>-</td>
           </j:if>
           
           <j:if test='${!pageDetailData.strAveragePageLoad.equals("-1.00")}'>
-          <td tooltip='${pageDetailData.strAveragePageLoad}'>${pageDetailData.strAveragePageLoad}</td>
+          <td tooltip='h.escape(${pageDetailData.strAveragePageLoad})'>${pageDetailData.strAveragePageLoad}</td>
           </j:if>
           <j:if test='${pageDetailData.strAveragePageLoad.equals("-1.00")}'>
           <td>-</td>
           </j:if>
           
           <j:if test='${!pageDetailData.strAverageTimeToInteract.equals("-1.00")}'>
-          <td tooltip='${pageDetailData.strAverageTimeToInteract}'>${pageDetailData.strAverageTimeToInteract}</td>
+          <td tooltip='h.escape(${pageDetailData.strAverageTimeToInteract})'>${pageDetailData.strAverageTimeToInteract}</td>
           </j:if>
           <j:if test='${pageDetailData.strAverageTimeToInteract.equals("-1.00")}'>
           <td>-</td>
           </j:if>
           
           <j:if test='${!pageDetailData.averageStartRender.equals("-1.00")}'>
-          <td tooltip='${pageDetailData.averageStartRender}'>${pageDetailData.averageStartRender}</td>
+          <td tooltip='h.escape(${pageDetailData.averageStartRender})'>${pageDetailData.averageStartRender}</td>
           </j:if>
           <j:if test='${pageDetailData.averageStartRender.equals("-1.00")}'>
           <td>-</td>
           </j:if>
           
           <j:if test='${!pageDetailData.averageEndRender.equals("-1.00")}'>
-          <td tooltip='${pageDetailData.averageEndRender}'>${pageDetailData.averageEndRender}</td>
+          <td tooltip='h.escape(${pageDetailData.averageEndRender})'>${pageDetailData.averageEndRender}</td>
           </j:if>
           <j:if test='${pageDetailData.averageEndRender.equals("-1.00")}'>
           <td>-</td>
           </j:if>
           
           <j:if test='${!pageDetailData.strAverageReq.equals("-1")}'>
-          <td tooltip='${pageDetailData.strAverageReq}'>${pageDetailData.strAverageReq}</td>
+          <td tooltip='h.escape(${pageDetailData.strAverageReq})'>${pageDetailData.strAverageReq}</td>
           </j:if>
           <j:if test='${pageDetailData.strAverageReq.equals("-1")}'>
           <td>-</td>
           </j:if>
           
           <j:if test='${!pageDetailData.strBrowserAverageReq.equals("-1")}'>
-          <td tooltip='${pageDetailData.strBrowserAverageReq}'>${pageDetailData.strBrowserAverageReq}</td>
+          <td tooltip='h.escape(${pageDetailData.strBrowserAverageReq})'>${pageDetailData.strBrowserAverageReq}</td>
           </j:if>
           <j:if test='${pageDetailData.strBrowserAverageReq.equals("-1")}'>
           <td>-</td>
           </j:if>
           
           <j:if test='${!pageDetailData.strAverageByteRec.equals("-1")}'>
-          <td tooltip='${pageDetailData.strAverageByteRec}'>${pageDetailData.strAverageByteRec}</td>
+          <td tooltip='h.escape(${pageDetailData.strAverageByteRec})'>${pageDetailData.strAverageByteRec}</td>
           </j:if>
           <j:if test='${pageDetailData.strAverageByteRec.equals("-1")}'>
           <td>-</td>
           </j:if>
           
           <j:if test='${!pageDetailData.strAverageByteSent.equals("-1")}'>
-          <td tooltip='${pageDetailData.strAverageByteSent}'>${pageDetailData.strAverageByteSent}</td>
+          <td tooltip='h.escape(${pageDetailData.strAverageByteSent})'>${pageDetailData.strAverageByteSent}</td>
           </j:if>
           <j:if test='${pageDetailData.strAverageByteSent.equals("-1")}'>
           <td>-</td>
           </j:if>
           
           <j:if test='${!pageDetailData.averageSpeedIndex.equals("-1")}'>
-          <td tooltip='${pageDetailData.averageSpeedIndex}'>${pageDetailData.averageSpeedIndex}</td>
+          <td tooltip='h.escape(${pageDetailData.averageSpeedIndex})'>${pageDetailData.averageSpeedIndex}</td>
           </j:if>
           <j:if test='${pageDetailData.averageSpeedIndex.equals("-1")}'>
           <td>-</td>
@@ -1271,7 +1269,7 @@
         <table border='1' class='table1'  width="100%" bgcolor="#F0F0F0" cellspacing="0" cellpadding="5" id="reportID">
           <thead id ='pfh'><tr>
              <th align='left' class='th td_color' >Metric Under Test</th>
-             <th align='right' class='th td_color' tooltip='${testReportND.currentDescription}' >Current (${testReportND.testRun}) [${testReportND.currentDateTime}] </th>
+             <th align='right' class='th td_color' tooltip='h.escape(${testReportND.currentDescription})' >Current (${testReportND.testRun}) [${testReportND.currentDateTime}] </th>
              <j:if test='${!testReportND.operator.equals("NA")}'>
                <th align='right' class='th td_color' > </th>
              </j:if>
@@ -1283,16 +1281,16 @@
               </j:if>
   
              <j:if test='${!testReportND.baseLineTestRun.equals("-1")}'>
-               <th align='right' class='th td_color' tooltip='${testReportND.baselineDescription}'>Baseline (${testReportND.baseLineTestRun}) [${testReportND.baselineDateTime}]</th>
+               <th align='right' class='th td_color' tooltip='h.escape(${testReportND.baselineDescription})'>Baseline (${testReportND.baseLineTestRun}) [${testReportND.baselineDateTime}]</th>
              </j:if>
 
              <j:if test='${!testReportND.previousTestRun.equals("-1")}'>
-               <th align='right' class='th td_color' tooltip='${testReportND.previousDescription}'>Previous (${testReportND.previousTestRun}) [${testReportND.previousDateTime}]</th>
+               <th align='right' class='th td_color' tooltip='h.escape(${testReportND.previousDescription})'>Previous (${testReportND.previousTestRun}) [${testReportND.previousDateTime}]</th>
              </j:if>
 
 
              <j:if test='${!testReportND.initialTestRun.equals("-1")}'>
-               <th align='right' class='th td_color' tooltip='${testReportND.initialDescription}'>Initial (${testReportND.initialTestRun}) [${testReportND.initialDateTime}]</th>
+               <th align='right' class='th td_color' tooltip='h.escape(${testReportND.initialDescription})'>Initial (${testReportND.initialTestRun}) [${testReportND.initialDateTime}]</th>
              </j:if>
            
             <j:forEach var="test_metric" items="${testReportND.testMetrics}"/> 
@@ -1386,11 +1384,11 @@
                   
                   <j:if test='${!suit_metric.transactiontStatus.equals("-1")}'>
                    <j:if test='${!suit_metric.statusColour.equals("NA")}'>   
-                     <td align='right' style='background:${suit_metric.statusColour};' tooltip='${suit_metric.transactionTooltip}'>${suit_metric.transactiontStatus} </td>
+                     <td align='right' style='background:${suit_metric.statusColour};' tooltip='h.escape(${suit_metric.transactionTooltip})'>${suit_metric.transactiontStatus} </td>
                   </j:if>
      
                   <j:if test='${suit_metric.statusColour.equals("NA")}'>
-                     <td align='right' style='background:#FFFFFF;' tooltip='${suit_metric.transactionTooltip}'>${suit_metric.transactiontStatus} </td>
+                     <td align='right' style='background:#FFFFFF;' tooltip='h.escape(${suit_metric.transactionTooltip})'>${suit_metric.transactiontStatus} </td>
                   </j:if>
               </j:if>
            <td  style="background:#FFFFFF;color:blue;cursor:pointer;" > 

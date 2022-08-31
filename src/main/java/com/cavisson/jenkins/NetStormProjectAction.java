@@ -5,7 +5,7 @@
  */
 package com.cavisson.jenkins;
 
-//import hudson.model.Run;
+import jenkins.model.Jenkins;
 import hudson.model.AbstractProject;
 import hudson.model.Action;
 import hudson.model.Run;
@@ -87,6 +87,7 @@ public class NetStormProjectAction implements Action  {
    */
   public void doSummarizerGraphMainMetric(final StaplerRequest request,
                                           final StaplerResponse response) throws IOException {
+	  Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
     final Map<ChartUtil.NumberOnlyBuildLabel, Double> averagesFromReports =
         getAveragesFromAllReports(getExistingReportsList(), mainMetricKey);
 
@@ -116,6 +117,7 @@ public class NetStormProjectAction implements Action  {
    */
   public void doSummarizerGraphForMetric(final StaplerRequest request,
                                           final StaplerResponse response) throws IOException {
+    Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
     final String metricKey = request.getParameter("metricDataKey");
     final Map<ChartUtil.NumberOnlyBuildLabel, Double> averagesFromReports =
         getAveragesFromAllReports(getExistingReportsList(), metricKey);

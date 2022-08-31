@@ -205,16 +205,16 @@
  	document.getElementById("advSetting").checked = advBoolVal;
  	openDiv();
  	
- 	document.getElementById('gitPullMsg').innerHTML = "";
+ 	document.getElementById('gitPullMsg').innerText = "";
  	document.getElementById('gitPullMsg').style.color = "#000000";
  	document.getElementById('gitPullMsg').fontWeight = "400";
 	if(checkBox.checked == true){
- 	document.getElementById('gitPullMsg').innerHTML = "Git pull is in progress ...";
+ 	document.getElementById('gitPullMsg').innerText = "Git pull is in progress ...";
  	var x = document.getElementById("showIcon");
  	x.style.display = "block";
 	backend.performGitpull(urlConn,username,password,checkVal,project,subProject,testMode,function(t) {
 	  var res = t.responseObject();
-	  document.getElementById('gitPullMsg').innerHTML = res.msg;
+	  document.getElementById('gitPullMsg').innerText = res.msg;
 	  var colortext = document.getElementById('gitPullMsg');
 	  colortext.style.color = res.color;
 	  colortext.style.fontWeight = "500";
@@ -249,9 +249,9 @@
 			var cell2 = row.insertCell(1);
 			var cell3 = row.insertCell(2);
 
-			cell1.innerHTML =i+1;
-			cell2.innerHTML =arr[i];
-			cell3.innerHTML = '<i class="fa fa-trash" onclick="deleteEntry(this)"></i>';
+			cell1.innerText =i+1;
+			cell2.innerText =arr[i];
+			cell3.innerText = '<i class="fa fa-trash" onclick="deleteEntry(this)"></i>';
 		}
 	  }
 	}
@@ -277,12 +277,12 @@
   			var cell5 = rows.insertCell(4);
   			var cell6 = rows.insertCell(5);
   	
-  			cell1.innerHTML = temp[0];
-  			cell2.innerHTML = temp[1];
-  			cell3.innerHTML = temp[2];
-  			cell4.innerHTML = temp[3];
-  			cell5.innerHTML = second;
-  			cell6.innerHTML = '<i class="fa fa-trash" onclick="deleteRow(this)"></i>';
+  			cell1.innerText = temp[0];
+  			cell2.innerText = temp[1];
+  			cell3.innerText = temp[2];
+  			cell4.innerText = temp[3];
+  			cell5.innerText = second;
+  			cell6.innerText = '<i class="fa fa-trash" onclick="deleteRow(this)"></i>';
   			
 			}
 		}else{
@@ -291,7 +291,7 @@
   		
   			var cell1 = rows.insertCell(0);
   	
-  			cell1.innerHTML = 'No data available';
+  			cell1.innerText = 'No data available';
   			cell1.id = "myTd";
   			document.getElementById("myTd").colSpan="6";
 			document.getElementById("myTd").style.textAlign = 'center';
@@ -321,7 +321,7 @@
                 addOptions += "<option>" + res[i] + "</option>";
                }
             }
-            document.getElementById(value).innerHTML = addOptions;
+            document.getElementById(value).innerText = addOptions;
             if(res.includes(temp)){
             	document.getElementById(value).value = temp;
             }else{
@@ -342,18 +342,18 @@
  	var repoPath = document.getElementById("repourl");
  	var checkvalue = document.getElementById("myCheck").value;
  	
- 	document.getElementById('gitPullMsg').innerHTML = "";
+ 	document.getElementById('gitPullMsg').innerText = "";
  	document.getElementById('gitPullMsg').style.color = "#000000";
  	document.getElementById('gitPullMsg').fontWeight = "400";
 	if(checkBox.checked == true){
- 	document.getElementById('gitPullMsg').innerHTML = "Git pull is in progress ...";
+ 	document.getElementById('gitPullMsg').innerText = "Git pull is in progress ...";
  	var x = document.getElementById("showIcon");
  	x.style.display = "block";
  	console.log("before git pull");
 	backend.performGitpull(urlConn,username,password,value,project,subProject,testMode,function(t) {
 	  var res = t.responseObject();
 	  console.log("res gitPull msg -"+res.msg+",color -"+res.color);
-	  document.getElementById('gitPullMsg').innerHTML = res.msg;
+	  document.getElementById('gitPullMsg').innerText = res.msg;
 	  var colortext = document.getElementById('gitPullMsg');
 	  colortext.style.color = res.color;
 	  colortext.style.fontWeight = "500";
@@ -390,11 +390,11 @@ function addRow() {
 	
 	for (i=1;i &lt; table.rows.length;i++){
 		var cells = table.rows.item(i).cells;
-		if(script == cells.item(0).innerHTML){
-			if(page == cells.item(1).innerHTML){
-				if(url == cells.item(2).innerHTML){
-					if(hdrname == cells.item(3).innerHTML){
-						if(hdrvalue == cells.item(4).innerHTML){
+		if(script == cells.item(0).innerText){
+			if(page == cells.item(1).innerText){
+				if(url == cells.item(2).innerText){
+					if(hdrname == cells.item(3).innerText){
+						if(hdrvalue == cells.item(4).innerText){
 							alert("Added values already exist.");
 							document.getElementById("hdrName").value = "";
 							document.getElementById("hdrValue").value = "";
@@ -409,7 +409,7 @@ function addRow() {
 	if(table.rows.length == 2){
 	for (i=1;i &lt; table.rows.length;i++){
 		var cells = table.rows.item(i).cells;
-		if(cells.item(0).innerHTML == 'No data available'){
+		if(cells.item(0).innerText == 'No data available'){
 			table.deleteRow(1);
 			rowlength--;
 		}
@@ -424,18 +424,18 @@ function addRow() {
   	var cell5 = row.insertCell(4);
   	var cell6 = row.insertCell(5);
   	
-  	cell1.innerHTML = script;
-  	cell2.innerHTML = page;
-  	cell3.innerHTML = url;
+  	cell1.innerText = script;
+  	cell2.innerText = page;
+  	cell3.innerText = url;
 	if(hdrname == null || hdrname == "")
-		cell4.innerHTML = "NA";
+		cell4.innerText = "NA";
 	else
-		cell4.innerHTML = hdrname;
+		cell4.innerText = hdrname;
 	if(hdrvalue == null || hdrvalue == "")
-		cell5.innerHTML = "NA";
+		cell5.innerText = "NA";
 	else
-		cell5.innerHTML = hdrvalue;
-  	cell6.innerHTML = '<i class="fa fa-trash" onclick="deleteRow(this)"></i>';
+		cell5.innerText = hdrvalue;
+  	cell6.innerText = '<i class="fa fa-trash" onclick="deleteRow(this)"></i>';
   	
   }
   
@@ -461,7 +461,7 @@ function saveTableData(){
 	if(table.rows.length == 2){
 	for (i=1;i &lt; table.rows.length;i++){
 		var cells = table.rows.item(i).cells;
-		if(cells.item(0).innerHTML == 'No data available'){
+		if(cells.item(0).innerText == 'No data available'){
 			document.getElementById("hiddenTxt").value = "";
 			spinner.style.display = "none";
 			return;
@@ -470,11 +470,11 @@ function saveTableData(){
 	}
 	for (i=1;i &lt; table.rows.length;i++){
 		var cells = table.rows.item(i).cells;
-		const obj = {script:cells.item(0).innerHTML, page:cells.item(1).innerHTML, url:cells.item(2).innerHTML, headerName:cells.item(3).innerHTML , headerValue:cells.item(4).innerHTML };
+		const obj = {script:cells.item(0).innerText, page:cells.item(1).innerText, url:cells.item(2).innerText, headerName:cells.item(3).innerText , headerValue:cells.item(4).innerText };
 		if(i &lt; table.rows.length-1){
-			hiddenData = hiddenData + cells.item(0).innerHTML +","+cells.item(1).innerHTML+","+cells.item(2).innerHTML+","+cells.item(3).innerHTML+","+cells.item(4).innerHTML+"%0A";
+			hiddenData = hiddenData + cells.item(0).innerText +","+cells.item(1).innerText+","+cells.item(2).innerText+","+cells.item(3).innerText+","+cells.item(4).innerText+"%0A";
 		}else{
-			hiddenData = hiddenData + cells.item(0).innerHTML +","+cells.item(1).innerHTML+","+cells.item(2).innerHTML+","+cells.item(3).innerHTML+","+cells.item(4).innerHTML;
+			hiddenData = hiddenData + cells.item(0).innerText +","+cells.item(1).innerText+","+cells.item(2).innerText+","+cells.item(3).innerText+","+cells.item(4).innerText;
 		}
 	}
 	document.getElementById("hiddenTxt").value = hiddenData;
@@ -493,7 +493,7 @@ function deleteRow(r) {
   		
   	var cell1 = rows.insertCell(0);
   	
-  	cell1.innerHTML = 'No data available';
+  	cell1.innerText = 'No data available';
   	cell1.id = "myTd";
   	document.getElementById("myTd").colSpan="6";
 	document.getElementById("myTd").style.textAlign = 'center';
@@ -516,9 +516,9 @@ function deleteRow(r) {
 			var cell2 = row.insertCell(1);
 			var cell3 = row.insertCell(2);
 
-			cell1.innerHTML =rowlength;
-			cell2.innerHTML =value;
-			cell3.innerHTML = '<i class="fa fa-trash" onclick="deleteEntry(this)"></i>';
+			cell1.innerText =rowlength;
+			cell2.innerText =value;
+			cell3.innerText = '<i class="fa fa-trash" onclick="deleteEntry(this)"></i>';
 
 			if(testProfileData.value=="")
 			testProfileData.value = value;
@@ -549,7 +549,7 @@ function deleteEntry(r) {
   var table= document.getElementById("scen_table");
   var box=document.getElementById("scen_box");
 
-  table.innerHTML='<tr>
+  table.innerText='<tr>
         	<th style="width:15%;" class="ths">Sl. No.</th>
         	<th style="width:70%;" class="ths">Test Profile Name</th>
         	<th class="ths">Action</th>
@@ -564,9 +564,9 @@ function deleteEntry(r) {
 			var cell2 = row.insertCell(1);
 			var cell3 = row.insertCell(2);
 
-			cell1.innerHTML =i+1;
-			cell2.innerHTML =arr[i];
-			cell3.innerHTML = '<i class="fa fa-trash" onclick="deleteEntry(this)"></i>';
+			cell1.innerText =i+1;
+			cell2.innerText =arr[i];
+			cell3.innerText = '<i class="fa fa-trash" onclick="deleteEntry(this)"></i>';
 		}
 
 	  if(table.rows.length ==1)
